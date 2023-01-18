@@ -24,7 +24,7 @@ def get_branch(repo_path: Union[str, os.PathLike, None] = None):
             g_repo = g.get_repo(
                 re.sub(r".*\.com/(.*)\.git", r"\1", remote_url)
             )
-            pr = g_repo.get_pull(os.environ["READTHEDOCS_VERSION"])
+            pr = g_repo.get_pull(int(os.environ["READTHEDOCS_VERSION"]))
             return pr.head.repo.html_url, pr.head.ref
         # if build type is unknown try the usual strategy
     for branch in repo.branches:
