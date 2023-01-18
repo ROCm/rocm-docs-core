@@ -2,30 +2,44 @@ import os
 import re
 from typing import Optional, Union
 from git import Repo, Remote, RemoteReference
+from github import Github
 from pathlib import Path
 
 
 def get_branch(repo_path: Union[str, os.PathLike, None] = None):
-    git_url = re.compile(r'git@(\w+(?:\.\w+)+):(.*)\.git')
+    git_url = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
     if repo_path is None:
         repo_path = Path()
     elif not isinstance(repo_path, Path):
         repo_path = Path(repo_path)
     repo = Repo(repo_path, search_parent_directories=True)
     assert not repo.bare
+    if os.environ["READTHEDOCS"]:
+        g = Github()
+        remote_url = repo.remotes.origin.url
+        build_type = os.environ["READTHEDOCS_VERSION_TYPE"]
+        if build_type == "branch" or build_type == "tag":
+            return remote_url, os.environ["READTHEDOCS_VERSION"]
+        if build_type == "external":
+            g_repo = g.get_repo(
+                re.sub(r".*\.com/(.*)\.git", r"\1", remote_url)
+            )
+            pr = g_repo.get_pull(os.environ["READTHEDOCS_VERSION"])
+            return pr.head.repo.html_url, pr.head.ref
+        # if build type is unknown try the usual strategy
     for branch in repo.branches:
         if branch.commit == repo.head.commit:
             tracking = branch.tracking_branch()
             if tracking is not None:
                 remote_url = repo.remotes[tracking.remote_name].url
-                remote_url = git_url.sub('http://\\1/\\2', remote_url)
+                remote_url = git_url.sub(r"http://\1/\2", remote_url)
                 return remote_url, tracking.remote_head
     for remote in repo.remotes:
         remote: Remote
         for ref in remote.refs:
             ref: RemoteReference
             if ref.commit == repo.head.commit:
-                remote_url = git_url.sub('http://\\1/\\2', remote.url)
+                remote_url = git_url.sub(r"http://\1/\2", remote.url)
                 return remote_url, ref.remote_head
     raise TypeError("Could not find the commit in the git repo.")
 
