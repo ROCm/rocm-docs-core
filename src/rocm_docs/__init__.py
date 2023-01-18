@@ -3,7 +3,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
-from typing import BinaryIO, Union
+from typing import BinaryIO, List, Union, Dict, Tuple
 from .util import format_toc
 
 
@@ -18,8 +18,31 @@ else:
 
 
 def setup_rocm_docs(
-    project_name: str, repository_url: str, docs_folder: Union[str, os.PathLike, None] = None
-):
+    project_name: str, docs_folder: Union[str, os.PathLike, None] = None
+) -> Tuple[
+    str,
+    str,
+    str,
+    List[str],
+    List[str],
+    int,
+    str,
+    bool,
+    Dict[str, Tuple[str, None]],
+    List[str],
+    List[str],
+    str,
+    List[str],
+    str,
+    str,
+    List[str],
+    List[str],
+    List[str],
+    List[str],
+    Dict[str, Union[str, bool]],
+    bool,
+    str,
+]:
     """Sets up default RTD variables and copies necessary files.
 
     Args:
@@ -35,10 +58,6 @@ def setup_rocm_docs(
         NotADirectoryError: An error occurred when trying to copy files from  \
             the rocm_docs package.
     """
-    # pylint: disable=global-variable-undefined, invalid-name
-    global copyright
-    global author
-    global project
     # pylint: disable=redefined-builtin
     copyright = "2022-2023, Advanced Micro Devices Ltd."
     # pylint: enable=redefined-builtin
@@ -50,7 +69,6 @@ def setup_rocm_docs(
 
     # -- General configuration ------------------------------------------------
     # -- General configuration
-    global extensions
     extensions = [
         "sphinx.ext.duration",
         "sphinx.ext.doctest",
@@ -64,8 +82,6 @@ def setup_rocm_docs(
     ]
 
     # MyST Configuration
-    global myst_enable_extensions
-    global myst_heading_anchors
     myst_enable_extensions = ["colon_fence", "linkify"]
     myst_heading_anchors = 3
 
@@ -86,14 +102,10 @@ def setup_rocm_docs(
         )
     url, branch = format_toc(docs_folder)
 
-    global external_toc_path
-    global external_toc_exclude_missing
     external_toc_path = "_toc.yml"
     external_toc_exclude_missing = False
 
     # intersphinx Configuration
-    global intersphinx_mapping
-    global intersphinx_disabled_domains
     intersphinx_mapping = {
         "rtd": ("https://docs.readthedocs.io/en/stable/", None),
         "python": ("https://docs.python.org/3/", None),
@@ -102,9 +114,6 @@ def setup_rocm_docs(
     intersphinx_disabled_domains = ["std"]
 
     # Other configuration
-    global templates_path
-    global epub_show_urls
-    global exclude_patterns
     templates_path = ["_templates"]
 
     # -- Options for EPUB output
@@ -116,15 +125,6 @@ def setup_rocm_docs(
     exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
     # -- Options for HTML output ----------------------------------------------
-    global html_theme
-    global html_title
-    global html_static_path
-    global html_css_files
-    global html_js_files
-    global html_extra_path
-    global html_theme_options
-    global html_show_sphinx
-    global html_favicon
 
     # The theme to use for HTML and HTML Help pages.  See the documentation for
     # a list of builtin themes.
@@ -166,7 +166,7 @@ def setup_rocm_docs(
                     write_path + "/" + entry.name,
                 )
             else:
-                with entry.open_binary() as resource_file:
+                with entry.open("rb") as resource_file:
                     # We open the resource file as a binary stream instead of a
                     # file on disk because the latter may require unzipping
                     # and/or the creation of a temporary file. This is not the
@@ -177,3 +177,28 @@ def setup_rocm_docs(
 
     pkg = importlib_resources.files("rocm_docs")
     copy_from_package(pkg / "data", "data", ".")
+
+    return (
+        copyright,
+        author,
+        project,
+        extensions,
+        myst_enable_extensions,
+        myst_heading_anchors,
+        external_toc_path,
+        external_toc_exclude_missing,
+        intersphinx_mapping,
+        intersphinx_disabled_domains,
+        templates_path,
+        epub_show_urls,
+        exclude_patterns,
+        html_theme,
+        html_title,
+        html_static_path,
+        html_css_files,
+        html_js_files,
+        html_extra_path,
+        html_theme_options,
+        html_show_sphinx,
+        html_favicon,
+    )
