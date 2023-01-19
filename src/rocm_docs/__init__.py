@@ -4,7 +4,7 @@ import shutil
 import sys
 from pathlib import Path
 from typing import BinaryIO, List, Union, Dict, Tuple
-from .util import format_toc
+from .util import format_toc, get_path_to_docs
 
 
 if sys.version_info < (3, 9):
@@ -140,7 +140,7 @@ def setup_rocm_docs(
         "use_edit_page_button": True,
         "repository_url": url,
         "repository_branch": branch,
-        "path_to_docs": "docs",
+        "path_to_docs": get_path_to_docs(),
         "show_navbar_depth": "2",
         "body_max_width": "none",
         "show_toc_level": "0",

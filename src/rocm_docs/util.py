@@ -6,6 +6,19 @@ from github import Github
 from pathlib import Path
 
 
+def get_path_to_docs(conf_path: Union[str, os.PathLike, None] = None, repo_path: Union[str, os.PathLike, None] = None):
+    if conf_path is None:
+        conf_path = Path()
+    elif not isinstance(conf_path, Path):
+        conf_path = Path(conf_path)
+    if repo_path is None:
+        repo_path = conf_path
+    elif not isinstance(repo_path, Path):
+        repo_path = Path(repo_path)
+    repo = Repo(repo_path, search_parent_directories=True)
+    return os.path.relpath(str(conf_path), repo.working_dir)
+
+
 def get_branch(repo_path: Union[str, os.PathLike, None] = None):
     git_url = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
     if repo_path is None:
