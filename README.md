@@ -1,12 +1,11 @@
 # ROCm Documentation Core Utilities
 
 ### Purpose
-In order to maintain a uniform appearance across all of the ROCm documentation, this repository was created to contain some utilities and styling that is
-common to all ROCm projects. This greatly aids in maintaining the documentation, as any change to the appearance only needs to be modified in one location.
+This repository is comprised of utilities, styling, scripts, and additional HTML content that is common to all ROCm projects' documentation. This greatly aids in maintaining the documentation, as any change to the appearance only needs to be modified in one location.
 
 ### Common elements covered
-- A couple of Javascript tweaks for tables with long variable names, as Sphinx' default rendering is problematic.
-- Creation of a header and footer for the documentation page.
+- Javascript tweaks for tables with long variable names, as Sphinx' default rendering is problematic.
+- HTML for a header and footer for the documentation page.
 - Common Sphinx configuration options for ROCm documentation processes.
 
 ### Use
