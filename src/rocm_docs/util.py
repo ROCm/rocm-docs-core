@@ -29,7 +29,7 @@ def get_branch(repo_path: Union[str, os.PathLike, None] = None):
     assert not repo.bare
     if os.environ.get("READTHEDOCS", ""):
         gh_token = os.environ.get("TOKEN", "")
-        if token:
+        if gh_token:
             g = Github(token)
         else:
             g = Github()
