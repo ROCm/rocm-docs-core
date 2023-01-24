@@ -30,7 +30,7 @@ def get_branch(repo_path: Union[str, os.PathLike, None] = None):
     if os.environ.get("READTHEDOCS", ""):
         gh_token = os.environ.get("TOKEN", "")
         if gh_token:
-            g = Github(token)
+            g = Github(gh_token)
         else:
             g = Github()
         remote_url = repo.remotes.origin.url
