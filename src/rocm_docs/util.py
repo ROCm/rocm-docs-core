@@ -38,7 +38,7 @@ def get_branch(repo_path: Union[str, os.PathLike, None] = None):
         if build_type == "branch" or build_type == "tag":
             return remote_url, os.environ["READTHEDOCS_VERSION"]
         if build_type == "external":
-            url = re.sub(r".*\.com/(.*)\.git", r"\1", remote_url)
+            url = re.sub(r".*\.com[/:](.*)\.git", r"\1", remote_url)
             print("Repository URL: " + url)
             g_repo = g.get_repo(url)
             pr = g_repo.get_pull(int(os.environ["READTHEDOCS_VERSION"]))
