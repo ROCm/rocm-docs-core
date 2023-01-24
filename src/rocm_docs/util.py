@@ -28,7 +28,11 @@ def get_branch(repo_path: Union[str, os.PathLike, None] = None):
     repo = Repo(repo_path, search_parent_directories=True)
     assert not repo.bare
     if os.environ.get("READTHEDOCS", ""):
-        g = Github()
+        gh_token = os.environ.get("TOKEN", "")
+        if token:
+            g = Github(token)
+        else:
+            g = Github()
         remote_url = repo.remotes.origin.url
         build_type = os.environ["READTHEDOCS_VERSION_TYPE"]
         if build_type == "branch" or build_type == "tag":
