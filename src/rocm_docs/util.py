@@ -1,12 +1,18 @@
+"""Utilities for rocm-docs-core."""
 import os
 import re
 from typing import Optional, Union
-from git import Repo, Remote, RemoteReference
+from git import Remote, RemoteReference
+from git.repo import Repo
 from github import Github
 from pathlib import Path
 
 
-def get_path_to_docs(conf_path: Union[str, os.PathLike, None] = None, repo_path: Union[str, os.PathLike, None] = None):
+def get_path_to_docs(
+    conf_path: Union[str, os.PathLike, None] = None,
+    repo_path: Union[str, os.PathLike, None] = None,
+):
+    """Get the relative path from the repo root to the docs."""
     if conf_path is None:
         conf_path = Path()
     elif not isinstance(conf_path, Path):
@@ -20,6 +26,7 @@ def get_path_to_docs(conf_path: Union[str, os.PathLike, None] = None, repo_path:
 
 
 def get_branch(repo_path: Union[str, os.PathLike, None] = None):
+    """Get the branch whose tip is checked out, even if detached."""
     git_url = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
     if repo_path is None:
         repo_path = Path()
@@ -67,6 +74,7 @@ def format_toc(
     input_name: Optional[str] = None,
     output_name: Optional[str] = None,
 ):
+    """Format the input table of contents with additional information."""
     if toc_path is None:
         toc_path = Path()
     elif not isinstance(toc_path, Path):
@@ -78,13 +86,13 @@ def format_toc(
     at_start = True
 
     url, branch = get_branch(repo_path)
-    with open(toc_path / input_name, "r", encoding="utf-8") as input:
-        with open(toc_path / output_name, "w", encoding="utf-8") as output:
-            for line in input.readlines():
+    with open(toc_path / input_name, "r", encoding="utf-8") as toc_in:
+        with open(toc_path / output_name, "w", encoding="utf-8") as toc_out:
+            for line in toc_in.readlines():
                 if line[0] == "#" and at_start:
                     continue
                 at_start = False
-                output.write(line.format(branch=branch, url=url))
+                toc_out.write(line.format(branch=branch, url=url))
     return url, branch
 
 
