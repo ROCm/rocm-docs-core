@@ -116,10 +116,11 @@ class ROCmDocs:
             return
         self._ran_doxygen = True
         doxygen_root = self.to_path(doxygen_root)
+        if doxygen_root is None:
+            doxygen_root = Path("../doxygen")
         doxygen_path = self.to_path(doxygen_path)
-        if doxygen_root is None or doxygen_path is None:
-            # Weren't provided sufficient information
-            return
+        if doxygen_path is None:
+            doxygen_path = Path("docBin/xml")
         doxygen_file = "Doxyfile" if doxygen_file is None else doxygen_file
 
         try:
