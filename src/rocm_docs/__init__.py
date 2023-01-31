@@ -153,9 +153,7 @@ class ROCmDocs:
         if self._setup:
             self.extensions += ["sphinx.ext.mathjax", "breathe"]
             self.breathe_projects = {
-                self._project_name: str(
-                    self._doxygen_path.relative_to(self._docs_folder)
-                )
+                self._project_name: str(self._doxygen_path)
             }
             self.breathe_default_project = self._project_name
 
@@ -189,9 +187,7 @@ class ROCmDocs:
         if self._ran_doxygen:
             self.extensions += ["sphinx.ext.mathjax", "breathe"]
             self.breathe_projects = {
-                self._project_name: str(
-                    self._doxygen_path.relative_to(self._docs_folder)
-                )
+                self._project_name: str(self._doxygen_path)
             }
             self.breathe_default_project = self._project_name
         else:
