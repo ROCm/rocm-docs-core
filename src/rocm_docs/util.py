@@ -2,10 +2,10 @@
 import os
 import re
 from typing import Optional, Union
+from pathlib import Path
 from git import Remote, RemoteReference
 from git.repo import Repo
 from github import Github
-from pathlib import Path
 
 
 def get_path_to_docs(
@@ -37,9 +37,9 @@ def get_branch(repo_path: Union[str, os.PathLike, None] = None):
     if os.environ.get("READTHEDOCS", ""):
         gh_token = os.environ.get("TOKEN", "")
         if gh_token:
-            g = Github(gh_token)
+            gh_inst = Github(gh_token)
         else:
-            g = Github()
+            gh_inst = Github()
         remote_url = repo.remotes.origin.url
         build_type = os.environ["READTHEDOCS_VERSION_TYPE"]
         if build_type == "branch" or build_type == "tag":
@@ -47,9 +47,9 @@ def get_branch(repo_path: Union[str, os.PathLike, None] = None):
         if build_type == "external":
             url = re.sub(r".*\.com[/:](.*)\.git", r"\1", remote_url)
             print("Repository URL: " + url)
-            g_repo = g.get_repo(url)
-            pr = g_repo.get_pull(int(os.environ["READTHEDOCS_VERSION"]))
-            return pr.head.repo.html_url, pr.head.ref
+            g_repo = gh_inst.get_repo(url)
+            pull = g_repo.get_pull(int(os.environ["READTHEDOCS_VERSION"]))
+            return pull.head.repo.html_url, pull.head.ref
         # if build type is unknown try the usual strategy
     for branch in repo.branches:
         if branch.commit == repo.head.commit:
