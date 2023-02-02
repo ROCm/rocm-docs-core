@@ -16,7 +16,7 @@ This repository is comprised of utilities, styling, scripts, and additional HTML
 from rocm_docs import ROCmDocs
 
 docs_core = ROCmDocs(<PROJECT NAME HERE>)
-docs_core.run_doxygen()
+docs_core.run_doxygen()  # Only if Doxygen is required for this project
 docs_core.setup()
 
 for sphinx_var in ROCmDocs.SPHINX_VARS:
