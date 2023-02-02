@@ -27,7 +27,7 @@ THE SOFTWARE.
 
 ===========================================================================
 
-Files in src/rocm_docs/data/_images and its subdirectories is governed by 
+Files in src/rocm_docs/data/_images and its subdirectories are governed by 
 the following terms:
 
 Creative Commons Attribution 4.0 International Public License
