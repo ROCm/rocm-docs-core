@@ -13,28 +13,12 @@ This repository is comprised of utilities, styling, scripts, and additional HTML
 - From the `rocm_docs` package import the function `setup_rocm_docs` into `conf.py` for the ReadTheDocs project.
 - Call exactly the following, replacing `<PROJECT NAME HERE>` with the name of the project.
 ```python
-(
-    copyright,
-    author,
-    project,
-    extensions,
-    myst_enable_extensions,
-    myst_heading_anchors,
-    external_toc_path,
-    external_toc_exclude_missing,
-    intersphinx_mapping,
-    intersphinx_disabled_domains,
-    templates_path,
-    epub_show_urls,
-    exclude_patterns,
-    html_theme,
-    html_title,
-    html_static_path,
-    html_css_files,
-    html_js_files,
-    html_extra_path,
-    html_theme_options,
-    html_show_sphinx,
-    html_favicon,
-) = setup_rocm_docs(<PROJECT NAME HERE>)
+from rocm_docs import ROCmDocs
+
+docs_core = ROCmDocs(<PROJECT NAME HERE>)
+docs_core.run_doxygen()
+docs_core.setup()
+
+for sphinx_var in ROCmDocs.SPHINX_VARS:
+    globals()[sphinx_var] = getattr(docs_core, sphinx_var)
 ```
