@@ -40,3 +40,27 @@ div.content-container {
     opacity: 1;
     visibility: visible;
 }
+
+div#rdc-watermark-container {
+    pointer-events: none;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+img#rdc-watermark {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 10%;
+    z-index: 10000;
+    max-width: 100%;
+    max-height: calc(100% - 200px);
+    object-fit: contain;
+    width: 90%;
+}
