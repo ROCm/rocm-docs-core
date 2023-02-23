@@ -77,7 +77,7 @@ class ROCmDocs:
         self.html_css_files: List[str]
         self.html_js_files: List[str]
         self.html_extra_path: List[str]
-        self.html_theme_options: Dict[str, Union[str, bool]]
+        self.html_theme_options: Dict[str, Union[str, bool, List[str]]]
         self.html_show_sphinx: bool
         self.html_favicon: str
         self._docs_folder: Path
@@ -261,7 +261,10 @@ class ROCmDocs:
             "show_navbar_depth": "2",
             "body_max_width": "none",
             "show_toc_level": "0",
-            "extra_navbar": "",
+            "article_header_start": [
+                "toggle-primary-sidebar.html",
+                "breadcrumbs.html"
+            ]
         }
 
         self.html_show_sphinx = False

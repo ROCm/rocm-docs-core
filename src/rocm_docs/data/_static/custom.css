@@ -65,3 +65,7 @@ img#rdc-watermark {
     object-fit: contain;
     width: 45%;
 }
+
+ul.bd-breadcrumbs {
+    margin-bottom: 0;
+}
