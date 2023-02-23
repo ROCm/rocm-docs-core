@@ -3,7 +3,7 @@
     position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 0;
-    max-width: 100%;
+    width: 100%;
     min-height: 50px;
     overflow: hidden;
     font-family: 'Noto Sans', sans-serif;
