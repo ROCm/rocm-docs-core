@@ -258,7 +258,7 @@ class ROCmDocs:
             "repository_url": url,
             "repository_branch": branch,
             "path_to_docs": get_path_to_docs(),
-            "show_navbar_depth": "2",
+            "show_navbar_depth": "0",
             "body_max_width": "none",
             "show_toc_level": "0",
             "article_header_start": [
