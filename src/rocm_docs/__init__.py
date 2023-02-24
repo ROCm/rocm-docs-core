@@ -253,7 +253,7 @@ class ROCmDocs:
         self.html_js_files = ["code_word_breaks.js"]
         self.html_extra_path = ["_images"]
         self.html_theme_options = {
-            "home_page_in_toc": True,
+            "home_page_in_toc": False,
             "use_edit_page_button": True,
             "repository_url": url,
             "repository_branch": branch,
