@@ -137,6 +137,7 @@ class ROCmDocs:
             )
         try:
             subprocess.check_call(["doxygen", doxygen_file], cwd=doxygen_root)
+            subprocess.check_call(["doxygen", doxygen_file], cwd=doxygen_root)
         except subprocess.CalledProcessError as err:
             raise RuntimeError("Failed when running doxygen") from err
         try:
