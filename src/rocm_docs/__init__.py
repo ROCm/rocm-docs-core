@@ -136,7 +136,7 @@ class ROCmDocs:
                 f"Expected doxyfile {doxyfile} to exist and be readable."
             )
         try:
-            subprocess.check_call(["doxygen", doxygen_file], cwd=doxygen_root)
+            subprocess.check_call(["doxygen", "--version"], cwd=doxygen_root)
             subprocess.check_call(["doxygen", doxygen_file], cwd=doxygen_root)
         except subprocess.CalledProcessError as err:
             raise RuntimeError("Failed when running doxygen") from err
