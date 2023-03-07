@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import BinaryIO, List, Optional, Union, Dict, Tuple
+from sphinx.application import Sphinx
+
 from .util import format_toc, get_path_to_docs
 
 
