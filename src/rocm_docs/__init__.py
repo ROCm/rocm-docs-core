@@ -208,7 +208,7 @@ class ROCmDocs:
                 " readable."
             )
 
-        toc_in_path = self._docs_folder / "./docs/_toc.yml.in"
+        toc_in_path = self._docs_folder / "./docs/sphinx/_toc.yml.in"
         if not (toc_in_path.exists() and toc_in_path.is_file()):
             raise FileNotFoundError(
                 f"Expected input toc file {toc_in_path} to exist and be"
@@ -216,7 +216,7 @@ class ROCmDocs:
             )
         url, branch = format_toc(self._docs_folder)
 
-        self.external_toc_path = "./docs/_toc.yml"
+        self.external_toc_path = "./docs/sphinx/_toc.yml"
         self.external_toc_exclude_missing = False
 
         # intersphinx Configuration
