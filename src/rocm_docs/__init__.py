@@ -121,7 +121,7 @@ class ROCmDocs:
         self._ran_doxygen = True
         doxygen_root = self.to_path(doxygen_root)
         if doxygen_root is None:
-            doxygen_root = Path("../doxygen")
+            doxygen_root = Path("./.doxygen")
         doxygen_path = self.to_path(doxygen_path)
         if doxygen_path is None:
             doxygen_path = Path("docBin/xml")
@@ -213,7 +213,7 @@ class ROCmDocs:
                 " readable."
             )
 
-        toc_in_path = self._docs_folder / "_toc.yml.in"
+        toc_in_path = self._docs_folder / "./.sphinx/_toc.yml.in"
         if not (toc_in_path.exists() and toc_in_path.is_file()):
             raise FileNotFoundError(
                 f"Expected input toc file {toc_in_path} to exist and be"
@@ -221,7 +221,7 @@ class ROCmDocs:
             )
         url, branch = format_toc(self._docs_folder)
 
-        self.external_toc_path = "_toc.yml"
+        self.external_toc_path = "./.sphinx/_toc.yml"
         self.external_toc_exclude_missing = False
 
         # intersphinx Configuration
