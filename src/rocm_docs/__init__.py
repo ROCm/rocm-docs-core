@@ -22,6 +22,8 @@ else:
 MaybePath = Union[str, os.PathLike, None]
 
 
+# Intentionally disabling the too-many-instance-attributes check in pylint
+# as this class is intended to contain all necessary Sphinx config variables
 # pylint: disable=too-many-instance-attributes
 class ROCmDocs:
     """A class to contain all of the Sphinx variables"""
@@ -267,8 +269,9 @@ class ROCmDocs:
             "show_toc_level": "0",
             "article_header_start": [
                 "toggle-primary-sidebar.html",
-                "breadcrumbs.html"
-            ]
+                "breadcrumbs.html",
+            ],
+            "navbar_center": ["components/foobar.html"],
         }
 
         self.html_show_sphinx = False
