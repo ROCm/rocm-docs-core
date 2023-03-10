@@ -57,15 +57,23 @@
     padding-left: 8px;
 }
 
-.ot-sdk-show-settings {
-  background-color: black;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
+#ot-sdk-btn {
+    margin: 0;
 }
+
+.ot-sdk-show-settings {
+    background-color: steelblue;
+    border: white;
+    border-radius: 8px;
+    color: white;
+    padding: 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0px 0px;
+    cursor: pointer;
+  }
+  
+  .ot-sdk-show-settings:hover {
+    background-color: black;
+  }
