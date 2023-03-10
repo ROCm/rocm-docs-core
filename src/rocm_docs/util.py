@@ -100,8 +100,8 @@ def format_toc(
         toc_path = Path(toc_path)
     if repo_path is None:
         repo_path = toc_path
-    input_name = "_toc.yml.in" if input_name is None else input_name
-    output_name = "_toc.yml" if output_name is None else output_name
+    input_name = "./.sphinx/_toc.yml.in" if input_name is None else input_name
+    output_name = "./.sphinx/_toc.yml" if output_name is None else output_name
     at_start = True
 
     url, branch, _ = get_branch(repo_path)
