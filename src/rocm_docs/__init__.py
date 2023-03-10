@@ -307,11 +307,3 @@ class ROCmDocs:
 
         pkg = importlib_resources.files("rocm_docs")
         copy_from_package(pkg / "data", "data", ".")
-
-
-def setup(app: Sphinx):
-    """Set up rocm_docs_core as a Sphinx extension as well.
-
-    Args:
-        app (Sphinx): Sphinx application to access the API.
-    """
