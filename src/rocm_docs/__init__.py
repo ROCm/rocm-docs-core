@@ -175,6 +175,7 @@ class ROCmDocs:
         # -- General configuration --------------------------------------------
         # -- General configuration
         self.extensions = [
+            "rocm_docs",
             "sphinx.ext.duration",
             "sphinx.ext.doctest",
             "sphinx.ext.autodoc",
@@ -307,3 +308,14 @@ class ROCmDocs:
 
         pkg = importlib_resources.files("rocm_docs")
         copy_from_package(pkg / "data", "data", ".")
+
+
+def setup(app: Sphinx):
+    app.add_js_file(
+        "https://code.jquery.com/jquery-1.11.3.min.js", priority=1_000_000
+    )
+    app.add_js_file(
+        "https://download.amd.com/js/analytics/analyticsinit.js",
+        priority=999_999,
+        loading_method="async",
+    )
