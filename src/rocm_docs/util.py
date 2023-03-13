@@ -48,7 +48,10 @@ def get_branch(
         remote_url = repo.remotes.origin.url
         build_type = os.environ["READTHEDOCS_VERSION_TYPE"]
         if build_type in ("branch", "tag"):
-            return remote_url, os.environ["READTHEDOCS_VERSION"], True
+            url = re.sub(
+                        r"(?:.*://)?(.*\.com)[/:](.*)\.git", r"\1/\2", remote_url
+                    )
+            return url, os.environ["READTHEDOCS_VERSION"], True
         if build_type == "external":
             repo_fqn = re.sub(r".*\.com[/:](.*)\.git", r"\1", remote_url)
             print("Repository URL: " + repo_fqn)
@@ -62,7 +65,7 @@ def get_branch(
                     # Possibly a private repository that we're not
                     # authenticated for, fallback
                     url = re.sub(
-                        r".*://(.*\.com)[/:](.*)\.git", r"\1/\2", remote_url
+                        r"(?:.*://)?(.*\.com)[/:](.*)\.git", r"\1/\2", remote_url
                     )
                     return (
                         url,
