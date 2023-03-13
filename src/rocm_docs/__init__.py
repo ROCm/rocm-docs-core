@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import BinaryIO, List, Optional, Union, Dict, Tuple
+from sphinx.application import Sphinx
+
 from .util import format_toc, get_path_to_docs
 
 
@@ -117,7 +119,7 @@ class ROCmDocs:
         self._ran_doxygen = True
         doxygen_root = self.to_path(doxygen_root)
         if doxygen_root is None:
-            doxygen_root = Path("../doxygen")
+            doxygen_root = Path("./.doxygen")
         doxygen_path = self.to_path(doxygen_path)
         if doxygen_path is None:
             doxygen_path = Path("docBin/xml")
@@ -175,6 +177,7 @@ class ROCmDocs:
         # -- General configuration --------------------------------------------
         # -- General configuration
         self.extensions = [
+            "rocm_docs",
             "sphinx.ext.duration",
             "sphinx.ext.doctest",
             "sphinx.ext.autodoc",
@@ -208,7 +211,7 @@ class ROCmDocs:
                 " readable."
             )
 
-        toc_in_path = self._docs_folder / "_toc.yml.in"
+        toc_in_path = self._docs_folder / "./.sphinx/_toc.yml.in"
         if not (toc_in_path.exists() and toc_in_path.is_file()):
             raise FileNotFoundError(
                 f"Expected input toc file {toc_in_path} to exist and be"
@@ -216,7 +219,7 @@ class ROCmDocs:
             )
         url, branch = format_toc(self._docs_folder)
 
-        self.external_toc_path = "_toc.yml"
+        self.external_toc_path = "./.sphinx/_toc.yml"
         self.external_toc_exclude_missing = False
 
         # intersphinx Configuration
@@ -306,3 +309,14 @@ class ROCmDocs:
 
         pkg = importlib_resources.files("rocm_docs")
         copy_from_package(pkg / "data", "data", ".")
+
+
+def setup(app: Sphinx):
+    app.add_js_file(
+        "https://code.jquery.com/jquery-1.11.3.min.js", priority=1_000_000
+    )
+    app.add_js_file(
+        "https://download.amd.com/js/analytics/analyticsinit.js",
+        priority=999_999,
+        loading_method="async",
+    )
