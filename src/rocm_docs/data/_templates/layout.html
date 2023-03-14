@@ -1,40 +1,5 @@
 {% extends "!layout.html" %}
 
-<link href={{ pathto('_static/styles/theme.css?digest=12da95d707ffb74b382d', 1) }} rel="stylesheet" />
-<link href={{ pathto('_static/styles/bootstrap.css?digest=12da95d707ffb74b382d', 1) }} rel="stylesheet" />
-<link href={{ pathto('_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d', 1) }} rel="stylesheet" />
-
-  
-  <link href={{ pathto('_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d', 1) }} rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href={{ pathto('_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2', 1) }} />
-<link rel="preload" as="font" type="font/woff2" crossorigin href={{ pathto('_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2', 1) }} />
-<link rel="preload" as="font" type="font/woff2" crossorigin href={{ pathto('_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2', 1) }} />
-
-    <link rel="stylesheet" type="text/css" href={{ pathto('_static/pygments.css', 1) }} />
-    <link rel="stylesheet" href={{ pathto('_static/styles/sphinx-book-theme.css?digest=18134341461cad4d0490f915e28f299975ce52b8', 1) }} type="text/css" />
-    <link rel="stylesheet" type="text/css" href={{ pathto('_static/copybutton.css', 1) }} />
-    <link rel="stylesheet" type="text/css" href={{ pathto('_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css', 1) }} />
-    <link rel="stylesheet" type="text/css" href={{ pathto('_static/custom.css', 1) }} />
-    <link rel="stylesheet" type="text/css" href={{ pathto('_static/rocm_header.css', 1) }} />
-    <link rel="stylesheet" type="text/css" href={{ pathto('_static/rocm_footer.css', 1) }} />
-    <link rel="stylesheet" type="text/css" href={{ pathto('_static/design-style.4045f2051d55cab465a707391d5b2007.min.css', 1) }} />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href={{ pathto('_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d', 1) }} />
-<link rel="preload" as="script" href={{ pathto('_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d', 1) }} />
-
-    <script data-url_root="./" id="documentation_options" src={{ pathto('_static/documentation_options.js', 1) }}></script>
-    <script src={{ pathto('_static/jquery.js', 1) }}></script>
-    <script src={{ pathto('_static/underscore.js', 1) }}></script>
-    <script src={{ pathto('_static/doctools.js', 1) }}></script>
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script loading_method="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
-    <script src={{ pathto('_static/clipboard.min.js', 1) }}></script>
-    <script src={{ pathto('_static/copybutton.js', 1) }}></script>
-    <script src={{ pathto('_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824', 1) }}></script>
-    <script src={{ pathto('_static/code_word_breaks.js', 1) }}></script>
-    <script src={{ pathto('_static/design-tabs.js', 1) }}></script>
-
 {%- block footer %}
     {%- include "sections/footer.html" %}
 {%- endblock %}
