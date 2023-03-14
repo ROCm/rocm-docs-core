@@ -1,5 +1,6 @@
 """Set up variables for documentation of ROCm projects using RTD."""
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -187,7 +188,7 @@ class ROCmDocs:
             "sphinx_design",
             "sphinx_copybutton",
             "myst_nb",
-            'notfound.extension',
+            "notfound.extension",
         ]
 
         if self._ran_doxygen:
@@ -269,8 +270,8 @@ class ROCmDocs:
             "show_toc_level": "0",
             "article_header_start": [
                 "toggle-primary-sidebar.html",
-                "breadcrumbs.html"
-            ]
+                "breadcrumbs.html",
+            ],
         }
 
         self.html_show_sphinx = False
@@ -317,7 +318,12 @@ def force_notfound_prefix(app, config):
     if os.environ.get("READTHEDOCS", "False") == "True":
         default, _, _ = app.config.values.get("notfound_urls_prefix")
         if app.config.notfound_urls_prefix == default:
-            app.config.notfound_urls_prefix = "/" + config.html_baseurl.split("://")[-1].split("/", 1)[-1]
+            abs_path = re.sub(
+                r"^(?:.*://)[^/]*/(.*)/[^/]*/",
+                r"/\1/" + app.config["context"]["current_version"] + "/",
+                config.html_baseurl
+            )
+            app.config.notfound_urls_prefix = abs_path
 
 
 def setup(app: Sphinx):
