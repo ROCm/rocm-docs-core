@@ -313,7 +313,15 @@ class ROCmDocs:
         copy_from_package(pkg / "data", "data", ".")
 
 
+def force_notfound_prefix(app, config):
+    if os.environ.get("READTHEDOCS", "False") == "True":
+        default, _, _ = app.config.values.get("notfound_urls_prefix")
+        if app.config.notfound_urls_prefix == default:
+            app.config.notfound_urls_prefix = "/" + config.html_baseurl.split("://")[-1].split("/", 1)[-1]
+
+
 def setup(app: Sphinx):
+    app.setup_extension("notfound.extension")
     app.add_js_file(
         "https://code.jquery.com/jquery-1.11.3.min.js", priority=1_000_000
     )
@@ -322,3 +330,4 @@ def setup(app: Sphinx):
         priority=999_999,
         loading_method="async",
     )
+    app.connect("config-inited", force_notfound_prefix, 300)
