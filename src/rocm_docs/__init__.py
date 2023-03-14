@@ -187,6 +187,7 @@ class ROCmDocs:
             "sphinx_design",
             "sphinx_copybutton",
             "myst_nb",
+            'notfound.extension',
         ]
 
         if self._ran_doxygen:
