@@ -282,6 +282,9 @@ class ROCmDocs:
 
         self.copy_files()
 
+    def disable_main_doc_link(self):
+        self.html_theme_options.pop("navbar_center")
+
     def copy_files(self):
         """Insert additional files into workspace."""
         if self._copied_files:
