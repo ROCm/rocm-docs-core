@@ -274,7 +274,11 @@ class ROCmDocs:
             ],
             "navbar_center": [
                 "components/left-side-menu.html"
-            ]
+            ],
+            "show_breadcrumbs": True,
+            "additional_breadcrumbs": [
+                ("ROCm Docs", "https://rocmdocs.amd.com/en/latest/"),
+            ],
         }
 
         self.html_show_sphinx = False
