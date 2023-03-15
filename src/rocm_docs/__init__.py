@@ -1,5 +1,6 @@
 """Set up variables for documentation of ROCm projects using RTD."""
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -187,6 +188,7 @@ class ROCmDocs:
             "sphinx_design",
             "sphinx_copybutton",
             "myst_nb",
+            "notfound.extension",
         ]
 
         if self._ran_doxygen:
@@ -268,8 +270,8 @@ class ROCmDocs:
             "show_toc_level": "0",
             "article_header_start": [
                 "toggle-primary-sidebar.html",
-                "breadcrumbs.html"
-            ]
+                "breadcrumbs.html",
+            ],
         }
 
         self.html_show_sphinx = False
@@ -312,7 +314,20 @@ class ROCmDocs:
         copy_from_package(pkg / "data", "data", ".")
 
 
+def force_notfound_prefix(app, config):
+    if os.environ.get("READTHEDOCS", "False") == "True":
+        default, _, _ = app.config.values.get("notfound_urls_prefix")
+        if app.config.notfound_urls_prefix == default:
+            abs_path = re.sub(
+                r"^(?:.*://)?[^/]*/(.*)/[^/]*/$",
+                r"/\1/" + app.config["html_context"]["current_version"] + "/",
+                config.html_baseurl
+            )
+            app.config.notfound_urls_prefix = abs_path
+
+
 def setup(app: Sphinx):
+    app.setup_extension("notfound.extension")
     app.add_js_file(
         "https://code.jquery.com/jquery-1.11.3.min.js", priority=1_000_000
     )
@@ -321,3 +336,4 @@ def setup(app: Sphinx):
         priority=999_999,
         loading_method="async",
     )
+    app.connect("config-inited", force_notfound_prefix, 300)

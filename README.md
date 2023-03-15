@@ -9,7 +9,7 @@ This repository is comprised of utilities, styling, scripts, and additional HTML
 - Common Sphinx configuration options for ROCm documentation processes.
 
 ### Use
-- Install this repository as a Python package using pip, for example `pip install git+https://RadeonOpenCompute/rocm-docs-core.git`.
+- Install this repository as a Python package using pip, for example `pip install git+https://github.com/RadeonOpenCompute/rocm-docs-core.git`.
 - From the `rocm_docs` package import the function `setup_rocm_docs` into `conf.py` for the ReadTheDocs project.
 - Call exactly the following, replacing `<PROJECT NAME HERE>` with the name of the project.
 ```python
