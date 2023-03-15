@@ -274,9 +274,6 @@ class ROCmDocs:
             ],
             "navbar_center": [
                 "components/foobar.html"
-            ],
-            "navbar-expand-lg": [
-                "components/left-side-menu.html"
             ]
         }
 
