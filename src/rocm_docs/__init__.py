@@ -260,6 +260,21 @@ class ROCmDocs:
         self.html_js_files = ["code_word_breaks.js"]
         self.html_extra_path = ["_images"]
         self.html_theme_options = {
+            "home_page_in_toc": False,
+            "use_edit_page_button": edit_page,
+            "repository_url": url,
+            "repository_branch": branch,
+            "path_to_docs": get_path_to_docs(),
+            "show_navbar_depth": "0",
+            "body_max_width": "none",
+            "show_toc_level": "0",
+            "article_header_start": [
+                "toggle-primary-sidebar.html",
+                "breadcrumbs.html",
+            ],
+            "navbar_center": [
+                "components/foobar.html"
+            ],
             "navbar-expand-lg": [
                 "components/left-side-menu.html"
             ]
