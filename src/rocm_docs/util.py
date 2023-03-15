@@ -110,8 +110,6 @@ def format_toc(
     url, branch, _ = get_branch(repo_path)
     with open(toc_path / input_name, "r", encoding="utf-8") as toc_in:
         with open(toc_path / output_name, "w", encoding="utf-8") as toc_out:
-            toc_out.write("- name: ROCm Docs\n")
-            toc_out.write("href: https://rocmdocs.amd.com/en/latest/\n")
             for line in toc_in.readlines():
                 if line[0] == "#" and at_start:
                     continue
