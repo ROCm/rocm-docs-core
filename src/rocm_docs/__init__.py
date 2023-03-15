@@ -273,7 +273,7 @@ class ROCmDocs:
                 "breadcrumbs.html",
             ],
             "navbar_center": [
-                "components/foobar.html"
+                "components/left-side-menu.html"
             ]
         }
 
