@@ -272,6 +272,9 @@ class ROCmDocs:
                 "toggle-primary-sidebar.html",
                 "breadcrumbs.html",
             ],
+            "navbar_center": [
+                "components/left-side-menu.html"
+            ]
         }
 
         self.html_show_sphinx = False

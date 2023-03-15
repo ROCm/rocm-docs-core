@@ -70,3 +70,8 @@ ul.bd-breadcrumbs {
     margin-bottom: 0;
     margin-top: 1px;
 }
+
+.bd-sidebar-primary .sidebar-header-items {
+    display: flex;
+    flex-direction: column;
+}
