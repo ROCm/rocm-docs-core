@@ -32,7 +32,7 @@ def get_branch(
     repo_path: Union[str, os.PathLike, None] = None,
 ) -> Tuple[str, str, bool]:
     """Get the branch whose tip is checked out, even if detached."""
-    git_url = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git@(.*)")
+    git_url = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
     if repo_path is None:
         repo_path = Path()
     elif not isinstance(repo_path, Path):
@@ -49,7 +49,7 @@ def get_branch(
         build_type = os.environ["READTHEDOCS_VERSION_TYPE"]
         if build_type in ("branch", "tag"):
             url = re.sub(
-                        r"(?:.*://)?(.*\.com)[/:](.*)\.git@(.*)", r"\1/\2", remote_url
+                        r"(?:.*://)?(.*\.com)[/:](.*)\.git", r"\1/\2", remote_url
                     )
             return url, os.environ["READTHEDOCS_VERSION"], True
         if build_type == "external":
