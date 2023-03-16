@@ -272,12 +272,18 @@ class ROCmDocs:
                 "toggle-primary-sidebar.html",
                 "breadcrumbs.html",
             ],
+            "navbar_center": [
+                "components/left-side-menu.html"
+            ]
         }
 
         self.html_show_sphinx = False
         self.html_favicon = "https://www.amd.com/themes/custom/amd/favicon.ico"
 
         self.copy_files()
+
+    def disable_main_doc_link(self):
+        self.html_theme_options.pop("navbar_center")
 
     def copy_files(self):
         """Insert additional files into workspace."""

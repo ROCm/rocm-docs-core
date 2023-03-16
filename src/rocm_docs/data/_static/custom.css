@@ -71,6 +71,11 @@ ul.bd-breadcrumbs {
     margin-top: 1px;
 }
 
+.bd-sidebar-primary .sidebar-header-items {
+    display: flex;
+    flex-direction: column;
+}
+
 a#ot-sdk-btn {
     background:none !important;
     border:none !important;
