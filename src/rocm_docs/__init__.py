@@ -258,6 +258,7 @@ class ROCmDocs:
             "custom.css",
             "rocm_header.css",
             "rocm_footer.css",
+            "fonts.css",
         ]
         self.html_js_files = ["code_word_breaks.js"]
         self.html_extra_path = ["_images"]
