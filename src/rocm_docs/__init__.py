@@ -335,9 +335,6 @@ def force_notfound_prefix(app, config):
 def setup(app: Sphinx):
     app.setup_extension("notfound.extension")
     app.add_js_file(
-        "https://code.jquery.com/jquery-1.11.3.min.js", priority=1_000_000
-    )
-    app.add_js_file(
         "https://download.amd.com/js/analytics/analyticsinit.js",
         priority=999_999,
         loading_method="async",
