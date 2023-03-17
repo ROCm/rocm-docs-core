@@ -1,3 +1,0 @@
-[submodule "src/rocm_docs/data/_static/fonts/private"]
-	path = src/rocm_docs/data/_static/fonts/private
-	url = git@github.com:RadeonOpenCompute/rocm-docs-core-fonts.git
