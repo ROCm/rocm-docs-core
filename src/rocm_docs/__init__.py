@@ -5,7 +5,9 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+import tarfile
 from typing import BinaryIO, List, Optional, Union, Dict, Tuple
+from cryptography.fernet import Fernet
 from sphinx.application import Sphinx
 
 from .util import format_toc, get_branch, get_path_to_docs
@@ -282,9 +284,42 @@ class ROCmDocs:
         self.html_favicon = "https://www.amd.com/themes/custom/amd/favicon.ico"
 
         self.copy_files()
+        self.get_private_fonts()
 
     def disable_main_doc_link(self):
         self.html_theme_options.pop("navbar_center")
+
+    def get_private_fonts(self):
+        """Decrypt, untar, and decompress private font files."""
+        if not self._copied_files:
+            self.copy_files()
+        decryption_key: bytes
+        fonts_folder = self._docs_folder / "_static" / "fonts"
+        env_key = os.environ.get("FONTS_KEY")
+        if env_key is not None:
+            decryption_key = env_key.encode("utf8")
+        elif (fonts_folder / "filekey.key").exists():
+            with open(fonts_folder / "filekey.key", "rb") as keyfile:
+                decryption_key = keyfile.read()
+            os.remove(fonts_folder / "filekey.key")
+        else:
+            # Emit a warning saying that the fonts could not be decrypted?
+            return
+        try:
+            fernet = Fernet(decryption_key)
+            with open(fonts_folder / "private.tar.xz.enc", "rb") as enc_file:
+                ciphertext = enc_file.read()
+            with open(fonts_folder / "private.tar.xz", "wb") as clr_file:
+                clr_file.write(fernet.decrypt(ciphertext))
+            with tarfile.open(fonts_folder / "private.tar.xz", "r:xz") as tar:
+                tar.extractall(fonts_folder)
+        except FileNotFoundError:
+            # Emit a warning?
+            pass
+        # I think there are more errors we should be catching here?
+        # ¯\_(ツ)_/¯
+        os.remove(str(fonts_folder / "private.tar.xz"))
+        os.remove(str(fonts_folder / "private.tar.xz.enc"))
 
     def copy_files(self):
         """Insert additional files into workspace."""
