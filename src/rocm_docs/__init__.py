@@ -1,5 +1,6 @@
 """Set up variables for documentation of ROCm projects using RTD."""
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -7,7 +8,7 @@ from pathlib import Path
 from typing import BinaryIO, List, Optional, Union, Dict, Tuple
 from sphinx.application import Sphinx
 
-from .util import format_toc, get_path_to_docs
+from .util import format_toc, get_branch, get_path_to_docs
 
 
 if sys.version_info < (3, 9):
@@ -189,6 +190,7 @@ class ROCmDocs:
             "sphinx_design",
             "sphinx_copybutton",
             "myst_nb",
+            "notfound.extension",
         ]
 
         if self._ran_doxygen:
@@ -219,7 +221,8 @@ class ROCmDocs:
                 f"Expected input toc file {toc_in_path} to exist and be"
                 " readable."
             )
-        url, branch = format_toc(self._docs_folder)
+        format_toc(self._docs_folder)
+        url, branch, edit_page = get_branch(self._docs_folder)
 
         self.external_toc_path = "./.sphinx/_toc.yml"
         self.external_toc_exclude_missing = False
@@ -260,7 +263,7 @@ class ROCmDocs:
         self.html_extra_path = ["_images"]
         self.html_theme_options = {
             "home_page_in_toc": False,
-            "use_edit_page_button": True,
+            "use_edit_page_button": edit_page,
             "repository_url": url,
             "repository_branch": branch,
             "path_to_docs": get_path_to_docs(),
@@ -271,13 +274,16 @@ class ROCmDocs:
                 "toggle-primary-sidebar.html",
                 "breadcrumbs.html",
             ],
-            "navbar_center": ["components/foobar.html"],
+            "navbar_center": ["components/left-side-menu.html"],
         }
 
         self.html_show_sphinx = False
         self.html_favicon = "https://www.amd.com/themes/custom/amd/favicon.ico"
 
         self.copy_files()
+
+    def disable_main_doc_link(self):
+        self.html_theme_options.pop("navbar_center")
 
     def copy_files(self):
         """Insert additional files into workspace."""
@@ -314,7 +320,20 @@ class ROCmDocs:
         copy_from_package(pkg / "data", "data", ".")
 
 
+def force_notfound_prefix(app, config):
+    if os.environ.get("READTHEDOCS", "False") == "True":
+        default, _, _ = app.config.values.get("notfound_urls_prefix")
+        if app.config.notfound_urls_prefix == default:
+            abs_path = re.sub(
+                r"^(?:.*://)?[^/]*/(.*)/[^/]*/$",
+                r"/\1/" + app.config["html_context"]["current_version"] + "/",
+                config.html_baseurl,
+            )
+            app.config.notfound_urls_prefix = abs_path
+
+
 def setup(app: Sphinx):
+    app.setup_extension("notfound.extension")
     app.add_js_file(
         "https://code.jquery.com/jquery-1.11.3.min.js", priority=1_000_000
     )
@@ -323,3 +342,4 @@ def setup(app: Sphinx):
         priority=999_999,
         loading_method="async",
     )
+    app.connect("config-inited", force_notfound_prefix, 300)

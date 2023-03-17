@@ -22,5 +22,6 @@ dependencies = [
   "sphinx-book-theme==1.0.0rc2",
   "myst_nb==0.17.1",
   "myst-parser[linkify]==0.18.1",
+  "sphinx-notfound-page==0.8.3"
 ]
 requires-python = ">=3.8"
