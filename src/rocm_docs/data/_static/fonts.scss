@@ -1,78 +1,3 @@
-@function fontSuffix-lower($list) {
-  @if length($list) == 0 {
-    @return "-regular";
-  } @else {
-    $result: to-lower-case(nth($list, 1));
-    @if length($list) > 1 {
-      @for $i from 2 through length($list) {
-        $result: $result + "-" + to-lower-case(nth($list, $i));
-      }
-    }
-    @return "-" + $result;
-  }
-}
-
-@function fontSuffix-upper($list) {
-  @if length($list) == 0 {
-    @return "-Regular";
-  } @else {
-    $result: nth($list, 1);
-    @if length($list) > 1 {
-      @for $i from 2 through length($list) {
-        $result: $result + nth($list, $i);
-      }
-    }
-    @return "-" + $result;
-  }
-}
-
-@mixin klavika-font($fontType: "") {
-  $sizes: (
-    "Light": 300,
-    "Normal": 400,
-    "Medium": 500,
-    "Bold": 700,
-  );
-  @each $weightName, $weight in $sizes {
-    $fontSuffix-list: ();
-    @if ($weightName != "Normal") {
-      $fontSuffix-list: append($fontSuffix-list, $weightName);
-    }
-    $fontName: "Klavika";
-    @if ($fontType != "") {
-      $fontSuffix-list: append($fontSuffix-list, $fontType);
-      $fontName: "Klavika " + $fontType;
-    }
-
-    @each $style in ("normal", "Italic") {
-      $fontSuffix-style: $fontSuffix-list;
-      @if ($style != "normal") {
-        @if $fontType == "" and $weightName == "Normal" {
-          $fontSuffix-style: join(("Regular"), $fontSuffix-style);
-        }
-        $fontSuffix-style: append($fontSuffix-style, $style);
-      }
-      $fontPath: "./fonts/klavika/klavika" +
-        fontSuffix-lower($fontSuffix-list) +
-        "/Klavika" +
-        fontSuffix-upper($fontSuffix-style);
-      @font-face {
-        font-display: swap;
-        font-family: unquote($fontName);
-        font-style: unquote(to-lower-case($style));
-        font-weight: $weight;
-        src: url(unquote($fontPath + ".eot"));
-        src: url(unquote($fontPath + ".eot#iefix")) format("embedded-opentype"),
-          url(unquote($fontPath + ".woff")) format("woff"),
-          url(unquote($fontPath + ".ttf")) format("truetype");
-      }
-    }
-  }
-}
-
-@include klavika-font("Condensed");
-@include klavika-font("");
-
 @function fontPath($weight, $style, $ext: false) {
   $result: "./fonts/open-sans/open-sans-v34-latin-";
   @if $ext {
@@ -140,3 +65,5 @@
     }
   }
 }
+
+@import url(./fonts/private/private-fonts.css)
