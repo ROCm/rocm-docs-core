@@ -1,0 +1,3 @@
+[submodule "src/rocm_docs/data/_static/fonts/private"]
+	path = src/rocm_docs/data/_static/fonts/private
+	url = ../rocm-docs-core-fonts.git
