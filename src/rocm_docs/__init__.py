@@ -5,9 +5,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-import tarfile
 from typing import BinaryIO, List, Optional, Union, Dict, Tuple
-from cryptography.fernet import Fernet
 from sphinx.application import Sphinx
 
 from .util import format_toc, get_branch, get_path_to_docs
