@@ -52,6 +52,7 @@ class ROCmDocs:
         "html_theme_options",
         "html_show_sphinx",
         "html_favicon",
+        "numfig",
     ]
 
     def __init__(
@@ -83,6 +84,7 @@ class ROCmDocs:
         self.html_theme_options: Dict[str, Union[str, bool, List[str]]]
         self.html_show_sphinx: bool
         self.html_favicon: str
+        self.numfig: bool
         self._docs_folder: Path
         tmp_docs_folder = self.to_path(docs_folder)
         self._docs_folder = (
@@ -284,6 +286,8 @@ class ROCmDocs:
 
         self.html_show_sphinx = False
         self.html_favicon = "https://www.amd.com/themes/custom/amd/favicon.ico"
+
+        self.numfig = True
 
         self.copy_files()
 
