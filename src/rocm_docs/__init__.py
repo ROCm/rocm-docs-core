@@ -23,6 +23,8 @@ else:
 MaybePath = Union[str, os.PathLike, None]
 
 
+# Intentionally disabling the too-many-instance-attributes check in pylint
+# as this class is intended to contain all necessary Sphinx config variables
 # pylint: disable=too-many-instance-attributes
 class ROCmDocs:
     """A class to contain all of the Sphinx variables"""
@@ -263,6 +265,7 @@ class ROCmDocs:
             "custom.css",
             "rocm_header.css",
             "rocm_footer.css",
+            "fonts.css",
         ]
         self.html_js_files = ["code_word_breaks.js"]
         self.html_extra_path = ["_images"]
@@ -279,9 +282,7 @@ class ROCmDocs:
                 "toggle-primary-sidebar.html",
                 "breadcrumbs.html",
             ],
-            "navbar_center": [
-                "components/left-side-menu.html"
-            ]
+            "navbar_center": ["components/left-side-menu.html"],
         }
 
         self.html_show_sphinx = False
@@ -336,7 +337,7 @@ def force_notfound_prefix(app, config):
             abs_path = re.sub(
                 r"^(?:.*://)?[^/]*/(.*)/[^/]*/$",
                 r"/\1/" + app.config["html_context"]["current_version"] + "/",
-                config.html_baseurl
+                config.html_baseurl,
             )
             app.config.notfound_urls_prefix = abs_path
 
