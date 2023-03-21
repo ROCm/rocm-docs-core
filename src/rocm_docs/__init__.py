@@ -204,7 +204,12 @@ class ROCmDocs:
             self.breathe_default_project = ""
 
         # MyST Configuration
-        self.myst_enable_extensions = ["colon_fence", "linkify"]
+        self.myst_enable_extensions = [
+            "colon_fence",
+            "linkify",
+            "fieldlist",
+            "replacements"
+        ]
         self.myst_heading_anchors = 3
 
         # Table of Contents Configuration
