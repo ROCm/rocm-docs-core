@@ -23,6 +23,8 @@ else:
 MaybePath = Union[str, os.PathLike, None]
 
 
+# Intentionally disabling the too-many-instance-attributes check in pylint
+# as this class is intended to contain all necessary Sphinx config variables
 # pylint: disable=too-many-instance-attributes
 class ROCmDocs:
     """A class to contain all of the Sphinx variables"""
@@ -52,6 +54,7 @@ class ROCmDocs:
         "html_theme_options",
         "html_show_sphinx",
         "html_favicon",
+        "numfig",
     ]
 
     def __init__(
@@ -83,6 +86,7 @@ class ROCmDocs:
         self.html_theme_options: Dict[str, Union[str, bool, List[str]]]
         self.html_show_sphinx: bool
         self.html_favicon: str
+        self.numfig: bool
         self._docs_folder: Path
         tmp_docs_folder = self.to_path(docs_folder)
         self._docs_folder = (
@@ -202,7 +206,12 @@ class ROCmDocs:
             self.breathe_default_project = ""
 
         # MyST Configuration
-        self.myst_enable_extensions = ["colon_fence", "linkify"]
+        self.myst_enable_extensions = [
+            "colon_fence",
+            "linkify",
+            "fieldlist",
+            "replacements"
+        ]
         self.myst_heading_anchors = 3
 
         # Table of Contents Configuration
@@ -256,6 +265,7 @@ class ROCmDocs:
             "custom.css",
             "rocm_header.css",
             "rocm_footer.css",
+            "fonts.css",
         ]
         self.html_js_files = ["code_word_breaks.js"]
         self.html_extra_path = ["_images"]
@@ -272,13 +282,13 @@ class ROCmDocs:
                 "toggle-primary-sidebar.html",
                 "breadcrumbs.html",
             ],
-            "navbar_center": [
-                "components/left-side-menu.html"
-            ]
+            "navbar_center": ["components/left-side-menu.html"],
         }
 
         self.html_show_sphinx = False
         self.html_favicon = "https://www.amd.com/themes/custom/amd/favicon.ico"
+
+        self.numfig = True
 
         self.copy_files()
 
@@ -327,7 +337,7 @@ def force_notfound_prefix(app, config):
             abs_path = re.sub(
                 r"^(?:.*://)?[^/]*/(.*)/[^/]*/$",
                 r"/\1/" + app.config["html_context"]["current_version"] + "/",
-                config.html_baseurl
+                config.html_baseurl,
             )
             app.config.notfound_urls_prefix = abs_path
 
