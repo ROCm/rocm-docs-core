@@ -31,7 +31,13 @@ def get_path_to_docs(
 def get_branch(
     repo_path: Union[str, os.PathLike, None] = None,
 ) -> Tuple[str, str, bool]:
-    """Get the branch whose tip is checked out, even if detached."""
+    """Get the branch whose tip is checked out, even if detached.
+    May be overridden with the environment variable `ROCM_DOCS_REMOTE_DETAILS`
+    """
+    if "ROCM_DOCS_REMOTE_DETAILS" in os.environ:
+        remote_details = os.environ["ROCM_DOCS_REMOTE_DETAILS"].split(',')
+        return remote_details[0], remote_details[1], remote_details[2].lower() in ["1","on","true","yes"]
+
     git_url = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
     if repo_path is None:
         repo_path = Path()
@@ -89,7 +95,15 @@ def get_branch(
             if ref.commit == repo.head.commit:
                 remote_url = git_url.sub(r"http://\1/\2", remote.url)
                 return remote_url, ref.remote_head, True
-    raise TypeError("Could not find the commit in the git repo.")
+    
+    # Fall-back to the current branch or a fallback value if HEAD is detached
+    # In this case the repository URL cannot be provided
+    try:
+        branch=repo.active_branch
+    except TypeError:
+        branch="branch-not-found"
+
+    return None, branch, False
 
 
 def format_toc(
