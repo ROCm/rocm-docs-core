@@ -4,6 +4,7 @@ import re
 import shutil
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import BinaryIO, List, Optional, Union, Dict, Tuple
 from sphinx.application import Sphinx
@@ -92,7 +93,7 @@ class ROCmDocs:
         self._docs_folder = (
             tmp_docs_folder if tmp_docs_folder is not None else Path(".")
         )
-        self._doxygen_path = Path()
+        self._doxygen_context = _DoxygenContext()
         self._copied_files = False
         self._ran_doxygen = False
         self._setup = False
@@ -154,10 +155,10 @@ class ROCmDocs:
         except subprocess.CalledProcessError as err:
             raise RuntimeError("Failed when running doxygen") from err
         try:
-            self._doxygen_path = doxygen_path.resolve(strict=True)
+            doxygen_path = doxygen_path.resolve(strict=True)
         except FileNotFoundError:
             try:
-                self._doxygen_path = (doxygen_root / doxygen_path).resolve(
+                doxygen_path = (doxygen_root / doxygen_path).resolve(
                     strict=True
                 )
             except FileNotFoundError as err:
@@ -165,12 +166,40 @@ class ROCmDocs:
                     "Expected doxygen to generate the folder"
                     f" {doxygen_path} but it could not be found."
                 ) from err
+
+        self._doxygen_context = _DoxygenContext(ran_doxygen=True,
+                                                root=doxygen_root,
+                                                path=doxygen_path,
+                                                doxyfile=Path(doxygen_file))
+        if hasattr(setup, '_doxygen_context'):
+            setup._doxygen_context = self._doxygen_context
+
         if self._setup:
             self.extensions += ["sphinx.ext.mathjax", "breathe"]
             self.breathe_projects = {
-                self._project_name: str(self._doxygen_path)
+                self._project_name: str(self._doxygen_context.path)
             }
             self.breathe_default_project = self._project_name
+
+    def enable_api_reference(self) -> None:
+        """Enable embedding the doxygen generated api.
+        `run_doxygen` must be called (before or after) for this to work
+        This requires extra dependencies exposed as the api_reference option.
+        """
+        try:
+            import doxysphinx.cli
+        except ImportError:
+            raise RuntimeError("Missing optional dependencies: make sure the " 
+                               "[api_reference] feature is enabled. (e.g. "
+                               "\"pip install rocm-docs-core[api_reference]\")")
+
+        # Register the data that will be needed for doxysphinx, it will be run
+        # during setup()
+        # It cannot run just yet as we don't know the location of
+        # doxygen source and output directories.
+        # In the future rocm-docs-core could be converted to a sphinx extension,
+        # then this hack wouldn't be required.
+        setup._doxygen_context = self._doxygen_context
 
     def setup(self) -> None:
         """Sets up default RTD variables and copies necessary files."""
@@ -204,7 +233,7 @@ class ROCmDocs:
         if self._ran_doxygen:
             self.extensions += ["sphinx.ext.mathjax", "breathe"]
             self.breathe_projects = {
-                self._project_name: str(self._doxygen_path)
+                self._project_name: str(self._doxygen_context.path)
             }
             self.breathe_default_project = self._project_name
         else:
@@ -348,7 +377,15 @@ def force_notfound_prefix(app, config):
             app.config.notfound_urls_prefix = abs_path
 
 
-def setup(app: Sphinx):
+@dataclass
+class _DoxygenContext:
+    ran_doxygen: bool = False
+    root: Path = Path()
+    path: Path = Path()
+    doxyfile: str = ""
+
+
+def setup(app: Sphinx) -> None:
     app.setup_extension("notfound.extension")
     app.add_js_file(
         "https://download.amd.com/js/analytics/analyticsinit.js",
@@ -356,3 +393,17 @@ def setup(app: Sphinx):
         loading_method="async",
     )
     app.connect("config-inited", force_notfound_prefix, 300)
+
+    # Execute doxysphinx now that sphinx source and output directories are known
+    if not hasattr(setup, '_doxygen_context'):
+        return
+
+    doxygen_context = setup._doxygen_context
+    if not doxygen_context.ran_doxygen:
+        raise RuntimeError("Doxysphinx enabled but run_doxygen not called")
+
+    res = subprocess.run([sys.executable, "-m", "doxysphinx", "build",
+                          app.srcdir, app.outdir, doxygen_context.doxyfile],
+                         cwd=doxygen_context.root)
+    if res.returncode != 0:
+        raise RuntimeError(f"doxysphinx failed (exitcode={res.returncode:d})")

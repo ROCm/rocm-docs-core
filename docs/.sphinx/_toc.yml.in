@@ -7,3 +7,5 @@ root: index.md
 entries:
   - file: about
     title: About ROCm Docs Core
+  - file: demo/doxygen/html/index
+    title: Library API Doxygen Demo
