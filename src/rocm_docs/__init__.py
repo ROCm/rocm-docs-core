@@ -196,7 +196,7 @@ class ROCmDocs:
         ]
 
         if self._ran_doxygen:
-            self.extensions += ["sphinx.ext.mathjax", "breathe", "sphinxcontrib.bibtex"]
+            self.extensions += ["sphinx.ext.mathjax", "breathe"]
             self.breathe_projects = {
                 self._project_name: str(self._doxygen_path)
             }
