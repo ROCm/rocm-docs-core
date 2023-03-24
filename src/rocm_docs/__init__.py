@@ -149,6 +149,11 @@ class ROCmDocs:
             raise RuntimeError("'doxygen' command not found! Make sure that "
                                "doxygen is installed and in the PATH")
 
+        
+        # Running doxygen requires that the files are already copied because 
+        # the Doxyfile references files distributed with rocm-docs-core
+        # (e.g. stylesheets)
+        self.copy_files()
         try:
             subprocess.check_call([doxygen_exe, "--version"], cwd=doxygen_root)
             subprocess.check_call([doxygen_exe, doxygen_file], cwd=doxygen_root)
