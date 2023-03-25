@@ -142,9 +142,15 @@ class ROCmDocs:
             raise FileNotFoundError(
                 f"Expected doxyfile {doxyfile} to exist and be readable."
             )
+
+        doxygen_exe = shutil.which("doxygen")
+        if doxygen_exe is None:
+            raise RuntimeError("'doxygen' command not found! Make sure that "
+                               "doxygen is installed and in the PATH")
+
         try:
-            subprocess.check_call(["doxygen", "--version"], cwd=doxygen_root)
-            subprocess.check_call(["doxygen", doxygen_file], cwd=doxygen_root)
+            subprocess.check_call([doxygen_exe, "--version"], cwd=doxygen_root)
+            subprocess.check_call([doxygen_exe, doxygen_file], cwd=doxygen_root)
         except subprocess.CalledProcessError as err:
             raise RuntimeError("Failed when running doxygen") from err
         try:
