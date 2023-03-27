@@ -334,9 +334,10 @@ def force_notfound_prefix(app, config):
     if os.environ.get("READTHEDOCS", "False") == "True":
         default, _, _ = app.config.values.get("notfound_urls_prefix")
         if app.config.notfound_urls_prefix == default:
+            current_version = app.config["html_context"].get("current_version") + "/" if app.config["html_context"].get("current_version") is not None else ""
             abs_path = re.sub(
                 r"^(?:.*://)?[^/]*/(.*)/[^/]*/$",
-                r"/\1/" + app.config["html_context"].get("current_version") + "/",
+                r"/\1/" + current_version,
                 config.html_baseurl,
             )
             app.config.notfound_urls_prefix = abs_path
