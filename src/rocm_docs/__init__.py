@@ -336,7 +336,7 @@ def force_notfound_prefix(app, config):
         if app.config.notfound_urls_prefix == default:
             abs_path = re.sub(
                 r"^(?:.*://)?[^/]*/(.*)/[^/]*/$",
-                r"/\1/",
+                r"/\1/" + app.config["html_context"].get("current_version") + "/",
                 config.html_baseurl,
             )
             app.config.notfound_urls_prefix = abs_path
