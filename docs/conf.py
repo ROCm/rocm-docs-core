@@ -7,6 +7,8 @@
 from rocm_docs import ROCmDocs
 
 docs_core = ROCmDocs("ROCm Docs Core 0.0.2")
+docs_core.run_doxygen(doxygen_root="demo/doxygen", doxygen_path=".")
+docs_core.enable_api_reference()
 docs_core.setup()
 
 for sphinx_var in ROCmDocs.SPHINX_VARS:
