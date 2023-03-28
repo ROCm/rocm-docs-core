@@ -7,11 +7,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = 'rocm-docs-core'
-version = "0.1.0"
+version = "0.2.0"
 description ='Core utilities for all ROCm documentation on RTD'
 dependencies = [
   "GitPython>=3.1.30,<3.2",
-  "importlib_resources>=5.10.2,<5.11",
+  'importlib_resources>=5.10.2,<5.11;python_version<"3.9"',
   "PyGithub==1.57",
   "docutils==0.16",
   "sphinx==4.3.1",
@@ -25,3 +25,8 @@ dependencies = [
   "sphinx-notfound-page==0.8.3" 
 ]
 requires-python = ">=3.8"
+
+[project.optional-dependencies]
+api_reference = [
+  "doxysphinx>=3.2.1,<4"
+]
