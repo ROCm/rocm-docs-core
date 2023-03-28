@@ -38,7 +38,16 @@ def get_branch(
         remote_details = os.environ["ROCM_DOCS_REMOTE_DETAILS"].split(',')
         return remote_details[0], remote_details[1], remote_details[2].lower() in ["1","on","true","yes"]
 
-    git_url = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
+    def get_repo_url(remote_url: str) -> str:
+        ssh_pattern  = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
+        http_pattern = re.compile(r"(https?://.+)\.git")
+        remote_url, num_subs = ssh_pattern.subn(r"http://\1/\2", remote_url,
+                                                count=1)
+        if num_subs > 0:
+            return remote_url
+        remote_url = http_pattern.sub(r"\1", remote_url, count=1)
+        return remote_url
+
     if repo_path is None:
         repo_path = Path()
     elif not isinstance(repo_path, Path):
@@ -86,14 +95,14 @@ def get_branch(
             tracking = branch.tracking_branch()
             if tracking is not None:
                 remote_url = repo.remotes[tracking.remote_name].url
-                remote_url = git_url.sub(r"http://\1/\2", remote_url)
+                remote_url = get_repo_url(remote_url)
                 return remote_url, tracking.remote_head, True
     for remote in repo.remotes:
         remote: Remote
         for ref in remote.refs:
             ref: RemoteReference
             if ref.commit == repo.head.commit:
-                remote_url = git_url.sub(r"http://\1/\2", remote.url)
+                remote_url = get_repo_url(remote.url)
                 return remote_url, ref.remote_head, True
     
     # Fall-back to the current branch or a fallback value if HEAD is detached
