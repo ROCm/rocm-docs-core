@@ -1,7 +1,19 @@
 @import url("theme.css");
 
 :root {
-    --pst-font-size-base: 0.75rem;
+    --pst-font-size-base: 1.25rem;
+}
+
+@media screen and (min-width: 1000px) {
+    :root {
+        --pst-font-size-base: 0.5rem;
+    }
+}
+
+@media screen and (min-width: 2000px) {
+    :root {
+        --pst-font-size-base: 0.75rem;
+    }
 }
 
 div#site-navigation {
