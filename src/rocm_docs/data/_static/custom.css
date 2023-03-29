@@ -1,7 +1,7 @@
 @import url("theme.css");
 
 :root {
-    --pst-font-size-base: 2rem;
+    --pst-font-size-base: 0.75rem;
 }
 
 div#site-navigation {
