@@ -23,8 +23,9 @@
 }
 
 .rocm-header img#amd-logo{
-    margin: 1em;
-    width: 8.25rem;
+    width: auto;
+    height: auto;
+    max-height: 2rem;
 }
 
 .rocm-header img#rocm-logo{
