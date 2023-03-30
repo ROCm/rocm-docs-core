@@ -10,7 +10,7 @@
     width: 100%;
     padding-top: 5px;
     line-height: 20px;
-    height: 120px;
+    min-height: 120px;
 }
 
 .rocm-footer a, .rocm-footer p {
