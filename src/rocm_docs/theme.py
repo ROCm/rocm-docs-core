@@ -3,7 +3,10 @@ from sphinx.application import Sphinx
 from sphinx.config import Config
 from typing import Dict, Any
 from pathlib import Path
-from pydata_sphinx_theme.utils import get_theme_options_dict
+from pydata_sphinx_theme.utils import (
+    config_provided_by_user,
+    get_theme_options_dict,
+)
 import rocm_docs.util as util
 
 
@@ -39,6 +42,14 @@ def _update_theme_options(app: Sphinx) -> None:
         theme_opts.setdefault("navbar_center", []).insert(
             0, "components/left-side-menu"
         )
+
+    default_config_opts = {
+        "html_show_sphinx": False,
+        "html_favicon": "https://www.amd.com/themes/custom/amd/favicon.ico",
+    }
+    for key, default in default_config_opts.items():
+        if not config_provided_by_user(app, key):
+            setattr(app.config, key, default)
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:

@@ -48,8 +48,6 @@ class ROCmDocs:
         "html_theme",
         "html_title",
         "html_theme_options",
-        "html_show_sphinx",
-        "html_favicon",
         "numfig",
     ]
 
@@ -76,8 +74,6 @@ class ROCmDocs:
         self.html_theme: str
         self.html_title: str
         self.html_theme_options: Dict[str, Union[str, bool, List[str]]] = {}
-        self.html_show_sphinx: bool
-        self.html_favicon: str
         self.numfig: bool
         self._docs_folder: Path
         tmp_docs_folder = self.to_path(docs_folder)
@@ -288,9 +284,6 @@ class ROCmDocs:
         self.html_theme = "rocm_docs_theme"
         self.html_title = self._project_name
 
-        self.html_show_sphinx = False
-        self.html_favicon = "https://www.amd.com/themes/custom/amd/favicon.ico"
-
         self.numfig = True
 
         self.copy_files()
@@ -356,11 +349,6 @@ class _DoxygenContext:
 
 def setup(app: Sphinx) -> None:
     app.setup_extension("notfound.extension")
-    app.add_js_file(
-        "https://download.amd.com/js/analytics/analyticsinit.js",
-        priority=999_999,
-        loading_method="async",
-    )
     app.connect("config-inited", force_notfound_prefix, 300)
 
     # Execute doxysphinx now that sphinx source and output directories are known
