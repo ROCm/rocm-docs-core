@@ -94,7 +94,7 @@ jupyter-core==5.2.0
     #   ipykernel
     #   jupyter-client
     #   nbformat
-linkify-it-py==1.0.3
+linkify-it-py==2.0.0
     # via myst-parser
 markdown-it-py==2.2.0
     # via
