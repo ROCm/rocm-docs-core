@@ -89,7 +89,7 @@ jupyter-client==8.0.3
     # via
     #   ipykernel
     #   nbclient
-jupyter-core==5.2.0
+jupyter-core==5.3.0
     # via
     #   ipykernel
     #   jupyter-client
