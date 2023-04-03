@@ -152,7 +152,7 @@ pure-eval==0.2.2
     # via stack-data
 pycparser==2.21
     # via cffi
-pydata-sphinx-theme==0.13.1
+pydata-sphinx-theme==0.13.3
     # via sphinx-book-theme
 pygithub==1.57
     # via rocm-docs-core (pyproject.toml)
