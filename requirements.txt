@@ -140,7 +140,7 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-platformdirs==3.1.0
+platformdirs==3.2.0
     # via jupyter-core
 prompt-toolkit==3.0.38
     # via ipython
