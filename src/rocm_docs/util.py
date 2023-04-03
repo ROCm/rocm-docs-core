@@ -2,11 +2,12 @@
 import functools
 import os
 import re
-from typing import Optional, Tuple, Union
 from pathlib import Path
+from typing import Optional, Tuple, Union
+
+import github
 from git import Remote, RemoteReference
 from git.repo import Repo
-import github
 from github.GithubException import UnknownObjectException
 
 
@@ -35,14 +36,19 @@ def get_branch(
     May be overridden with the environment variable `ROCM_DOCS_REMOTE_DETAILS`
     """
     if "ROCM_DOCS_REMOTE_DETAILS" in os.environ:
-        remote_details = os.environ["ROCM_DOCS_REMOTE_DETAILS"].split(',')
-        return remote_details[0], remote_details[1], remote_details[2].lower() in ["1","on","true","yes"]
+        remote_details = os.environ["ROCM_DOCS_REMOTE_DETAILS"].split(",")
+        return (
+            remote_details[0],
+            remote_details[1],
+            remote_details[2].lower() in ["1", "on", "true", "yes"],
+        )
 
     def get_repo_url(remote_url: str) -> str:
-        ssh_pattern  = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
+        ssh_pattern = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
         http_pattern = re.compile(r"(https?://.+)\.git")
-        remote_url, num_subs = ssh_pattern.subn(r"http://\1/\2", remote_url,
-                                                count=1)
+        remote_url, num_subs = ssh_pattern.subn(
+            r"http://\1/\2", remote_url, count=1
+        )
         if num_subs > 0:
             return remote_url
         remote_url = http_pattern.sub(r"\1", remote_url, count=1)
@@ -104,15 +110,16 @@ def get_branch(
             if ref.commit == repo.head.commit:
                 remote_url = get_repo_url(remote.url)
                 return remote_url, ref.remote_head, True
-    
+
     # Fall-back to the current branch or a fallback value if HEAD is detached
     # In this case the repository URL cannot be provided
+    branch: str
     try:
-        branch=repo.active_branch
+        branch = repo.active_branch.name
     except TypeError:
-        branch="branch-not-found"
+        branch = "branch-not-found"
 
-    return None, branch, False
+    return "", branch, False
 
 
 def format_toc(
