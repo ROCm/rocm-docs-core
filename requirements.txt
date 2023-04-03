@@ -116,7 +116,7 @@ myst-parser[linkify]==1.0.0
     # via
     #   myst-nb
     #   rocm-docs-core (pyproject.toml)
-nbclient==0.5.13
+nbclient==0.7.3
     # via
     #   jupyter-cache
     #   myst-nb
