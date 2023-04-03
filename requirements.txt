@@ -176,7 +176,7 @@ pyyaml==6.0
     #   myst-nb
     #   myst-parser
     #   sphinx-external-toc
-pyzmq==25.0.0
+pyzmq==25.0.2
     # via
     #   ipykernel
     #   jupyter-client
