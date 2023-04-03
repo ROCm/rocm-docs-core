@@ -22,7 +22,7 @@ backcall==0.2.0
     # via ipython
 beautifulsoup4==4.11.2
     # via pydata-sphinx-theme
-breathe==4.34.0
+breathe==4.35.0
     # via rocm-docs-core (pyproject.toml)
 certifi==2022.12.7
     # via requests
