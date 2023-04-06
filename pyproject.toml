@@ -44,6 +44,9 @@ documentation="https://docs.amd.com"
 api_reference = [
   "doxysphinx>=3.2.1,<4"
 ]
+development = [
+  "commitizen>=2.42,<3"
+]
 
 [project.entry-points."sphinx.html_themes"]
 rocm_docs_theme = "rocm_docs.theme"
@@ -53,3 +56,10 @@ where=["src"]
 
 [tool.setuptools.package-data]
 rocm_docs = ["data/**/*", "rocm_docs_theme/**/*"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.2.0"
+version_files = ["pyproject.toml:^version"]
+tag_format = "v$version"
+annotated_tag = true
