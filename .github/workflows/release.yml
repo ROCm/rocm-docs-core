@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+*
+  workflow_call:
+    inputs:
+      revision:
+        required: true
+        type: string
+    secrets:
+      PYPI_TOKEN:
+        required: true
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        python-version: ["3.8"]
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3.5.0
+      with:
+        ref: ${{ inputs.revision || github.sha }}
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "${{ matrix.python-version }}"
+        cache: pip
+    - name: Build python package
+      shell: sh
+      run: |
+        pip install build==0.10.0
+        python -m build
+    - uses: actions/upload-artifact@v3.1.2
+      with:
+        name: dist-python${{ matrix.python-version }}
+        path: dist
+
+  publish:
+    concurrency: publish
+    needs: [build]
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: "3.8"
+    steps:
+      - uses: actions/download-artifact@v3.0.2
+        with:
+          name: dist-python${{ env.PYTHON_VERSION }}
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@v1.8.5
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
