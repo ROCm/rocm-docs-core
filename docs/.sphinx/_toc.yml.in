@@ -4,8 +4,11 @@ defaults:
   numbered: False
   maxdepth: 6
 root: index.md
-entries:
-  - file: about
-    title: About ROCm Docs Core
-  - file: demo/doxygen/html/index
-    title: Library API Doxygen Demo
+subtrees:
+  - caption: Demo Documentation Showcase
+    entries:
+      - file: demo/doxygen/html/index
+        title: Library API Doxygen Demo
+  - caption: Developer Guide
+    entries:
+      - file: developer_guide/commitizen
