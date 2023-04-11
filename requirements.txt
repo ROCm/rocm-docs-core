@@ -136,7 +136,7 @@ mdurl==0.1.2
     # via markdown-it-py
 myst-nb==0.17.1
     # via rocm-docs-core (pyproject.toml)
-myst-parser[linkify]==0.18.1
+myst-parser[linkify]==1.0.0
     # via
     #   myst-nb
     #   rocm-docs-core (pyproject.toml)

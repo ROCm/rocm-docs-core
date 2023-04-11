@@ -30,7 +30,7 @@ dependencies = [
   "sphinx_external_toc==0.3.1",
   "sphinx-book-theme==1.0.0rc2",
   "myst_nb==0.17.1",
-  "myst-parser[linkify]==0.18.1",
+  "myst-parser[linkify]==1.0.0",
   "sphinx-notfound-page==0.8.3",
   "pydata-sphinx-theme>=0.13.3,<14"
 ]
