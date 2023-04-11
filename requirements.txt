@@ -116,7 +116,7 @@ jupyter-core==5.2.0
     #   ipykernel
     #   jupyter-client
     #   nbformat
-linkify-it-py==1.0.3
+linkify-it-py==2.0.0
     # via myst-parser
 lxml==4.9.2
     # via doxysphinx
