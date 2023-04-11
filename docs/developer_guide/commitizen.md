@@ -11,7 +11,7 @@ A commit message should like like this:
 ```text
 <type>[optional scope]: <subject>
 
-[optinal body]
+[optional body]
 
 [optional footer(s)]
 ```
@@ -37,7 +37,7 @@ dependencies.
 Multiple scopes can be given and `(all)` may be used if change affects the
 entire project.
 
-The **subject** should be a succint description of the change in present imperative
+The **subject** should be a succinct description of the change in present imperative
 tense (i.e. *update wording* not *updated wording*)
 
 A longer description can be included in the **body**, including the motivation
