@@ -1,0 +1,39 @@
+on:
+  pull_request:
+
+jobs:
+  lint:
+    strategy:
+      matrix:
+        python-version: ["3.8"]
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3.5.0
+      with:
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "${{ matrix.python-version }}"
+        cache: pip
+        cache-dependency-path: |
+          pyproject.toml
+          requirements.txt
+    - name: Set up cache
+      uses: actions/cache@v3.3.1
+      with:
+        path: .venv
+        key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
+    - name: Create virtual env, install requirements
+      shell: sh
+      run: |
+        python -m venv .venv
+        . .venv/bin/activate
+        python -m pip install pip-tools
+        python -m piptools sync requirements.txt
+        echo "PATH=$PATH" >> "$GITHUB_ENV"
+    - name: Run commitizen
+      shell: sh
+      run: |
+        cz check --rev-range "refs/remotes/origin/${{ github.base_ref }}..HEAD"

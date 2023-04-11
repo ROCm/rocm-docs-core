@@ -43,18 +43,11 @@ class ROCmDocs:
         "external_toc_exclude_missing",
         "intersphinx_mapping",
         "intersphinx_disabled_domains",
-        "templates_path",
         "epub_show_urls",
         "exclude_patterns",
         "html_theme",
         "html_title",
-        "html_static_path",
-        "html_css_files",
-        "html_js_files",
-        "html_extra_path",
         "html_theme_options",
-        "html_show_sphinx",
-        "html_favicon",
         "numfig",
     ]
 
@@ -80,13 +73,7 @@ class ROCmDocs:
         self.exclude_patterns: List[str]
         self.html_theme: str
         self.html_title: str
-        self.html_static_path: List[str]
-        self.html_css_files: List[str]
-        self.html_js_files: List[str]
-        self.html_extra_path: List[str]
-        self.html_theme_options: Dict[str, Union[str, bool, List[str]]]
-        self.html_show_sphinx: bool
-        self.html_favicon: str
+        self.html_theme_options: Dict[str, Union[str, bool, List[str]]] = {}
         self.numfig: bool
         self._docs_folder: Path
         tmp_docs_folder = self.to_path(docs_folder)
@@ -269,7 +256,6 @@ class ROCmDocs:
                 " readable."
             )
         format_toc(self._docs_folder)
-        url, branch, edit_page = get_branch(self._docs_folder)
 
         self.external_toc_path = "./.sphinx/_toc.yml"
         self.external_toc_exclude_missing = False
@@ -281,9 +267,6 @@ class ROCmDocs:
             "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
         }
         self.intersphinx_disabled_domains = ["std"]
-
-        # Other configuration
-        self.templates_path = ["_templates"]
 
         # -- Options foself.r EPUB output
         self.epub_show_urls = "footnote"
@@ -298,42 +281,15 @@ class ROCmDocs:
         # The theme to use for HTML and HTML Help pages.  See the documentation
         # for a list of builtin themes.
         #
-        self.html_theme = "sphinx_book_theme"
+        self.html_theme = "rocm_docs_theme"
         self.html_title = self._project_name
-        self.html_static_path = ["_static"]
-        self.html_css_files = [
-            "custom.css",
-            "rocm_header.css",
-            "rocm_footer.css",
-            "fonts.css",
-        ]
-        self.html_js_files = ["code_word_breaks.js"]
-        self.html_extra_path = ["_images"]
-        self.html_theme_options = {
-            "home_page_in_toc": False,
-            "use_edit_page_button": edit_page,
-            "repository_url": url,
-            "repository_branch": branch,
-            "path_to_docs": get_path_to_docs(),
-            "show_navbar_depth": "0",
-            "body_max_width": "none",
-            "show_toc_level": "0",
-            "article_header_start": [
-                "toggle-primary-sidebar.html",
-                "breadcrumbs.html",
-            ],
-            "navbar_center": ["components/left-side-menu.html"],
-        }
-
-        self.html_show_sphinx = False
-        self.html_favicon = "https://www.amd.com/themes/custom/amd/favicon.ico"
 
         self.numfig = True
 
         self.copy_files()
 
     def disable_main_doc_link(self):
-        self.html_theme_options.pop("navbar_center")
+        self.html_theme_options["link_main_doc"] = False
 
     def copy_files(self):
         """Insert additional files into workspace."""
@@ -393,11 +349,6 @@ class _DoxygenContext:
 
 def setup(app: Sphinx) -> None:
     app.setup_extension("notfound.extension")
-    app.add_js_file(
-        "https://download.amd.com/js/analytics/analyticsinit.js",
-        priority=999_999,
-        loading_method="async",
-    )
     app.connect("config-inited", force_notfound_prefix, 300)
 
     # Execute doxysphinx now that sphinx source and output directories are known

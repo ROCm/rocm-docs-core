@@ -1,0 +1,83 @@
+name: Version Bump
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  bump-version:
+    name: "Bump version and create changelog with commitizen"
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    concurrency: bump-version
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: "3.8"
+    outputs:
+      bumped: ${{ steps.cz-bump.outputs.bumped }}
+      revision: ${{ steps.cz-bump.outputs.revision }}
+    steps:
+      - uses: actions/checkout@v3.5.0
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            requirements.txt
+      - name: Set up cache
+        uses: actions/cache@v3.3.1
+        with:
+          path: .venv
+          key: venv-${{ env.PYTHON_VERSION }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
+      - name: Create virtual env, install requirements
+        shell: sh
+        run: |
+          python -m venv .venv
+          . .venv/bin/activate
+          python -m pip install pip-tools
+          python -m piptools sync requirements.txt
+          echo "PATH=$PATH" >> "$GITHUB_ENV"
+      - name: Bump version and generate changelog
+        shell: sh
+        id: cz-bump
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          RESULT=0
+          # Answer yes if asked if this is the first tag created
+          cz bump --yes --changelog-to-stdout > body.md || RESULT=$?
+          if [ "$RESULT" -eq 0 ]; then
+            echo "bumped=true" >> "$GITHUB_OUTPUT"
+            echo "revision=v$(cz version --project)" >> "$GITHUB_OUTPUT"
+          # https://commitizen-tools.github.io/commitizen/exit_codes/
+          # NoneIncrementExit(21): No need to increment the version number
+          elif [ "$RESULT" -eq 21 ]; then
+            echo "bumped=false" >> "$GITHUB_OUTPUT"
+          else
+            exit $RESULT
+          fi
+      - name: Push changes
+        if: steps.cz-bump.outputs.bumped == 'true'
+        shell: sh
+        run: |
+          git push origin "HEAD:${{ github.ref }}" "${{ steps.cz-bump.outputs.revision }}"
+      - name: Release
+        if: steps.cz-bump.outputs.bumped == 'true'
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          body_path: "body.md"
+          tag_name: ${{ steps.cz-bump.outputs.revision }}
+
+  call-release:
+    name: Trigger a Release
+    needs: [bump-version]
+    if: needs.bump-version.outputs.bumped == 'true'
+    uses: ./.github/workflows/release.yml
+    with:
+      revision: ${{ needs.bump-version.revision }}
+    secrets:
+      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
