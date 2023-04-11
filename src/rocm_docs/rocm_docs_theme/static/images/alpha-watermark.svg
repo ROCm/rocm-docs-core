@@ -1,15 +1,30 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="440" height="150" viewBox="0 0 440 150" xml:space="preserve">
-<desc>Created with Fabric.js 5.2.4</desc>
-<defs>
-</defs>
-<g transform="matrix(Infinity NaN NaN Infinity 0 0)" id="e2500395-4d25-4daa-bd7d-96325038a044"  >
-</g>
-<g transform="matrix(1 0 0 1 220 75)" id="a71d78b6-7e3a-4b5e-a7de-9d18dc942f88"  >
-<rect style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; visibility: hidden;" vector-effect="non-scaling-stroke"  x="-220" y="-75" rx="0" ry="0" width="440" height="150" />
-</g>
-<g transform="matrix(1 0 0 1 267 75)" style="" id="308de996-461a-4801-a228-0d8d9f126861"  >
-		<text xml:space="preserve" font-family="Raleway" font-size="105" font-style="normal" font-weight="900" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-248.95" y="32.98" >ALPHA</tspan></text>
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="394.000000pt" height="77.000000pt" viewBox="0 0 394.000000 77.000000"
+ preserveAspectRatio="xMidYMid meet">
+
+<g transform="translate(0.000000,77.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M279 743 c-43 -112 -269 -731 -269 -736 0 -4 44 -7 98 -7 l98 0 23
+70 22 71 156 -3 156 -3 22 -65 22 -65 100 -3 101 -3 -69 188 c-39 103 -102
+277 -142 385 l-72 198 -118 0 -117 0 -11 -27z m187 -326 c24 -72 44 -132 44
+-134 0 -2 -47 -3 -104 -3 l-104 0 50 151 c39 118 53 148 60 134 6 -9 30 -76
+54 -148z"/>
+<path d="M910 385 l0 -385 270 0 270 0 0 75 0 75 -175 0 -175 0 0 310 0 310
+-95 0 -95 0 0 -385z"/>
+<path d="M1580 385 l0 -385 95 0 95 0 0 135 0 135 95 0 c120 0 184 14 243 53
+65 44 96 108 96 197 0 124 -72 213 -194 239 -28 6 -136 11 -240 11 l-190 0 0
+-385z m343 234 c20 -5 46 -20 57 -31 23 -25 27 -82 9 -122 -17 -36 -80 -58
+-154 -54 l-60 3 -3 94 c-1 52 -1 100 2 108 7 16 94 18 149 2z"/>
+<path d="M2350 385 l0 -385 95 0 95 0 0 165 0 165 145 0 145 0 0 -165 0 -165
+100 0 100 0 0 385 0 386 -97 -3 -98 -3 -3 -142 -3 -143 -144 0 -145 0 0 145 0
+145 -95 0 -95 0 0 -385z"/>
+<path d="M3409 743 c-43 -112 -269 -731 -269 -736 0 -4 44 -7 98 -7 l98 0 23
+70 22 71 156 -3 156 -3 22 -65 22 -65 100 -3 101 -3 -69 188 c-39 103 -102
+277 -142 385 l-72 198 -118 0 -117 0 -11 -27z m187 -326 c24 -72 44 -132 44
+-134 0 -2 -47 -3 -104 -3 l-104 0 50 151 c39 118 53 148 60 134 6 -9 30 -76
+54 -148z"/>
 </g>
 </svg>
