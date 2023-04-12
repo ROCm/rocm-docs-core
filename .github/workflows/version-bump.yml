@@ -82,3 +82,11 @@ jobs:
       revision: ${{ needs.bump-version.outputs.revision }}
     secrets:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+
+  call-sync-branches:
+    name: Trigger merge
+    needs: [bump-version]
+    if: needs.bump-version.outputs.bumped == 'true'
+    uses: ./.github/workflows/sync_branches.yml
+    with:
+      revision: ${{ needs.bump-version.outputs.revision }}

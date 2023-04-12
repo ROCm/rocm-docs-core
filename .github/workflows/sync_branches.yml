@@ -1,0 +1,23 @@
+name: "Merge to develop"
+
+on:
+  workflow_call:
+    inputs:
+      revision:
+        required: true
+        type: string
+  workflow_dispatch:
+
+jobs:
+  sync_branches:
+    runs-on: ubuntu-latest
+    concurrency: sync_branches
+    name: Merge a branch into the default branch (develop)
+    steps:
+    - name: Merge branch -> default
+      uses: devmasx/merge-branch@1.4.0
+      with:
+        type: now
+        head_to_merge: ${{ inputs.revision || github.sha }}
+        target_branch: ${{ github.event.repository.default_branch }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
