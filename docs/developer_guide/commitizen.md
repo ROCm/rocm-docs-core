@@ -11,7 +11,7 @@ A commit message should like like this:
 ```text
 <type>[optional scope]: <subject>
 
-[optinal body]
+[optional body]
 
 [optional footer(s)]
 ```
@@ -37,7 +37,7 @@ dependencies.
 Multiple scopes can be given and `(all)` may be used if change affects the
 entire project.
 
-The **subject** should be a succint description of the change in present imperative
+The **subject** should be a succinct description of the change in present imperative
 tense (i.e. *update wording* not *updated wording*)
 
 A longer description can be included in the **body**, including the motivation
@@ -67,7 +67,7 @@ installable via `pip install .[development]` from the root of the repostory.
 
 ### Usage
 
-Run `commitizen commit` to start making a commit after staging the files to
+Run `cz commit` or `cz c` to start making a commit after staging the files to
 be added. Commitizen will ask for each part of the commit message in turn.
 
 Refer to the documentation of commitizen (linked above) on other options, and
