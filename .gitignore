@@ -4,4 +4,4 @@ dist/**/*
 **/__pycache__/**/*
 **/*.egg-info/**/*
 .sass-cache/*
-build
+/build
