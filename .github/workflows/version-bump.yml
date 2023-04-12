@@ -65,7 +65,8 @@ jobs:
         if: steps.cz-bump.outputs.bumped == 'true'
         shell: sh
         run: |
-          git push origin "HEAD:${{ github.ref }}" "${{ steps.cz-bump.outputs.revision }}"
+          git push --atomic origin "HEAD:${{ github.ref }}" \
+            "${{ steps.cz-bump.outputs.revision }}"
       - name: Release
         if: steps.cz-bump.outputs.bumped == 'true'
         uses: softprops/action-gh-release@v0.1.15
