@@ -76,6 +76,7 @@ img#rdc-watermark {
     max-height: calc(100% - 200px);
     object-fit: contain;
     width: 45%;
+    opacity: 20%;
 }
 
 ul.bd-breadcrumbs {
