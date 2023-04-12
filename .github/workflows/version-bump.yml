@@ -78,6 +78,6 @@ jobs:
     if: needs.bump-version.outputs.bumped == 'true'
     uses: ./.github/workflows/release.yml
     with:
-      revision: ${{ needs.bump-version.revision }}
+      revision: ${{ needs.bump-version.outputs.revision }}
     secrets:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
