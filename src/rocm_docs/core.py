@@ -74,7 +74,6 @@ class _DefaultSettings:
     # pylint: disable=redefined-builtin
     copyright = _ConfigDefault("2022-2023, Advanced Micro Devices Ltd")
     # pylint: enable=redefined-builtin
-    html_theme = _ConfigDefault("rocm_docs_theme")
     myst_enable_extensions = _ConfigExtend(
         ["colon_fence", "fieldlist", "linkify", "replacements"]
     )
