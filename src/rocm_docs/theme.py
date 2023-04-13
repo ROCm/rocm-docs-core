@@ -53,6 +53,11 @@ def _update_theme_options(app: Sphinx) -> None:
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
+    app.add_js_file(
+        "https://download.amd.com/js/analytics/analyticsinit.js",
+        priority=999_999,
+        loading_method="async",
+    )
     app.add_js_file("code_word_breaks.js", loading_method="async")
     here = Path(__file__).parent.resolve()
     theme_path = here / "rocm_docs_theme"
