@@ -17,6 +17,7 @@ jobs:
     outputs:
       bumped: ${{ steps.cz-bump.outputs.bumped }}
       revision: ${{ steps.cz-bump.outputs.revision }}
+      sha: ${{ steps.cz-bump.outputs.sha }}
     steps:
       - uses: actions/checkout@v3.5.0
         with:
@@ -54,6 +55,7 @@ jobs:
           if [ "$RESULT" -eq 0 ]; then
             echo "bumped=true" >> "$GITHUB_OUTPUT"
             echo "revision=v$(cz version --project)" >> "$GITHUB_OUTPUT"
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           # https://commitizen-tools.github.io/commitizen/exit_codes/
           # NoneIncrementExit(21): No need to increment the version number
           elif [ "$RESULT" -eq 21 ]; then
@@ -90,4 +92,4 @@ jobs:
     if: needs.bump-version.outputs.bumped == 'true'
     uses: ./.github/workflows/sync_branches.yml
     with:
-      revision: ${{ needs.bump-version.outputs.revision }}
+      sha: ${{ needs.bump-version.outputs.sha }}

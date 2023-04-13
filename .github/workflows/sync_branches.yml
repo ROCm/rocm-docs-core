@@ -1,9 +1,9 @@
-name: "Merge to develop"
+name: "Sync to develop"
 
 on:
   workflow_call:
     inputs:
-      revision:
+      sha:
         required: true
         type: string
   workflow_dispatch:
@@ -12,12 +12,17 @@ jobs:
   sync_branches:
     runs-on: ubuntu-latest
     concurrency: sync_branches
-    name: Merge a branch into the default branch (develop)
+    name: Sync the branch with the default branch (develop)
     steps:
-    - name: Merge branch -> default
-      uses: devmasx/merge-branch@1.4.0
-      with:
-        type: now
-        head_to_merge: ${{ inputs.revision || github.sha }}
-        target_branch: ${{ github.event.repository.default_branch }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Push develop forward (ff only)
+      shell: sh
+      run: |
+        REF="refs/heads/${{ github.event.repository.default_branch }}"
+        gh api "/repos/${{ github.repository }}/git/$REF"   \
+          --method PATCH                                    \
+          --header "Accept: application/vnd.github+json"    \
+          --header "X-GitHub-Api-Version: 2022-11-28"       \
+          --raw-field sha='${{ inputs.sha || github.sha }}' \
+          --field force=false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
