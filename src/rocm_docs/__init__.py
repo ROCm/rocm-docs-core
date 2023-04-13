@@ -17,6 +17,7 @@ class ROCmDocs:
     SPHINX_VARS = [
         "extensions",
         "html_title",
+        "html_theme",
         "html_theme_options",
         "doxygen_root",
         "doxygen_project",
@@ -32,6 +33,7 @@ class ROCmDocs:
         self._project_name = project_name
         self.extensions: List[str] = []
         self.html_title: str
+        self.html_theme: str
         self.html_theme_options: Dict[str, Union[str, bool, List[str]]] = {}
         self.doxygen_root: MaybePath
         self.doxygen_project: Tuple[Optional[str], MaybePath]
@@ -70,6 +72,7 @@ class ROCmDocs:
         """Sets up default RTD variables and copies necessary files."""
         self.extensions.append("rocm_docs")
         self.html_title = self._project_name
+        self.html_theme = "rocm_docs_theme"
 
     def disable_main_doc_link(self):
         self.html_theme_options["link_main_doc"] = False
