@@ -12,4 +12,4 @@ updates:
       interval: "weekly"
     commit-message:
           # Prefix all commit messages with "build: "
-	        prefix: "build"
+	        prefix: "build(deps)"
