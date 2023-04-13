@@ -17,11 +17,7 @@ class ROCmDocs:
     SPHINX_VARS = [
         "extensions",
         "html_title",
-        "html_theme_options",
-        "doxygen_root",
-        "doxygen_project",
-        "doxyfile",
-        "doxysphinx_enabled",
+        "html_theme_options"
     ]
 
     def __init__(
