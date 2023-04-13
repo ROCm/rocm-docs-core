@@ -1,3 +1,9 @@
+## v0.2.2 (2023-04-13)
+
+### Fix
+
+- various stlysheet fixes
+
 ## v0.2.1 (2023-04-13)
 
 ### Fix
