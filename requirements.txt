@@ -244,7 +244,7 @@ sphinx==4.3.1
     #   sphinx-design
     #   sphinx-external-toc
     #   sphinx-notfound-page
-sphinx-book-theme==1.0.0rc2
+sphinx-book-theme==1.0.1
     # via rocm-docs-core (pyproject.toml)
 sphinx-copybutton==0.5.1
     # via rocm-docs-core (pyproject.toml)
