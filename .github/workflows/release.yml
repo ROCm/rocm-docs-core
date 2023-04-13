@@ -12,6 +12,7 @@ on:
     secrets:
       PYPI_TOKEN:
         required: true
+  workflow_dispatch:
 
 jobs:
   build:

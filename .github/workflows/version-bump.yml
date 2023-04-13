@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "main"
+  workflow_dispatch:
 
 jobs:
   bump-version:
@@ -16,6 +17,7 @@ jobs:
     outputs:
       bumped: ${{ steps.cz-bump.outputs.bumped }}
       revision: ${{ steps.cz-bump.outputs.revision }}
+      sha: ${{ steps.cz-bump.outputs.sha }}
     steps:
       - uses: actions/checkout@v3.5.0
         with:
@@ -53,6 +55,7 @@ jobs:
           if [ "$RESULT" -eq 0 ]; then
             echo "bumped=true" >> "$GITHUB_OUTPUT"
             echo "revision=v$(cz version --project)" >> "$GITHUB_OUTPUT"
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           # https://commitizen-tools.github.io/commitizen/exit_codes/
           # NoneIncrementExit(21): No need to increment the version number
           elif [ "$RESULT" -eq 21 ]; then
@@ -64,7 +67,8 @@ jobs:
         if: steps.cz-bump.outputs.bumped == 'true'
         shell: sh
         run: |
-          git push origin "HEAD:${{ github.ref }}" "${{ steps.cz-bump.outputs.revision }}"
+          git push --atomic origin "HEAD:${{ github.ref }}" \
+            "${{ steps.cz-bump.outputs.revision }}"
       - name: Release
         if: steps.cz-bump.outputs.bumped == 'true'
         uses: softprops/action-gh-release@v0.1.15
@@ -78,6 +82,14 @@ jobs:
     if: needs.bump-version.outputs.bumped == 'true'
     uses: ./.github/workflows/release.yml
     with:
-      revision: ${{ needs.bump-version.revision }}
+      revision: ${{ needs.bump-version.outputs.revision }}
     secrets:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+
+  call-sync-branches:
+    name: Trigger merge
+    needs: [bump-version]
+    if: needs.bump-version.outputs.bumped == 'true'
+    uses: ./.github/workflows/sync_branches.yml
+    with:
+      sha: ${{ needs.bump-version.outputs.sha }}
