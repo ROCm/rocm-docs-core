@@ -62,7 +62,7 @@ class ROCmDocs:
 
     def enable_api_reference(self) -> None:
         """Enable embedding the doxygen generated api."""
-        if not "rocm_docs.doxygen" in self.extensions:
+        if  "rocm_docs.doxygen" not in self.extensions:
             self.extensions.append("rocm_docs.doxygen")
 
         self.doxysphinx_enabled = True
