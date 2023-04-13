@@ -1,5 +1,6 @@
 """Set up variables for documentation of ROCm projects using RTD."""
 import os
+import subprocess
 from pathlib import Path
 from typing import BinaryIO, Dict, Generator, List, Optional, Union
 
@@ -28,9 +29,11 @@ class ROCmDocs:
     def __init__(
         self,
         project_name: str,
+        version_string : str = None,
         _: MaybePath = None,
     ) -> None:
         self._project_name = project_name
+        self._version_string = version_string
         self.extensions: List[str] = []
         self.html_title: str
         self.html_theme: str
@@ -74,7 +77,13 @@ class ROCmDocs:
     def setup(self) -> None:
         """Sets up default RTD variables and copies necessary files."""
         self.extensions.append("rocm_docs")
-        self.html_title = self._project_name
+        full_project_name = self._project_name
+        if self._version_string is None and os.path.exists("../CMakeLists.txt"):
+            getVersionString = r'sed -n -e "s/^.*VERSION_STRING.* \"\([0-9\.]\{1,\}\).*/\1/p" ../CMakeLists.txt'
+            self._version_string = subprocess.getoutput(getVersionString)
+        if self._version_string is not None and len(self._version_string) > 0:
+            full_project_name += f" {self._version_string}"
+        self.html_title = full_project_name
         self.html_theme = "rocm_docs_theme"
 
     def disable_main_doc_link(self):
