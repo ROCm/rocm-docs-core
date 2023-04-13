@@ -1,3 +1,15 @@
+## v0.4.0 (2023-04-13)
+
+### BREAKING CHANGE
+
+- users of the non-legacy API have to set `html_theme` to `rocm_docs_theme` to maintain the current behaviour.
+
+### Fix
+
+- **legacy**: fix builds without doxygen
+- **extension**: no longer set the html_theme by default in the extension
+- **legacy**: restore custom theme on readthedocs
+
 ## v0.3.0 (2023-04-13)
 
 ### Feat
