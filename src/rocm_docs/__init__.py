@@ -30,7 +30,7 @@ class ROCmDocs:
         self.html_title: str
         self.html_theme_options: Dict[str, Union[str, bool, List[str]]] = {}
         self.doxygen_root: MaybePath
-        self.doxygen_project: Tuple[Optional[str], MaybePath]
+        self.doxygen_project: Dict[str, Union[MaybePath, str]]
         self.doxyfile: MaybePath
         self.doxysphinx_enabled = False
 
@@ -45,7 +45,7 @@ class ROCmDocs:
         doxygen_path: MaybePath = None,
         doxygen_file: Optional[str] = None,
     ) -> None:
-        if not "rocm_docs.doxygen" in self.extensions:
+        if "rocm_docs.doxygen" not in self.extensions:
             self.extensions.append("rocm_docs.doxygen")
 
         self.doxygen_root = doxygen_root
@@ -54,6 +54,11 @@ class ROCmDocs:
             "path": doxygen_path,
         }
         self.doxyfile = doxygen_file
+        ROCmDocs.SPHINX_VARS += [
+            "doxygen_root",
+            "doxygen_project",
+            "doxyfile"
+        ]
 
     def enable_api_reference(self) -> None:
         """Enable embedding the doxygen generated api."""
