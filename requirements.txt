@@ -185,7 +185,7 @@ pydata-sphinx-theme==0.13.3
     # via
     #   rocm-docs-core (pyproject.toml)
     #   sphinx-book-theme
-pygithub==1.57
+pygithub==1.58.1
     # via rocm-docs-core (pyproject.toml)
 pygments==2.14.0
     # via
