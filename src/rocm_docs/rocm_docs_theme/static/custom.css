@@ -1,10 +1,10 @@
 :root {
-    --pst-font-size-base: 0.625rem;
+    --pst-font-size-base: 0.875rem;
 }
 
 @media screen and (min-width: 440px) {
     :root {
-        --pst-font-size-base: 0.75rem;
+        --pst-font-size-base: 0.9rem;
     }
 }
 
@@ -91,7 +91,7 @@ a#ot-sdk-btn {
     background:none !important;
     border:none !important;
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,"Helvetica Neue",Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
     color:white !important;
     padding: 0 !important;
 }
