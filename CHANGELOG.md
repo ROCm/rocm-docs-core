@@ -1,3 +1,14 @@
+## v0.5.0 (2023-04-14)
+
+### Feat
+
+- **__init__.py**: add version numbers
+
+### Fix
+
+- ensure compatibility for 3.8 through 3.11
+- **dependabot.yml**: remove extra spaces
+
 ## v0.4.0 (2023-04-13)
 
 ### BREAKING CHANGE
