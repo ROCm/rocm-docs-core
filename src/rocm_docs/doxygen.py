@@ -17,12 +17,16 @@ if sys.version_info < (3, 9):
     # importlib.resources either doesn't exist or lacks the files()
     # function, so use the PyPI version:
     import importlib_resources
-
+    import importlib_resources.abc as importlib_abc
 else:
     # importlib.resources has files(), so use that:
     import importlib.resources as importlib_resources
+    if sys.version_info < (3, 11):
+        import importlib.abc as importlib_abc
+    else:
+        import importlib.resources.abc as importlib_abc
 
-Traversable = importlib_resources.abc.Traversable
+Traversable = importlib_abc.Traversable
 
 
 def _copy_files(app: Sphinx):
