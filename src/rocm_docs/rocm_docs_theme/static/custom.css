@@ -14,6 +14,16 @@
     }
 }
 
+/* for the light theme */
+html[data-theme="light"] {
+    --link-color: #0051C6;
+}
+
+/* for the dark theme */
+html[data-theme="dark"] {
+    --link-color: #2899FF;
+}
+
 div#site-navigation {
     height: fit-content;
     min-height: calc(100vh - 190px);
@@ -88,10 +98,10 @@ ul.bd-breadcrumbs {
 }
 
 a#ot-sdk-btn {
-    background:none !important;
-    border:none !important;
+    background: none !important;
+    border: none !important;
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,"Helvetica Neue",Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol !important;
     font-size: 14px !important;
-    color:white !important;
+    color: white !important;
     padding: 0 !important;
 }
