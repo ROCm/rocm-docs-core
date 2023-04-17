@@ -63,7 +63,7 @@ docutils==0.16
     #   pydata-sphinx-theme
     #   rocm-docs-core (pyproject.toml)
     #   sphinx
-doxysphinx==3.2.1
+doxysphinx==3.2.3
     # via rocm-docs-core (pyproject.toml)
 executing==1.2.0
     # via stack-data
