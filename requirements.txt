@@ -12,7 +12,7 @@ argcomplete==2.0.6
     # via commitizen
 asttokens==2.2.1
     # via stack-data
-attrs==22.2.0
+attrs==23.1.0
     # via
     #   jsonschema
     #   jupyter-cache
