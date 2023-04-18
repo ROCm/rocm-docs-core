@@ -1,3 +1,14 @@
+## v0.6.0 (2023-04-18)
+
+### Feat
+
+- use different link color based on theme
+- increase font size
+
+### Fix
+
+- **header**: direct GitHub header link to ROCm
+
 ## v0.5.0 (2023-04-14)
 
 ### Feat
