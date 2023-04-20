@@ -25,6 +25,7 @@ CIFAR
 CLI
 CMake
 codename
+Commitizen
 CommonMark
 composable
 Conda
@@ -97,6 +98,7 @@ inband
 inferencing
 Inlines
 inlining
+installable
 intra
 invariants
 Ioffe
@@ -148,9 +150,9 @@ prefetch
 preprocess
 preprocessing
 prerequisites
-pretrained
 PRNG
 profiler
+PyPi
 Radeon
 RadeonOpenCompute
 RCCL
@@ -233,6 +235,7 @@ VMWare
 wavefront
 wavefronts
 WGP
+whitepaper
 Wojna
 Xeon
 XGMI
@@ -243,6 +246,3 @@ YAML
 YML
 YModel
 ZenDNN
-PyPi
-Commitizen
-installable
