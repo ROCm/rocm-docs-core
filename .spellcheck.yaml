@@ -1,0 +1,48 @@
+matrix:
+- name: Markdown
+  sources:
+  - 'docs/**/*.md'
+  aspell:
+    lang: en
+  dictionary:
+    wordlists:
+    - .wordlist.txt
+  pipeline:
+  - pyspelling.filters.context:
+      context_visible_first: true
+      delimiters:
+      # Manual disabling via: #spellcheck-disable
+      - open : '^ *<!-- *spellcheck-disable *-->$'
+        content: '[\s\S]*?'
+        close: '^ *<!-- *spellcheck-enable *-->$'
+      # Ignore URLs in [text](URL)
+      - open : '\[[^]]*?]\('
+        content: '[^)]*?'
+        close: '\)'
+      # Ignore URLs in <URL>
+      - open : '\<'
+        content: '[^]]*?'
+        close: '\>'
+      # Ignore text in backtick code blocks.
+      - open : '(?s)^(?P<open> *`{3,})[^\n]*$'
+        close: '^(?P=open)$'
+      # Ignore text between inline back ticks
+      - open : '(?P<open>`+)'
+        content: '[^\n]+'
+        close: '(?P=open)'
+      # Ignore block classes and extra in :::{class} extra
+      - open : '^ *:{3,}'
+        content: '[^\n]+'
+        close: ''
+      # Ignore keys in :property: key
+      - open : '^ *:[^\n:]*: +'
+        content: '[^\n]+'
+        close: '$'
+      # Ignore properties in :property:
+      - open : '^ *:'
+        close: ':'
+      # Ignore tag in (tag)=
+      - open : '('
+        content: '[^\n]+'
+        close: ')=$'
+  - pyspelling.filters.url:
