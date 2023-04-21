@@ -10,11 +10,11 @@ formats: [htmlzip]
 
 python:
    install:
-   - requirements: requirements.txt
    - method: pip
      path: .
      extra_requirements:
        - "api_reference"
+   - requirements: requirements.txt
 
 build:
    os: ubuntu-20.04
