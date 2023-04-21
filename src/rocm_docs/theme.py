@@ -1,8 +1,6 @@
-import sphinx
-from sphinx.application import Sphinx
-from sphinx.config import Config
 from typing import Dict, Any
 from pathlib import Path
+from sphinx.application import Sphinx
 from pydata_sphinx_theme.utils import (
     config_provided_by_user,
     get_theme_options_dict,

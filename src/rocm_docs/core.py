@@ -1,6 +1,8 @@
-"""Core rocm_docs extension that enables a core set of sphinx extensions and
-provides good defaults for settings. Provides a consistent common consistent
-base environment for the rocm documentation projects."""
+"""
+Core rocm_docs extension.
+Enables a core set of sphinx extensions and provides good defaults for settings.
+Provides a consistent common base environment for ROCm documentation projects.
+"""
 
 import inspect
 import os
@@ -132,6 +134,11 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
     app.config.notfound_urls_prefix = abs_path
 
 
+def _delete_copied_files(app: Sphinx) -> None:
+    for file in app.copied_files:
+        os.system(f"rm {file}")
+        
+
 def setup(app: Sphinx) -> Dict[str, Any]:
     required_extensions = [
         "myst_nb",
@@ -153,4 +160,5 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.connect("config-inited", _format_toc_file)
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
+    app.connect("build-finished", _delete_copied_files)
     return {"parallel_read_safe": True, "parallel_write_safe": True}

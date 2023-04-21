@@ -1,9 +1,8 @@
 """Set up variables for documentation of ROCm projects using RTD."""
+
 import os
 import subprocess
-from pathlib import Path
-from typing import BinaryIO, Dict, Generator, List, Optional, Union
-
+from typing import Dict, List, Optional, Union
 from rocm_docs.core import setup
 
 MaybePath = Union[str, os.PathLike, None]
@@ -45,11 +44,18 @@ class ROCmDocs:
         }
         self.doxyfile: MaybePath = None
         self.doxysphinx_enabled = False
+        self.copied_files: List[str] = []
 
     @property
     def project(self) -> str:
         """Sphinx project variable."""
         return self._project_name
+
+    def copy_file(self, source: str, dest: str) -> None:
+        os.system(f"cp {source} {dest}")
+
+    def run_sed_on_file(self, expression: str, file: str) -> None:
+        os.system(f"sed -e {expression} {file}")
 
     def run_doxygen(
         self,

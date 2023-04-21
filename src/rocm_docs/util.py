@@ -1,4 +1,5 @@
-"""Utilities for rocm-docs-core."""
+"""Internal utilities for rocm-docs-core."""
+
 import functools
 import os
 import re
