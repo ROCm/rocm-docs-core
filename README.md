@@ -1,17 +1,21 @@
 # ROCm Documentation Core Utilities
 
 ### Purpose
+
 This repository is comprised of utilities, styling, scripts, and additional HTML content that is common to all ROCm projects' documentation. This greatly aids in maintaining the documentation, as any change to the appearance only needs to be modified in one location.
 
 ### Common elements covered
+
 - Javascript tweaks for tables with long variable names, as Sphinx' default rendering is problematic.
 - HTML for a header and footer for the documentation page.
 - Common Sphinx configuration options for ROCm documentation processes.
 
 ### Use
-- Install this repository as a Python package using pip, for example `pip install git+https://github.com/RadeonOpenCompute/rocm-docs-core.git`.
-- From the `rocm_docs` package import the function `setup_rocm_docs` into `conf.py` for the ReadTheDocs project.
-- Call exactly the following, replacing `<PROJECT NAME HERE>` with the name of the project.
+
+- Install this `rocm-docs-core` as a Python package using pip: `pip install rocm-docs-core`.
+- From the `rocm_docs` package import the class `ROCmDocs` into `conf.py` for the ReadTheDocs project.
+- Example, replacing `<PROJECT NAME HERE>` with the name of the project.
+
 ```python
 from rocm_docs import ROCmDocs
 
