@@ -1,11 +1,10 @@
 # ROCm Docs Core
 
 ROCm Docs Core is a collection of utilities, styling, scripts and additional
-HTML content common to all rocm projects' documentation.
+HTML content common to all ROCm projects' documentation.
 
-ROCm Docs Core is distributed as pip package availaible from pypi as
+ROCm Docs Core is distributed as pip package available from PyPi as
 `rocm-docs-core`.
-
 
 ## Overview
 
