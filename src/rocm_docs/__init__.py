@@ -24,6 +24,10 @@ class ROCmDocs:
         "doxygen_project",
         "doxyfile",
         "doxysphinx_enabled",
+        "linkcheck_timeout",
+        "linkcheck_request_headers",
+        "linkcheck_anchors_ignore",
+        "linkcheck_ignore",
     ]
 
     def __init__(
@@ -32,8 +36,8 @@ class ROCmDocs:
         version_string : str = None,
         _: MaybePath = None,
     ) -> None:
-        self._project_name = project_name
-        self._version_string = version_string
+        self._project_name: str = project_name
+        self._version_string: str = version_string
         self.extensions: List[str] = []
         self.html_title: str
         self.html_theme: str
@@ -44,7 +48,13 @@ class ROCmDocs:
             "path": None,
         }
         self.doxyfile: MaybePath = None
-        self.doxysphinx_enabled = False
+        self.doxysphinx_enabled: bool = False
+        self.linkcheck_timeout: int = 10
+        self.linkcheck_request_headers = {
+            r'https://docs.github.com/': {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) Gecko/20100101 Firefox/112.0'}
+        }
+        self.linkcheck_anchors_ignore: List[str] = []
+        self.linkcheck_ignore: List[str] = []
 
     @property
     def project(self) -> str:
@@ -86,8 +96,13 @@ class ROCmDocs:
         self.html_title = full_project_name
         self.html_theme = "rocm_docs_theme"
 
-    def disable_main_doc_link(self):
+    def disable_main_doc_link(self) -> None:
         self.html_theme_options["link_main_doc"] = False
 
+    def set_linkcheck_anchors_ignore(self, ignore_list: List[str]) -> None:
+        self.linkcheck_anchors_ignore = ignore_list
+
+    def set_linkcheck_ignore(self, ignore_list: List[str]) -> None:
+        self.linkcheck_ignore = ignore_list
 
 __all__ = ["setup", "ROCmDocs"]
