@@ -134,10 +134,18 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
     app.config.notfound_urls_prefix = abs_path
 
 
-def _delete_copied_files(app: Sphinx) -> None:
-    for file in app.copied_files:
-        os.system(f"rm {file}")
-        
+def _delete_copied_files(app: Sphinx, _: Config) -> None:
+    copied_files = "copied_files.txt"
+
+    if os.path.isfile(copied_files) is False:
+        return
+    
+    file = open(copied_files, "r")
+    for line in file:
+        os.system(f"rm {line}")
+
+    os.system(f"rm copied_files.txt")
+
 
 def setup(app: Sphinx) -> Dict[str, Any]:
     required_extensions = [

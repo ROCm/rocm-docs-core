@@ -44,7 +44,6 @@ class ROCmDocs:
         }
         self.doxyfile: MaybePath = None
         self.doxysphinx_enabled = False
-        self.copied_files: List[str] = []
 
     @property
     def project(self) -> str:
@@ -53,9 +52,13 @@ class ROCmDocs:
 
     def copy_file(self, source: str, dest: str) -> None:
         os.system(f"cp {source} {dest}")
+        copied_files = "copied_files.txt"
+        file = open(copied_files, "a")
+        file.write(dest + "\r\n")
+
 
     def run_sed_on_file(self, expression: str, file: str) -> None:
-        os.system(f"sed -e {expression} {file}")
+        os.system(f"sed -i '{expression}' {file}")
 
     def run_doxygen(
         self,
