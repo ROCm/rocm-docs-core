@@ -32,8 +32,8 @@ class ROCmDocs:
         version_string : str = None,
         _: MaybePath = None,
     ) -> None:
-        self._project_name = project_name
-        self._version_string = version_string
+        self._project_name: str = project_name
+        self._version_string: str = version_string
         self.extensions: List[str] = []
         self.html_title: str
         self.html_theme: str
@@ -44,7 +44,7 @@ class ROCmDocs:
             "path": None,
         }
         self.doxyfile: MaybePath = None
-        self.doxysphinx_enabled = False
+        self.doxysphinx_enabled: bool = False
 
     @property
     def project(self) -> str:
@@ -86,8 +86,7 @@ class ROCmDocs:
         self.html_title = full_project_name
         self.html_theme = "rocm_docs_theme"
 
-    def disable_main_doc_link(self):
+    def disable_main_doc_link(self) -> None:
         self.html_theme_options["link_main_doc"] = False
-
 
 __all__ = ["setup", "ROCmDocs"]

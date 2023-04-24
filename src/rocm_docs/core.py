@@ -91,6 +91,12 @@ class _DefaultSettings:
     epub_show_urls = _ConfigDefault("footnote")
     exclude_patterns = _ConfigExtend(["_build", "Thumbs.db", ".DS_Store"])
     numfig = _ConfigDefault(True)
+    linkcheck_timeout = _ConfigDefault(10)
+    linkcheck_request_headers = _ConfigMerge(
+        {
+            r'https://docs.github.com/': {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) Gecko/20100101 Firefox/112.0'}
+        }
+    )
 
     @classmethod
     def update_config(cls, app: Sphinx, _: Config) -> None:
