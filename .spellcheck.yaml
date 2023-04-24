@@ -4,6 +4,7 @@ matrix:
   - 'docs/**/*.md'
   aspell:
     lang: en
+    ignore: 3
   dictionary:
     wordlists:
     - .wordlist.txt
