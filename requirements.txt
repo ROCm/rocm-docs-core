@@ -248,7 +248,7 @@ sphinx-book-theme==1.0.1
     # via rocm-docs-core (pyproject.toml)
 sphinx-copybutton==0.5.1
     # via rocm-docs-core (pyproject.toml)
-sphinx-design==0.3.0
+sphinx-design==0.4.1
     # via rocm-docs-core (pyproject.toml)
 sphinx-external-toc==0.3.1
     # via rocm-docs-core (pyproject.toml)
