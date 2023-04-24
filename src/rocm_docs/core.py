@@ -97,8 +97,6 @@ class _DefaultSettings:
             r'https://docs.github.com/': {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) Gecko/20100101 Firefox/112.0'}
         }
     )
-    linkcheck_anchors_ignore = _ConfigExtend([])
-    linkcheck_ignore = _ConfigExtend([])
 
     @classmethod
     def update_config(cls, app: Sphinx, _: Config) -> None:

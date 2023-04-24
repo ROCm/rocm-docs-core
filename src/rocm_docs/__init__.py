@@ -23,7 +23,7 @@ class ROCmDocs:
         "doxygen_root",
         "doxygen_project",
         "doxyfile",
-        "doxysphinx_enabled"
+        "doxysphinx_enabled",
     ]
 
     def __init__(
