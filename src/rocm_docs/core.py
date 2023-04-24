@@ -8,7 +8,8 @@ import re
 import types
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Callable, Dict, Generic, List, Type, TypeVar
+from typing import Any, Callable, Dict, Generic, Type, TypeVar
+import textwrap
 
 from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
@@ -75,7 +76,7 @@ class _DefaultSettings:
     copyright = _ConfigDefault("2022-2023, Advanced Micro Devices Ltd")
     # pylint: enable=redefined-builtin
     myst_enable_extensions = _ConfigExtend(
-        ["colon_fence", "fieldlist", "linkify", "replacements"]
+        ["colon_fence", "fieldlist", "linkify", "replacements", "substitution"]
     )
     myst_heading_anchors = _ConfigDefault(3)
     external_toc_path = _ConfigOverride("./.sphinx/_toc.yml")
@@ -97,6 +98,25 @@ class _DefaultSettings:
             r'https://docs.github.com/': {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) Gecko/20100101 Firefox/112.0'}
         }
     )
+    myst_subtitutions = {
+        "article_info_linux" : textwrap.dedent("""
+            ```{article-info}
+            :avatar: _static/images/linux.svg
+            :avatar-outline: muted
+            :author: Linux
+            :class-container: sd-p-2 sd-outline-muted sd-rounded-1
+            ```
+            """),
+        "article_info_windows" : textwrap.dedent("""
+            ```{article-info}
+            :avatar: _static/images/windows.svg
+            :avatar-outline: muted
+            :author: Windows
+            :class-container: sd-p-2 sd-outline-muted sd-rounded-1
+            ```
+            """)
+    }
+
 
     @classmethod
     def update_config(cls, app: Sphinx, _: Config) -> None:
