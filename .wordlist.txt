@@ -129,6 +129,7 @@ numref
 NVPTX
 OAM
 OAMs
+OEM
 OCP
 OMP
 OMPT
