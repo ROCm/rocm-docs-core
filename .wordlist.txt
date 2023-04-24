@@ -62,6 +62,7 @@ enablement
 epilog
 EPYC
 ESXi
+ethernet
 exascale
 FFT
 Flang
@@ -85,11 +86,15 @@ HBM
 heterogenous
 hipBLAS
 hipBLASLt
+HIPCC
 hipCUB
 hipFFT
 HIPify
 hipLIB
 hipRAND
+hipSOLVER
+hipSPARSE
+hipSPARSELt
 HPC
 HSA
 ImageNet
@@ -154,6 +159,7 @@ prerequisites
 PRNG
 profiler
 PyPi
+PyTorch
 Radeon
 RadeonOpenCompute
 RCCL
@@ -181,7 +187,9 @@ rocprof
 ROCr
 rocRAND
 rocSOLVER
+rocSPARSE
 rocThrust
+rocWMMA
 RST
 runtime
 runtimes
