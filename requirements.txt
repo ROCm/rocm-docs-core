@@ -153,7 +153,7 @@ nest-asyncio==1.5.6
     # via
     #   ipykernel
     #   nbclient
-packaging==23.0
+packaging==23.1
     # via
     #   commitizen
     #   ipykernel
