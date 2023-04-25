@@ -1,5 +1,5 @@
 """Core rocm_docs extension that enables a core set of sphinx extensions and
-provides good defaults for settings. Provides a consistent common consistent
+provides good defaults for settings. Provides a consistent common
 base environment for the rocm documentation projects."""
 
 import inspect
@@ -9,7 +9,7 @@ import types
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Callable, Dict, Generic, Type, TypeVar
-import textwrap
+from bs4 import BeautifulSoup
 
 from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
@@ -98,25 +98,6 @@ class _DefaultSettings:
             r'https://docs.github.com/': {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) Gecko/20100101 Firefox/112.0'}
         }
     )
-    myst_subtitutions = {
-        "article_info_linux" : textwrap.dedent("""
-            ```{article-info}
-            :avatar: _static/images/linux.svg
-            :avatar-outline: muted
-            :author: Linux
-            :class-container: sd-p-2 sd-outline-muted sd-rounded-1
-            ```
-            """),
-        "article_info_windows" : textwrap.dedent("""
-            ```{article-info}
-            :avatar: _static/images/windows.svg
-            :avatar-outline: muted
-            :author: Windows
-            :class-container: sd-p-2 sd-outline-muted sd-rounded-1
-            ```
-            """)
-    }
-
 
     @classmethod
     def update_config(cls, app: Sphinx, _: Config) -> None:
@@ -158,6 +139,33 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
     app.config.notfound_urls_prefix = abs_path
 
 
+def _add_article_info(app: Sphinx, _: Config) -> None:
+    with open("_templates/components/article-info-linux.html", "r") as file:
+        article_info_linux = file.read()
+    with open("_templates/components/article-info-windows.html", "r") as file:
+        article_info_win = file.read()
+    with open("_templates/components/article-info-linux-windows.html", "r") as file:
+        article_info_linux_and_win = file.read()
+    for page in app.config.linux_pages:
+        path = os.path.join(app.config.html_output_directory, page) + ".html"
+        _write_article_info(path, article_info_linux)
+    for page in app.config.windows_pages:
+        path = os.path.join(app.config.html_output_directory, page) + ".html"
+        _write_article_info(path, article_info_win)
+    for page in app.config.linux_and_windows_pages:
+        path = os.path.join(app.config.html_output_directory, page) + ".html"
+        _write_article_info(path, article_info_linux_and_win)
+
+
+def _write_article_info(path: str, article_info: str) -> None:
+    with open(path, "r+") as file:
+        page_html = file.read()
+        file.truncate(0)
+        soup = BeautifulSoup(page_html, 'html.parser')
+        soup.article.insert(0, BeautifulSoup(article_info, 'html.parser'))
+        file.write(str(soup))
+        
+
 def setup(app: Sphinx) -> Dict[str, Any]:
     required_extensions = [
         "myst_nb",
@@ -174,9 +182,15 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     for ext in required_extensions:
         app.setup_extension(ext)
 
+    app.add_config_value("html_output_directory", default="_build/html/", rebuild="html", types=str)
+    app.add_config_value("linux_pages", default=[], rebuild="html", types=Any)
+    app.add_config_value("windows_pages", default=[], rebuild="html", types=Any)
+    app.add_config_value("linux_and_windows_pages", default=[], rebuild="html", types=Any)
+
+    # Run before notfound.extension sees the config (default priority(=500))
+    app.connect("config-inited", _force_notfound_prefix, priority=400)
     app.connect("config-inited", _DefaultSettings.update_config)
     # This needs to happen before external-tocs's config-inited (priority=900)
     app.connect("config-inited", _format_toc_file)
-    # Run before notfound.extension sees the config (default priority(=500))
-    app.connect("config-inited", _force_notfound_prefix, priority=400)
+    app.connect("build-finished", _add_article_info, priority=1000)
     return {"parallel_read_safe": True, "parallel_write_safe": True}

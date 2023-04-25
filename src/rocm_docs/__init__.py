@@ -1,8 +1,8 @@
 """Set up variables for documentation of ROCm projects using RTD."""
+
 import os
 import subprocess
-from pathlib import Path
-from typing import BinaryIO, Dict, Generator, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from rocm_docs.core import setup
 
@@ -45,6 +45,10 @@ class ROCmDocs:
         }
         self.doxyfile: MaybePath = None
         self.doxysphinx_enabled: bool = False
+        self.html_output_directory: str
+        self.linux_pages: List[str] = []
+        self.windows_pages: List[str] = []
+        self.linux_and_windows_pages: List[str] = []
 
     @property
     def project(self) -> str:
@@ -75,7 +79,7 @@ class ROCmDocs:
         self.doxysphinx_enabled = True
 
     def setup(self) -> None:
-        """Sets up default RTD variables and copies necessary files."""
+        """Sets up default RTD variables."""
         self.extensions.append("rocm_docs")
         full_project_name = self._project_name
         if self._version_string is None and os.path.exists("../CMakeLists.txt"):
@@ -88,5 +92,14 @@ class ROCmDocs:
 
     def disable_main_doc_link(self) -> None:
         self.html_theme_options["link_main_doc"] = False
+
+    def set_page_article_info(self, output_directory: str, 
+        linux_pages: List[str] = [], windows_pages: List[str] = [], linux_and_windows_pages: List[str] = []
+    ):
+        self.html_output_directory = output_directory
+        self.linux_pages = linux_pages
+        self.windows_pages = windows_pages
+        self.linux_and_windows_pages = linux_and_windows_pages
+
 
 __all__ = ["setup", "ROCmDocs"]
