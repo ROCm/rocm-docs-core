@@ -140,21 +140,23 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
 
 
 def _add_article_info(app: Sphinx, _: Config) -> None:
-    with open("_templates/components/article-info-linux.html", "r") as file:
-        article_info_linux = file.read()
-    with open("_templates/components/article-info-windows.html", "r") as file:
-        article_info_win = file.read()
-    with open("_templates/components/article-info-linux-windows.html", "r") as file:
-        article_info_linux_and_win = file.read()
-    for page in app.config.linux_pages:
-        path = os.path.join(app.config.html_output_directory, page) + ".html"
-        _write_article_info(path, article_info_linux)
-    for page in app.config.windows_pages:
-        path = os.path.join(app.config.html_output_directory, page) + ".html"
-        _write_article_info(path, article_info_win)
-    for page in app.config.linux_and_windows_pages:
-        path = os.path.join(app.config.html_output_directory, page) + ".html"
-        _write_article_info(path, article_info_linux_and_win)
+    if app.config.article_pages is None:
+        return
+    
+    with open("_templates/components/article-info.html", "r") as file:
+        article_info = file.read()
+    for page in app.config.article_pages:
+        font_awesome_os = ""
+        if "linux" in page["os"]:
+            font_awesome_os += '<i class="fa-brands fa-linux fa-2xl"></i>'
+        if "windows" in page["os"]:
+            font_awesome_os += '<i class="fa-brands fa-windows fa-2xl"></i>'
+        modified_info = article_info.replace("<!--fontawesome-->", font_awesome_os)
+        modified_info = modified_info.replace("AMD", page["author"])
+        modified_info = modified_info.replace("2023", page["date"])
+        modified_info = modified_info.replace("5 min read", page["read-time"])
+        path = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
+        _write_article_info(path, modified_info)
 
 
 def _write_article_info(path: str, article_info: str) -> None:
@@ -184,6 +186,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
         app.setup_extension(ext)
 
     app.add_config_value("html_output_directory", default="_build/html/", rebuild="html", types=str)
+    app.add_config_value("article_pages", default=None, rebuild="html", types=Any)
     app.add_config_value("linux_pages", default=[], rebuild="html", types=Any)
     app.add_config_value("windows_pages", default=[], rebuild="html", types=Any)
     app.add_config_value("linux_and_windows_pages", default=[], rebuild="html", types=Any)

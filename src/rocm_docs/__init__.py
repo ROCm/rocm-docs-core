@@ -46,9 +46,7 @@ class ROCmDocs:
         self.doxyfile: MaybePath = None
         self.doxysphinx_enabled: bool = False
         self.html_output_directory: str
-        self.linux_pages: List[str] = []
-        self.windows_pages: List[str] = []
-        self.linux_and_windows_pages: List[str] = []
+        self.article_info: List[Dict[str, str]] = None
 
     @property
     def project(self) -> str:
@@ -93,13 +91,9 @@ class ROCmDocs:
     def disable_main_doc_link(self) -> None:
         self.html_theme_options["link_main_doc"] = False
 
-    def set_page_article_info(self, output_directory: str, 
-        linux_pages: List[str] = [], windows_pages: List[str] = [], linux_and_windows_pages: List[str] = []
-    ):
+    def set_page_article_info(self, output_directory: str, article_info: List[Dict[str, str]]) -> None:
         self.html_output_directory = output_directory
-        self.linux_pages = linux_pages
-        self.windows_pages = windows_pages
-        self.linux_and_windows_pages = linux_and_windows_pages
+        self.article_info = article_info
 
 
 __all__ = ["setup", "ROCmDocs"]
