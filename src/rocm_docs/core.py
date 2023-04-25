@@ -95,7 +95,8 @@ class _DefaultSettings:
     linkcheck_timeout = _ConfigDefault(10)
     linkcheck_request_headers = _ConfigMerge(
         {
-            r'https://docs.github.com/': {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) Gecko/20100101 Firefox/112.0'}
+            r'https://docs.github.com/': {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) \
+                Gecko/20100101 Firefox/112.0'}
         }
     )
 
@@ -138,19 +139,33 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
     )
     app.config.notfound_urls_prefix = abs_path
 
-def _set_page_article_info(app: Sphinx, _: Config) -> None:
+def _set_article_info(app: Sphinx, _: Config) -> None:
+    """Add article info headers to HTML pages"""
+    if app.config.setting_all_article_info is False and len(app.config.article_pages) == 0:
+        return
+
     with open("_templates/components/article-info.html", "r") as file:
         article_info = file.read()
 
-    if app.config.setting_all_article_info is True:
-        _set_all_article_info(app, article_info)
-        return
+    specific_pages = []
 
-    if app.config.article_pages is None:
-        return
-    
+    _set_page_article_info(app, article_info, specific_pages)
+
+    if app.config.setting_all_article_info is True:
+        _set_all_article_info(app, article_info, specific_pages)
+
+
+def _set_page_article_info(
+    app: Sphinx, 
+    article_info: str, 
+    specific_pages: List[str]
+) -> None:
+    """
+    Add article info headers to specific HTML pages
+    mentioned in app.config.article_pages
+    """
     for page in app.config.article_pages:
-        # default to linux icon
+        # default to linux os
         font_awesome_os = '<i class="fa-brands fa-linux fa-2xl"></i>'
         if "os" in page.keys():
             if "linux" not in page["os"]:
@@ -159,6 +174,7 @@ def _set_page_article_info(app: Sphinx, _: Config) -> None:
                 font_awesome_os += '<i class="fa-brands fa-windows fa-2xl"></i>'
         modified_info = article_info.replace("<!--fontawesome-->", font_awesome_os)
 
+        # default to no author
         author = ""
         if "author" in page.keys():
             author = page["author"]
@@ -171,12 +187,27 @@ def _set_page_article_info(app: Sphinx, _: Config) -> None:
             modified_info = modified_info.replace("5 min read", page["read-time"])
         
         path = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
+        specific_pages.append(path)
         _write_article_info(path, modified_info)
 
 
-def _set_all_article_info(app: Sphinx, article_info: str) -> None:
+def _set_all_article_info(
+    app: Sphinx, 
+    article_info: str, 
+    specific_pages: List[str]
+) -> None:
+    """
+    Add article info headers with general settings to all HTML pages
+    except those in app.config.article_pages
+    """
     all_pages = _get_all_pages(app.config.html_output_directory)
+
     for page in all_pages:
+        # skip pages with specific settings
+        if page in specific_pages:
+            continue
+
+        # default to linux os
         font_awesome_os = '<i class="fa-brands fa-linux fa-2xl"></i>'
         if "linux" not in app.config.all_article_info_os:
             font_awesome_os = ""
@@ -233,12 +264,12 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value("all_article_info_author", default="", rebuild="html", types=Any)
     app.add_config_value("all_article_info_date", default="2023", rebuild="html", types=Any)
     app.add_config_value("all_article_info_read_time", default="5 min read time", rebuild="html", types=Any)
-    app.add_config_value("article_pages", default=None, rebuild="html", types=Any)
+    app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
 
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
     app.connect("config-inited", _DefaultSettings.update_config)
     # This needs to happen before external-tocs's config-inited (priority=900)
     app.connect("config-inited", _format_toc_file)
-    app.connect("build-finished", _set_page_article_info, priority=1000)
+    app.connect("build-finished", _set_article_info, priority=1000)
     return {"parallel_read_safe": True, "parallel_write_safe": True}
