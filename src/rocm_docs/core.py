@@ -160,6 +160,7 @@ def _add_article_info(app: Sphinx, _: Config) -> None:
 def _write_article_info(path: str, article_info: str) -> None:
     with open(path, "r+") as file:
         page_html = file.read()
+        file.seek(0)
         file.truncate(0)
         soup = BeautifulSoup(page_html, 'html.parser')
         soup.article.insert(0, BeautifulSoup(article_info, 'html.parser'))
