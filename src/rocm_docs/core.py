@@ -163,7 +163,7 @@ def _write_article_info(path: str, article_info: str) -> None:
         file.seek(0)
         file.truncate(0)
         soup = BeautifulSoup(page_html, 'html.parser')
-        soup.article.insert(0, BeautifulSoup(article_info, 'html.parser'))
+        soup.article.h1.insert_after(BeautifulSoup(article_info, 'html.parser'))
         file.write(str(soup))
         
 
