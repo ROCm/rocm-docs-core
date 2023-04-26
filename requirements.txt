@@ -84,6 +84,7 @@ importlib-metadata==6.6.0
     #   jupyter-cache
     #   jupyter-client
     #   myst-nb
+    #   sphinx
 importlib-resources==5.10.4 ; python_version < "3.9"
     # via
     #   jsonschema
@@ -232,7 +233,7 @@ snowballstemmer==2.2.0
     # via sphinx
 soupsieve==2.4.1
     # via beautifulsoup4
-sphinx==4.3.1
+sphinx==5.3.0
     # via
     #   breathe
     #   myst-nb
@@ -308,6 +309,3 @@ zipp==3.15.0
     # via
     #   importlib-metadata
     #   importlib-resources
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
