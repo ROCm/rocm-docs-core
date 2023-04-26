@@ -1,8 +1,8 @@
 """Set up variables for documentation of ROCm projects using RTD."""
+
 import os
 import subprocess
-from pathlib import Path
-from typing import BinaryIO, Dict, Generator, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from rocm_docs.core import setup
 
@@ -75,7 +75,7 @@ class ROCmDocs:
         self.doxysphinx_enabled = True
 
     def setup(self) -> None:
-        """Sets up default RTD variables and copies necessary files."""
+        """Sets up default RTD variables."""
         self.extensions.append("rocm_docs")
         full_project_name = self._project_name
         if self._version_string is None and os.path.exists("../CMakeLists.txt"):
@@ -88,5 +88,6 @@ class ROCmDocs:
 
     def disable_main_doc_link(self) -> None:
         self.html_theme_options["link_main_doc"] = False
+
 
 __all__ = ["setup", "ROCmDocs"]
