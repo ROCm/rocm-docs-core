@@ -1,3 +1,22 @@
+## v0.7.0 (2023-04-26)
+
+### Feat
+
+- **core.py**: set specific page settings first before setting general settings
+- **core.py**: add ability to set article info for all pages
+- allow substitutions for author, date, and read time in article info
+- add article info for linux and windows
+- **core.py**: add article info with supported os info
+
+### Fix
+
+- **deps**: Fix search highlight in doxysphinx by updating sphinx version
+
+### Refactor
+
+- use consistent formatting for init and remove empty list from core
+- **core.py**: move linkcheck configs to core from init
+
 ## v0.6.0 (2023-04-18)
 
 ### Feat
