@@ -1,6 +1,8 @@
 # yaml-language-server: $schema=./intersphinx_mapping.schema.json
 version: 1
 
+# ${version} will be replaced by the version of the (current) project
+
 projects:
   python:
     target: https://docs.python.org/3/
