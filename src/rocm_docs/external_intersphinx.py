@@ -33,6 +33,7 @@ Inventory = Union[str, None, Tuple[Union[str, None], ...]]
 ProjectMapping = Tuple[str, Inventory]
 
 DEFAULT_INTERSPHINX_REPOSITORY = "RadeonOpenCompute/rocm-docs-core"
+DEFAULT_INTERSPHINX_BRANCH = "develop"
 
 
 def _parse_mapping(
@@ -72,13 +73,15 @@ def _parse_mapping(
     return {key: get_target(value) for key, value in data["projects"].items()}
 
 
-def _fetch_mapping(remote_repository: str) -> Union[str, Traversable]:
+def _fetch_mapping(
+    remote_repository: str, remote_branch: str
+) -> Union[str, Traversable]:
     mapping_file_loc = "data/intersphinx_mapping.yaml"
     remote_filepath = "src/rocm_docs/" + mapping_file_loc
     try:
         gh = github.Github(os.environ.get("TOKEN"))
         repo = gh.get_repo(remote_repository)
-        contents = repo.get_contents(remote_filepath)
+        contents = repo.get_contents(remote_filepath, remote_branch)
         if isinstance(contents, list):
             raise RuntimeError("Expected a file not a directory!")
 
@@ -101,7 +104,8 @@ def _update_config(app: Sphinx, _: Config) -> None:
         _fetch_mapping(
             os.environ.get(
                 "INTERSPHINX_REPOSITORY", DEFAULT_INTERSPHINX_REPOSITORY
-            )
+            ),
+            os.environ.get("INTERSPHINX_BRANCH", DEFAULT_INTERSPHINX_BRANCH),
         )
     )
 
