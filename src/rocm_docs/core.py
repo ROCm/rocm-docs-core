@@ -9,8 +9,9 @@ import types
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Callable, Dict, Generic, List, Type, TypeVar
-from bs4 import BeautifulSoup
+import importlib_resources
 
+from bs4 import BeautifulSoup
 from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
 from sphinx.config import Config
@@ -144,7 +145,9 @@ def _set_article_info(app: Sphinx, _: Config) -> None:
     if app.config.setting_all_article_info is False and len(app.config.article_pages) == 0:
         return
 
-    with open("_templates/components/article-info.html", "r") as file:
+    rocm_docs_package = importlib_resources.files("rocm_docs")
+    article_info_path = os.path.join(rocm_docs_package, "rocm_docs_theme/components/article-info.html")
+    with open(article_info_path, "r") as file:
         article_info = file.read()
 
     specific_pages = []
