@@ -244,7 +244,7 @@ def _write_article_info(path: str, article_info: str) -> None:
 
 def setup(app: Sphinx) -> Dict[str, Any]:
     required_extensions = [
-        "myst_nb",
+        "myst_parser",
         "notfound.extension",
         "sphinx_copybutton",
         "sphinx_design",

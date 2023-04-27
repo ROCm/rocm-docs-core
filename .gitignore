@@ -4,3 +4,4 @@ dist/**/*
 **/*.egg-info/**/*
 .sass-cache/*
 /build
+/_readthedocs/
