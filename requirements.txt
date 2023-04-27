@@ -53,6 +53,8 @@ docutils==0.19
     #   sphinx
 doxysphinx==3.3.3
     # via rocm-docs-core (pyproject.toml)
+fastjsonschema==2.16.3
+    # via rocm-docs-core (pyproject.toml)
 gitdb==4.0.10
     # via gitpython
 gitpython==3.1.31
@@ -127,6 +129,7 @@ pyyaml==6.0
     # via
     #   commitizen
     #   myst-parser
+    #   rocm-docs-core (pyproject.toml)
     #   sphinx-external-toc
 questionary==1.10.0
     # via commitizen

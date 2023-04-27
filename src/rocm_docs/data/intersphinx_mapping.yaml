@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=./intersphinx_mapping.schema.json
+version: 1
+
+projects:
+  python:
+    target: https://docs.python.org/3/
+  rtd:
+    target: https://docs.readthedocs.io/en/stable/
+  sphinx:
+    target: https://www.sphinx-doc.org/en/master/

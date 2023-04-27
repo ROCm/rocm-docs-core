@@ -88,14 +88,6 @@ class _DefaultSettings:
     myst_heading_anchors = _ConfigDefault(3)
     external_toc_path = _ConfigDefault("./.sphinx/_toc.yml")
     external_toc_exclude_missing = _ConfigDefault(False)
-    intersphinx_mapping = _ConfigMerge(
-        {
-            "rtd": ("https://docs.readthedocs.io/en/stable/", None),
-            "python": ("https://docs.python.org/3/", None),
-            "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
-        }
-    )
-    intersphinx_disabled_domains = _ConfigDefault(["std"])
     epub_show_urls = _ConfigDefault("footnote")
     exclude_patterns = _ConfigExtend(["_build", "Thumbs.db", ".DS_Store"])
     numfig = _ConfigDefault(True)
@@ -330,6 +322,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     required_extensions = [
         "myst_parser",
         "notfound.extension",
+        "rocm_docs.external_intersphinx",
         "sphinx_copybutton",
         "sphinx_design",
         "sphinx_external_toc",
@@ -337,7 +330,6 @@ def setup(app: Sphinx) -> Dict[str, Any]:
         "sphinx.ext.autosummary",
         "sphinx.ext.doctest",
         "sphinx.ext.duration",
-        "sphinx.ext.intersphinx",
     ]
     for ext in required_extensions:
         app.setup_extension(ext)

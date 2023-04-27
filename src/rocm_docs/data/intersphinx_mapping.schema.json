@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/develop/src/rocm_docs/data/intersphinx_mapping.schema.json",
+    "title": "External intersphinx mapping",
+    "description": "Intersphinx mappings",
+    "type": "object",
+    "properties": {
+        "version": {
+            "type": "integer",
+            "const": 1
+        },
+        "projects": {
+            "type": "object",
+            "title": "projects",
+            "description": "A mapping of project names to intersphinx targets",
+            "default": {
+                "projectname": "http://example.com"
+            },
+            "propertyNames": {
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_\\-]*$"
+            },
+            "patternProperties": {
+                "^[a-zA-Z][a-zA-Z0-9_\\-]*$": {
+                    "title": "project",
+                    "description": "A single mapping for a project",
+                    "type": "object",
+                    "properties": {
+                        "target": {
+                            "type": "string",
+                            "description": "Base URI of the sphinx documentation of the project",
+                            "default": "http://example.com"
+                        },
+                        "inventory": {
+                            "default": null,
+                            "description": "Location of the inventory file",
+                            "type": [
+                                "array",
+                                "string",
+                                "null"
+                            ],
+                            "uniqueItems": true,
+                            "items": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "target"
+                    ]
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "version",
+        "projects"
+    ]
+}
