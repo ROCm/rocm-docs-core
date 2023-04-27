@@ -55,7 +55,7 @@ def _format_mapping(
     )
 
     ProjectItem = Union[str, None, List[Union[str, None]]]
-    Project = Dict[str, ProjectItem]
+    Project = Union[str, Dict[str, ProjectItem]]
     data: Dict[str, Union[int, Dict[str, Project]]]
     try:
         data = fastjsonschema.validate(schema, contents)
@@ -70,6 +70,9 @@ def _format_mapping(
         return item
 
     def get_target(project: Project) -> ProjectMapping:
+        if isinstance(project, str):
+            return (project.replace("${version}", version), None)
+
         assert isinstance(project["target"], str)
         target: str = project["target"].replace("${version}", version)
 

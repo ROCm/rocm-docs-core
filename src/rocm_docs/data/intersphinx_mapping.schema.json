@@ -23,7 +23,10 @@
                 "^[a-zA-Z][a-zA-Z0-9_\\-]*$": {
                     "title": "project",
                     "description": "A single mapping for a project",
-                    "type": "object",
+                    "type": [
+                        "object",
+                        "string"
+                    ],
                     "properties": {
                         "target": {
                             "type": "string",

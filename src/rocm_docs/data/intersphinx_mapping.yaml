@@ -4,9 +4,6 @@ version: 1
 # ${version} will be replaced by the version of the (current) project
 
 projects:
-  python:
-    target: https://docs.python.org/3/
-  rtd:
-    target: https://docs.readthedocs.io/en/stable/
-  sphinx:
-    target: https://www.sphinx-doc.org/en/master/
+  python: https://docs.python.org/3/
+  rtd: https://docs.readthedocs.io/en/stable/
+  sphinx: https://www.sphinx-doc.org/en/master/
