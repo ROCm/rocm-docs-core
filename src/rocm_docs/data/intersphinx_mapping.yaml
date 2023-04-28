@@ -1,9 +1,9 @@
 # yaml-language-server: $schema=./intersphinx_mapping.schema.json
 version: 1
 
-# ${version} will be replaced by the version of the (current) project
-
+# ${version} will be replaced by the version of the (current) project in values
 projects:
   python: https://docs.python.org/3/
   rtd: https://docs.readthedocs.io/en/stable/
   sphinx: https://www.sphinx-doc.org/en/master/
+  rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
