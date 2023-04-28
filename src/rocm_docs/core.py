@@ -10,6 +10,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Callable, Dict, Generic, List, Type, TypeVar
 import importlib_resources
+import datetime
 
 from bs4 import BeautifulSoup
 from pydata_sphinx_theme.utils import config_provided_by_user
@@ -168,26 +169,32 @@ def _set_page_article_info(
     mentioned in app.config.article_pages
     """
     for page in app.config.article_pages:
-        # default to linux os
-        font_awesome_os = '<i class="fa-brands fa-linux fa-2xl"></i>'
-        if "os" in page.keys():
-            if "linux" not in page["os"]:
-                font_awesome_os = ""
-            if "windows" in page["os"]:
-                font_awesome_os += '<i class="fa-brands fa-windows fa-2xl"></i>'
-        modified_info = article_info.replace("<!--fontawesome-->", font_awesome_os)
+        font_awesome_os = ""
+        if "os" not in page.keys():
+            page["os"] = app.config.all_article_info_os
+        if "linux" in page["os"]:
+            font_awesome_os += '<i class="fa-brands fa-linux fa-2xl fa-fw"></i>'
+        if "windows" in page["os"]:
+            font_awesome_os += '<i class="fa-brands fa-windows fa-2xl fa-fw"></i>'
+        modified_info = article_info.replace("<!--osicons-->", font_awesome_os)
 
-        # default to no author
-        author = ""
+        author = app.config.all_article_info_author
         if "author" in page.keys():
             author = page["author"]
         modified_info = modified_info.replace("AMD", author)
 
+        date_info = app.config.all_article_info_date
         if "date" in page.keys():
-            modified_info = modified_info.replace("2023", page["date"])
+            date_info = page["date"]
+            modified_info = modified_info.replace("2023", date_info)
 
+        read_time = app.config.all_article_info_read_time
         if "read-time" in page.keys():
-            modified_info = modified_info.replace("5 min read", page["read-time"])
+            read_time = page["read-time"]
+            modified_info = modified_info.replace("5 min read", read_time)
+            if read_time == "":
+                modified_info = modified_info.replace("sd-octicon sd-octicon-clock", "")
+
         
         path = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
         specific_pages.append(path)
@@ -210,17 +217,18 @@ def _set_all_article_info(
         if page in specific_pages:
             continue
 
-        # default to linux os
-        font_awesome_os = '<i class="fa-brands fa-linux fa-2xl"></i>'
-        if "linux" not in app.config.all_article_info_os:
-            font_awesome_os = ""
+        font_awesome_os = ""
+        if "linux" in app.config.all_article_info_os:
+            font_awesome_os += '<i class="fa-brands fa-linux fa-2xl fa-fw"></i>'
         if "windows" in app.config.all_article_info_os:
-            font_awesome_os += '<i class="fa-brands fa-windows fa-2xl"></i>'
+            font_awesome_os += '<i class="fa-brands fa-windows fa-2xl fa-fw"></i>'
 
-        modified_info = article_info.replace("<!--fontawesome-->", font_awesome_os)
+        modified_info = article_info.replace("<!--osicons-->", font_awesome_os)
         modified_info = modified_info.replace("AMD", app.config.all_article_info_author)
         modified_info = modified_info.replace("2023", app.config.all_article_info_date)
         modified_info = modified_info.replace("5 min read", app.config.all_article_info_read_time)
+        if app.config.all_article_info_read_time == "":
+                modified_info = modified_info.replace("sd-octicon sd-octicon-clock", "")
         
         _write_article_info(page, modified_info)
 
@@ -263,10 +271,11 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
     app.add_config_value("html_output_directory", default="_build/html/", rebuild="html", types=str)
     app.add_config_value("setting_all_article_info", default=False, rebuild="html", types=Any)
-    app.add_config_value("all_article_info_os", default=["linux"], rebuild="html", types=Any)
+    app.add_config_value("all_article_info_os", default=["linux", "windows"], rebuild="html", types=Any)
     app.add_config_value("all_article_info_author", default="", rebuild="html", types=Any)
-    app.add_config_value("all_article_info_date", default="2023", rebuild="html", types=Any)
-    app.add_config_value("all_article_info_read_time", default="5 min read time", rebuild="html", types=Any)
+    today = datetime.date.today().strftime("%B %d, %Y")
+    app.add_config_value("all_article_info_date", default=today, rebuild="html", types=Any)
+    app.add_config_value("all_article_info_read_time", default="", rebuild="html", types=Any)
     app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
 
     # Run before notfound.extension sees the config (default priority(=500))
