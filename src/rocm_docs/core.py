@@ -46,7 +46,7 @@ def _config_updater(
 
 @_config_updater
 def _ConfigExtend(key: str, app: Sphinx, default: T) -> None:
-    getattr(app.config, key).extend(default)
+    list(getattr(app.config, key)).extend(default)
 
 
 @_config_updater
