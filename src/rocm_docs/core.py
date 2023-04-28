@@ -307,7 +307,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     required_extensions = [
         "myst_parser",
         "notfound.extension",
-        "rocm_docs.external_intersphinx",
+        "rocm_docs.projects",
         "sphinx_copybutton",
         "sphinx_design",
         "sphinx.ext.autodoc",

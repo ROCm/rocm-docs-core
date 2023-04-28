@@ -1,5 +1,5 @@
-"""Load intersphinx mappings from an external file possibly fetched from a
-remote location"""
+"""Handle external projects (remote loading of intersphinx_mapping from file,
+templating projects in toc.yml)"""
 
 import json
 import os
@@ -51,7 +51,7 @@ def _format_mapping(
     mapping_yaml: Union[str, Traversable], version: str
 ) -> Dict[str, ProjectMapping]:
     base = importlib_resources.files("rocm_docs") / "data"
-    schema_file = base / "intersphinx_mapping.schema.json"
+    schema_file = base / "projects.schema.json"
 
     schema = json.load(schema_file.open(encoding="utf-8"))
     contents = yaml.safe_load(
@@ -121,7 +121,7 @@ def _fetch_mapping(
 
 
 def _load_mapping(repo_path: Path) -> Dict[str, ProjectMapping]:
-    mapping_file_loc = "data/intersphinx_mapping.yaml"
+    mapping_file_loc = "data/projects.yaml"
 
     _, branch, __ = util.get_branch(repo_path)
     mapping: Optional[Dict[str, ProjectMapping]] = None

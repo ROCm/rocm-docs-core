@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=./intersphinx_mapping.schema.json
+# yaml-language-server: $schema=./projects.schema.json
 version: 1
 
 # ${version} will be replaced by the version of the (current) project in values

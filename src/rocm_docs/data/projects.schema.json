@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/develop/src/rocm_docs/data/intersphinx_mapping.schema.json",
+    "$id": "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/develop/src/rocm_docs/data/projects.schema.json",
     "title": "External intersphinx mapping",
     "description": "Intersphinx mappings",
     "type": "object",
