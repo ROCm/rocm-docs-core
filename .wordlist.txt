@@ -84,6 +84,7 @@ grayscale
 Haswell
 HBM
 heterogenous
+heterogeneous
 hipBLAS
 hipBLASLt
 HIPCC
@@ -106,6 +107,7 @@ inlining
 installable
 intra
 invariants
+invocating
 Ioffe
 ISA
 ISV
@@ -119,6 +121,7 @@ LLVM
 logits
 lossy
 LTS
+Makefile
 Makefiles
 Matplotlib
 MIGraphX
@@ -134,8 +137,8 @@ numref
 NVPTX
 OAM
 OAMs
-OEM
 OCP
+OEM
 OMP
 OMPT
 OMPX
