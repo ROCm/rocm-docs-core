@@ -54,7 +54,7 @@ cryptography==40.0.2
     # via pyjwt
 debugpy==1.6.7
     # via ipykernel
-decli==0.5.2
+decli==0.6.0
     # via commitizen
 decorator==5.1.1
     # via ipython
