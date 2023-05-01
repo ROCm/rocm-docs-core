@@ -301,7 +301,7 @@ typing-extensions==4.5.0
     #   myst-parser
     #   pydata-sphinx-theme
     #   sqlalchemy
-uc-micro-py==1.0.1
+uc-micro-py==1.0.2
     # via linkify-it-py
 urllib3==1.26.15
     # via requests
