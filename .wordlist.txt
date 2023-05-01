@@ -146,6 +146,7 @@ ONNX
 OpenCL
 OpenMP
 OpenVX
+OSS
 passthrough
 PCIe
 Perfetto
