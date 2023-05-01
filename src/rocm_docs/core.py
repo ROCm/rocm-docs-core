@@ -12,7 +12,7 @@ from typing import Any, Callable, Dict, Generic, List, Type, TypeVar
 import importlib_resources
 import datetime
 
-from bs4 import BeautifulSoup
+import bs4
 from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
 from sphinx.config import Config
@@ -169,6 +169,8 @@ def _set_page_article_info(
     mentioned in app.config.article_pages
     """
     for page in app.config.article_pages:
+        path = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
+
         font_awesome_os = ""
         if "os" not in page.keys():
             page["os"] = app.config.all_article_info_os
@@ -188,15 +190,12 @@ def _set_page_article_info(
             date_info = page["date"]
             modified_info = modified_info.replace("2023", date_info)
 
-        read_time = app.config.all_article_info_read_time
         if "read-time" in page.keys():
             read_time = page["read-time"]
-            modified_info = modified_info.replace("5 min read", read_time)
-            if read_time == "":
-                modified_info = modified_info.replace("sd-octicon sd-octicon-clock", "")
+        else:
+            read_time = _estimate_read_time(path)
+        modified_info = modified_info.replace("5 min read", read_time)
 
-        
-        path = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
         specific_pages.append(path)
         _write_article_info(path, modified_info)
 
@@ -226,7 +225,7 @@ def _set_all_article_info(
         modified_info = article_info.replace("<!--osicons-->", font_awesome_os)
         modified_info = modified_info.replace("AMD", app.config.all_article_info_author)
         modified_info = modified_info.replace("2023", app.config.all_article_info_date)
-        modified_info = modified_info.replace("5 min read", app.config.all_article_info_read_time)
+        modified_info = modified_info.replace("5 min read", _estimate_read_time(page))
         if app.config.all_article_info_read_time == "":
                 modified_info = modified_info.replace("sd-octicon sd-octicon-clock", "")
         
@@ -242,14 +241,43 @@ def _get_all_pages(output_directory: str) -> List[str]:
     return all_pages
 
 
+def _estimate_read_time(file_name: str) -> str:
+    def is_visible(element):
+        if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+            return False
+        elif isinstance(element, bs4.element.Comment):
+            return False
+        elif element.string == "\n":
+            return False
+        return True
+    
+    def count_words(text, avg_word_len):
+        words = 0
+        for line in text:
+            words += len(line)/avg_word_len
+        return words
+
+    WORDS_PER_MIN = 200
+    AVG_WORD_LEN = 5
+
+    file = open(file_name, "r")
+    html = file.read()
+    soup = bs4.BeautifulSoup(html, 'html.parser')
+    page_text = soup.findAll(text=True)
+    visible_page_text = filter(is_visible, page_text)
+    average_word_count = count_words(visible_page_text, AVG_WORD_LEN)
+    time_minutes = max(1, int(average_word_count // WORDS_PER_MIN))
+    return f"{time_minutes} min read time"
+
+
 def _write_article_info(path: str, article_info: str) -> None:
     with open(path, "r+") as file:
         page_html = file.read()
         file.seek(0)
         file.truncate(0)
-        soup = BeautifulSoup(page_html, 'html.parser')
+        soup = bs4.BeautifulSoup(page_html, 'html.parser')
         if soup.article is not None and soup.article.h1 is not None:
-            soup.article.h1.insert_after(BeautifulSoup(article_info, 'html.parser'))
+            soup.article.h1.insert_after(bs4.BeautifulSoup(article_info, 'html.parser'))
         file.write(str(soup))
         
 
