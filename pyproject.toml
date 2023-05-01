@@ -41,7 +41,7 @@ documentation="https://docs.amd.com"
 
 [project.optional-dependencies]
 api_reference = [
-  "doxysphinx>=3.2.1,<3.3"
+  "doxysphinx>=3.2.1,<3.4"
 ]
 development = [
   "commitizen>=2.42"
