@@ -2,48 +2,38 @@
 provides good defaults for settings. Provides a consistent common
 base environment for the rocm documentation projects."""
 
-import contextlib
-import datetime
-import glob
 import inspect
-import itertools
 import os
-import re
 import sys
-import types
+import re
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import (
     Any,
-    Callable,
     Dict,
-    Generator,
     Generic,
     List,
     Optional,
     Set,
-    Tuple,
-    Type,
     TypeVar,
     cast,
 )
 
 import bs4
 import git.repo
-from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import]
+from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
-import rocm_docs.util as util
+from rocm_docs import util
+
+T = TypeVar("T")
 
 # based on doxygen.py
 if sys.version_info < (3, 9):
     import importlib_resources
 else:
     import importlib.resources as importlib_resources
-
-
-T = TypeVar("T")
 
 
 class _ConfigUpdater(Generic[T], ABC):
@@ -56,46 +46,32 @@ class _ConfigUpdater(Generic[T], ABC):
         pass
 
 
-def _config_updater(
-    f: Callable[[str, Sphinx, T], None]
-) -> Type[_ConfigUpdater]:
-    def __call__(self: _ConfigUpdater[T], key: str, app: Sphinx) -> None:
-        f(key, app, self.default)
-
-    def update_body(body: Dict[str, Any]) -> None:
-        body["__call__"] = __call__
-
-    return types.new_class(
-        f.__name__, bases=[_ConfigUpdater[T]], exec_body=update_body
-    )
+class _ConfigExtend(_ConfigUpdater[List[T]]):
+    def __call__(self, key: str, app: Sphinx) -> None:
+        getattr(app.config, key).extend(self.default)
 
 
-@_config_updater
-def _ConfigExtend(key: str, app: Sphinx, default: T) -> None:
-    getattr(app.config, key).extend(default)
+class _ConfigDefault(_ConfigUpdater[T]):
+    def __call__(self, key: str, app: Sphinx) -> None:
+        if not config_provided_by_user(app, key):
+            setattr(app.config, key, self.default)
 
 
-@_config_updater
-def _ConfigUnion(key: str, app: Sphinx, default: Set[T]) -> None:
-    getattr(app.config, key).update(default)
+class _ConfigUnion(_ConfigUpdater[Set[T]]):
+    def __call__(self, key: str, app: Sphinx) -> None:
+        getattr(app.config, key).update(self.default)
 
 
-@_config_updater
-def _ConfigDefault(key: str, app: Sphinx, default: T) -> None:
-    if not config_provided_by_user(app, key):
-        setattr(app.config, key, default)
+class _ConfigOverride(_ConfigUpdater[T]):
+    def __call__(self, key: str, app: Sphinx) -> None:
+        setattr(app.config, key, self.default)
 
 
-@_config_updater
-def _ConfigOverride(key: str, app: Sphinx, value: T) -> None:
-    setattr(app.config, key, value)
-
-
-@_config_updater
-def _ConfigMerge(key: str, app: Sphinx, default: Dict[str, Any]) -> None:
-    setting: Dict[str, Any] = getattr(app.config, key)
-    for key, value in default.items():
-        setting.setdefault(key, value)
+class _ConfigMerge(_ConfigUpdater[Dict[str, Any]]):
+    def __call__(self, key: str, app: Sphinx) -> None:
+        current_setting: Dict[str, Any] = getattr(app.config, key)
+        for item in self.default.items():
+            current_setting.setdefault(item[0], item[1])
 
 
 class _DefaultSettings:
@@ -127,14 +103,17 @@ class _DefaultSettings:
     linkcheck_request_headers = _ConfigMerge(
         {
             r"https://docs.github.com/": {
-                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) \
-                Gecko/20100101 Firefox/112.0"
+                "User-Agent": (
+                    "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0)          "
+                    "       Gecko/20100101 Firefox/112.0"
+                )
             }
         }
     )
 
     @classmethod
     def update_config(cls, app: Sphinx, _: Config) -> None:
+        """Update the Sphinx configuration from the default settings."""
         for name, attr in inspect.getmembers(cls):
             if isinstance(attr, _ConfigUpdater):
                 attr(name, app)
@@ -144,8 +123,7 @@ def _format_toc_file(app: Sphinx, config: Config) -> None:
     toc_in_path = Path(app.srcdir) / (config.external_toc_path + ".in")
     if not (toc_in_path.exists() and toc_in_path.is_file()):
         raise FileNotFoundError(
-            f"Expected input toc file {toc_in_path} to exist and be"
-            " readable."
+            f"Expected input toc file {toc_in_path} to exist and be readable."
         )
     util.format_toc(
         toc_path=app.srcdir,
@@ -156,7 +134,7 @@ def _format_toc_file(app: Sphinx, config: Config) -> None:
 
 
 def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
-    if not "READTHEDOCS" in os.environ:
+    if "READTHEDOCS" not in os.environ:
         return
 
     if not config_provided_by_user(app, "notfound_urls_prefix"):
@@ -170,7 +148,7 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
         r"/\1/" + current_version,
         app.config.html_baseurl,
     )
-    app.config.notfound_urls_prefix = abs_path  # type: ignore[attr-defined]
+    setattr(app.config, "notfound_urls_prefix", abs_path)
 
 
 def _set_article_info(app: Sphinx, _: Config) -> None:
@@ -181,12 +159,11 @@ def _set_article_info(app: Sphinx, _: Config) -> None:
     ):
         return
 
-    rocm_docs_package = importlib_resources.files("rocm_docs")
-    article_info_path = os.path.join(
-        rocm_docs_package, "rocm_docs_theme/components/article-info.html"
+    article_info = (
+        importlib_resources.files("rocm_docs")
+        .joinpath("rocm_docs_theme/components/article-info.html")
+        .read_text(encoding="utf-8")
     )
-    with open(article_info_path, "r") as file:
-        article_info = file.read()
 
     specific_pages: List[str] = []
 
@@ -306,33 +283,29 @@ def _estimate_read_time(file_name: Path) -> str:
             "title",
         ]:
             return False
-        elif isinstance(element, bs4.element.Comment):
+        if isinstance(element, bs4.element.Comment):
             return False
-        elif element.string == "\n":
+        if element.string == "\n":
             return False
         return True
 
-    def count_words(text, avg_word_len):
-        words = 0
-        for line in text:
-            words += len(line) / avg_word_len
-        return words
+    words_per_minute = 200
+    average_word_length = 5
 
-    WORDS_PER_MIN = 200
-    AVG_WORD_LEN = 5
-
-    file = open(file_name, "r")
-    html = file.read()
+    with open(file_name, encoding="utf-8") as file:
+        html = file.read()
     soup = bs4.BeautifulSoup(html, "html.parser")
     page_text = soup.findAll(text=True)
     visible_page_text = filter(is_visible, page_text)
-    average_word_count = count_words(visible_page_text, AVG_WORD_LEN)
-    time_minutes = max(1, int(average_word_count // WORDS_PER_MIN))
+    average_word_count = (
+        sum(len(line) for line in visible_page_text) / average_word_length
+    )
+    time_minutes = max(1, average_word_count // words_per_minute)
     return f"{time_minutes} min read time"
 
 
-def _write_article_info(path: Path, article_info: str) -> None:
-    with open(path, "r+") as file:
+def _write_article_info(path: os.PathLike, article_info: str) -> None:
+    with open(path, "r+", encoding="utf8") as file:
         page_html = file.read()
         soup = bs4.BeautifulSoup(page_html, "html.parser")
 
@@ -353,6 +326,7 @@ def _write_article_info(path: Path, article_info: str) -> None:
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
+    """Set up rocm_docs.core as a Sphinx extension."""
     required_extensions = [
         "myst_parser",
         "notfound.extension",
@@ -386,7 +360,9 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value(
         "all_article_info_read_time", default="", rebuild="html", types=str
     )
-    app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
+    app.add_config_value(
+        "article_pages", default=[], rebuild="html", types=Any
+    )
 
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)

@@ -1,7 +1,7 @@
 """Set up variables for documentation of ROCm projects using RTD."""
 
 import os
-import subprocess
+import re
 from typing import Dict, List, Optional, Union
 
 from deprecated import deprecated
@@ -31,11 +31,13 @@ class ROCmDocs:
     def __init__(
         self,
         project_name: str,
-        version_string : str = None,
+        version_string: Optional[str] = None,
         _: MaybePath = None,
     ) -> None:
         self._project_name: str = project_name
-        self._version_string: str = version_string
+        self._version_string: str = (
+            "" if version_string is None else version_string
+        )
         self.extensions: List[str] = []
         self.html_title: str
         self.html_theme: str
@@ -59,6 +61,7 @@ class ROCmDocs:
         doxygen_path: MaybePath = None,
         doxygen_file: Optional[str] = None,
     ) -> None:
+        """Run doxygen as part of Sphinx by adding rocm_docs.doxygen."""
         if "rocm_docs.doxygen" not in self.extensions:
             self.extensions.append("rocm_docs.doxygen")
 
@@ -80,9 +83,18 @@ class ROCmDocs:
         """Sets up default RTD variables."""
         self.extensions.append("rocm_docs")
         full_project_name = self._project_name
-        if self._version_string is None and os.path.exists("../CMakeLists.txt"):
-            getVersionString = r'sed -n -e "s/^.*VERSION_STRING.* \"\([0-9\.]\{1,\}\).*/\1/p" ../CMakeLists.txt'
-            self._version_string = subprocess.getoutput(getVersionString)
+        if self._version_string is None and os.path.exists(
+            "../CMakeLists.txt"
+        ):
+            with open("../CMakeLists.txt", encoding="utf8") as file:
+                for line in file.readlines():
+                    if "VERSION_STRING" in line:
+                        self._version_string = re.sub(
+                            r"^.*VERSION_STRING.*\s\"([0-9]+(?:\.[0-9]+)*).*$",
+                            "\1",
+                            line,
+                        )
+                        break
         if self._version_string is not None and len(self._version_string) > 0:
             full_project_name += f" {self._version_string}"
         self.html_title = full_project_name

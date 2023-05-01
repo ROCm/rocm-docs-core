@@ -1,3 +1,4 @@
+"""Module to use rocm-docs-core as a theme."""
 from typing import Dict, Any
 from pathlib import Path
 from deprecated import deprecated
@@ -8,14 +9,14 @@ from pydata_sphinx_theme.utils import (
     get_theme_options_dict,
 )
 
-import rocm_docs.util as util
+from rocm_docs import util
 
 
 @deprecated
 def _update_edit_opts(
-    srcdir: Path, theme_opts: Dict[str, Any]
-) -> Dict[str, Any]:
-    # Bail if the user explicitly disabled the edit button
+    srcdir: str, theme_opts: Dict[str, Any]
+) -> None:
+    # Bail if the user didn't explicitly enable the edit button
     if not theme_opts.get("use_edit_page_button", False):
         return
 
@@ -26,8 +27,8 @@ def _update_edit_opts(
         "repository_branch": branch,
         "path_to_docs": util.get_path_to_docs(srcdir),
     }
-    for k, v in default_branch_options.items():
-        theme_opts.setdefault(k, v)
+    for key, val in default_branch_options.items():
+        theme_opts.setdefault(key, val)
 
 
 def _update_theme_options(app: Sphinx) -> None:
@@ -39,6 +40,7 @@ def _update_theme_options(app: Sphinx) -> None:
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
     )
 
+    # Default the download, edit, and fullscreen buttons to off
     for button in ["download", "edit_page", "fullscreen"]:
         theme_opts.setdefault(
             f"use_{button}_button", False
@@ -54,6 +56,7 @@ def _update_theme_options(app: Sphinx) -> None:
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
+    """Set up the module as a Sphinx extension."""
     app.add_js_file(
         "https://download.amd.com/js/analytics/analyticsinit.js",
         priority=999_999,
