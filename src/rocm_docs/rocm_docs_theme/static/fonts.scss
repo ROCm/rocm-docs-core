@@ -61,7 +61,27 @@
           url(unquote($fontPath)) format("woff");
         unicode-range: $unicodeRange;
       }
+      @font-face {
+        font-display: swap;
+        font-family: Open Sans;
+        font-style: unquote($style);
+        font-weight: $weight;
+        src: local(""), url("/_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2") format("woff2");
+        unicode-range: u+e000-f8ff;
+      }
       $fontPath: fontPath($weight, $style, true);
     }
+  }
+}
+
+@font-face {
+  font-family: Open Sans;
+
+}
+
+body {
+  @font-face {
+    font-family: "FontAwesome", "Open Sans";
+
   }
 }
