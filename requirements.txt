@@ -95,7 +95,7 @@ importlib-resources==5.12.0 ; python_version < "3.9"
     #   rocm-docs-core (pyproject.toml)
 ipykernel==6.22.0
     # via myst-nb
-ipython==8.12.0
+ipython==8.12.1
     # via
     #   ipykernel
     #   myst-nb
