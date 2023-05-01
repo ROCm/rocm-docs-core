@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Generic, List, Type, TypeVar
 import importlib_resources
 import datetime
+import time
 
 import bs4
 from pydata_sphinx_theme.utils import config_provided_by_user
@@ -169,7 +170,10 @@ def _set_page_article_info(
     mentioned in app.config.article_pages
     """
     for page in app.config.article_pages:
-        path = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
+        path_html = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
+        path_source = page["file"] + ".rst"
+        if os.path.isfile(path_source) is False:
+            path_source = page["file"] + ".md"
 
         font_awesome_os = ""
         if "os" not in page.keys():
@@ -185,19 +189,19 @@ def _set_page_article_info(
             author = page["author"]
         modified_info = modified_info.replace("AMD", author)
 
-        date_info = app.config.all_article_info_date
+        date_info = _get_time_last_modified(path_source)
         if "date" in page.keys():
             date_info = page["date"]
-            modified_info = modified_info.replace("2023", date_info)
+        modified_info = modified_info.replace("2023", date_info)
 
         if "read-time" in page.keys():
             read_time = page["read-time"]
         else:
-            read_time = _estimate_read_time(path)
+            read_time = _estimate_read_time(path_html)
         modified_info = modified_info.replace("5 min read", read_time)
 
-        specific_pages.append(path)
-        _write_article_info(path, modified_info)
+        specific_pages.append(path_html)
+        _write_article_info(path_html, modified_info)
 
 
 def _set_all_article_info(
@@ -209,9 +213,9 @@ def _set_all_article_info(
     Add article info headers with general settings to all HTML pages
     except those in app.config.article_pages
     """
-    all_pages = _get_all_pages(app.config.html_output_directory)
+    (html_pages, source_map) = _get_all_pages(app.config.html_output_directory)
 
-    for page in all_pages:
+    for page in html_pages:
         # skip pages with specific settings
         if page in specific_pages:
             continue
@@ -222,23 +226,43 @@ def _set_all_article_info(
         if "windows" in app.config.all_article_info_os:
             font_awesome_os += '<i class="fa-brands fa-windows fa-2xl fa-fw"></i>'
 
+        page_key = Path(page).stem
+        if page_key in source_map.keys():
+            modified_path = source_map[Path(page).stem]
+        else:
+            modified_path = page
+
         modified_info = article_info.replace("<!--osicons-->", font_awesome_os)
         modified_info = modified_info.replace("AMD", app.config.all_article_info_author)
-        modified_info = modified_info.replace("2023", app.config.all_article_info_date)
+        modified_info = modified_info.replace("2023", _get_time_last_modified(modified_path))
         modified_info = modified_info.replace("5 min read", _estimate_read_time(page))
-        if app.config.all_article_info_read_time == "":
-                modified_info = modified_info.replace("sd-octicon sd-octicon-clock", "")
         
         _write_article_info(page, modified_info)
 
 
-def _get_all_pages(output_directory: str) -> List[str]:
-    all_pages = []
+def _get_all_pages(output_directory: str):
+    html_pages = list()
+    source_map = dict()
+
     for root, _, files in os.walk(output_directory):
         for file in files:
             if file.endswith(".html"):
-                all_pages.append(os.path.join(root, file))
-    return all_pages
+                html_pages.append(os.path.join(root, file))
+
+    for root, _, files in os.walk("."):
+        for file in files:
+            if file.endswith(".rst") or file.endswith(".md"):
+                file_key = Path(file).stem
+                source_map[file_key] = os.path.join(root, file)
+    
+    return (html_pages, source_map)
+
+
+def _get_time_last_modified(path: str) -> str:
+    last_time_modified = os.path.getmtime(path)
+    global_time = time.gmtime(last_time_modified)
+    date_info = time.strftime("%B %d, %Y", global_time)
+    return date_info
 
 
 def _estimate_read_time(file_name: str) -> str:
