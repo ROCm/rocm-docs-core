@@ -303,7 +303,7 @@ typing-extensions==4.5.0
     #   sqlalchemy
 uc-micro-py==1.0.1
     # via linkify-it-py
-urllib3==1.26.15
+urllib3==2.0.1
     # via requests
 wcwidth==0.2.6
     # via prompt-toolkit
