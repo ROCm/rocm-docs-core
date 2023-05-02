@@ -8,14 +8,16 @@ from rocm_docs import ROCmDocs
 
 html_output_directory = "../_readthedocs/html"
 setting_all_article_info = True
-#all_article_info_os = ["linux", "windows"] # same as default
-#all_article_info_author = "" # same as default
-#all_article_info_date = "2023" # defaults to today
-#all_article_info_read_time = "" # same as default
 
-# specific settings override general settings above
+# specific settings override any general settings (eg: all_article_info_<field>)
 article_pages = [
-    {"file":"index", "os":["windows"], "author":"Author: AMD", "date":"May 1, 2023", "read-time":"2 min read"},
+    {
+        "file":"index", 
+        "os":["linux", "windows"], 
+        "author":"Author: AMD", 
+        "date":"2023-05-01", 
+        "read-time":"2 min read"
+    },
     {"file":"developer_guide/commitizen"}
 ]
 
