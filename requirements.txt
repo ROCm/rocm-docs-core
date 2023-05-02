@@ -106,8 +106,6 @@ jinja2==3.1.2
     #   commitizen
     #   myst-parser
     #   sphinx
-json5==0.9.11
-    # via doxysphinx
 jsonschema==4.17.3
     # via nbformat
 jupyter-cache==0.6.1
@@ -122,6 +120,8 @@ jupyter-core==5.3.0
     #   jupyter-client
     #   nbclient
     #   nbformat
+libsass==0.22.0
+    # via doxysphinx
 linkify-it-py==1.0.3
     # via myst-parser
 lxml==4.9.2
@@ -140,6 +140,8 @@ mdit-py-plugins==0.3.5
     # via myst-parser
 mdurl==0.1.2
     # via markdown-it-py
+mpire==2.7.1
+    # via doxysphinx
 myst-nb==0.17.2
     # via rocm-docs-core (pyproject.toml)
 myst-parser[linkify]==0.18.1
@@ -195,8 +197,11 @@ pygments==2.15.1
     # via
     #   accessible-pygments
     #   ipython
+    #   mpire
     #   pydata-sphinx-theme
     #   sphinx
+pyjson5==1.6.2
+    # via doxysphinx
 pyjwt[crypto]==2.6.0
     # via pygithub
 pynacl==1.5.0
@@ -284,6 +289,8 @@ tornado==6.3.1
     # via
     #   ipykernel
     #   jupyter-client
+tqdm==4.65.0
+    # via mpire
 traitlets==5.9.0
     # via
     #   comm
