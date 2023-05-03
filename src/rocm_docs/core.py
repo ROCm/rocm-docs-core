@@ -7,11 +7,10 @@ import os
 import re
 import subprocess
 import sys
-import time
 import types
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Callable, Dict, Generic, List, Type, TypeVar
+from typing import Any, Callable, Dict, Generic, List, Set, Type, TypeVar
 
 import bs4
 from pydata_sphinx_theme.utils import config_provided_by_user
@@ -60,6 +59,11 @@ def _ConfigExtend(key: str, app: Sphinx, default: T) -> None:
 
 
 @_config_updater
+def _ConfigUnion(key: str, app: Sphinx, default: Set[T]) -> None:
+    getattr(app.config, key).update(default)
+
+
+@_config_updater
 def _ConfigDefault(key: str, app: Sphinx, default: T) -> None:
     if not config_provided_by_user(app, key):
         setattr(app.config, key, default)
@@ -85,8 +89,8 @@ class _DefaultSettings:
     # pylint: disable=redefined-builtin
     copyright = _ConfigDefault("2022-2023, Advanced Micro Devices Ltd")
     # pylint: enable=redefined-builtin
-    myst_enable_extensions = _ConfigExtend(
-        ["colon_fence", "fieldlist", "linkify", "replacements", "substitution"]
+    myst_enable_extensions = _ConfigUnion(
+        {"colon_fence", "fieldlist", "linkify", "replacements", "substitution"}
     )
     myst_heading_anchors = _ConfigDefault(3)
     external_toc_path = _ConfigOverride("./.sphinx/_toc.yml")
@@ -314,7 +318,7 @@ def _write_article_info(path: str, article_info: str) -> None:
 
 def setup(app: Sphinx) -> Dict[str, Any]:
     required_extensions = [
-        "myst_nb",
+        "myst_parser",
         "notfound.extension",
         "sphinx_copybutton",
         "sphinx_design",
