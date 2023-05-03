@@ -1,6 +1,7 @@
 ABI
 activations
 AlexNet
+allocators
 AMD
 AMDGPU
 AMDGPUs
@@ -83,8 +84,8 @@ GPUs
 grayscale
 Haswell
 HBM
-heterogenous
 heterogeneous
+heterogenous
 hipBLAS
 hipBLASLt
 HIPCC
