@@ -1,3 +1,13 @@
+## v0.8.0 (2023-05-02)
+
+### Feat
+
+- Rename versioned doc links with version number
+
+### Fix
+
+- Remove unintended CSS changes
+
 ## v0.7.1 (2023-04-26)
 
 ## v0.7.0 (2023-04-26)

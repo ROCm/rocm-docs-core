@@ -1,6 +1,7 @@
 ABI
 activations
 AlexNet
+allocators
 AMD
 AMDGPU
 AMDGPUs
@@ -83,6 +84,7 @@ GPUs
 grayscale
 Haswell
 HBM
+heterogeneous
 heterogenous
 hipBLAS
 hipBLASLt
@@ -106,6 +108,7 @@ inlining
 installable
 intra
 invariants
+invocating
 Ioffe
 ISA
 ISV
@@ -119,6 +122,7 @@ LLVM
 logits
 lossy
 LTS
+Makefile
 Makefiles
 Matplotlib
 MIGraphX
@@ -134,8 +138,8 @@ numref
 NVPTX
 OAM
 OAMs
-OEM
 OCP
+OEM
 OMP
 OMPT
 OMPX
@@ -143,6 +147,7 @@ ONNX
 OpenCL
 OpenMP
 OpenVX
+OSS
 passthrough
 PCIe
 Perfetto
