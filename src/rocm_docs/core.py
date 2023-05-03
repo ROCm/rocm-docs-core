@@ -8,7 +8,7 @@ import re
 import types
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Callable, Dict, Generic, List, Type, TypeVar
+from typing import Any, Callable, Dict, Generic, List, Set, Type, TypeVar
 from bs4 import BeautifulSoup
 
 from pydata_sphinx_theme.utils import config_provided_by_user
@@ -46,7 +46,12 @@ def _config_updater(
 
 @_config_updater
 def _ConfigExtend(key: str, app: Sphinx, default: T) -> None:
-    list(getattr(app.config, key)).extend(default)
+    getattr(app.config, key).extend(default)
+
+
+@_config_updater
+def _ConfigUnion(key: str, app: Sphinx, default: Set[T]) -> None:
+    getattr(app.config, key).update(default)
 
 
 @_config_updater
@@ -75,8 +80,8 @@ class _DefaultSettings:
     # pylint: disable=redefined-builtin
     copyright = _ConfigDefault("2022-2023, Advanced Micro Devices Ltd")
     # pylint: enable=redefined-builtin
-    myst_enable_extensions = _ConfigExtend(
-        ["colon_fence", "fieldlist", "linkify", "replacements", "substitution"]
+    myst_enable_extensions = _ConfigUnion(
+        {"colon_fence", "fieldlist", "linkify", "replacements", "substitution"}
     )
     myst_heading_anchors = _ConfigDefault(3)
     external_toc_path = _ConfigOverride("./.sphinx/_toc.yml")
