@@ -5,17 +5,27 @@ base environment for the rocm documentation projects."""
 import inspect
 import os
 import re
+import subprocess
+import sys
+import time
 import types
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Callable, Dict, Generic, List, Type, TypeVar
-from bs4 import BeautifulSoup
 
+import bs4
 from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
 import rocm_docs.util as util
+
+# based on doxygen.py
+if sys.version_info < (3, 9):
+    import importlib_resources
+else:
+    import importlib.resources as importlib_resources
+
 
 T = TypeVar("T")
 
@@ -144,7 +154,9 @@ def _set_article_info(app: Sphinx, _: Config) -> None:
     if app.config.setting_all_article_info is False and len(app.config.article_pages) == 0:
         return
 
-    with open("_templates/components/article-info.html", "r") as file:
+    rocm_docs_package = importlib_resources.files("rocm_docs")
+    article_info_path = os.path.join(rocm_docs_package, "rocm_docs_theme/components/article-info.html")
+    with open(article_info_path, "r") as file:
         article_info = file.read()
 
     specific_pages = []
@@ -165,30 +177,38 @@ def _set_page_article_info(
     mentioned in app.config.article_pages
     """
     for page in app.config.article_pages:
-        # default to linux os
-        font_awesome_os = '<i class="fa-brands fa-linux fa-2xl"></i>'
-        if "os" in page.keys():
-            if "linux" not in page["os"]:
-                font_awesome_os = ""
-            if "windows" in page["os"]:
-                font_awesome_os += '<i class="fa-brands fa-windows fa-2xl"></i>'
-        modified_info = article_info.replace("<!--fontawesome-->", font_awesome_os)
+        path_html = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
+        path_source = page["file"] + ".rst"
+        if os.path.isfile(path_source) is False:
+            path_source = page["file"] + ".md"
 
-        # default to no author
-        author = ""
+        font_awesome_os = ""
+        if "os" not in page.keys():
+            page["os"] = app.config.all_article_info_os
+        if "linux" in page["os"]:
+            font_awesome_os += '<i class="fa-brands fa-linux fa-2xl fa-fw"></i>'
+        if "windows" in page["os"]:
+            font_awesome_os += '<i class="fa-brands fa-windows fa-2xl fa-fw"></i>'
+        modified_info = article_info.replace("<!--osicons-->", font_awesome_os)
+
+        author = app.config.all_article_info_author
         if "author" in page.keys():
             author = page["author"]
         modified_info = modified_info.replace("AMD", author)
 
+        date_info = _get_time_last_modified(path_source)
         if "date" in page.keys():
-            modified_info = modified_info.replace("2023", page["date"])
+            date_info = page["date"]
+        modified_info = modified_info.replace("2023", date_info)
 
         if "read-time" in page.keys():
-            modified_info = modified_info.replace("5 min read", page["read-time"])
-        
-        path = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
-        specific_pages.append(path)
-        _write_article_info(path, modified_info)
+            read_time = page["read-time"]
+        else:
+            read_time = _estimate_read_time(path_html)
+        modified_info = modified_info.replace("5 min read", read_time)
+
+        specific_pages.append(path_html)
+        _write_article_info(path_html, modified_info)
 
 
 def _set_all_article_info(
@@ -200,35 +220,85 @@ def _set_all_article_info(
     Add article info headers with general settings to all HTML pages
     except those in app.config.article_pages
     """
-    all_pages = _get_all_pages(app.config.html_output_directory)
+    (html_pages, source_map) = _get_all_pages(app.config.html_output_directory)
 
-    for page in all_pages:
+    for page in html_pages:
         # skip pages with specific settings
         if page in specific_pages:
             continue
 
-        # default to linux os
-        font_awesome_os = '<i class="fa-brands fa-linux fa-2xl"></i>'
-        if "linux" not in app.config.all_article_info_os:
-            font_awesome_os = ""
+        font_awesome_os = ""
+        if "linux" in app.config.all_article_info_os:
+            font_awesome_os += '<i class="fa-brands fa-linux fa-2xl fa-fw"></i>'
         if "windows" in app.config.all_article_info_os:
-            font_awesome_os += '<i class="fa-brands fa-windows fa-2xl"></i>'
+            font_awesome_os += '<i class="fa-brands fa-windows fa-2xl fa-fw"></i>'
 
-        modified_info = article_info.replace("<!--fontawesome-->", font_awesome_os)
+        page_key = Path(page).stem
+        if page_key in source_map.keys():
+            modified_path = source_map[page_key]
+        else:
+            modified_path = page
+        date_info = _get_time_last_modified(modified_path)
+        if len(date_info) == 0:
+            date_info = app.config.all_article_info_date
+
+        modified_info = article_info.replace("<!--osicons-->", font_awesome_os)
         modified_info = modified_info.replace("AMD", app.config.all_article_info_author)
-        modified_info = modified_info.replace("2023", app.config.all_article_info_date)
-        modified_info = modified_info.replace("5 min read", app.config.all_article_info_read_time)
+        modified_info = modified_info.replace("2023", date_info)
+        modified_info = modified_info.replace("5 min read", _estimate_read_time(page))
         
         _write_article_info(page, modified_info)
 
 
-def _get_all_pages(output_directory: str) -> List[str]:
-    all_pages = []
+def _get_all_pages(output_directory: str):
+    html_pages = list()
+    source_map = dict()
+
     for root, _, files in os.walk(output_directory):
         for file in files:
             if file.endswith(".html"):
-                all_pages.append(os.path.join(root, file))
-    return all_pages
+                html_pages.append(os.path.join(root, file))
+
+    for root, _, files in os.walk("."):
+        for file in files:
+            if file.endswith(".rst") or file.endswith(".md"):
+                file_key = Path(file).stem
+                source_map[file_key] = os.path.join(root, file)
+    
+    return (html_pages, source_map)
+
+
+def _get_time_last_modified(path: str) -> str:
+    return subprocess.getoutput(f"git log -1 --pretty='format:%cs' {path}")
+
+
+def _estimate_read_time(file_name: str) -> str:
+    def is_visible(element):
+        if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+            return False
+        elif isinstance(element, bs4.element.Comment):
+            return False
+        elif element.string == "\n":
+            return False
+        return True
+    
+    def count_words(text, avg_word_len):
+        words = 0
+        for line in text:
+            words += len(line)/avg_word_len
+        return words
+
+    WORDS_PER_MIN = 200
+    AVG_WORD_LEN = 5
+
+    file = open(file_name, "r")
+    html = file.read()
+    soup = bs4.BeautifulSoup(html, 'html.parser')
+    page_text = soup.findAll(text=True)
+    visible_page_text = filter(is_visible, page_text)
+    average_word_count = count_words(visible_page_text, AVG_WORD_LEN)
+    time_minutes = max(1, int(average_word_count // WORDS_PER_MIN))
+    return f"{time_minutes} min read time"
 
 
 def _write_article_info(path: str, article_info: str) -> None:
@@ -236,9 +306,9 @@ def _write_article_info(path: str, article_info: str) -> None:
         page_html = file.read()
         file.seek(0)
         file.truncate(0)
-        soup = BeautifulSoup(page_html, 'html.parser')
+        soup = bs4.BeautifulSoup(page_html, 'html.parser')
         if soup.article is not None and soup.article.h1 is not None:
-            soup.article.h1.insert_after(BeautifulSoup(article_info, 'html.parser'))
+            soup.article.h1.insert_after(bs4.BeautifulSoup(article_info, 'html.parser'))
         file.write(str(soup))
         
 
@@ -260,10 +330,10 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
     app.add_config_value("html_output_directory", default="_build/html/", rebuild="html", types=str)
     app.add_config_value("setting_all_article_info", default=False, rebuild="html", types=Any)
-    app.add_config_value("all_article_info_os", default=["linux"], rebuild="html", types=Any)
+    app.add_config_value("all_article_info_os", default=["linux", "windows"], rebuild="html", types=Any)
     app.add_config_value("all_article_info_author", default="", rebuild="html", types=Any)
     app.add_config_value("all_article_info_date", default="2023", rebuild="html", types=Any)
-    app.add_config_value("all_article_info_read_time", default="5 min read time", rebuild="html", types=Any)
+    app.add_config_value("all_article_info_read_time", default="", rebuild="html", types=Any)
     app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
 
     # Run before notfound.extension sees the config (default priority(=500))
