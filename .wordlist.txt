@@ -131,6 +131,8 @@ MIOpen
 MIVisionX
 MNIST
 MyST
+namespace
+namespaces
 Navi
 NUMA
 NumPy
@@ -145,6 +147,7 @@ OMPT
 OMPX
 ONNX
 OpenCL
+OpenGL
 OpenMP
 OpenVX
 OSS
@@ -234,6 +237,7 @@ uninstallation
 unsqueeze
 unstacking
 unswitching
+untrusted
 untuned
 USM
 Vanhoucke
@@ -246,6 +250,7 @@ vectorizes
 VGPR
 VGPRs
 VMWare
+Vulkan
 wavefront
 wavefronts
 WGP

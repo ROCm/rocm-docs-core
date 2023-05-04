@@ -19,6 +19,13 @@ matrix:
       - open : '\[[^]]*?]\('
         content: '[^)]*?'
         close: '\)'
+      # Ignore out-of-line URL references in [text][reference-name]
+      - open : '\[[^\]]*?\]\['
+        content: '[^\]]*?'
+        close: '\]'
+      # Ignore out-of-line URL definitions
+      - open : '^ {0,3}\[[^\]]*?\]:\s*\S+'
+        close: '$'
       # Ignore URLs in <URL>
       - open : '\<'
         content: '[^]]*?'
