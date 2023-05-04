@@ -273,7 +273,7 @@ def _get_all_pages(output_directory: str):
 
 
 def _get_time_last_modified(path: str) -> str:
-    return subprocess.getoutput(f"git log -1 --pretty='format:%cs' {path}")
+    return subprocess.getoutput(f"git log -1 --pretty=format:%cd --date=short {path}")
 
 
 def _estimate_read_time(file_name: str) -> str:
