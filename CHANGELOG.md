@@ -1,3 +1,9 @@
+## v0.9.1 (2023-05-04)
+
+### Fix
+
+- **core.py**: use older version of pretty format in git log command
+
 ## v0.9.0 (2023-05-03)
 
 ### Feat
