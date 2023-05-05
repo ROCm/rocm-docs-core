@@ -183,7 +183,7 @@ typing-extensions==4.5.0
     # via pydata-sphinx-theme
 uc-micro-py==1.0.2
     # via linkify-it-py
-urllib3==2.0.1
+urllib3==2.0.2
     # via requests
 wcwidth==0.2.6
     # via prompt-toolkit

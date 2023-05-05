@@ -308,11 +308,15 @@ def _estimate_read_time(file_name: str) -> str:
 def _write_article_info(path: str, article_info: str) -> None:
     with open(path, "r+") as file:
         page_html = file.read()
+        soup = bs4.BeautifulSoup(page_html, 'html.parser')
+
+        has_article_info = soup.find("div", id="rocm-docs-core-article-info")
+        if has_article_info is not None or soup.article is None or soup.article.h1 is None:
+            return
+            
+        soup.article.h1.insert_after(bs4.BeautifulSoup(article_info, 'html.parser'))
         file.seek(0)
         file.truncate(0)
-        soup = bs4.BeautifulSoup(page_html, 'html.parser')
-        if soup.article is not None and soup.article.h1 is not None:
-            soup.article.h1.insert_after(bs4.BeautifulSoup(article_info, 'html.parser'))
         file.write(str(soup))
         
 
