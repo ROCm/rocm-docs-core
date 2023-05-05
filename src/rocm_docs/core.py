@@ -310,8 +310,8 @@ def _write_article_info(path: str, article_info: str) -> None:
         page_html = file.read()
         soup = bs4.BeautifulSoup(page_html, 'html.parser')
 
-        has_article_info = soup.find("div", {"id": "rocm-docs-core-article-info"})
-        if has_article_info == False or soup.article is None or soup.article.h1 is None:
+        has_article_info = soup.find("div", id="rocm-docs-core-article-info")
+        if has_article_info is not None or soup.article is None or soup.article.h1 is None:
             return
             
         soup.article.h1.insert_after(bs4.BeautifulSoup(article_info, 'html.parser'))
