@@ -1,3 +1,9 @@
+## v0.9.2 (2023-05-05)
+
+### Fix
+
+- check for existing article info before inserting
+
 ## v0.9.1 (2023-05-04)
 
 ### Fix
