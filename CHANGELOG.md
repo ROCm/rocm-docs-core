@@ -1,3 +1,26 @@
+## v0.10.0 (2023-05-09)
+
+### Feat
+
+- Bring into compliance with AMD styling
+
+### Fix
+
+- Fix header on narrow screens
+- Remove left side menu & buttons
+- Fix lengths on shorter breadcrumbs
+- Add zero width spaces when testing width
+- deprecate disable_main_doc_link
+- fix breadcrumbs and scrolling
+- update ROCm Documentation url
+- Tighten secondary nav
+- Improve transitioning on resize
+
+### Refactor
+
+- Add links to header
+- Merge remote-tracking branch 'upstream/develop' into HEAD
+
 ## v0.9.2 (2023-05-05)
 
 ### Fix
