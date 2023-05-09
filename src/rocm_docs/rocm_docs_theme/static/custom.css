@@ -120,6 +120,22 @@ ul.bd-breadcrumbs {
   margin-top: 1px;
 }
 
+.bd-sidebar-primary {
+  margin-top: 3.5rem;
+}
+
+@media (min-width: 576px) and (max-width: 959.98px) {
+  .bd-sidebar-primary {
+    margin-top: 5.5rem;
+  }
+}
+
+@media(min-width: 960px) {
+  .bd-sidebar-primary {
+    margin-top: unset;
+  }
+}
+
 .bd-sidebar-primary .sidebar-header-items {
   display: flex;
   flex-direction: column;
@@ -129,6 +145,10 @@ ul.bd-breadcrumbs {
     transform-origin: 50%, 50%;
     transition: transform 0.3s ease-in-out;
     transform: rotate(0);
+}
+
+input#__primary:checked ~ .bd-container .primary-toggle>span {
+  transform: rotate(180deg);
 }
 
 /* Fix for sidebar width mismatch between Bootstrap and the Sphinx Book Theme */
