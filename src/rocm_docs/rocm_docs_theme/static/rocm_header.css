@@ -895,3 +895,9 @@ header.common-header
   button.header-menu-links {
   border-top: 1px solid rgba(71, 73, 78, 0.53);
 }
+
+@media (max-width: 959.98px) {
+  input#__primary:checked ~ header.common-header {
+    position: fixed;
+  }
+}
