@@ -4,6 +4,8 @@ import os
 import subprocess
 from typing import Dict, List, Optional, Union
 
+from deprecated import deprecated
+
 from rocm_docs.core import setup
 
 MaybePath = Union[str, os.PathLike, None]
@@ -86,8 +88,9 @@ class ROCmDocs:
         self.html_title = full_project_name
         self.html_theme = "rocm_docs_theme"
 
+    @deprecated
     def disable_main_doc_link(self) -> None:
-        self.html_theme_options["link_main_doc"] = False
+        """The main doc link is now in the header."""
 
 
 __all__ = ["setup", "ROCmDocs"]
