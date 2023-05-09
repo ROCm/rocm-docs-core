@@ -118,10 +118,20 @@ img#rdc-watermark {
 ul.bd-breadcrumbs {
   margin-bottom: 0;
   margin-top: 1px;
+  margin-left: 1rem;
+}
+
+ul.bd-breadcrumbs li.breadcrumb-item {
+  align-items: baseline;
+  align-self: baseline;
 }
 
 .bd-sidebar-primary {
   margin-top: 3.5rem;
+}
+
+.sbt-scroll-pixel-helper {
+  top: 3.5rem !important;
 }
 
 @media (min-width: 576px) and (max-width: 959.98px) {
@@ -133,6 +143,18 @@ ul.bd-breadcrumbs {
 @media(min-width: 960px) {
   .bd-sidebar-primary {
     margin-top: unset;
+  }
+}
+
+@media(min-width: 576px) {
+  .sbt-scroll-pixel-helper {
+    top: 5.5rem !important;
+  }
+}
+
+@media(min-width: 1200px) {
+  .sbt-scroll-pixel-helper {
+    top: 9.5rem !important;
   }
 }
 

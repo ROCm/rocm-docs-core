@@ -48,7 +48,7 @@ header.common-header .navbar.second-level-nav {
   }
   header.common-header .navbar.second-level-nav .header-menu-links {
     padding-bottom: 0.625rem !important;
-    padding-top: calc(0.6625rem) !important;
+    padding-top: 0.625rem !important;
   }
 }
 
@@ -491,7 +491,7 @@ header.common-header
     li
     button.top-level:after {
     border: 0;
-    border-bottom: 2px solid #fff;
+    border-bottom: 0.125rem solid #fff;
     content: "";
     display: block;
     margin: 0;
