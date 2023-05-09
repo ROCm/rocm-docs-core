@@ -40,7 +40,7 @@ function fixBreadcrumbItems() {
     textItem.text(newText);
   }
   breadcrumbItems.each(function() {
-    adjustLength($(this), breadcrumbBox, 0.4, x => x.children('a'))
+    adjustLength($(this), breadcrumbBox, 0.82 * (breadcrumbItems.length <= 2 ? 1 : 0.5), x => x.children('a'))
   })
   adjustLength($("li.breadcrumb-item.active"), breadcrumbBox, 0.95, x => x);
   breadcrumbBox.data("maxWidth", 0);
