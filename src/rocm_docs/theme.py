@@ -34,7 +34,7 @@ def _update_theme_options(app: Sphinx) -> None:
 
     theme_opts.setdefault(
         "article_header_start",
-        ["toggle-primary-sidebar.html", "breadcrumbs.html"],
+        ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
     )
 
     # Prepend or set as value if the list doesn't yet exist
