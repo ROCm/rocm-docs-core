@@ -77,6 +77,8 @@ GCDs
 GCN
 GDB
 gfx
+GL
+GLXT
 GPG
 GPU
 GPU's
@@ -131,6 +133,9 @@ MIOpen
 MIVisionX
 MNIST
 MyST
+namespace
+namespaces
+Nano
 Navi
 NUMA
 NumPy
@@ -145,10 +150,12 @@ OMPT
 OMPX
 ONNX
 OpenCL
+OpenGL
 OpenMP
 OpenVX
 OSS
 passthrough
+PCI
 PCIe
 Perfetto
 performant
@@ -216,6 +223,7 @@ stochastically
 strided
 subdirectory
 subexpression
+SWE
 Szegedy
 TensorFlow
 TFLOPS
@@ -234,6 +242,7 @@ uninstallation
 unsqueeze
 unstacking
 unswitching
+untrusted
 untuned
 USM
 Vanhoucke
@@ -246,15 +255,18 @@ vectorizes
 VGPR
 VGPRs
 VMWare
+Vulkan
 wavefront
 wavefronts
 WGP
 whitepaper
 Wojna
+WX
 Xeon
 XGMI
 Xnack
 XT
+XTX
 Xteam
 YAML
 YML

@@ -186,14 +186,16 @@ def _set_page_article_info(
         if os.path.isfile(path_source) is False:
             path_source = page["file"] + ".md"
 
-        font_awesome_os = ""
+        article_os_info = ""
         if "os" not in page.keys():
             page["os"] = app.config.all_article_info_os
         if "linux" in page["os"]:
-            font_awesome_os += '<i class="fa-brands fa-linux fa-2xl fa-fw"></i>'
+            article_os_info += 'Linux'
         if "windows" in page["os"]:
-            font_awesome_os += '<i class="fa-brands fa-windows fa-2xl fa-fw"></i>'
-        modified_info = article_info.replace("<!--osicons-->", font_awesome_os)
+            if len(article_os_info) > 0:
+                article_os_info += ' and '
+            article_os_info += 'Windows'
+        modified_info = article_info.replace("<!--os-info-->", article_os_info)
 
         author = app.config.all_article_info_author
         if "author" in page.keys():
@@ -231,11 +233,13 @@ def _set_all_article_info(
         if page in specific_pages:
             continue
 
-        font_awesome_os = ""
+        article_os_info = ""
         if "linux" in app.config.all_article_info_os:
-            font_awesome_os += '<i class="fa-brands fa-linux fa-2xl fa-fw"></i>'
+            article_os_info += 'Linux'
         if "windows" in app.config.all_article_info_os:
-            font_awesome_os += '<i class="fa-brands fa-windows fa-2xl fa-fw"></i>'
+            if len(article_os_info) > 0:
+                article_os_info += ' and '
+            article_os_info += 'Windows'
 
         page_key = Path(page).stem
         if page_key in source_map.keys():
@@ -246,7 +250,7 @@ def _set_all_article_info(
         if len(date_info) == 0:
             date_info = app.config.all_article_info_date
 
-        modified_info = article_info.replace("<!--osicons-->", font_awesome_os)
+        modified_info = article_info.replace("<!--os-info-->", article_os_info)
         modified_info = modified_info.replace("AMD", app.config.all_article_info_author)
         modified_info = modified_info.replace("2023", date_info)
         modified_info = modified_info.replace("5 min read", _estimate_read_time(page))
@@ -273,7 +277,7 @@ def _get_all_pages(output_directory: str):
 
 
 def _get_time_last_modified(path: str) -> str:
-    return subprocess.getoutput(f"git log -1 --pretty='format:%cs' {path}")
+    return subprocess.getoutput(f"git log -1 --pretty=format:%cd --date=short {path}")
 
 
 def _estimate_read_time(file_name: str) -> str:
@@ -308,11 +312,15 @@ def _estimate_read_time(file_name: str) -> str:
 def _write_article_info(path: str, article_info: str) -> None:
     with open(path, "r+") as file:
         page_html = file.read()
+        soup = bs4.BeautifulSoup(page_html, 'html.parser')
+
+        has_article_info = soup.find("div", id="rocm-docs-core-article-info")
+        if has_article_info is not None or soup.article is None or soup.article.h1 is None:
+            return
+            
+        soup.article.h1.insert_after(bs4.BeautifulSoup(article_info, 'html.parser'))
         file.seek(0)
         file.truncate(0)
-        soup = bs4.BeautifulSoup(page_html, 'html.parser')
-        if soup.article is not None and soup.article.h1 is not None:
-            soup.article.h1.insert_after(bs4.BeautifulSoup(article_info, 'html.parser'))
         file.write(str(soup))
         
 

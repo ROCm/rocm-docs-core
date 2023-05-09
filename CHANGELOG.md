@@ -1,3 +1,31 @@
+## v0.9.2 (2023-05-05)
+
+### Fix
+
+- check for existing article info before inserting
+
+## v0.9.1 (2023-05-04)
+
+### Fix
+
+- **core.py**: use older version of pretty format in git log command
+
+## v0.9.0 (2023-05-03)
+
+### Feat
+
+- **core.py**: set default publish date as time article was last modified
+- **core.py**: set default read time by counting visible words in html output
+
+### Refactor
+
+- add back linkify
+- merge with develop branch
+- get file modification time using git
+- import article info via importlib.resources
+- convert myst_enable_extensions to set and add configunion helper
+- **core.py**: explicitly cast to list
+
 ## v0.8.0 (2023-05-02)
 
 ### Feat

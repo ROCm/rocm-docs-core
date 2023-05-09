@@ -18,7 +18,7 @@ beautifulsoup4==4.12.2
     # via pydata-sphinx-theme
 breathe==4.35.0
     # via rocm-docs-core (pyproject.toml)
-certifi==2022.12.7
+certifi==2023.5.7
     # via requests
 cffi==1.15.1
     # via
@@ -183,7 +183,7 @@ typing-extensions==4.5.0
     # via pydata-sphinx-theme
 uc-micro-py==1.0.2
     # via linkify-it-py
-urllib3==2.0.1
+urllib3==2.0.2
     # via requests
 wcwidth==0.2.6
     # via prompt-toolkit
