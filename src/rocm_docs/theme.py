@@ -1,5 +1,6 @@
 from typing import Dict, Any
 from pathlib import Path
+from deprecated import deprecated
 
 from sphinx.application import Sphinx
 from pydata_sphinx_theme.utils import (
@@ -10,11 +11,12 @@ from pydata_sphinx_theme.utils import (
 import rocm_docs.util as util
 
 
+@deprecated
 def _update_edit_opts(
     srcdir: Path, theme_opts: Dict[str, Any]
 ) -> Dict[str, Any]:
     # Bail if the user explicitly disabled the edit button
-    if not theme_opts.get("use_edit_page_button", True):
+    if not theme_opts.get("use_edit_page_button", False):
         return
 
     url, branch, edit_page = util.get_branch(srcdir)
@@ -34,13 +36,12 @@ def _update_theme_options(app: Sphinx) -> None:
 
     theme_opts.setdefault(
         "article_header_start",
-        ["toggle-primary-sidebar.html", "breadcrumbs.html"],
+        ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
     )
 
-    # Prepend or set as value if the list doesn't yet exist
-    if theme_opts.get("link_main_doc", True):
-        theme_opts.setdefault("navbar_center", []).insert(
-            0, "components/left-side-menu"
+    for button in ["download", "edit_page", "fullscreen"]:
+        theme_opts.setdefault(
+            f"use_{button}_button", False
         )
 
     default_config_opts = {
@@ -60,6 +61,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     )
     app.add_js_file("code_word_breaks.js", loading_method="async")
     app.add_js_file("renameVersionLinks.js", loading_method="async")
+    app.add_js_file("rdcMisc.js", loading_method="async")
     here = Path(__file__).parent.resolve()
     theme_path = here / "rocm_docs_theme"
     app.add_html_theme("rocm_docs_theme", str(theme_path))

@@ -1,62 +1,50 @@
-.rocm-footer {
-    background-color: black;
-    color: white;
-    display: flex;
-    flex-wrap: wrap;
-    border-top: 1px solid hsla(216,3%,63%,.5);
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    padding-top: 5px;
-    line-height: 20px;
-    min-height: 120px;
+footer.rocm-footer {
+  background-color: #000;
+  color: #fff;
+  padding: 1rem;
 }
-
-.rocm-footer a, .rocm-footer p {
-    color: white;
+footer.rocm-footer a:not(.klavika-font) {
+  color: #9d9fa2;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin-bottom: 0.625rem;
+  text-decoration: none;
 }
-
-.rocm-footer>ul {
-    border-bottom: 1px solid hsla(216,3%,63%,.5);
-    justify-content: flex-end;
-    margin-top:15px;
+footer.rocm-footer a:not(.klavika-font):hover {
+  color: #fff;
+  text-decoration: underline;
 }
-
-.rocm-footer ul {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    font-size: 14px;
-    padding: 0;
-    padding-bottom: 12px;
-    width:98vw;
-    list-style: none inside none;
-    margin: 0;
+footer.rocm-footer a.klavika-font:hover {
+  text-decoration: underline;
 }
-
-.rocm-footer div {
-    width: 98vw;
+@media (min-width: 768px) {
+  footer.rocm-footer a.klavika-font {
+    pointer-events: inherit;
+  }
 }
-
-.rocm-footer div {
-    text-align: start;
+footer.rocm-footer section.menu ul {
+  list-style: none;
+  padding-left: 0;
 }
-
-.rocm-footer a:hover {
-    color: #e9ecef;
-    text-decoration: none;
+footer.rocm-footer .bottom-menu ul > li {
+  display: block;
 }
-
-.rocm-footer ul li {
-    margin-right: 5px;
+footer.rocm-footer .bottom-menu ul > li a {
+  font-size: 0.75rem;
+  line-height: 1.125rem;
 }
-
-.rocm-footer ul li+li {
-    margin-left: 10px;
-    padding-left: 8px;
+@media (min-width: 768px) {
+  footer.rocm-footer .bottom-menu ul > li {
+    display: inline-block;
+  }
+  footer.rocm-footer .bottom-menu ul > li:not(:last-child)::after {
+    color: #9d9fa2;
+    content: "|";
+    margin-left: 5px;
+  }
 }
-
-.rocm-footer .copyright {
-    text-align: center;
+footer.rocm-footer .bottom-menu .copyright {
+  color: #9d9fa2;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
 }

@@ -1,42 +1,60 @@
-<div class="rocm-header">
-    <div class="rocm-header-buttons">
-        <a href="https://www.amd.com" target="_blank" class="rocm-header-link">
-            <img id="amd-logo" alt="Advanced Micro Devices, Inc." src="{{ pathto('_static/images/rocm-logo.png',1) }}"></img>
-            <div class="glow-wrap">
-                <i class="glow"></i>
+
+<header class="common-header" >
+    <nav class="navbar navbar-expand-xl">
+        <div class="container-fluid main-nav rocm-header">
+            <button class="navbar-toggler collapsed" id="nav-icon" data-tracking-information="mainMenuToggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="header-logo">
+                <a class="navbar-brand" href="https://amd.com/">
+                    <img src="{{ pathto('_static/images/amd-header-logo.svg',1) }}" alt="AMD Logo" title="AMD Logo" width="90" class="d-inline-block align-text-top hover-opacity"/>
+                </a>
+                <div class="vr vr mx-40 my-25"></div>
+                <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform 5.5.1</a>
             </div>
-        </a>
-        <a href="https://github.com/RadeonOpenCompute/ROCm" target="_blank" class="rocm-header-link">
-            <div class="rocm-link-box">
-                <p>GitHub</p>
+            <div class="icon-nav text-center d-flex ms-auto">
+                <!-- TODO: Search icon up here maybe? -->
             </div>
-            <div class="glow-wrap">
-                <i class="glow"></i>
+        </div>
+    </nav>
+    <nav class="navbar navbar-expand-xl second-level-nav">
+        <div class="container-fluid main-nav">
+            <div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+                    <li class="nav-item" >
+                        <a class="nav-link top-level header-menu-links" href="https://github.com/ROCmSoftwarePlatform" id="menu1" role="button" aria-expanded="false" >
+                            GitHub
+                        </a>
+                    </li>
+                    <li class="nav-item" >
+                        <a class="nav-link top-level header-menu-links" href="https://github.com/RadeonOpenCompute/ROCm/discussions" id="menu2" role="button" aria-expanded="false" >
+                            Community
+                        </a>
+                    </li>
+                    <li class="nav-item" >
+                        <a class="nav-link top-level header-menu-links" href="https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-readme/" id="menu2" role="button" aria-expanded="false" >
+                            AMD Lab Notes
+                        </a>
+                    </li>
+                    <li class="nav-item" >
+                        <a class="nav-link top-level header-menu-links" href="https://www.amd.com/en/technologies/infinity-hub" id="menu4" role="button" aria-expanded="false" >
+                            Infinity Hub
+                        </a>
+                    </li>
+                    <li class="nav-item" >
+                        <a class="nav-link top-level header-menu-links" href="https://github.com/ROCmSoftwareplatform" id="menu3" role="button" aria-expanded="false" >
+                            Support
+                        </a>
+                    </li>
+                    <li class="nav-item" >
+                        <a class="nav-link top-level header-menu-links" href="mailto:dl.rocm-docs-core@amd.com" id="menu4" role="button" aria-expanded="false" >
+                            Feedback
+                        </a>
+                    </li>
+                </ul>
             </div>
-        </a>
-        <a href="https://github.com/RadeonOpenCompute/ROCm/discussions" target="_blank" class="rocm-header-link">
-            <div class="rocm-link-box">
-                <p>Community</p>
-            </div>
-            <div class="glow-wrap">
-                <i class="glow"></i>
-            </div>
-        </a>
-        <a href="https://github.com/RadeonOpenCompute/ROCm/issues/new" target="_blank" class="rocm-header-link">
-            <div class="rocm-link-box">
-                <p>Support</p>
-            </div>
-            <div class="glow-wrap">
-                <i class="glow"></i>
-            </div>
-        </a>
-        <a href="https://www.amd.com/en/technologies/infinity-hub" target="_blank" class="rocm-header-link">
-            <div class="rocm-link-box">
-                <p>Infinity Hub</p>
-            </div>
-            <div class="glow-wrap">
-                <i class="glow"></i>
-            </div>
-        </a>
-    </div>
-</div>
+        </div>
+    </nav>
+</header>
