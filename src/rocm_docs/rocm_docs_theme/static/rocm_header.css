@@ -43,12 +43,12 @@ header.common-header .navbar.second-level-nav {
 }
 @media (min-width: 1200px) {
   header.common-header .navbar.second-level-nav {
-    padding-bottom: 1rem;
-    padding-top: 1rem;
+    padding-bottom: 0.4rem;
+    padding-top: 0.4rem;
   }
   header.common-header .navbar.second-level-nav .header-menu-links {
     padding-bottom: 0.625rem !important;
-    padding-top: 0.625rem !important;
+    padding-top: calc(0.6625rem) !important;
   }
 }
 
@@ -140,7 +140,7 @@ header.common-header .navbar > .main-nav button.navbar-toggler#nav-icon {
 header.common-header .navbar > .main-nav button.navbar-toggler#nav-icon span {
   background: #fff;
   display: block;
-  height: 2px;
+  height: 0.25rem;
   left: 0;
   opacity: 1;
   position: absolute;
