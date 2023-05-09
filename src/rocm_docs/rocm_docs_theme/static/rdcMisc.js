@@ -10,7 +10,7 @@ function fixBreadcrumbItems() {
       const initialText = itm.text();
       let maxWidth = container.width();
       while(lines(container) == startLines) {
-        itm.text(itm.text() + ".");
+        itm.text(itm.text() + "\u200B.");
         if (container.width() > maxWidth) {
           maxWidth = container.width()
         }
