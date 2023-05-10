@@ -126,8 +126,10 @@ class _DefaultSettings:
     linkcheck_timeout = _ConfigDefault(10)
     linkcheck_request_headers = _ConfigMerge(
         {
-            r'https://docs.github.com/': {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) \
-                Gecko/20100101 Firefox/112.0'}
+            r"https://docs.github.com/": {
+                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:112.0) \
+                Gecko/20100101 Firefox/112.0"
+            }
         }
     )
 
@@ -168,15 +170,21 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
         r"/\1/" + current_version,
         app.config.html_baseurl,
     )
-    app.config.notfound_urls_prefix = abs_path #type: ignore[attr-defined]
+    app.config.notfound_urls_prefix = abs_path  # type: ignore[attr-defined]
+
 
 def _set_article_info(app: Sphinx, _: Config) -> None:
     """Add article info headers to HTML pages"""
-    if app.config.setting_all_article_info is False and len(app.config.article_pages) == 0:
+    if (
+        app.config.setting_all_article_info is False
+        and len(app.config.article_pages) == 0
+    ):
         return
 
     rocm_docs_package = importlib_resources.files("rocm_docs")
-    article_info_path = os.path.join(rocm_docs_package, "rocm_docs_theme/components/article-info.html")
+    article_info_path = os.path.join(
+        rocm_docs_package, "rocm_docs_theme/components/article-info.html"
+    )
     with open(article_info_path, "r") as file:
         article_info = file.read()
 
@@ -189,9 +197,7 @@ def _set_article_info(app: Sphinx, _: Config) -> None:
 
 
 def _set_page_article_info(
-    app: Sphinx, 
-    article_info: str, 
-    specific_pages: List[str]
+    app: Sphinx, article_info: str, specific_pages: List[str]
 ) -> None:
     """
     Add article info headers to specific HTML pages
@@ -207,11 +213,11 @@ def _set_page_article_info(
         if "os" not in page.keys():
             page["os"] = app.config.all_article_info_os
         if "linux" in page["os"]:
-            article_os_info += 'Linux'
+            article_os_info += "Linux"
         if "windows" in page["os"]:
             if len(article_os_info) > 0:
-                article_os_info += ' and '
-            article_os_info += 'Windows'
+                article_os_info += " and "
+            article_os_info += "Windows"
         modified_info = article_info.replace("<!--os-info-->", article_os_info)
 
         author = app.config.all_article_info_author
@@ -241,9 +247,7 @@ def _set_page_article_info(
 
 
 def _set_all_article_info(
-    app: Sphinx, 
-    article_info: str, 
-    specific_pages: List[str]
+    app: Sphinx, article_info: str, specific_pages: List[str]
 ) -> None:
     """
     Add article info headers with general settings to all HTML pages
@@ -257,11 +261,11 @@ def _set_all_article_info(
 
         article_os_info = ""
         if "linux" in app.config.all_article_info_os:
-            article_os_info += 'Linux'
+            article_os_info += "Linux"
         if "windows" in app.config.all_article_info_os:
             if len(article_os_info) > 0:
-                article_os_info += ' and '
-            article_os_info += 'Windows'
+                article_os_info += " and "
+            article_os_info += "Windows"
 
         page_rel = app.project.doc2path(docname, basedir=False)
         page = Path(app.outdir, page_rel).with_suffix(".html")
@@ -271,16 +275,22 @@ def _set_all_article_info(
             date_info = cast(str, app.config.all_article_info_date)
 
         modified_info = article_info.replace("<!--os-info-->", article_os_info)
-        modified_info = modified_info.replace("AMD", app.config.all_article_info_author)
+        modified_info = modified_info.replace(
+            "AMD", app.config.all_article_info_author
+        )
         modified_info = modified_info.replace("2023", date_info)
-        modified_info = modified_info.replace("5 min read", _estimate_read_time(page))
-        
+        modified_info = modified_info.replace(
+            "5 min read", _estimate_read_time(page)
+        )
+
         _write_article_info(page, modified_info)
 
 
 def _get_time_last_modified(repo: git.repo.Repo, path: Path) -> Optional[str]:
     try:
-        time = next(repo.iter_commits(paths=path, max_count=1)).committed_datetime
+        time = next(
+            repo.iter_commits(paths=path, max_count=1)
+        ).committed_datetime
         return time.strftime("%Y-%m-%d")
     except StopIteration:
         return None
@@ -288,18 +298,24 @@ def _get_time_last_modified(repo: git.repo.Repo, path: Path) -> Optional[str]:
 
 def _estimate_read_time(file_name: Path) -> str:
     def is_visible(element):
-        if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+        if element.parent.name in [
+            "style",
+            "script",
+            "[document]",
+            "head",
+            "title",
+        ]:
             return False
         elif isinstance(element, bs4.element.Comment):
             return False
         elif element.string == "\n":
             return False
         return True
-    
+
     def count_words(text, avg_word_len):
         words = 0
         for line in text:
-            words += len(line)/avg_word_len
+            words += len(line) / avg_word_len
         return words
 
     WORDS_PER_MIN = 200
@@ -307,7 +323,7 @@ def _estimate_read_time(file_name: Path) -> str:
 
     file = open(file_name, "r")
     html = file.read()
-    soup = bs4.BeautifulSoup(html, 'html.parser')
+    soup = bs4.BeautifulSoup(html, "html.parser")
     page_text = soup.findAll(text=True)
     visible_page_text = filter(is_visible, page_text)
     average_word_count = count_words(visible_page_text, AVG_WORD_LEN)
@@ -318,17 +334,23 @@ def _estimate_read_time(file_name: Path) -> str:
 def _write_article_info(path: Path, article_info: str) -> None:
     with open(path, "r+") as file:
         page_html = file.read()
-        soup = bs4.BeautifulSoup(page_html, 'html.parser')
+        soup = bs4.BeautifulSoup(page_html, "html.parser")
 
         has_article_info = soup.find("div", id="rocm-docs-core-article-info")
-        if has_article_info is not None or soup.article is None or soup.article.h1 is None:
+        if (
+            has_article_info is not None
+            or soup.article is None
+            or soup.article.h1 is None
+        ):
             return
-            
-        soup.article.h1.insert_after(bs4.BeautifulSoup(article_info, 'html.parser'))
+
+        soup.article.h1.insert_after(
+            bs4.BeautifulSoup(article_info, "html.parser")
+        )
         file.seek(0)
         file.truncate(0)
         file.write(str(soup))
-        
+
 
 def setup(app: Sphinx) -> Dict[str, Any]:
     required_extensions = [
@@ -346,11 +368,24 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     for ext in required_extensions:
         app.setup_extension(ext)
 
-    app.add_config_value("setting_all_article_info", default=False, rebuild="html", types=str)
-    app.add_config_value("all_article_info_os", default=["linux", "windows"], rebuild="html", types=str)
-    app.add_config_value("all_article_info_author", default="", rebuild="html", types=str)
-    app.add_config_value("all_article_info_date", default="2023", rebuild="html", types=str)
-    app.add_config_value("all_article_info_read_time", default="", rebuild="html", types=str)
+    app.add_config_value(
+        "setting_all_article_info", default=False, rebuild="html", types=str
+    )
+    app.add_config_value(
+        "all_article_info_os",
+        default=["linux", "windows"],
+        rebuild="html",
+        types=str,
+    )
+    app.add_config_value(
+        "all_article_info_author", default="", rebuild="html", types=str
+    )
+    app.add_config_value(
+        "all_article_info_date", default="2023", rebuild="html", types=str
+    )
+    app.add_config_value(
+        "all_article_info_read_time", default="", rebuild="html", types=str
+    )
     app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
 
     # Run before notfound.extension sees the config (default priority(=500))
