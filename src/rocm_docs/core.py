@@ -2,17 +2,33 @@
 provides good defaults for settings. Provides a consistent common
 base environment for the rocm documentation projects."""
 
+import contextlib
+import datetime
+import glob
 import inspect
+import itertools
 import os
 import re
-import subprocess
 import sys
 import types
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Callable, Dict, Generic, List, Set, Type, TypeVar
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Generator,
+    Generic,
+    List,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+    TypeVar,
+)
 
 import bs4
+import git.repo
 from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
 from sphinx.config import Config
@@ -180,11 +196,11 @@ def _set_page_article_info(
     Add article info headers to specific HTML pages
     mentioned in app.config.article_pages
     """
+    repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
     for page in app.config.article_pages:
-        path_html = os.path.join(app.outdir, page["file"]) + ".html"
-        path_source = page["file"] + ".rst"
-        if os.path.isfile(path_source) is False:
-            path_source = page["file"] + ".md"
+        path_rel = app.project.doc2path(page["file"], basedir=False)
+        path_html = Path(app.outdir, path_rel).with_suffix(".html")
+        path_source = Path(app.srcdir, path_rel)
 
         article_os_info = ""
         if "os" not in page.keys():
@@ -202,9 +218,15 @@ def _set_page_article_info(
             author = page["author"]
         modified_info = modified_info.replace("AMD", author)
 
-        date_info = _get_time_last_modified(path_source)
+        date_info: Optional[str] = None
         if "date" in page.keys():
             date_info = page["date"]
+        else:
+            date_info = _get_time_last_modified(repo, path_source)
+
+        if not date_info:
+            date_info = app.config.all_article_info_date
+
         modified_info = modified_info.replace("2023", date_info)
 
         if "read-time" in page.keys():
@@ -213,7 +235,7 @@ def _set_page_article_info(
             read_time = _estimate_read_time(path_html)
         modified_info = modified_info.replace("5 min read", read_time)
 
-        specific_pages.append(path_html)
+        specific_pages.append(page["file"])
         _write_article_info(path_html, modified_info)
 
 
@@ -226,11 +248,10 @@ def _set_all_article_info(
     Add article info headers with general settings to all HTML pages
     except those in app.config.article_pages
     """
-    (html_pages, source_map) = _get_all_pages(app.outdir)
-
-    for page in html_pages:
+    repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
+    for docname in app.project.docnames:
         # skip pages with specific settings
-        if page in specific_pages:
+        if docname in specific_pages:
             continue
 
         article_os_info = ""
@@ -241,13 +262,11 @@ def _set_all_article_info(
                 article_os_info += ' and '
             article_os_info += 'Windows'
 
-        page_key = Path(page).stem
-        if page_key in source_map.keys():
-            modified_path = source_map[page_key]
-        else:
-            modified_path = page
-        date_info = _get_time_last_modified(modified_path)
-        if len(date_info) == 0:
+        page_rel = app.project.doc2path(docname, basedir=False)
+        page = str(Path(app.outdir, page_rel).with_suffix(".html"))
+
+        date_info = _get_time_last_modified(repo, Path(app.srcdir, page_rel))
+        if not date_info:
             date_info = app.config.all_article_info_date
 
         modified_info = article_info.replace("<!--os-info-->", article_os_info)
@@ -258,26 +277,12 @@ def _set_all_article_info(
         _write_article_info(page, modified_info)
 
 
-def _get_all_pages(output_directory: str):
-    html_pages = list()
-    source_map = dict()
-
-    for root, _, files in os.walk(output_directory):
-        for file in files:
-            if file.endswith(".html"):
-                html_pages.append(os.path.join(root, file))
-
-    for root, _, files in os.walk("."):
-        for file in files:
-            if file.endswith(".rst") or file.endswith(".md"):
-                file_key = Path(file).stem
-                source_map[file_key] = os.path.join(root, file)
-    
-    return (html_pages, source_map)
-
-
-def _get_time_last_modified(path: str) -> str:
-    return subprocess.getoutput(f"git log -1 --pretty=format:%cd --date=short {path}")
+def _get_time_last_modified(repo: git.repo.Repo, path: Path) -> Optional[str]:
+    try:
+        time = next(repo.iter_commits(paths=path, max_count=1)).committed_datetime
+        return time.strftime("%Y-%m-%d")
+    except StopIteration:
+        return None
 
 
 def _estimate_read_time(file_name: str) -> str:
