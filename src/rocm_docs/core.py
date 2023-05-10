@@ -25,11 +25,12 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    cast,
 )
 
 import bs4
 import git.repo
-from pydata_sphinx_theme.utils import config_provided_by_user
+from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import]
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
@@ -167,7 +168,7 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
         r"/\1/" + current_version,
         app.config.html_baseurl,
     )
-    app.config.notfound_urls_prefix = abs_path
+    app.config.notfound_urls_prefix = abs_path #type: ignore[attr-defined]
 
 def _set_article_info(app: Sphinx, _: Config) -> None:
     """Add article info headers to HTML pages"""
@@ -179,7 +180,7 @@ def _set_article_info(app: Sphinx, _: Config) -> None:
     with open(article_info_path, "r") as file:
         article_info = file.read()
 
-    specific_pages = []
+    specific_pages: List[str] = []
 
     _set_page_article_info(app, article_info, specific_pages)
 
@@ -225,7 +226,7 @@ def _set_page_article_info(
             date_info = _get_time_last_modified(repo, path_source)
 
         if not date_info:
-            date_info = app.config.all_article_info_date
+            date_info = cast(str, app.config.all_article_info_date)
 
         modified_info = modified_info.replace("2023", date_info)
 
@@ -263,11 +264,11 @@ def _set_all_article_info(
             article_os_info += 'Windows'
 
         page_rel = app.project.doc2path(docname, basedir=False)
-        page = str(Path(app.outdir, page_rel).with_suffix(".html"))
+        page = Path(app.outdir, page_rel).with_suffix(".html")
 
         date_info = _get_time_last_modified(repo, Path(app.srcdir, page_rel))
         if not date_info:
-            date_info = app.config.all_article_info_date
+            date_info = cast(str, app.config.all_article_info_date)
 
         modified_info = article_info.replace("<!--os-info-->", article_os_info)
         modified_info = modified_info.replace("AMD", app.config.all_article_info_author)
@@ -285,7 +286,7 @@ def _get_time_last_modified(repo: git.repo.Repo, path: Path) -> Optional[str]:
         return None
 
 
-def _estimate_read_time(file_name: str) -> str:
+def _estimate_read_time(file_name: Path) -> str:
     def is_visible(element):
         if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
             return False
@@ -314,7 +315,7 @@ def _estimate_read_time(file_name: str) -> str:
     return f"{time_minutes} min read time"
 
 
-def _write_article_info(path: str, article_info: str) -> None:
+def _write_article_info(path: Path, article_info: str) -> None:
     with open(path, "r+") as file:
         page_html = file.read()
         soup = bs4.BeautifulSoup(page_html, 'html.parser')
@@ -345,11 +346,11 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     for ext in required_extensions:
         app.setup_extension(ext)
 
-    app.add_config_value("setting_all_article_info", default=False, rebuild="html", types=Any)
-    app.add_config_value("all_article_info_os", default=["linux", "windows"], rebuild="html", types=Any)
-    app.add_config_value("all_article_info_author", default="", rebuild="html", types=Any)
-    app.add_config_value("all_article_info_date", default="2023", rebuild="html", types=Any)
-    app.add_config_value("all_article_info_read_time", default="", rebuild="html", types=Any)
+    app.add_config_value("setting_all_article_info", default=False, rebuild="html", types=str)
+    app.add_config_value("all_article_info_os", default=["linux", "windows"], rebuild="html", types=str)
+    app.add_config_value("all_article_info_author", default="", rebuild="html", types=str)
+    app.add_config_value("all_article_info_date", default="2023", rebuild="html", types=str)
+    app.add_config_value("all_article_info_read_time", default="", rebuild="html", types=str)
     app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
 
     # Run before notfound.extension sees the config (default priority(=500))
