@@ -120,19 +120,39 @@ def _fetch_mapping(
         ) from err
 
 
-def _load_mapping(repo_path: Path) -> Dict[str, ProjectMapping]:
+def _load_mapping(
+    repo_path: Path,
+    remote_repository: str,
+    remote_branch: str,
+) -> Dict[str, ProjectMapping]:
     mapping_file_loc = "data/projects.yaml"
+
+    def should_fetch_mappings(
+        remote_repository: Optional[str], remote_branch: Optional[str]
+    ) -> bool:
+        if not remote_repository:
+            logger.info(
+                "Skipping the fetch for remote mappings, remote_repository "
+                "is unset."
+            )
+            return False
+
+        if not remote_branch:
+            logger.error(
+                "Remote branch is unset, cannot fetch remote mappings."
+            )
+            return False
+
+        logger.info(
+            "Remote mappings will be fetched from "
+            f"{remote_repository} branch={remote_branch}"
+        )
+        return True
 
     _, branch, __ = util.get_branch(repo_path)
     mapping: Optional[Dict[str, ProjectMapping]] = None
-    if "SKIP_INTERSPHINX_REMOTE" not in os.environ:
+    if should_fetch_mappings(remote_repository, remote_branch):
         try:
-            remote_repository = os.environ.get(
-                "INTERSPHINX_REPOSITORY", DEFAULT_INTERSPHINX_REPOSITORY
-            )
-            remote_branch = os.environ.get(
-                "INTERSPHINX_BRANCH", DEFAULT_INTERSPHINX_BRANCH
-            )
             remote_filepath = "src/rocm_docs/" + mapping_file_loc
             mapping = _format_mapping(
                 _fetch_mapping(
@@ -172,7 +192,10 @@ def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "intersphinx_disabled_domains"):
         app.config.intersphinx_disabled_domains = ["std"]  # type: ignore[attr-defined]
 
-    default = _load_mapping(Path(app.srcdir))
+    remote_repository = app.config.external_projects_remote_repository
+    remote_branch = app.config.external_projects_remote_branch
+    default = _load_mapping(Path(app.srcdir), remote_repository, remote_branch)
+
     mapping: Dict[str, ProjectMapping] = app.config.intersphinx_mapping
     for key, value in default.items():
         mapping.setdefault(key, value)
@@ -189,13 +212,28 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.setup_extension("sphinx.ext.intersphinx")
     app.setup_extension("sphinx_external_toc")
 
+    app.add_config_value(
+        "external_projects_remote_repository",
+        DEFAULT_INTERSPHINX_REPOSITORY,
+        rebuild="env",
+        types=str,
+    )
+    app.add_config_value(
+        "external_projects_remote_branch",
+        DEFAULT_INTERSPHINX_BRANCH,
+        rebuild="env",
+        types=str,
+    )
+
     # This needs to happen before external-tocs's config-inited (priority=900)
     app.connect("config-inited", _update_config)
     return {"parallel_read_safe": True, "parallel_write_safe": True}
 
 
 def debug_projects() -> None:
-    mapping = _load_mapping(Path())
+    mapping = _load_mapping(
+        Path(), DEFAULT_INTERSPHINX_REPOSITORY, DEFAULT_INTERSPHINX_BRANCH
+    )
     print(mapping)
     context = _get_context(Path(), mapping)
     print(context)
