@@ -173,6 +173,12 @@ input#__primary:checked ~ .bd-container .primary-toggle>span {
   transform: rotate(180deg);
 }
 
+a#ot-sdk-btn {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
 /* Fix for sidebar width mismatch between Bootstrap and the Sphinx Book Theme */
 @media (min-width: 960px) {
   input#__primary:checked ~ .bd-container .bd-sidebar-primary {
