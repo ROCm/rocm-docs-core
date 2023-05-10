@@ -181,7 +181,7 @@ def _set_page_article_info(
     mentioned in app.config.article_pages
     """
     for page in app.config.article_pages:
-        path_html = os.path.join(app.config.html_output_directory, page["file"]) + ".html"
+        path_html = os.path.join(app.outdir, page["file"]) + ".html"
         path_source = page["file"] + ".rst"
         if os.path.isfile(path_source) is False:
             path_source = page["file"] + ".md"
@@ -226,7 +226,7 @@ def _set_all_article_info(
     Add article info headers with general settings to all HTML pages
     except those in app.config.article_pages
     """
-    (html_pages, source_map) = _get_all_pages(app.config.html_output_directory)
+    (html_pages, source_map) = _get_all_pages(app.outdir)
 
     for page in html_pages:
         # skip pages with specific settings
@@ -340,7 +340,6 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     for ext in required_extensions:
         app.setup_extension(ext)
 
-    app.add_config_value("html_output_directory", default="_build/html/", rebuild="html", types=str)
     app.add_config_value("setting_all_article_info", default=False, rebuild="html", types=Any)
     app.add_config_value("all_article_info_os", default=["linux", "windows"], rebuild="html", types=Any)
     app.add_config_value("all_article_info_author", default="", rebuild="html", types=Any)
