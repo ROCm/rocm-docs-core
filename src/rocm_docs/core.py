@@ -93,7 +93,7 @@ class _DefaultSettings:
         {"colon_fence", "fieldlist", "linkify", "replacements", "substitution"}
     )
     myst_heading_anchors = _ConfigDefault(3)
-    external_toc_path = _ConfigOverride("./.sphinx/_toc.yml")
+    external_toc_path = _ConfigDefault("./.sphinx/_toc.yml")
     external_toc_exclude_missing = _ConfigDefault(False)
     intersphinx_mapping = _ConfigMerge(
         {
@@ -122,7 +122,7 @@ class _DefaultSettings:
 
 
 def _format_toc_file(app: Sphinx, config: Config) -> None:
-    toc_in_path = Path(app.srcdir) / "./.sphinx/_toc.yml.in"
+    toc_in_path = Path(app.srcdir) / (config.external_toc_path + ".in")
     if not (toc_in_path.exists() and toc_in_path.is_file()):
         raise FileNotFoundError(
             f"Expected input toc file {toc_in_path} to exist and be"
@@ -131,7 +131,7 @@ def _format_toc_file(app: Sphinx, config: Config) -> None:
     util.format_toc(
         toc_path=app.srcdir,
         repo_path=app.srcdir,
-        input_name="./.sphinx/_toc.yml.in",
+        input_name=config.external_toc_path + ".in",
         output_name=config.external_toc_path,
     )
 
