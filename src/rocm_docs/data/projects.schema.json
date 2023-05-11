@@ -1,6 +1,47 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/develop/src/rocm_docs/data/projects.schema.json",
+    "$defs": {
+        "project": {
+            "title": "project",
+            "description": "A single mapping for a project",
+            "type": [
+                "object",
+                "string"
+            ],
+            "properties": {
+                "target": {
+                    "type": "string",
+                    "description": "Base URI of the sphinx documentation of the project",
+                    "default": "http://example.com"
+                },
+                "inventory": {
+                    "default": null,
+                    "description": "Location of the inventory file",
+                    "type": [
+                        "array",
+                        "string",
+                        "null"
+                    ],
+                    "uniqueItems": true,
+                    "items": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "development_branch": {
+                    "type": "string",
+                    "description": "Branch name of the \"development\" or \"mainline\" branch where development happens.",
+                    "default": "develop"
+                }
+            },
+            "required": [
+                "target"
+            ]
+        }
+    },
     "title": "External intersphinx mapping",
     "description": "Intersphinx mappings",
     "type": "object",
@@ -20,40 +61,7 @@
                 "pattern": "^[a-zA-Z][a-zA-Z0-9_\\-]*$"
             },
             "patternProperties": {
-                "^[a-zA-Z][a-zA-Z0-9_\\-]*$": {
-                    "title": "project",
-                    "description": "A single mapping for a project",
-                    "type": [
-                        "object",
-                        "string"
-                    ],
-                    "properties": {
-                        "target": {
-                            "type": "string",
-                            "description": "Base URI of the sphinx documentation of the project",
-                            "default": "http://example.com"
-                        },
-                        "inventory": {
-                            "default": null,
-                            "description": "Location of the inventory file",
-                            "type": [
-                                "array",
-                                "string",
-                                "null"
-                            ],
-                            "uniqueItems": true,
-                            "items": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            }
-                        }
-                    },
-                    "required": [
-                        "target"
-                    ]
-                }
+                "^[a-zA-Z][a-zA-Z0-9_\\-]*$": { "$ref":"#/$defs/project" }
             },
             "additionalProperties": false
         }

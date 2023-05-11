@@ -12,6 +12,8 @@ setting_all_article_info = True
 # except if a PR modifies it. We want to test with its version in that case
 external_projects_remote_repository = ""
 
+external_projects_current_project = "rocm-docs-core"
+
 # specific settings override any general settings (eg: all_article_info_<field>)
 article_pages = [
     {

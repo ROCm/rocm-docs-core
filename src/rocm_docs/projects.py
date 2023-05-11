@@ -4,8 +4,9 @@ templating projects in toc.yml)"""
 import json
 import os
 import sys
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import fastjsonschema  # type: ignore[import]
 import github
@@ -15,8 +16,7 @@ from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[im
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
-import rocm_docs.formatting as formatting
-import rocm_docs.util as util
+from rocm_docs import formatting, util
 
 if sys.version_info < (3, 9):
     # importlib.resources either doesn't exist or lacks the files()
@@ -44,11 +44,94 @@ logger = sphinx.util.logging.getLogger(__name__)
 
 
 class InvalidMappingFile(RuntimeError):
-    pass
+    """Mapping file has invalid format, or failed to validate."""
+
+
+ProjectItem = Union[str, None, List[Union[str, None]]]
+ProjectEntry = Union[str, Dict[str, ProjectItem]]
+
+
+@dataclass
+class _Project:
+    target: str
+    inventory: List[Union[str, None]]
+    development_branch: str
+
+    @classmethod
+    def from_yaml_entry(
+        cls, schema: Dict[str, Any], entry: ProjectEntry
+    ) -> "_Project":
+        """Create from an entry that conforms to the project schema"""
+
+        def def_val(prop: str) -> str:
+            return schema["properties"][prop]["default"]
+
+        if isinstance(entry, str):
+            return _Project(
+                entry, [def_val("inventory")], def_val("development_branch")
+            )
+
+        inventory = entry["inventory"]
+        if not isinstance(inventory, list):
+            inventory = [inventory]
+
+        return _Project(
+            cast(str, entry["target"]),
+            inventory,
+            cast(str, entry["development_branch"]),
+        )
+
+    @classmethod
+    def get_static_version(
+        cls,
+        schema: Dict[str, Any],
+        current_branch: str,
+        current_project: Optional['_Project'],
+    ) -> Optional[str]:
+        """In some cases all remote projects will receive the same version,
+        return that version if this is the case, returns None otherwise."""
+
+        # Canonically available everywhere
+        if current_branch in ["latest", "stable"]:
+            return current_branch
+
+        # Past release versions always with docs/
+        if current_branch.startswith("docs-"):
+            return current_branch
+
+        # Anything besides the canonical development branch links to latest docs
+        development_branch: str = schema["properties"]["development_branch"][
+            "default"
+        ]
+        if current_project is not None:
+            development_branch = current_project.development_branch
+
+        if current_branch != development_branch:
+            return "latest"
+
+        return None
+
+    def evaluate(self, static_version: Optional[str]) -> None:
+        """Evaluate ${version} placeholders in the inventory and target values"""
+        version = (
+            static_version
+            if static_version is not None
+            else self.development_branch
+        )
+        self.target = self.target.replace("${version}", version)
+        for item in self.inventory:
+            if item is None:
+                continue
+            item = item.replace("${version}", version)
+
+    @property
+    def mapping(self) -> ProjectMapping:
+        """Target and inventory location in the format expected by sphinx"""
+        return (self.target, tuple(self.inventory))
 
 
 def _format_mapping(
-    mapping_yaml: Union[str, Traversable], version: str
+    mapping_yaml: Union[str, Traversable], current_id: str, current_branch: str
 ) -> Dict[str, ProjectMapping]:
     base = importlib_resources.files("rocm_docs") / "data"
     schema_file = base / "projects.schema.json"
@@ -60,36 +143,38 @@ def _format_mapping(
         else mapping_yaml.open(encoding="utf-8")
     )
 
-    ProjectItem = Union[str, None, List[Union[str, None]]]
-    Project = Union[str, Dict[str, ProjectItem]]
-    data: Dict[str, Union[int, Dict[str, Project]]]
+    data: Dict[str, Union[int, Dict[str, ProjectEntry]]]
     try:
         data = fastjsonschema.validate(schema, contents)
-    except fastjsonschema.exceptions.JsonSchemaException as err:
+    except fastjsonschema.exceptions.JsonSchemaValueException as err:
         raise InvalidMappingFile(
             f"Mapping file is invalid: {err.message}."
         ) from err
 
-    def format_item(item: Union[str, None]) -> Union[str, None]:
-        if isinstance(item, str):
-            return item.replace("${version}", version)
-        return item
-
-    def get_target(project: Project) -> ProjectMapping:
-        if isinstance(project, str):
-            return (project.replace("${version}", version), None)
-
-        assert isinstance(project["target"], str)
-        target: str = project["target"].replace("${version}", version)
-
-        inventory: ProjectItem = project["inventory"]
-        if isinstance(inventory, list):
-            return (target, tuple(map(format_item, inventory)))
-
-        return (target, format_item(inventory))
-
+    project_schema = schema["$defs"]["project"]
     assert isinstance(data["projects"], dict)
-    return {key: get_target(value) for key, value in data["projects"].items()}
+    projects = {
+        project_id: _Project.from_yaml_entry(project_schema, entry)
+        for project_id, entry in data["projects"].items()
+    }
+
+    current_project: Optional[_Project] = None
+    try:
+        current_project = projects[current_id]
+    except KeyError:
+        logger.warning(
+            f"Current project '{current_id}' not found in projects.\n"
+            "Did you forget to set 'external_projects_current_project' to "
+            "the name of the current project?"
+        )
+
+    static_version = _Project.get_static_version(
+        project_schema, current_branch, current_project
+    )
+    for project in projects.values():
+        project.evaluate(static_version)
+
+    return {name: project.mapping for name, project in projects.items()}
 
 
 class FailedToFetchMappingFile(RuntimeError):
@@ -121,9 +206,7 @@ def _fetch_mapping(
 
 
 def _load_mapping(
-    repo_path: Path,
-    remote_repository: str,
-    remote_branch: str,
+    repo_path: Path, remote_repository: str, remote_branch: str, current_id: str
 ) -> Dict[str, ProjectMapping]:
     mapping_file_loc = "data/projects.yaml"
 
@@ -158,9 +241,9 @@ def _load_mapping(
                 _fetch_mapping(
                     remote_repository,
                     remote_branch,
-                    mapping_file_loc,
                     remote_filepath,
                 ),
+                current_id,
                 branch,
             )
         except (FailedToFetchMappingFile, InvalidMappingFile) as err:
@@ -171,7 +254,9 @@ def _load_mapping(
 
     if mapping is None:
         mapping = _format_mapping(
-            importlib_resources.files("rocm_docs") / mapping_file_loc, branch
+            importlib_resources.files("rocm_docs") / mapping_file_loc,
+            current_id,
+            branch,
         )
 
     return mapping
@@ -194,7 +279,10 @@ def _update_config(app: Sphinx, _: Config) -> None:
 
     remote_repository = app.config.external_projects_remote_repository
     remote_branch = app.config.external_projects_remote_branch
-    default = _load_mapping(Path(app.srcdir), remote_repository, remote_branch)
+    currrent_project_name = app.config.external_projects_current_project
+    default = _load_mapping(
+        Path(app.srcdir), remote_repository, remote_branch, currrent_project_name
+    )
 
     mapping: Dict[str, ProjectMapping] = app.config.intersphinx_mapping
     for key, value in default.items():
@@ -224,6 +312,12 @@ def setup(app: Sphinx) -> Dict[str, Any]:
         rebuild="env",
         types=str,
     )
+    app.add_config_value(
+        "external_projects_current_project",
+        lambda config: config.project,
+        rebuild="env",
+        types=str,
+    )
 
     # This needs to happen before external-tocs's config-inited (priority=900)
     app.connect("config-inited", _update_config)
@@ -232,7 +326,10 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
 def debug_projects() -> None:
     mapping = _load_mapping(
-        Path(), DEFAULT_INTERSPHINX_REPOSITORY, DEFAULT_INTERSPHINX_BRANCH
+        Path(),
+        DEFAULT_INTERSPHINX_REPOSITORY,
+        DEFAULT_INTERSPHINX_BRANCH,
+        "rocm-docs-core",
     )
     print(mapping)
     context = _get_context(Path(), mapping)
