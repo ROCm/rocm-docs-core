@@ -896,7 +896,14 @@ header.common-header
 }
 
 @media (max-width: 959.98px) {
+  input#__primary:not(:checked) ~ header.common-header {
+    /* top will be ignored when statically positioned, so this only applies
+       when the sidebar is opened and its used to animate it to its place. */
+    top: -5.5em;
+  }
   input#__primary:checked ~ header.common-header {
-    position: fixed;
+    position: sticky;
+    top: 0;
+    transition: top ease 0.25s;
   }
 }
