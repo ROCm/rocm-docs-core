@@ -1,4 +1,6 @@
 ABI
+AMI
+# American Megatrends Inc. (MI100, MI200 guides)
 activations
 AlexNet
 allocators
@@ -8,6 +10,8 @@ AMDGPUs
 AMDMIGraphX
 AOCC
 AOMP
+APIC
+# Advanced Programmable Interrupt Controller (MI100, MI200 guides)
 APIs
 ASan
 ASIC
@@ -19,6 +23,9 @@ benchmarking
 bilinear
 BitCode
 BLAS
+bursty
+CCD
+# Core Chiplet Die (MI100, MI200 guides)
 CDNA
 CentOS
 chiplet
@@ -51,6 +58,7 @@ datatype
 datatypes
 de
 denormalize
+deserializers
 distro
 DL
 DNN
@@ -58,6 +66,8 @@ DNNL
 Dockerfile
 DockerHub
 Doxygen
+DPM
+# Dynamic Power Management (MI100, MI200 guides)
 DRI
 enablement
 epilog
@@ -104,6 +114,7 @@ HSA
 ImageNet
 IMDB
 inband
+InfiniBand
 inferencing
 Inlines
 inlining
@@ -112,6 +123,8 @@ intra
 invariants
 invocating
 Ioffe
+IOMMU
+# Input–output memory management unit (MI100, MI200 guides)
 ISA
 ISV
 ISVs
@@ -119,6 +132,8 @@ JSON
 Jupyter
 KFD
 Khronos
+LCLK
+# Link clock frequency
 linearized
 LLVM
 logits
@@ -137,6 +152,14 @@ namespace
 namespaces
 Nano
 Navi
+NBIO
+NBIOs
+# North Bridge IO (MI100, MI200 guides)
+NIC
+NICs
+# Network Interface Card (MI100, MI200 guides)
+NPS
+# Nodes Per Socket (MI100, MI200 guides)
 NUMA
 NumPy
 numref
@@ -207,6 +230,9 @@ runtime
 runtimes
 scalability
 SDK
+SerDes
+# Serializer/Deserializer (MI100, MI200 guides)
+serializers
 SGPR
 SHA
 shader
@@ -215,6 +241,8 @@ sigmoid
 SIMD
 SLES
 SMI
+SMT
+# Simultaneous Multi-Threading (MI100, MI200 guides)
 softmax
 Spack
 SRAM
@@ -245,7 +273,11 @@ unswitching
 untrusted
 untuned
 USM
+UTIL
+# Utility, part of AMD-IOPM-UTIL (MI100, MI200 guides)
 Vanhoucke
+VBIOS
+# VGA BIOS (MI100, MI200 guides)
 vectorizable
 vectorization
 vectorize
