@@ -216,7 +216,6 @@ header.common-header .navbar > .main-nav .navbar-nav-container {
   height: auto;
   order: 3;
   overflow-x: hidden;
-  overflow-y: scroll;
   position: fixed;
   right: 0;
   top: 3.5rem;
