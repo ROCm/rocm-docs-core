@@ -127,7 +127,8 @@ ul.bd-breadcrumbs li.breadcrumb-item {
 }
 
 .bd-sidebar-primary {
-  margin-top: 3.5rem;
+  top: 3.5rem;
+  height: calc(100vh - 3.5rem);
 }
 
 .sbt-scroll-pixel-helper {
@@ -136,13 +137,15 @@ ul.bd-breadcrumbs li.breadcrumb-item {
 
 @media (min-width: 576px) and (max-width: 959.98px) {
   .bd-sidebar-primary {
-    margin-top: 5.5rem;
+    top: 5.5rem;
+    height: calc(100vh - 5.5rem);
   }
 }
 
 @media(min-width: 960px) {
   .bd-sidebar-primary {
-    margin-top: unset;
+    top: 0;
+    height: 100vh;
   }
 }
 
