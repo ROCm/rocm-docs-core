@@ -1,3 +1,19 @@
+## v0.10.1 (2023-05-11)
+
+### Fix
+
+- **sidebar**: fix rtd version selector not appearing on the sidebar for small screens
+- **sidebar**: fix page jump when sidebar is opened, animate header
+- **header**: don't show scroll-bar on menu when its not needed
+- **article-info**: Use app.outdir for html directory
+- allow overriding path to external toc path
+- **custom.css**: restore cookie settings button styling
+
+### Refactor
+
+- **core.py**: fix mypy errors
+- **article-info**: Simplify article-info handling
+
 ## v0.10.0 (2023-05-09)
 
 ### Feat
