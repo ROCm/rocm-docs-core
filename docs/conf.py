@@ -6,7 +6,6 @@
 
 from rocm_docs import ROCmDocs
 
-html_output_directory = "../_readthedocs/html"
 setting_all_article_info = True
 
 # specific settings override any general settings (eg: all_article_info_<field>)
