@@ -7,3 +7,6 @@ projects:
   rtd: https://docs.readthedocs.io/en/stable/
   sphinx: https://www.sphinx-doc.org/en/master/
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
+  hipify:
+    target: https://rocm.docs.amd.com/projects/HIPIFY/en/${version}
+    development_branch: amd-staging

@@ -19,6 +19,8 @@ subtrees:
       - url: "{url}/tree/{branch}"
       - url: ${project:python}
       - url: ${project:rocm-docs-core}
+      - url: ${project:hipify}
+        title: HIPIFY
   - caption: Developer Guide
     entries:
       - file: developer_guide/commitizen
