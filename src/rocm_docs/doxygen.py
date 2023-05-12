@@ -1,12 +1,12 @@
 """Doxygen sub-extension of rocm-docs-core"""
 
+import importlib.util
 import os
 import shutil
 import subprocess
 import sys
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, BinaryIO, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Union
 
 from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
@@ -17,16 +17,15 @@ if sys.version_info < (3, 9):
     # importlib.resources either doesn't exist or lacks the files()
     # function, so use the PyPI version:
     import importlib_resources
-    import importlib_resources.abc as importlib_abc
+    from importlib_resources.abc import Traversable
 else:
     # importlib.resources has files(), so use that:
     import importlib.resources as importlib_resources
-    if sys.version_info < (3, 11):
-        import importlib.abc as importlib_abc
-    else:
-        import importlib.resources.abc as importlib_abc
 
-Traversable = importlib_abc.Traversable
+    if sys.version_info < (3, 11):
+        from importlib.abc import Traversable
+    else:
+        from importlib.resources.abc import Traversable
 
 
 def _copy_files(app: Sphinx):
@@ -54,8 +53,13 @@ def _copy_files(app: Sphinx):
                 # unzipping and/or the creation of a temporary file.
                 # This is not the case when opening the file as a
                 # stream.
-                with entry.open("rb") as infile, open(entry_path, "wb") as out:
-                    shutil.copyfileobj(infile, out)
+                if entry is None:
+                    print("none")
+                else:
+                    print("some")
+                with entry.open("rb") as infile:  # type: ignore
+                    with open(entry_path, "wb") as out:
+                        shutil.copyfileobj(infile, out)
 
     pkg = importlib_resources.files("rocm_docs")
     copy_from_package(pkg / "data", "data", ".")
@@ -66,8 +70,7 @@ def _get_config_default(config: Config, key: str) -> Any:
     default_or_callable = config.values[key][0]
     if callable(default_or_callable):
         return default_or_callable(config)
-    else:
-        return default_or_callable
+    return default_or_callable
 
 
 def _run_doxygen(app: Sphinx, config: Config) -> None:
@@ -132,50 +135,55 @@ def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
 
     project_name: str = doxygen_project["name"]
 
-    # First try relative to the 
+    # First try relative to the
     xml_path = Path(app.confdir, doxygen_project["path"])
     try:
         xml_path = xml_path.resolve(strict=True)
     except FileNotFoundError as err:
         raise NotADirectoryError(
             "Expected doxygen to generate the folder"
-            f" {doxygen_path} but it could not be found."
+            f" {str(doxygen_root)} but it could not be found."
         ) from err
 
-    app.config.breathe_projects = {project_name: str(xml_path)}
-    app.config.breathe_default_project = project_name
+    setattr(app.config, "breathe_projects", {project_name: str(xml_path)})
+    setattr(app.config, "breathe_default_project", project_name)
 
 
 def _run_doxysphinx(app: Sphinx, doxygen_root: Path, doxyfile: Path) -> None:
     if not app.config.doxysphinx_enabled:
         return
 
-    try:
-        import doxysphinx.cli
-    except ImportError as err:
+    if (
+        "doxysphinx.cli" not in sys.modules
+        and importlib.util.find_spec("doxysphinx.cli") is None
+    ):
         raise RuntimeError(
             "Missing optional dependencies: make sure the "
             "[api_reference] feature is enabled. (e.g. "
             '"pip install rocm-docs-core[api_reference]")'
-        ) from err
+        )
 
-    res = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "doxysphinx",
-            "build",
-            app.srcdir,
-            app.outdir,
-            doxyfile,
-        ],
-        cwd=doxygen_root,
-    )
-    if res.returncode != 0:
-        raise RuntimeError(f"doxysphinx failed (exitcode={res.returncode:d})")
+    try:
+        subprocess.check_call(
+            [
+                sys.executable,
+                "-m",
+                "doxysphinx",
+                "build",
+                app.srcdir,
+                app.outdir,
+                doxyfile,
+            ],
+            cwd=doxygen_root,
+        )
+    except subprocess.CalledProcessError as err:
+        raise RuntimeError(
+            f"doxysphinx failed (exit code: {err.returncode})"
+        ) from err
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
+    """Set up rocm_docs.doxygen as a Sphinx extension."""
     app.setup_extension("sphinx.ext.mathjax")
     app.setup_extension("breathe")
 

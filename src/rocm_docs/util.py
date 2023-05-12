@@ -25,7 +25,7 @@ def get_path_to_docs(
         repo_path = conf_path
     elif not isinstance(repo_path, Path):
         repo_path = Path(repo_path)
-    repo = Repo(repo_path, search_parent_directories=True)
+    repo = Repo(path=repo_path, search_parent_directories=True)
     return os.path.relpath(str(conf_path), repo.working_dir)
 
 
@@ -114,7 +114,6 @@ def get_branch(
 
     # Fall-back to the current branch or a fallback value if HEAD is detached
     # In this case the repository URL cannot be provided
-    branch: str
     try:
         branch = repo.active_branch.name
     except TypeError:
