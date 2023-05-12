@@ -178,18 +178,17 @@ def _format_mapping(
 
 
 class FailedToFetchMappingFile(RuntimeError):
-    pass
+    """Fetching the yaml file from the remote failed"""
 
 
 def _fetch_mapping(
     remote_repository: str,
     remote_branch: str,
-    mapping_file_loc: str,
     remote_filepath: str,
 ) -> str:
     try:
-        gh = github.Github(os.environ.get("TOKEN"))
-        repo = gh.get_repo(remote_repository)
+        gh_api = github.Github(os.environ.get("TOKEN"))
+        repo = gh_api.get_repo(remote_repository)
         contents = repo.get_contents(remote_filepath, remote_branch)
         if isinstance(contents, list):
             raise FailedToFetchMappingFile("Expected a file not a directory!")
@@ -281,7 +280,10 @@ def _update_config(app: Sphinx, _: Config) -> None:
     remote_branch = app.config.external_projects_remote_branch
     currrent_project_name = app.config.external_projects_current_project
     default = _load_mapping(
-        Path(app.srcdir), remote_repository, remote_branch, currrent_project_name
+        Path(app.srcdir),
+        remote_repository,
+        remote_branch,
+        currrent_project_name,
     )
 
     mapping: Dict[str, ProjectMapping] = app.config.intersphinx_mapping
@@ -297,6 +299,8 @@ def _update_config(app: Sphinx, _: Config) -> None:
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
+    """Setup rocm_docs.projects as a sphinx extension"""
+
     app.setup_extension("sphinx.ext.intersphinx")
     app.setup_extension("sphinx_external_toc")
 
@@ -325,6 +329,8 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
 
 def debug_projects() -> None:
+    """Get remote mappings display them and format the toc.
+    Provided as a debugging tool for the functionality of this module."""
     mapping = _load_mapping(
         Path(),
         DEFAULT_INTERSPHINX_REPOSITORY,

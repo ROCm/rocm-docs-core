@@ -105,9 +105,7 @@ def get_branch(
                 remote_url = get_repo_url(remote_url)
                 return remote_url, tracking.remote_head, True
     for remote in repo.remotes:
-        remote: Remote
         for ref in remote.refs:
-            ref: RemoteReference
             if ref.commit == repo.head.commit:
                 remote_url = get_repo_url(remote.url)
                 return remote_url, ref.remote_head, True

@@ -16,32 +16,47 @@ class Formatter:
 
     def __init__(self, context: Dict[str, Any]):
         self.directive_pattern: re.Pattern = re.compile(
-            r"(\$)?\{([a-zA-z][a-zA-Z0-9_]+)(?:\:([a-zA-Z0-9_\-\.]+))?\}"
+            r"(?P<prefix>\$)?\{(?P<directive>[a-zA-z][a-zA-Z0-9_]+)"
+            r"(?:\:(?P<parameter>[a-zA-Z0-9_\-\.]+))?\}"
         )
         self.context = context
+
+    def _format_simple(
+        self, directive: str, parameter: Optional[str], loc: Tuple[int, int]
+    ) -> Optional[_Replacement]:
+        # Cannot have a parameter
+        if parameter is not None:
+            return None
+        return self._Replacement(loc, self.context[directive])
+
+    def _format_project(
+        self, _: str, parameter: Optional[str], loc: Tuple[int, int]
+    ) -> Optional[_Replacement]:
+        # Parameter is required
+        if parameter is None:
+            return None
+        if parameter not in self.context["projects"]:
+            return None
+        return self._Replacement(loc, self.context["projects"][parameter])
 
     def _format_directive(self, match: re.Match) -> Optional[_Replacement]:
         # As a special case allow `{branch}` and `url` to alias `${branch}`
         # and '${url}' respectively for backwards compatibility.
         # Otherwise the '$' is required
-        if match[1] is None:
-            if match[2] not in ["branch", "url"]:
+        if match["prefix"] is None:
+            if match["directive"] not in ["branch", "url"]:
                 return None
 
-        if match[2] in ["branch", "url"]:
-            # Cannot have a parameter
-            if match[3] is not None:
-                return None
-            return self._Replacement(match.span(), self.context[match[2]])
-        elif match[2] == "project":
-            # Parameter is required
-            if match[3] is None:
-                return None
-            if match[3] not in self.context["projects"]:
-                return None
-            return self._Replacement(
-                match.span(), self.context["projects"][match[3]]
+        if match["directive"] in ["branch", "url"]:
+            return self._format_simple(
+                match["directive"], match["parameter"], match.span()
             )
+
+        if match["directive"] == "project":
+            return self._format_project(
+                match["directive"], match["parameter"], match.span()
+            )
+
         return None
 
     def _replacements(self, line: str) -> Generator[_Replacement, None, None]:
@@ -96,12 +111,12 @@ class Formatter:
         # will not be skipped
         """
 
-        it = iter(lines)
-        for line in it:
+        iterator = iter(lines)
+        for line in iterator:
             if not line.startswith("#"):
                 yield line
                 break
-        yield from it
+        yield from iterator
 
 
 def format_toc(input_path: Path, output_path: Path, context: Dict[str, Any]):
