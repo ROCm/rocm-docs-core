@@ -25,8 +25,6 @@ from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
-from rocm_docs import util
-
 T = TypeVar("T")
 
 # based on doxygen.py
@@ -60,11 +58,6 @@ class _ConfigDefault(_ConfigUpdater[T]):
 class _ConfigUnion(_ConfigUpdater[Set[T]]):
     def __call__(self, key: str, app: Sphinx) -> None:
         getattr(app.config, key).update(self.default)
-
-
-class _ConfigOverride(_ConfigUpdater[T]):
-    def __call__(self, key: str, app: Sphinx) -> None:
-        setattr(app.config, key, self.default)
 
 
 class _ConfigMerge(_ConfigUpdater[Dict[str, Any]]):

@@ -86,7 +86,7 @@ class _Project:
         cls,
         schema: Dict[str, Any],
         current_branch: str,
-        current_project: Optional['_Project'],
+        current_project: Optional["_Project"],
     ) -> Optional[str]:
         """In some cases all remote projects will receive the same version,
         return that version if this is the case, returns None otherwise."""
@@ -290,12 +290,14 @@ def _update_config(app: Sphinx, _: Config) -> None:
     for key, value in default.items():
         mapping.setdefault(key, value)
 
+    if not config_provided_by_user(app, "external_toc_path"):
+        app.config.external_toc_path = "./.sphinx/_toc.yml"  # type: ignore[attr-defined]
+
     formatting.format_toc(
-        Path(app.srcdir, ".sphinx/_toc.yml.in"),
-        Path(app.srcdir, ".sphinx/_toc.yml"),
+        Path(app.srcdir, app.config.external_toc_template_path),
+        Path(app.srcdir, app.config.external_toc_path),
         _get_context(Path(app.srcdir), mapping),
     )
-    app.config.external_toc_path = "./.sphinx/_toc.yml"  # type: ignore[attr-defined]
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
@@ -321,6 +323,17 @@ def setup(app: Sphinx) -> Dict[str, Any]:
         lambda config: config.project,
         rebuild="env",
         types=str,
+    )
+
+    def external_toc_template_default(config: Config) -> str:
+        toc_path = Path(config.external_toc_path)
+        return str(toc_path.with_suffix(toc_path.suffix + ".in"))
+
+    app.add_config_value(
+        "external_toc_template_path",
+        external_toc_template_default,
+        rebuild="env",
+        types=[str, Path],
     )
 
     # This needs to happen before external-tocs's config-inited (priority=900)
