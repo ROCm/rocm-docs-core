@@ -186,6 +186,11 @@ def _set_page_article_info(
         path_html = Path(app.outdir, path_rel).with_suffix(".html")
         path_source = Path(app.srcdir, path_rel)
 
+        # FIXME: This will silently skip all files when not building the default
+        # `html` format (e.g `htmlzip`, `epub` or `pdf`)
+        if not path_html.is_file():
+            continue
+
         article_os_info = ""
         if "os" not in page.keys():
             page["os"] = app.config.all_article_info_os
@@ -236,6 +241,14 @@ def _set_all_article_info(
         if docname in specific_pages:
             continue
 
+        page_rel = app.project.doc2path(docname, basedir=False)
+        page = Path(app.outdir, page_rel).with_suffix(".html")
+
+        # FIXME: This will silently skip all files when not building the default
+        # `html` format (e.g `htmlzip`, `epub` or `pdf`)
+        if not page.is_file():
+            continue
+
         article_os_info = ""
         if "linux" in app.config.all_article_info_os:
             article_os_info += "Linux"
@@ -243,9 +256,6 @@ def _set_all_article_info(
             if len(article_os_info) > 0:
                 article_os_info += " and "
             article_os_info += "Windows"
-
-        page_rel = app.project.doc2path(docname, basedir=False)
-        page = Path(app.outdir, page_rel).with_suffix(".html")
 
         date_info = _get_time_last_modified(repo, Path(app.srcdir, page_rel))
         if not date_info:
