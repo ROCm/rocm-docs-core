@@ -1,3 +1,9 @@
+## v0.10.2 (2023-05-15)
+
+### Fix
+
+- Fix python typing, formatting, PEP8
+
 ## v0.10.1 (2023-05-11)
 
 ### Fix
