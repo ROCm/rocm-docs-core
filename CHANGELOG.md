@@ -1,3 +1,9 @@
+## v0.10.3 (2023-05-15)
+
+### Fix
+
+- **article-info**: hotfix non-html builds breaking
+
 ## v0.10.2 (2023-05-15)
 
 ### Fix
