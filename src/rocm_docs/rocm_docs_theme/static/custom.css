@@ -180,6 +180,7 @@ a#ot-sdk-btn {
   background: none !important;
   border: none !important;
   padding: 0 !important;
+  color: #9d9fa2 !important;
 }
 
 /* Fix for sidebar width mismatch between Bootstrap and the Sphinx Book Theme */
