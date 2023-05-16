@@ -45,7 +45,7 @@ decli==0.6.0
     # via commitizen
 deprecated==1.2.13
     # via pygithub
-docutils==0.19
+docutils==0.20
     # via
     #   breathe
     #   myst-parser
