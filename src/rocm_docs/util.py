@@ -105,9 +105,7 @@ def get_branch(
                 remote_url = get_repo_url(remote_url)
                 return remote_url, tracking.remote_head, True
     for remote in repo.remotes:
-        remote: Remote
         for ref in remote.refs:
-            ref: RemoteReference
             if ref.commit == repo.head.commit:
                 remote_url = get_repo_url(remote.url)
                 return remote_url, ref.remote_head, True
@@ -120,34 +118,3 @@ def get_branch(
         branch = "branch-not-found"
 
     return "", branch, False
-
-
-def format_toc(
-    toc_path: Union[str, os.PathLike, None] = None,
-    repo_path: Union[str, os.PathLike, None] = None,
-    input_name: Optional[str] = None,
-    output_name: Optional[str] = None,
-):
-    """Format the input table of contents with additional information."""
-    if toc_path is None:
-        toc_path = Path()
-    elif not isinstance(toc_path, Path):
-        toc_path = Path(toc_path)
-    if repo_path is None:
-        repo_path = toc_path
-    input_name = "./.sphinx/_toc.yml.in" if input_name is None else input_name
-    output_name = "./.sphinx/_toc.yml" if output_name is None else output_name
-    at_start = True
-
-    url, branch, _ = get_branch(repo_path)
-    with open(toc_path / input_name, "r", encoding="utf-8") as toc_in:
-        with open(toc_path / output_name, "w", encoding="utf-8") as toc_out:
-            for line in toc_in.readlines():
-                if line[0] == "#" and at_start:
-                    continue
-                at_start = False
-                toc_out.write(line.format(branch=branch, url=url))
-
-
-if __name__ == "__main__":
-    format_toc()

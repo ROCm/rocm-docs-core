@@ -1,4 +1,9 @@
-# Anywhere {branch} is used, the branch name will be substituted.
+# Variables of the form ${<variable>} are substituted, currently the following
+# list is supported:
+#   - ${branch} (or {branch}) the name of the current branch
+#   - ${url} (or {url}) github url of the current project
+#   - ${project:<project_name>} base url of the documentation of <project_name>
+#     based on intersphinx_mapping. 
 # These comments will also be removed.
 defaults:
   numbered: False
@@ -9,6 +14,13 @@ subtrees:
     entries:
       - file: demo/doxygen/html/index
         title: Library API Doxygen Demo
+  - caption: ToCTree Showcase
+    entries:
+      - url: "{url}/tree/{branch}"
+      - url: ${project:python}
+      - url: ${project:rocm-docs-core}
+      - url: ${project:hipify}
+        title: HIPIFY
   - caption: Developer Guide
     entries:
       - file: developer_guide/commitizen

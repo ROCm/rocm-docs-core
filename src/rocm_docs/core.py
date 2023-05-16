@@ -25,8 +25,6 @@ from pydata_sphinx_theme.utils import config_provided_by_user
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
-from rocm_docs import util
-
 T = TypeVar("T")
 
 # based on doxygen.py
@@ -62,11 +60,6 @@ class _ConfigUnion(_ConfigUpdater[Set[T]]):
         getattr(app.config, key).update(self.default)
 
 
-class _ConfigOverride(_ConfigUpdater[T]):
-    def __call__(self, key: str, app: Sphinx) -> None:
-        setattr(app.config, key, self.default)
-
-
 class _ConfigMerge(_ConfigUpdater[Dict[str, Any]]):
     def __call__(self, key: str, app: Sphinx) -> None:
         current_setting: Dict[str, Any] = getattr(app.config, key)
@@ -86,16 +79,7 @@ class _DefaultSettings:
         {"colon_fence", "fieldlist", "linkify", "replacements", "substitution"}
     )
     myst_heading_anchors = _ConfigDefault(3)
-    external_toc_path = _ConfigDefault("./.sphinx/_toc.yml")
     external_toc_exclude_missing = _ConfigDefault(False)
-    intersphinx_mapping = _ConfigMerge(
-        {
-            "rtd": ("https://docs.readthedocs.io/en/stable/", None),
-            "python": ("https://docs.python.org/3/", None),
-            "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
-        }
-    )
-    intersphinx_disabled_domains = _ConfigDefault(["std"])
     epub_show_urls = _ConfigDefault("footnote")
     exclude_patterns = _ConfigExtend(["_build", "Thumbs.db", ".DS_Store"])
     numfig = _ConfigDefault(True)
@@ -117,20 +101,6 @@ class _DefaultSettings:
         for name, attr in inspect.getmembers(cls):
             if isinstance(attr, _ConfigUpdater):
                 attr(name, app)
-
-
-def _format_toc_file(app: Sphinx, config: Config) -> None:
-    toc_in_path = Path(app.srcdir) / (config.external_toc_path + ".in")
-    if not (toc_in_path.exists() and toc_in_path.is_file()):
-        raise FileNotFoundError(
-            f"Expected input toc file {toc_in_path} to exist and be readable."
-        )
-    util.format_toc(
-        toc_path=app.srcdir,
-        repo_path=app.srcdir,
-        input_name=config.external_toc_path + ".in",
-        output_name=config.external_toc_path,
-    )
 
 
 def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
@@ -340,14 +310,13 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     required_extensions = [
         "myst_parser",
         "notfound.extension",
+        "rocm_docs.projects",
         "sphinx_copybutton",
         "sphinx_design",
-        "sphinx_external_toc",
         "sphinx.ext.autodoc",
         "sphinx.ext.autosummary",
         "sphinx.ext.doctest",
         "sphinx.ext.duration",
-        "sphinx.ext.intersphinx",
     ]
     for ext in required_extensions:
         app.setup_extension(ext)
@@ -377,7 +346,5 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
     app.connect("config-inited", _DefaultSettings.update_config)
-    # This needs to happen before external-tocs's config-inited (priority=900)
-    app.connect("config-inited", _format_toc_file)
     app.connect("build-finished", _set_article_info, priority=1000)
     return {"parallel_read_safe": True, "parallel_write_safe": True}

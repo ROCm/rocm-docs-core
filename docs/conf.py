@@ -8,6 +8,12 @@ from rocm_docs import ROCmDocs
 
 setting_all_article_info = True
 
+# Disable fetching projects.yaml, it would be the same as the local one anyway
+# except if a PR modifies it. We want to test with its version in that case
+external_projects_remote_repository = ""
+
+external_projects_current_project = "rocm-docs-core"
+
 # specific settings override any general settings (eg: all_article_info_<field>)
 article_pages = [
     {

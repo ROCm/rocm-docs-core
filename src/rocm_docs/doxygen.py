@@ -62,7 +62,11 @@ def _copy_files(app: Sphinx):
                         shutil.copyfileobj(infile, out)
 
     pkg = importlib_resources.files("rocm_docs")
-    copy_from_package(pkg / "data", "data", ".")
+    try:
+        Path(app.confdir, '_doxygen').mkdir()
+    except FileExistsError:
+        pass
+    copy_from_package(pkg / "data/_doxygen", "data/_doxygen", '_doxygen')
 
 
 def _get_config_default(config: Config, key: str) -> Any:
