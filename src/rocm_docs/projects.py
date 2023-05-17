@@ -231,7 +231,7 @@ def _load_mapping(
         )
         return True
 
-    _, branch, __ = util.get_branch(repo_path)
+    _, branch = util.get_branch(repo_path)
     mapping: Optional[Dict[str, ProjectMapping]] = None
     if should_fetch_mappings(remote_repository, remote_branch):
         try:
@@ -264,7 +264,7 @@ def _load_mapping(
 def _get_context(
     repo_path: Path, mapping: Dict[str, ProjectMapping]
 ) -> Dict[str, Any]:
-    url, branch, __ = util.get_branch(repo_path)
+    url, branch = util.get_branch(repo_path)
     return {
         "url": url,
         "branch": branch,
