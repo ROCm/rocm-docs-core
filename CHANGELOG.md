@@ -1,3 +1,31 @@
+## v0.11.0 (2023-05-17)
+
+### Feat
+
+- Nav bar links to project GitHub
+- **projects**: allow overriding toc template path
+- **projects**: mapping between project versions
+- **projects**: allow overriding and disabling external mappings from conf.py
+- **intersphinx**: Support intersphinx base urls in toc.yml
+- **intersphinx**: support single strings for project
+- **intersphinx**: add version replacement in the yaml
+- **intersphinx**: Allow overriding branch name via environment variable
+- fetch intersphinx config from a remote file
+
+### Fix
+
+- **rocm_footer.css**: Fix overlap with sidebar
+- **renameVersionLinks.js**: Wait for RTD injection
+
+### Refactor
+
+- Still get PR branch using pygithub
+- Use RTD environment variables
+- Remove edit button, simplify get_branch
+- **__init__.py**: remove deprecated and unused method
+- **projects**: rename external_intersphinx to projects
+- **doxygen**: Copy only doxygen folder from data
+
 ## v0.10.3 (2023-05-15)
 
 ### Fix
