@@ -2,6 +2,7 @@ footer.rocm-footer {
   background-color: #000;
   color: #fff;
   padding: 1rem;
+  z-index: 10000;
 }
 footer.rocm-footer a:not(.klavika-font) {
   color: #9d9fa2;
