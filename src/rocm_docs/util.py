@@ -53,17 +53,39 @@ def get_branch(
         remote_url = http_pattern.sub(r"\1", remote_url, count=1)
         return remote_url
 
+    if os.environ.get("READTHEDOCS", ""):
+        remote_url = os.environ.get("READTHEDOCS_GIT_CLONE_URL", "")
+        url = get_repo_url(remote_url)
+        build_type = os.environ["READTHEDOCS_VERSION_TYPE"]
+        match = re.match(r"(?:.*://)?.*\.com[/:](.*)\.git", remote_url)
+        assert match is not None
+        repo_fqn: str = match[1]
+        if build_type in ("branch", "tag"):
+            return url, os.environ["READTHEDOCS_VERSION"]
+        if build_type == "external":
+            gh_inst = github.Github(os.environ.get("TOKEN", None))
+            print("Repository URL: " + repo_fqn)
+            try:
+                pull = gh_inst.get_repo(repo_fqn).get_pull(
+                    int(os.environ["READTHEDOCS_VERSION"])
+                )
+                return url, pull.head.ref
+            except UnknownObjectException as err:
+                if err.data["message"] == "Not Found":
+                    # Possibly a private repository that we're not
+                    # authenticated for, fallback
+                    return (
+                        url,
+                        "external-" + os.environ["READTHEDOCS_VERSION"],
+                    )
+        # if build type is unknown try the usual strategy
+
     if repo_path is None:
         repo_path = Path()
     elif not isinstance(repo_path, Path):
         repo_path = Path(repo_path)
     repo = Repo(repo_path, search_parent_directories=True)
     assert not repo.bare
-    if os.environ.get("READTHEDOCS", ""):
-        url = get_repo_url(os.environ.get("READTHEDOCS_GIT_CLONE_URL", ""))
-        branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER")
-        if url and branch:
-            return url, branch
     for branch in repo.branches:
         if branch.commit == repo.head.commit:
             tracking = branch.tracking_branch()
