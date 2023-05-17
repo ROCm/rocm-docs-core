@@ -23,36 +23,19 @@
         <div class="container-fluid main-nav">
             <div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
-                    <li class="nav-item" >
-                        <a class="nav-link top-level header-menu-links" href="https://github.com/ROCmSoftwarePlatform" id="menu1" role="button" aria-expanded="false" >
-                            GitHub
+                    {% macro nav_button(name, url) -%}
+                    <li class="nav-item">
+                        <a class="nav-link top-level header-menu-links" href="{{ url }}" id="nav{{ name.lower()|replace(' ','-') }}" role="button" aria-expanded="false" target="_blank" >
+                            {{ name }}
                         </a>
                     </li>
-                    <li class="nav-item" >
-                        <a class="nav-link top-level header-menu-links" href="https://github.com/RadeonOpenCompute/ROCm/discussions" id="menu2" role="button" aria-expanded="false" >
-                            Community
-                        </a>
-                    </li>
-                    <li class="nav-item" >
-                        <a class="nav-link top-level header-menu-links" href="https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-readme/" id="menu2" role="button" aria-expanded="false" >
-                            AMD Lab Notes
-                        </a>
-                    </li>
-                    <li class="nav-item" >
-                        <a class="nav-link top-level header-menu-links" href="https://www.amd.com/en/technologies/infinity-hub" id="menu4" role="button" aria-expanded="false" >
-                            Infinity Hub
-                        </a>
-                    </li>
-                    <li class="nav-item" >
-                        <a class="nav-link top-level header-menu-links" href="https://github.com/ROCmSoftwareplatform" id="menu3" role="button" aria-expanded="false" >
-                            Support
-                        </a>
-                    </li>
-                    <li class="nav-item" >
-                        <a class="nav-link top-level header-menu-links" href="mailto:dl.rocm-docs-core@amd.com" id="menu4" role="button" aria-expanded="false" >
-                            Feedback
-                        </a>
-                    </li>
+                    {%- endmacro -%}
+                    {{ nav_button("GitHub", theme_repository_url) }}
+                    {{ nav_button("Community", "https://github.com/RadeonOpenCompute/ROCm/discussions") }}
+                    {{ nav_button("AMD Lab Notes", "https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-readme/") }}
+                    {{ nav_button("Infinity Hub", "https://www.amd.com/en/technologies/infinity-hub") }}
+                    {{ nav_button("Support", theme_repository_url + "/issues/new/choose") }}
+                    {{ nav_button("Feedback", "mailto:dl.rocm-docs-core@amd.com") }}
                 </ul>
             </div>
         </div>

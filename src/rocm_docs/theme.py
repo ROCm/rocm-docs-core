@@ -12,17 +12,12 @@ from pydata_sphinx_theme.utils import (
 from rocm_docs import util
 
 
-@deprecated
 def _update_edit_opts(
     srcdir: str, theme_opts: Dict[str, Any]
 ) -> None:
-    # Bail if the user didn't explicitly enable the edit button
-    if not theme_opts.get("use_edit_page_button", False):
-        return
-
-    url, branch, edit_page = util.get_branch(srcdir)
+    url, branch, _ = util.get_branch(srcdir)
     default_branch_options = {
-        "use_edit_page_button": edit_page,
+        "use_edit_page_button": False,
         "repository_url": url,
         "repository_branch": branch,
         "path_to_docs": util.get_path_to_docs(srcdir),
