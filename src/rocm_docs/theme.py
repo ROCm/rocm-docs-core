@@ -1,7 +1,6 @@
 """Module to use rocm-docs-core as a theme."""
 from typing import Dict, Any
 from pathlib import Path
-from deprecated import deprecated
 
 from sphinx.application import Sphinx
 from pydata_sphinx_theme.utils import (
@@ -12,10 +11,10 @@ from pydata_sphinx_theme.utils import (
 from rocm_docs import util
 
 
-def _update_edit_opts(
+def _update_repo_opts(
     srcdir: str, theme_opts: Dict[str, Any]
 ) -> None:
-    url, branch, _ = util.get_branch(srcdir)
+    url, branch = util.get_branch(srcdir)
     default_branch_options = {
         "use_edit_page_button": False,
         "repository_url": url,
@@ -28,7 +27,7 @@ def _update_edit_opts(
 
 def _update_theme_options(app: Sphinx) -> None:
     theme_opts = get_theme_options_dict(app)
-    _update_edit_opts(app.srcdir, theme_opts)
+    _update_repo_opts(app.srcdir, theme_opts)
 
     theme_opts.setdefault(
         "article_header_start",
