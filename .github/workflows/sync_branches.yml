@@ -15,19 +15,19 @@ jobs:
     concurrency: lock-develop
     steps:
       - run: |
-        current_protection=$(gh api repos/${OWNER}/${REPO}/branches/develop/protection)
-        new_protection=$(sed -E 's/(:\{)?"url"[^,]+,/\1/g;s/\{"enabled":(true|false)\}/\1/g;s/"lock_branch":(true|false)/"lock_branch":false/' <<< "$current_protection")
-        for req_field in required_pull_request_reviews required_status_checks restrictions enforce_admin; do
-          if ! [[ "$new_protection" =~ "\"$req_field\":" ]]; then
-            new_protection="${new_protection%\}},\"$req_field\":null}"
-          fi
-        done
-        gh api repos/${OWNER}/${REPO}/branches/develop/protection -X PUT --input <(echo "$new_protection")
+          current_protection=$(gh api repos/${OWNER}/${REPO}/branches/develop/protection)
+          new_protection=$(sed -E 's/(:\{)?"url"[^,]+,/\1/g;s/\{"enabled":(true|false)\}/\1/g;s/"lock_branch":(true|false)/"lock_branch":false/' <<< "$current_protection")
+          for req_field in required_pull_request_reviews required_status_checks restrictions enforce_admin; do
+            if ! [[ "$new_protection" =~ "\"$req_field\":" ]]; then
+              new_protection="${new_protection%\}},\"$req_field\":null}"
+            fi
+          done
+          gh api repos/${OWNER}/${REPO}/branches/develop/protection -X PUT --input <(echo "$new_protection")
 
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        OWNER: ${{ github.repository_owner }}
-        REPO: ${{ github.event.repository.name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
   sync_branches:
     runs-on: ubuntu-latest
     concurrency: sync_branches
