@@ -7,11 +7,32 @@ on:
   workflow_dispatch:
 
 jobs:
+  lock-develop:
+    name: "Lock develop branch"
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    concurrency: lock-develop
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+        current_protection=$(gh api repos/${OWNER}/${REPO}/branches/develop/protection)
+        new_protection=$(sed -E 's/(:\{)?"url"[^,]+,/\1/g;s/\{"enabled":(true|false)\}/\1/g;s/"lock_branch":(true|false)/"lock_branch":true/' <<< "$current_protection")
+        for req_field in required_pull_request_reviews required_status_checks restrictions enforce_admin; do
+          if ! [[ "$new_protection" =~ "\"$req_field\":" ]]; then
+            new_protection="${new_protection%\}},\"$req_field\":null}"
+          fi
+        done
+        gh api repos/${OWNER}/${REPO}/branches/develop/protection -X PUT --input <(echo "$new_protection")
+
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OWNER: ${{ github.repository_owner }}
+        REPO: ${{ github.event.repository.name }}
   bump-version:
     name: "Bump version and create changelog with commitizen"
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     concurrency: bump-version
     runs-on: ubuntu-latest
+    needs: [lock-develop]
     env:
       PYTHON_VERSION: "3.8"
     outputs:
@@ -93,3 +114,25 @@ jobs:
     uses: ./.github/workflows/sync_branches.yml
     with:
       sha: ${{ needs.bump-version.outputs.sha }}
+
+  unlock-develop:
+    name: Unlock develop branch
+    needs: [bump-version]
+    concurrency: lock-develop
+    if: needs.bump-version.outputs.bumped == 'false'
+        runs-on: ubuntu-latest
+    steps:
+      - run: |
+        current_protection=$(gh api repos/${OWNER}/${REPO}/branches/develop/protection)
+        new_protection=$(sed -E 's/(:\{)?"url"[^,]+,/\1/g;s/\{"enabled":(true|false)\}/\1/g;s/"lock_branch":(true|false)/"lock_branch":false/' <<< "$current_protection")
+        for req_field in required_pull_request_reviews required_status_checks restrictions enforce_admin; do
+          if ! [[ "$new_protection" =~ "\"$req_field\":" ]]; then
+            new_protection="${new_protection%\}},\"$req_field\":null}"
+          fi
+        done
+        gh api repos/${OWNER}/${REPO}/branches/develop/protection -X PUT --input <(echo "$new_protection")
+
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OWNER: ${{ github.repository_owner }}
+        REPO: ${{ github.event.repository.name }}
