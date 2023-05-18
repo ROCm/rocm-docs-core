@@ -1,9 +1,9 @@
 function renameVersionLinks() {
     $('div.rst-other-versions dl:first-child a').each( function () {
-        var text = $(this).text();
-        var versionRegEx = /^.*((?:[0-9]+\.){2}[0-9]+).*$/;
+        const text = $(this).text();
+        const versionRegEx = /^.*((?:[0-9]+\.){2}[0-9]+).*$/g;
         if (versionRegEx.test(text)) {
-            $(this).text(text.replaceAll(versionRegEx, '$1'));
+            $(this).text(text.replace(versionRegEx, '$1'));
         }
     })
 }
