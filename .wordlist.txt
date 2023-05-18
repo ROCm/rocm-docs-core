@@ -87,6 +87,8 @@ GCDs
 GCN
 GDB
 gfx
+GIM
+# GPU-IOV Module (RDNA2 Virtualization Guide)
 GL
 GLXT
 GPG
@@ -125,6 +127,8 @@ invocating
 Ioffe
 IOMMU
 # Input–output memory management unit (MI100, MI200 guides)
+IOV
+# Input-output Virtualization (RNDA2 virt guide)
 ISA
 ISV
 ISVs
@@ -132,6 +136,8 @@ JSON
 Jupyter
 KFD
 Khronos
+KVM
+# Kernel-based Virtual Machine (RDNA2 guide)
 LCLK
 # Link clock frequency
 linearized
@@ -228,6 +234,8 @@ rocWMMA
 RST
 runtime
 runtimes
+SBIOS
+# System BIOS (RDNA2 virt guide)
 scalability
 SDK
 SerDes
@@ -286,6 +294,8 @@ vectorizer
 vectorizes
 VGPR
 VGPRs
+VM
+# Virtual Machine
 VMWare
 Vulkan
 wavefront
