@@ -280,7 +280,7 @@ def _estimate_read_time(file_name: Path) -> str:
     average_word_count = (
         sum(len(line) for line in visible_page_text) / average_word_length
     )
-    time_minutes = max(1, average_word_count // words_per_minute)
+    time_minutes = int(max(1, round(average_word_count / words_per_minute)))
     return f"{time_minutes} min read time"
 
 
