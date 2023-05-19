@@ -28,6 +28,7 @@ CCD
 # Core Chiplet Die (MI100, MI200 guides)
 CDNA
 CentOS
+centric
 chiplet
 CIFAR
 CLI
