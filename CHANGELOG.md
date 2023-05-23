@@ -1,3 +1,11 @@
+## v0.11.1 (2023-05-23)
+
+### Fix
+
+- **header.html**: point docs repos to library repos
+- **core.py**: use round to nearest minute for read time
+- versioning script mismatch
+
 ## v0.11.0 (2023-05-17)
 
 ### Feat
