@@ -30,11 +30,11 @@
                         </a>
                     </li>
                     {%- endmacro -%}
-                    {{ nav_button("GitHub", theme_repository_url) }}
+                    {{ nav_button("GitHub", theme_repository_url|replace("-docs", "")) }}
                     {{ nav_button("Community", "https://github.com/RadeonOpenCompute/ROCm/discussions") }}
                     {{ nav_button("AMD Lab Notes", "https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-readme/") }}
                     {{ nav_button("Infinity Hub", "https://www.amd.com/en/technologies/infinity-hub") }}
-                    {{ nav_button("Support", theme_repository_url + "/issues/new/choose") }}
+                    {{ nav_button("Support", theme_repository_url|replace("-docs", "") + "/issues/new/choose") }}
                     {{ nav_button("Feedback", "mailto:dl.rocm-docs-core@amd.com") }}
                 </ul>
             </div>
