@@ -1,27 +1,24 @@
-"""Core rocm_docs extension that enables a core set of sphinx extensions and
-provides good defaults for settings. Provides a consistent common
-base environment for the rocm documentation projects."""
+"""Core rocm_docs extension.
+
+It enables a core set of sphinx extensions and provides good defaults for
+settings. The environment provided is meant as consistent common base for
+ROCm documentation projects.
+"""
+
+from __future__ import annotations
+
+from typing import Any, Dict, Generic, List, Set, TypeVar, cast
 
 import inspect
 import os
-import sys
 import re
+import sys
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import (
-    Any,
-    Dict,
-    Generic,
-    List,
-    Optional,
-    Set,
-    TypeVar,
-    cast,
-)
 
 import bs4
 import git.repo
-from pydata_sphinx_theme.utils import config_provided_by_user
+from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import]
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
@@ -62,7 +59,7 @@ class _ConfigUnion(_ConfigUpdater[Set[T]]):
 
 class _ConfigMerge(_ConfigUpdater[Dict[str, Any]]):
     def __call__(self, key: str, app: Sphinx) -> None:
-        current_setting: Dict[str, Any] = getattr(app.config, key)
+        current_setting: dict[str, Any] = getattr(app.config, key)
         for item in self.default.items():
             current_setting.setdefault(item[0], item[1])
 
@@ -122,7 +119,7 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
 
 
 def _set_article_info(app: Sphinx, _: Config) -> None:
-    """Add article info headers to HTML pages"""
+    """Add article info headers to HTML pages."""
     if (
         app.config.setting_all_article_info is False
         and len(app.config.article_pages) == 0
@@ -135,7 +132,7 @@ def _set_article_info(app: Sphinx, _: Config) -> None:
         .read_text(encoding="utf-8")
     )
 
-    specific_pages: List[str] = []
+    specific_pages: list[str] = []
 
     _set_page_article_info(app, article_info, specific_pages)
 
@@ -144,11 +141,11 @@ def _set_article_info(app: Sphinx, _: Config) -> None:
 
 
 def _set_page_article_info(
-    app: Sphinx, article_info: str, specific_pages: List[str]
+    app: Sphinx, article_info: str, specific_pages: list[str]
 ) -> None:
-    """
-    Add article info headers to specific HTML pages
-    mentioned in app.config.article_pages
+    """Add article info headers to the configured HTML pages.
+
+    The pages can be set in "article_pages" of the Sphinx configuration.
     """
     repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
     for page in app.config.article_pages:
@@ -177,7 +174,7 @@ def _set_page_article_info(
             author = page["author"]
         modified_info = modified_info.replace("AMD", author)
 
-        date_info: Optional[str] = None
+        date_info: str | None = None
         if "date" in page.keys():
             date_info = page["date"]
         else:
@@ -199,11 +196,12 @@ def _set_page_article_info(
 
 
 def _set_all_article_info(
-    app: Sphinx, article_info: str, specific_pages: List[str]
+    app: Sphinx, article_info: str, specific_pages: list[str]
 ) -> None:
-    """
-    Add article info headers with general settings to all HTML pages
-    except those in app.config.article_pages
+    """Add article info headers with general settings to all HTML pages.
+
+    Pages that have specific settings (configured by "article_pages") are
+    skipped.
     """
     repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
     for docname in app.project.docnames:
@@ -243,7 +241,7 @@ def _set_all_article_info(
         _write_article_info(page, modified_info)
 
 
-def _get_time_last_modified(repo: git.repo.Repo, path: Path) -> Optional[str]:
+def _get_time_last_modified(repo: git.repo.Repo, path: Path) -> str | None:
     try:
         time = next(
             repo.iter_commits(paths=path, max_count=1)
@@ -284,7 +282,7 @@ def _estimate_read_time(file_name: Path) -> str:
     return f"{time_minutes} min read time"
 
 
-def _write_article_info(path: os.PathLike, article_info: str) -> None:
+def _write_article_info(path: os.PathLike[Any], article_info: str) -> None:
     with open(path, "r+", encoding="utf8") as file:
         page_html = file.read()
         soup = bs4.BeautifulSoup(page_html, "html.parser")
@@ -305,7 +303,7 @@ def _write_article_info(path: os.PathLike, article_info: str) -> None:
         file.write(str(soup))
 
 
-def setup(app: Sphinx) -> Dict[str, Any]:
+def setup(app: Sphinx) -> dict[str, Any]:
     """Set up rocm_docs.core as a Sphinx extension."""
     required_extensions = [
         "myst_parser",
@@ -339,9 +337,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value(
         "all_article_info_read_time", default="", rebuild="html", types=str
     )
-    app.add_config_value(
-        "article_pages", default=[], rebuild="html", types=Any
-    )
+    app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
 
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)

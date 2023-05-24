@@ -1,4 +1,8 @@
-"""Doxygen sub-extension of rocm-docs-core"""
+"""Doxygen sub-extension of rocm-docs-core."""
+
+from __future__ import annotations
+
+from typing import Any, Dict, Union
 
 import importlib.util
 import os
@@ -6,9 +10,8 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict, Union
 
-from pydata_sphinx_theme.utils import config_provided_by_user
+from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import]
 from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ConfigError
@@ -28,12 +31,12 @@ else:
         from importlib.resources.abc import Traversable
 
 
-def _copy_files(app: Sphinx):
+def _copy_files(app: Sphinx) -> None:
     """Insert additional files into workspace."""
 
     def copy_from_package(
         data_dir: Traversable, read_path: str, write_path: str
-    ):
+    ) -> None:
         if not data_dir.is_dir():
             raise NotADirectoryError(
                 f"Expected path {read_path}/{data_dir} to be traversable."
@@ -53,16 +56,16 @@ def _copy_files(app: Sphinx):
                 # unzipping and/or the creation of a temporary file.
                 # This is not the case when opening the file as a
                 # stream.
-                with entry.open("rb") as infile:  # type: ignore
+                with entry.open("rb") as infile:
                     with open(entry_path, "wb") as out:
                         shutil.copyfileobj(infile, out)
 
     pkg = importlib_resources.files("rocm_docs")
     try:
-        Path(app.confdir, '_doxygen').mkdir()
+        Path(app.confdir, "_doxygen").mkdir()
     except FileExistsError:
         pass
-    copy_from_package(pkg / "data/_doxygen", "data/_doxygen", '_doxygen')
+    copy_from_package(pkg / "data/_doxygen", "data/_doxygen", "_doxygen")
 
 
 def _get_config_default(config: Config, key: str) -> Any:
@@ -75,7 +78,6 @@ def _get_config_default(config: Config, key: str) -> Any:
 
 def _run_doxygen(app: Sphinx, config: Config) -> None:
     """Run doxygen, validating all paths."""
-
     # To support the (legacy) ROCmDocs interface 'None' is a synonym for the
     # default value
     for i in ["doxygen_root", "doxyfile"]:
@@ -124,18 +126,25 @@ def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
     ) or config_provided_by_user(app, "breathe_default_project"):
         return
 
-    doxygen_project: Dict = app.config.doxygen_project
+    doxygen_project: dict[
+        str, None | str | os.PathLike[Any]
+    ] = app.config.doxygen_project
 
     # To support the (legacy) ROCmDocs interface 'None' is a synonym for the
     # default value for each element of the Tuple
-    default: Dict = _get_config_default(app.config, "doxygen_project")
+    default: dict[str, None | str | os.PathLike[Any]] = _get_config_default(
+        app.config, "doxygen_project"
+    )
     for key, value in doxygen_project.items():
         if value is None:
             doxygen_project[key] = default[key]
 
+    # FIXME: Log an error and reset to default instead of asserting
+    assert isinstance(doxygen_project["name"], str)
     project_name: str = doxygen_project["name"]
 
     # First try relative to the
+    assert doxygen_project["path"] is not None
     xml_path = Path(app.confdir, doxygen_project["path"])
     try:
         xml_path = xml_path.resolve(strict=True)
@@ -182,7 +191,7 @@ def _run_doxysphinx(app: Sphinx, doxygen_root: Path, doxyfile: Path) -> None:
         ) from err
 
 
-def setup(app: Sphinx) -> Dict[str, Any]:
+def setup(app: Sphinx) -> dict[str, Any]:
     """Set up rocm_docs.doxygen as a Sphinx extension."""
     app.setup_extension("sphinx.ext.mathjax")
     app.setup_extension("breathe")
@@ -194,7 +203,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
         "doxyfile",
         lambda config: Path(config.doxygen_root, "Doxyfile"),
         rebuild="",
-        types=[None, str, os.PathLike],
+        types=[None, str, "os.PathLike[Any]"],
     )
     app.add_config_value(
         "doxygen_project",
@@ -203,7 +212,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
             "path": Path(config.doxygen_root, "docBin", "xml"),
         },
         rebuild="",
-        types=Dict[str, Union[None, str, os.PathLike]],
+        types=Dict[str, Union[None, str, "os.PathLike[Any]"]],
     )
     app.add_config_value("doxysphinx_enabled", False, rebuild="", types=bool)
 

@@ -1,12 +1,15 @@
-"""Handle external projects (remote loading of intersphinx_mapping from file,
-templating projects in toc.yml)"""
+"""Handle external projects.
+
+Remote loading of intersphinx_mapping from file, templating projects in toc.yml).
+"""
+
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import json
 import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import fastjsonschema  # type: ignore[import]
 import github
@@ -43,7 +46,7 @@ DEFAULT_INTERSPHINX_BRANCH = "develop"
 logger = sphinx.util.logging.getLogger(__name__)
 
 
-class InvalidMappingFile(RuntimeError):
+class InvalidMappingFileError(RuntimeError):
     """Mapping file has invalid format, or failed to validate."""
 
 
@@ -61,10 +64,10 @@ class _Project:
     def from_yaml_entry(
         cls, schema: Dict[str, Any], entry: ProjectEntry
     ) -> "_Project":
-        """Create from an entry that conforms to the project schema"""
+        """Create from an entry that conforms to the project schema."""
 
         def def_val(prop: str) -> str:
-            return schema["properties"][prop]["default"]
+            return cast(str, schema["properties"][prop]["default"])
 
         if isinstance(entry, str):
             return _Project(
@@ -88,9 +91,11 @@ class _Project:
         current_branch: str,
         current_project: Optional["_Project"],
     ) -> Optional[str]:
-        """In some cases all remote projects will receive the same version,
-        return that version if this is the case, returns None otherwise."""
+        """Returns a common static version if it exists.
 
+        In some cases all remote projects will receive the same version,
+        return that version if this is the case, returns None otherwise.
+        """
         # Canonically available everywhere
         if current_branch in ["latest", "stable"]:
             return current_branch
@@ -112,7 +117,7 @@ class _Project:
         return None
 
     def evaluate(self, static_version: Optional[str]) -> None:
-        """Evaluate ${version} placeholders in the inventory and target values"""
+        """Evaluate ${version} placeholders in the inventory and target values."""
         version = (
             static_version
             if static_version is not None
@@ -126,7 +131,7 @@ class _Project:
 
     @property
     def mapping(self) -> ProjectMapping:
-        """Target and inventory location in the format expected by sphinx"""
+        """Target and inventory location in the format expected by sphinx."""
         return (self.target, tuple(self.inventory))
 
 
@@ -147,7 +152,7 @@ def _format_mapping(
     try:
         data = fastjsonschema.validate(schema, contents)
     except fastjsonschema.exceptions.JsonSchemaValueException as err:
-        raise InvalidMappingFile(
+        raise InvalidMappingFileError(
             f"Mapping file is invalid: {err.message}."
         ) from err
 
@@ -177,8 +182,8 @@ def _format_mapping(
     return {name: project.mapping for name, project in projects.items()}
 
 
-class FailedToFetchMappingFile(RuntimeError):
-    """Fetching the yaml file from the remote failed"""
+class MappingFileFetchError(RuntimeError):
+    """Fetching the yaml file from the remote failed."""
 
 
 def _fetch_mapping(
@@ -191,13 +196,13 @@ def _fetch_mapping(
         repo = gh_api.get_repo(remote_repository)
         contents = repo.get_contents(remote_filepath, remote_branch)
         if isinstance(contents, list):
-            raise FailedToFetchMappingFile("Expected a file not a directory!")
+            raise MappingFileFetchError("Expected a file not a directory!")
 
         return contents.decoded_content.decode("utf-8")
     except github.GithubException as err:
         assert isinstance(err.data["message"], str)
         message: str = err.data["message"]
-        raise FailedToFetchMappingFile(
+        raise MappingFileFetchError(
             "failed to read remote mappings from "
             f"{remote_repository}:{remote_filepath} "
             f"on branch={remote_branch}, API returned {err.status}: {message}.",
@@ -245,7 +250,7 @@ def _load_mapping(
                 current_id,
                 branch,
             )
-        except (FailedToFetchMappingFile, InvalidMappingFile) as err:
+        except (MappingFileFetchError, InvalidMappingFileError) as err:
             logger.warning(
                 f"Failed to use remote mapping: {err} "
                 "Falling back to bundled mapping."
@@ -301,8 +306,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
-    """Setup rocm_docs.projects as a sphinx extension"""
-
+    """Setup rocm_docs.projects as a sphinx extension."""
     app.setup_extension("sphinx.ext.intersphinx")
     app.setup_extension("sphinx_external_toc")
 
@@ -343,7 +347,9 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
 def debug_projects() -> None:
     """Get remote mappings display them and format the toc.
-    Provided as a debugging tool for the functionality of this module."""
+
+    Provided as a debugging tool for the functionality of this module.
+    """
     mapping = _load_mapping(
         Path(),
         DEFAULT_INTERSPHINX_REPOSITORY,

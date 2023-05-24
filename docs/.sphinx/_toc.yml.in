@@ -3,7 +3,7 @@
 #   - ${branch} (or {branch}) the name of the current branch
 #   - ${url} (or {url}) github url of the current project
 #   - ${project:<project_name>} base url of the documentation of <project_name>
-#     based on intersphinx_mapping. 
+#     based on intersphinx_mapping.
 # These comments will also be removed.
 defaults:
   numbered: False

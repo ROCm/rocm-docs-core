@@ -1,10 +1,13 @@
 """Utilities for rocm-docs-core."""
 
+from __future__ import annotations
+
+from typing import Any
+
 import functools
 import os
 import re
 from pathlib import Path
-from typing import Tuple, Union
 
 import github
 from git.repo import Repo
@@ -12,9 +15,9 @@ from github.GithubException import UnknownObjectException
 
 
 def get_path_to_docs(
-    conf_path: Union[str, os.PathLike, None] = None,
-    repo_path: Union[str, os.PathLike, None] = None,
-):
+    conf_path: str | os.PathLike[Any] | None = None,
+    repo_path: str | os.PathLike[Any] | None = None,
+) -> str:
     """Get the relative path from the repo root to the docs."""
     if conf_path is None:
         conf_path = Path()
@@ -30,17 +33,15 @@ def get_path_to_docs(
 
 @functools.lru_cache
 def get_branch(
-    repo_path: Union[str, os.PathLike, None] = None,
-) -> Tuple[str, str]:
+    repo_path: str | os.PathLike[Any] | None = None,
+) -> tuple[str, str]:
     """Get the branch whose tip is checked out, even if detached.
-    May be overridden with the environment variable `ROCM_DOCS_REMOTE_DETAILS`
+
+    May be overridden with the environment variable `ROCM_DOCS_REMOTE_DETAILS`.
     """
     if "ROCM_DOCS_REMOTE_DETAILS" in os.environ:
         remote_details = os.environ["ROCM_DOCS_REMOTE_DETAILS"].split(",")
-        return (
-            remote_details[0],
-            remote_details[1]
-        )
+        return (remote_details[0], remote_details[1])
 
     def get_repo_url(remote_url: str) -> str:
         ssh_pattern = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
@@ -86,9 +87,9 @@ def get_branch(
         repo_path = Path(repo_path)
     repo = Repo(repo_path, search_parent_directories=True)
     assert not repo.bare
-    for branch in repo.branches:
-        if branch.commit == repo.head.commit:
-            tracking = branch.tracking_branch()
+    for head in repo.heads:
+        if head.commit == repo.head.commit:
+            tracking = head.tracking_branch()
             if tracking is not None:
                 remote_url = repo.remotes[tracking.remote_name].url
                 remote_url = get_repo_url(remote_url)
