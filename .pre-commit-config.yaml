@@ -19,35 +19,35 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        entry: mypy --config-file pyproject.toml
+        entry: just mypy
         types_or: [python, pyi]
         language: system
         exclude: ^docs/.*
       - id: ruff
         name: ruff
-        entry: ruff --config pyproject.toml --fix --exit-non-zero-on-fix
+        entry: just ruff
         types_or: [python, pyi]
         language: system
         exclude: ^docs/.*
         require_serial: true
       - id: isort
         name: isort
-        entry: isort --settings-path pyproject.toml
+        entry: just isort
         types_or: [python, pyi]
         language: system
-      - id: black
-        name: black
-        entry: black --config pyproject.toml
+      - id: format
+        name: format
+        entry: just format
         types_or: [python, pyi]
         language: system
       - id: commitizen
         name: commitizen
-        entry: cz check --allow-abort --commit-msg-file
+        entry: just _check-commit-mesg
         stages: [commit-msg]
         language: system
       - id: pip-compile
         name: pip-compile
-        entry: pip-compile --all-extras pyproject.toml
+        entry: just lock-deps
         files: ^pyproject.toml|requirements.txt$
         pass_filenames: false
         language: system

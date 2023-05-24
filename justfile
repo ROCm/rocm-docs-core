@@ -1,7 +1,10 @@
 venvdir := ".venv"
 base-python := "python"
-bindir := if os_family() == "windows" {"Scripts"} else {"bin"}
-python := venvdir / bindir / "python"
+binfolder := if os_family() == "windows" {"Scripts"} else {"bin"}
+bindir := venvdir / binfolder
+python := bindir / "python"
+
+ruff_exe := bindir / "ruff"
 
 set windows-shell := ["powershell.exe", "-c"]
 
@@ -55,7 +58,12 @@ isort +files="src docs": (_isort "" files)
 check-isort +files="src docs": (_isort "--check" files)
 
 _ruff extra_args +files:
-	ruff --config pyproject.toml {{extra_args}} {{files}}
+	{{ruff_exe}} --config pyproject.toml {{extra_args}} {{files}}
+
+# Run ruff to lint files
+ruff +files="src": (_ruff "" files)
+# Run ruff and autolint
+fix-ruff +files="src": (_ruff "--fix --exit-non-zero-on-fix" files)
 
 _run-hook hook:
 	@{{python}} -m pre_commit run --all-files {{hook}}
@@ -64,9 +72,9 @@ _run-hook hook:
 hooks: (_run-hook "check-yaml ") (_run-hook "check-json") (_run-hook "check-toml") (_run-hook "end-of-file-fixer") (_run-hook "trailing-whitespace")
 
 # Run linters, no files are modified
-lint +files="src": (_ruff "" files) hooks
+lint +files="src": (ruff "" files) hooks
 # Run linters, trying to fix errors automatically
-fix-lint +files="src": (_ruff "--fix --exit-non-zero-on-fix" files) hooks
+fix-lint +files="src": (fix-ruff files) hooks
 
 # Run type-checking
 mypy +files="src":
@@ -83,3 +91,6 @@ alias check := check-codestyle
 docs:
 	{{python}} -m sphinx -j auto -T -b html -d docs/_build/doctrees \
 		--color -D language=en docs docs/_build/html
+
+_check-commit-mesg file:
+	{{python}} -m commitizen check --allow-abort --commit-msg-file {{file}}
