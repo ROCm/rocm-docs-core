@@ -11,9 +11,7 @@ from pydata_sphinx_theme.utils import (
 from rocm_docs import util
 
 
-def _update_repo_opts(
-    srcdir: str, theme_opts: Dict[str, Any]
-) -> None:
+def _update_repo_opts(srcdir: str, theme_opts: Dict[str, Any]) -> None:
     url, branch = util.get_branch(srcdir)
     default_branch_options = {
         "use_edit_page_button": False,
@@ -34,11 +32,20 @@ def _update_theme_options(app: Sphinx) -> None:
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
     )
 
+    theme_opts.setdefault(
+        "announcement",
+        (
+            "ROCm Documentation is transitioning to this site. For the legacy"
+            " documentation, please visit <a"
+            " href='https://docs.amd.com'>docs.amd.com</a>. For more"
+            " information about this documentation transition, please see <a"
+            " href='#'>our announcement</a>."
+        ),
+    )
+
     # Default the download, edit, and fullscreen buttons to off
     for button in ["download", "edit_page", "fullscreen"]:
-        theme_opts.setdefault(
-            f"use_{button}_button", False
-        )
+        theme_opts.setdefault(f"use_{button}_button", False)
 
     default_config_opts = {
         "html_show_sphinx": False,
