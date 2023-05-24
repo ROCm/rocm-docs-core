@@ -21,11 +21,16 @@ jobs:
         cache-dependency-path: |
           pyproject.toml
           requirements.txt
-    - name: Set up cache
+    - name: Cache venv
       uses: actions/cache@v3.3.1
       with:
         path: .venv
         key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
+    - name: Cache pre-commit
+      uses: actions/cache@v3.3.1
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
     - name: Install just
       uses: extractions/setup-just@v1
       with:
