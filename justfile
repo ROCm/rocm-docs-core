@@ -94,3 +94,6 @@ docs:
 
 _check-commit-mesg file:
 	{{python}} -m commitizen check --allow-abort --commit-msg-file {{file}}
+
+_check-commit-range range:
+	{{python}} -m commitizen check --rev-range {{range}}
