@@ -1,0 +1,12 @@
+image:
+  file: .devcontainer/Dockerfile
+
+tasks:
+  - name: Create development environment
+    init: just devenv docs
+
+vscode:
+  extensions:
+    - bungcip.better-toml
+    - ms-python.python
+    - ritwickdey.LiveServer
