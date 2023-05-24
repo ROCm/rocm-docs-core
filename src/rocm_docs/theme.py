@@ -48,6 +48,11 @@ def _update_theme_options(app: Sphinx) -> None:
     for button in ["download", "edit_page", "fullscreen"]:
         theme_opts.setdefault(f"use_{button}_button", False)
 
+    if theme_opts.get("link_main_doc", True):
+        theme_opts.setdefault("navbar_center", []).insert(
+            0, "components/left-side-menu"
+        )
+
     default_config_opts = {
         "html_show_sphinx": False,
         "html_favicon": "https://www.amd.com/themes/custom/amd/favicon.ico",
