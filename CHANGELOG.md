@@ -1,3 +1,13 @@
+## v0.12.0 (2023-05-24)
+
+### Feat
+
+- Add announcement banner.
+
+### Fix
+
+- announcement URL and phrasing
+
 ## v0.11.1 (2023-05-23)
 
 ### Fix
