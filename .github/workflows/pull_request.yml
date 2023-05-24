@@ -3,6 +3,7 @@ on:
 
 jobs:
   lint:
+    name: Python linting
     strategy:
       matrix:
         python-version: ["3.8"]
@@ -25,15 +26,20 @@ jobs:
       with:
         path: .venv
         key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
+    - name: Install just
+      uses: extractions/setup-just@v1
+      with:
+        just-version: '1.13.0'
     - name: Create virtual env, install requirements
       shell: sh
       run: |
-        python -m venv .venv
+        pip install virtualenv
+        just deps
         . .venv/bin/activate
-        python -m pip install pip-tools
-        python -m piptools sync requirements.txt
         echo "PATH=$PATH" >> "$GITHUB_ENV"
-    - name: Run commitizen
+    - name: Check commit messages
       shell: sh
-      run: |
-        cz check --rev-range "refs/remotes/origin/${{ github.base_ref }}..HEAD"
+      run: cz check --rev-range "refs/remotes/origin/${{ github.base_ref }}..HEAD"
+    - name: Check linting, formatting, types
+      shell: sh
+      run: just check-codestyle
