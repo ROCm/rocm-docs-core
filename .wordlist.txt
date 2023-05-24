@@ -275,6 +275,7 @@ TorchServe
 Torchvision
 TransferBench
 uarch
+UCC
 UIF
 uninstallation
 unsqueeze
