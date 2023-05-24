@@ -1,17 +1,17 @@
 venvdir := ".venv"
-base-python := "python3"
+base-python := "python"
 bindir := if os_family() == "windows" {"Scripts"} else {"bin"}
-python := venvdir / bindir / "python3"
+python := venvdir / bindir / "python"
 
 set windows-shell := ["powershell.exe", "-c"]
 
 [unix]
 _virtualenv:
-	[ -d {{venvdir}} ] || {{base-python}} -m virtualenv {{venvdir}}
+	[ -d {{venvdir}} ] || {{base-python}} -m venv {{venvdir}}
 
 [windows]
 _virtualenv:
-	if (-Not Test-Path {{venvdir}} -PathType Container) { {{base-python}} -m virtualenv {{venvdir}} }
+	if (-Not (Test-Path {{venvdir}} -PathType Container)) { {{base-python}} -m venv {{venvdir}} }
 
 _install-pip-tools: _virtualenv
 	{{python}} -m pip install pip-tools
