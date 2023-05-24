@@ -300,6 +300,8 @@ VM
 # Virtual Machine
 VMWare
 Vulkan
+walkthrough
+walkthroughs
 wavefront
 wavefronts
 WGP
