@@ -4,9 +4,42 @@ version: 1
 # ${version} will be replaced by the version of the (current) project in values
 projects:
   python: https://docs.python.org/3/
-  rtd: https://docs.readthedocs.io/en/stable/
-  sphinx: https://www.sphinx-doc.org/en/master/
-  rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
+  composable-kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
+  hip: https://rocm.docs.amd.com/projects/HIP/en/${version}
+  hipblaslt: https://rocm.docs.amd.com/projects/hipBLASLt/en/${version}
+  hipblas: https://rocm.docs.amd.com/projects/hipBLAS/en/${version}
+  hipcub: https://rocm.docs.amd.com/projects/hipCUB/en/${version}
+  hipfft: https://rocm.docs.amd.com/projects/hipFFT/en/${version}
   hipify:
     target: https://rocm.docs.amd.com/projects/HIPIFY/en/${version}
     development_branch: amd-staging
+  hiprand: https://rocm.docs.amd.com/projects/hipRAND/en/${version}
+  hipsolver: https://rocm.docs.amd.com/projects/hipSOLVER/en/${version}
+  hipsparse: https://rocm.docs.amd.com/projects/hipSPARSE/en/${version}
+  migraphx: https://rocm.docs.amd.com/projects/AMDMIGraphX/en/${version}
+  miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
+  mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
+  rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
+  rdc: https://rocm.docs.amd.com/projects/rdc/en/${version}
+  rocal: https://rocm.docs.amd.com/projects/rocAL/en/${version}
+  rocalution: https://rocm.docs.amd.com/projects/rocALUTION/en/${version}
+  rocblas: https://rocm.docs.amd.com/projects/rocBLAS/en/${version}
+  rocfft: https://rocm.docs.amd.com/projects/rocFFT/en/${version}
+  rocdbgapi: https://rocm.docs.amd.com/projects/ROCdbgapi/en/${version}
+  rocgdb:
+    target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
+    development_branch: amd-master
+  rocprofiler: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
+  roctracer: https://rocm.docs.amd.com/projects/roctracer/en/${version}
+  rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
+  rocm-validation-suite: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
+  rocm: https://rocm.docs.amd.com/en/develop/
+  rocprim: https://rocm.docs.amd.com/projects/rocPRIM/en/${version}
+  rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
+  rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}
+  rocsparse: https://rocm.docs.amd.com/projects/rocSPARSE/en/${version}
+  rocthrust: https://rocm.docs.amd.com/projects/rocThrust/en/${version}
+  rocwmma: https://rocm.docs.amd.com/projects/rocWMMA/en/${version}
+  rtd: https://docs.readthedocs.io/en/stable/
+  sphinx: https://www.sphinx-doc.org/en/master/
+  transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
