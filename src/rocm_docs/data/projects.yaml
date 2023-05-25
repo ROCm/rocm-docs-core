@@ -6,7 +6,7 @@ projects:
   python: https://docs.python.org/3/
   composable-kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
   hip: https://rocm.docs.amd.com/projects/HIP/en/${version}
-  hipblas-lt: https://rocm.docs.amd.com/projects/hipBLASLt/en/${version}
+  hipblaslt: https://rocm.docs.amd.com/projects/hipBLASLt/en/${version}
   hipblas: https://rocm.docs.amd.com/projects/hipBLAS/en/${version}
   hipcub: https://rocm.docs.amd.com/projects/hipCUB/en/${version}
   hipfft: https://rocm.docs.amd.com/projects/hipFFT/en/${version}
