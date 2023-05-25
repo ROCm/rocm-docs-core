@@ -167,9 +167,9 @@ ul.bd-breadcrumbs li.breadcrumb-item {
 }
 
 .bd-container .primary-toggle>span {
-    transform-origin: 50%, 50%;
-    transition: transform 0.3s ease-in-out;
-    transform: rotate(0);
+  transform-origin: 50%, 50%;
+  transition: transform 0.3s ease-in-out;
+  transform: rotate(0);
 }
 
 input#__primary:checked ~ .bd-container .primary-toggle>span {
@@ -181,6 +181,10 @@ a#ot-sdk-btn {
   border: none !important;
   padding: 0 !important;
   color: #9d9fa2 !important;
+}
+
+.navbar-brand.logo {
+  align-items: flex-start !important;
 }
 
 /* Fix for sidebar width mismatch between Bootstrap and the Sphinx Book Theme */
