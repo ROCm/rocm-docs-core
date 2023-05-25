@@ -1,5 +1,5 @@
 {% macro navbar_item(branch) -%}
-    {%if "develop" in branch%}
+    {% if branch in development_branches %}
     <a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/{{ branch }}"></a>
     {% else %}
     <a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
@@ -8,3 +8,4 @@
     </a>
 {%- endmacro -%}
 {{ navbar_item(theme_repository_branch) }}
+.. datatemplate:yaml:: development_branches.yaml
