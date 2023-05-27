@@ -1,0 +1,10 @@
+{% macro navbar_item(branch) -%}
+    {% if branch in ["develop", "amd-master", "amd-staging", "master"] %}
+    <a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/develop">
+    {% else %}
+    <a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+    {% endif %}
+        <p>ROCm Doc Index</p>
+    </a>
+{%- endmacro -%}
+{{ navbar_item(theme_repository_branch) }}
