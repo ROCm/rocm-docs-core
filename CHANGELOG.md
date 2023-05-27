@@ -1,3 +1,23 @@
+## v0.13.0 (2023-05-27)
+
+### Feat
+
+- **left-side-menu.html**: dynamically change homepage link for develop branch
+- add link to ROCm docs home to top of TOC
+
+### Fix
+
+- **header.html**: fix link to amd.com
+
+### Refactor
+
+- include master branch for left side menu
+- update development_branches
+- include dev branch names in left-side-menu
+- move yaml file to data folder
+- add yaml with development branches
+- dynamically change branch in left side menu
+
 ## v0.12.0 (2023-05-24)
 
 ### Feat
