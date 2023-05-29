@@ -43,7 +43,7 @@ cryptography==40.0.2
     # via pyjwt
 decli==0.6.0
     # via commitizen
-deprecated==1.2.13
+deprecated==1.2.14
     # via pygithub
 docutils==0.19
     # via
