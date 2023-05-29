@@ -237,6 +237,8 @@ RST
 runtime
 runtimes
 SBIOS
+# projects_yaml
+Intersphinx
 # System BIOS (RDNA2 virt guide)
 scalability
 SDK
