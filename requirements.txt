@@ -182,7 +182,7 @@ tomlkit==0.11.8
     # via commitizen
 tqdm==4.65.0
     # via mpire
-typing-extensions==4.5.0
+typing-extensions==4.6.2
     # via pydata-sphinx-theme
 uc-micro-py==1.0.2
     # via linkify-it-py
