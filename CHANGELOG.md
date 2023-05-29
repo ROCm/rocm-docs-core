@@ -1,3 +1,10 @@
+## v0.13.1 (2023-05-29)
+
+### Refactor
+
+- **doxygen.py**: remove extra print statement when copying over doxygen styling files
+- **left-side-menu**: rename main doc link to ROCm Documentation Home
+
 ## v0.13.0 (2023-05-27)
 
 ### Feat
