@@ -10,6 +10,10 @@ defaults:
   maxdepth: 6
 root: index.md
 subtrees:
+  - caption: User Guide
+    entries:
+      - file: user_guide/projects_yaml
+      - file: user_guide/article_info
   - caption: Demo Documentation Showcase
     entries:
       - file: demo/doxygen/html/index
