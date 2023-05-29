@@ -53,10 +53,6 @@ def _copy_files(app: Sphinx):
                 # unzipping and/or the creation of a temporary file.
                 # This is not the case when opening the file as a
                 # stream.
-                if entry is None:
-                    print("none")
-                else:
-                    print("some")
                 with entry.open("rb") as infile:  # type: ignore
                     with open(entry_path, "wb") as out:
                         shutil.copyfileobj(infile, out)
