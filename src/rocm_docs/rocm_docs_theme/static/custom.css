@@ -187,6 +187,10 @@ a#ot-sdk-btn {
   align-items: flex-start !important;
 }
 
+.navbar-brand .logo__title {
+  text-align: left !important;
+}
+
 /* Fix for sidebar width mismatch between Bootstrap and the Sphinx Book Theme */
 @media (min-width: 960px) {
   input#__primary:checked ~ .bd-container .bd-sidebar-primary {
