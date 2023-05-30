@@ -906,4 +906,26 @@ header.common-header
     top: 0;
     transition: top ease 0.25s;
   }
+  input#__primary:checked ~ div.bd-header-announcement ~ header.common-header {
+    position: fixed;
+  }
+}
+
+@media (min-width: 440px) and (max-width: 1199.98px) {
+  div.bd-header-announcement ~ header.common-header nav.second-level-nav div.main-nav {
+      width: 60%;
+      margin-left: 0;
+      height: 0;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  div.bd-header-announcement ~ header.common-header nav.second-level-nav div.main-nav {
+      height: 0;
+  }
+  div.bd-header-announcement ~ header.common-header div.navbar-collapse.show, div.bd-header-announcement ~ header.common-header div.navbar-collapse.collapsing {
+      position: relative;
+      top: 0;
+      width: 60%;
+  }
 }
