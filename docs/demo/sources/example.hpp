@@ -26,6 +26,13 @@ public:
     /// \param param The parameter
     /// \return description of the return value
     int method2(int param);
+
+    ///
+    /// \brief Example method taking parameters
+    /// \param param The parameter
+    /// \return description of the return value
+    int method3(int param);
+
 protected:
     ///
     /// \brief This is a protected static member
