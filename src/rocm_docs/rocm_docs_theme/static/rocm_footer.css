@@ -49,3 +49,9 @@ footer.rocm-footer .bottom-menu .copyright {
   font-size: 0.75rem;
   line-height: 1.125rem;
 }
+
+@media (max-width: 959.98px) {
+  input#__primary:checked ~ footer.rocm-footer {
+    z-index: 1000;
+  }
+}
