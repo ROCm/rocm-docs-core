@@ -1,3 +1,11 @@
+## v0.13.2 (2023-05-31)
+
+### Fix
+
+- **custom.css**: force navbar text to left align
+- Fix footer interaction with flyout nav
+- CSS fixes around announcement banner
+
 ## v0.13.1 (2023-05-29)
 
 ### Refactor
