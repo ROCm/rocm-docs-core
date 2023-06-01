@@ -1,12 +1,13 @@
 """Module to use rocm-docs-core as a theme."""
-from typing import Dict, Any
+from typing import Any, Dict
+
 from pathlib import Path
 
-from sphinx.application import Sphinx
-from pydata_sphinx_theme.utils import (
+from pydata_sphinx_theme.utils import (  # type: ignore[import]
     config_provided_by_user,
     get_theme_options_dict,
 )
+from sphinx.application import Sphinx
 
 from rocm_docs import util
 

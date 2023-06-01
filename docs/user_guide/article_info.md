@@ -2,7 +2,7 @@
 
 Article info is disabled by default and must be enabled in `conf.py`.
 
-# Settings
+## Settings
 
 *Legend: `setting name (setting data type): explanation`*
 
@@ -20,13 +20,13 @@ Article info is disabled by default and must be enabled in `conf.py`.
 
 Example:
 
-```
+```python
 article_pages = [
     {
-        "file":"index", 
-        "os":["linux", "windows"], 
-        "author":"Author: AMD", 
-        "date":"2023-05-01", 
+        "file":"index",
+        "os":["linux", "windows"],
+        "author":"Author: AMD",
+        "date":"2023-05-01",
         "read-time":"2 min read"
     },
     {"file":"developer_guide/commitizen"}

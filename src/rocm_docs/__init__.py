@@ -1,10 +1,9 @@
 """Set up variables for documentation of ROCm projects using RTD."""
 
-import os
-import re
 from typing import Dict, List, Optional, Union
 
-from deprecated import deprecated
+import os
+import re
 
 from rocm_docs.core import setup
 
@@ -15,7 +14,7 @@ MaybePath = Union[str, os.PathLike, None]
 # as this class is intended to contain all necessary Sphinx config variables
 # pylint: disable=too-many-instance-attributes
 class ROCmDocs:
-    """A class to contain all of the Sphinx variables"""
+    """A class to contain all of the Sphinx variables."""
 
     SPHINX_VARS = [
         "extensions",
@@ -34,10 +33,9 @@ class ROCmDocs:
         version_string: Optional[str] = None,
         _: MaybePath = None,
     ) -> None:
+        """Intialize ROCmDocs."""
         self._project_name: str = project_name
-        self._version_string: str = (
-            "" if version_string is None else version_string
-        )
+        self._version_string = version_string
         self.extensions: List[str] = []
         self.html_title: str
         self.html_theme: str
@@ -80,12 +78,10 @@ class ROCmDocs:
         self.doxysphinx_enabled = True
 
     def setup(self) -> None:
-        """Sets up default RTD variables."""
+        """Set up default RTD variables."""
         self.extensions.append("rocm_docs")
         full_project_name = self._project_name
-        if self._version_string is None and os.path.exists(
-            "../CMakeLists.txt"
-        ):
+        if self._version_string is None and os.path.exists("../CMakeLists.txt"):
             with open("../CMakeLists.txt", encoding="utf8") as file:
                 for line in file.readlines():
                     if "VERSION_STRING" in line:
@@ -99,5 +95,6 @@ class ROCmDocs:
             full_project_name += f" {self._version_string}"
         self.html_title = full_project_name
         self.html_theme = "rocm_docs_theme"
+
 
 __all__ = ["setup", "ROCmDocs"]

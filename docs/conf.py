@@ -17,13 +17,13 @@ external_projects_current_project = "rocm-docs-core"
 # specific settings override any general settings (eg: all_article_info_<field>)
 article_pages = [
     {
-        "file":"index", 
-        "os":["linux", "windows"], 
-        "author":"Author: AMD", 
-        "date":"2023-05-01", 
-        "read-time":"2 min read"
+        "file": "index",
+        "os": ["linux", "windows"],
+        "author": "Author: AMD",
+        "date": "2023-05-01",
+        "read-time": "2 min read",
     },
-    {"file":"developer_guide/commitizen"}
+    {"file": "developer_guide/commitizen"},
 ]
 
 docs_core = ROCmDocs("ROCm Docs Core")

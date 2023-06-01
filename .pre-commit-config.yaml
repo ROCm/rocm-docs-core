@@ -1,0 +1,53 @@
+default_language_version:
+  python: python3.8
+
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [commit]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: just mypy
+        types_or: [python, pyi]
+        language: system
+        exclude: ^docs/.*
+      - id: ruff
+        name: ruff
+        entry: just ruff
+        types_or: [python, pyi]
+        language: system
+        exclude: ^docs/.*
+        require_serial: true
+      - id: isort
+        name: isort
+        entry: just isort
+        types_or: [python, pyi]
+        language: system
+      - id: format
+        name: format
+        entry: just format
+        types_or: [python, pyi]
+        language: system
+      - id: commitizen
+        name: commitizen
+        entry: just _check-commit-mesg
+        stages: [commit-msg]
+        language: system
+      - id: pip-compile
+        name: pip-compile
+        entry: just lock-deps
+        files: ^pyproject.toml|requirements.txt$
+        pass_filenames: false
+        language: system

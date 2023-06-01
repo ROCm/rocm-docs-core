@@ -1,0 +1,13 @@
+{
+    "liveServer.settings.root": "docs/_build/html",
+    "liveServer.settings.wait": 1000,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--config",
+        "pyproject.toml"
+    ],
+    "editor.rulers": [
+        80
+    ]
+}

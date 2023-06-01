@@ -1,0 +1,15 @@
+{
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "updateContentCommand": "just devenv docs",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bungcip.better-toml",
+                "ms-python.python",
+                "ritwickdey.LiveServer"
+            ]
+        }
+    }
+}

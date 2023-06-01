@@ -1,9 +1,12 @@
-"""Utilities for formatting text"""
+"""Utilities for formatting text."""
+
+from __future__ import annotations
+
+from typing import Any, Generator, Iterable
 
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Generator, Iterable, Optional, Tuple
 
 
 class Formatter:
@@ -11,27 +14,28 @@ class Formatter:
 
     @dataclass
     class _Replacement:
-        loc: Tuple[int, int]
+        loc: tuple[int, int]
         text: str
 
-    def __init__(self, context: Dict[str, Any]):
-        self.directive_pattern: re.Pattern = re.compile(
+    def __init__(self, context: dict[str, Any]):
+        """Initialize Formatter."""
+        self.directive_pattern: re.Pattern[str] = re.compile(
             r"(?P<prefix>\$)?\{(?P<directive>[a-zA-z][a-zA-Z0-9_]+)"
             r"(?:\:(?P<parameter>[a-zA-Z0-9_\-\.]+))?\}"
         )
         self.context = context
 
     def _format_simple(
-        self, directive: str, parameter: Optional[str], loc: Tuple[int, int]
-    ) -> Optional[_Replacement]:
+        self, directive: str, parameter: str | None, loc: tuple[int, int]
+    ) -> _Replacement | None:
         # Cannot have a parameter
         if parameter is not None:
             return None
         return self._Replacement(loc, self.context[directive])
 
     def _format_project(
-        self, _: str, parameter: Optional[str], loc: Tuple[int, int]
-    ) -> Optional[_Replacement]:
+        self, _: str, parameter: str | None, loc: tuple[int, int]
+    ) -> _Replacement | None:
         # Parameter is required
         if parameter is None:
             return None
@@ -39,7 +43,7 @@ class Formatter:
             return None
         return self._Replacement(loc, self.context["projects"][parameter])
 
-    def _format_directive(self, match: re.Match) -> Optional[_Replacement]:
+    def _format_directive(self, match: re.Match[str]) -> _Replacement | None:
         # As a special case allow `{branch}` and `url` to alias `${branch}`
         # and '${url}' respectively for backwards compatibility.
         # Otherwise the '$' is required
@@ -66,9 +70,10 @@ class Formatter:
                 yield replacement
 
     def format_line(self, line: str) -> str:
-        """Substitute references of the form ${<variable>}
-        and ${directive:param} into line.
+        """Substitute variable references into line.
 
+        References of the form ${<variable>} and ${directive:param}
+        are substituted
         >>> f = Formatter(
         ...     {
         ...         "branch": "develop",
@@ -87,7 +92,6 @@ class Formatter:
         >>> f.format_line('{invalid}')
         '{invalid}'
         """
-
         result: str = ""
         end: int = 0
         for replacement in self._replacements(line):
@@ -100,8 +104,8 @@ class Formatter:
 
     def skip_comments(self, lines: Iterable[str]) -> Generator[str, None, None]:
         """Returns a sequence that skips lines as long as they start with '#'.
-        Lines after the first "non-comment" line are returned as-is.
 
+        Lines after the first "non-comment" line are returned as-is.
         >>> f = Formatter({})
         >>> for l in f.skip_comments(
         ...     ["#comment 0", "# comment 1", "text", "# will not be skipped"]
@@ -110,7 +114,6 @@ class Formatter:
         text
         # will not be skipped
         """
-
         iterator = iter(lines)
         for line in iterator:
             if not line.startswith("#"):
@@ -119,11 +122,12 @@ class Formatter:
         yield from iterator
 
 
-def format_toc(input_path: Path, output_path: Path, context: Dict[str, Any]):
+def format_toc(
+    input_path: Path, output_path: Path, context: dict[str, Any]
+) -> None:
     """Format the input table of contents with additional information."""
-
     formatter = Formatter(context)
-    with open(input_path, "r", encoding="utf-8") as toc_in, open(
+    with open(input_path, encoding="utf-8") as toc_in, open(
         output_path, "w", encoding="utf-8"
     ) as toc_out:
         for line in formatter.skip_comments(toc_in):

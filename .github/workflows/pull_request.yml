@@ -3,11 +3,13 @@ on:
 
 jobs:
   lint:
+    name: Python linting
     strategy:
       matrix:
+        os: ["ubuntu-latest", "windows-latest"]
         python-version: ["3.8"]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3.5.0
       with:
@@ -20,20 +22,27 @@ jobs:
         cache-dependency-path: |
           pyproject.toml
           requirements.txt
-    - name: Set up cache
+    - name: Cache venv
       uses: actions/cache@v3.3.1
       with:
         path: .venv
-        key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
+        key: venv-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
+    - run: echo "PRE_COMMIT_HOME=$Env:GITHUB_WORKSPACE/.cache/pre-commit" >> "$Env:GITHUB_ENV"
+      if: ${{ startsWith(matrix.os, 'windows') }}
+    - run: echo "PRE_COMMIT_HOME=$GITHUB_WORKSPACE/.cache/pre-commit" >> "$GITHUB_ENV"
+      if: ${{ !startsWith(matrix.os, 'windows') }}
+    - name: Cache pre-commit
+      uses: actions/cache@v3.3.1
+      with:
+        path: ${{ env.PRE_COMMIT_HOME }}
+        key: pre-commit-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
+    - name: Install just
+      uses: extractions/setup-just@v1
+      with:
+        just-version: '1.13.0'
     - name: Create virtual env, install requirements
-      shell: sh
-      run: |
-        python -m venv .venv
-        . .venv/bin/activate
-        python -m pip install pip-tools
-        python -m piptools sync requirements.txt
-        echo "PATH=$PATH" >> "$GITHUB_ENV"
-    - name: Run commitizen
-      shell: sh
-      run: |
-        cz check --rev-range "refs/remotes/origin/${{ github.base_ref }}..HEAD"
+      run: just deps
+    - name: Check commit messages
+      run: just _check-commit-range "refs/remotes/origin/${{ github.base_ref }}..HEAD"
+    - name: Check linting, formatting, types
+      run: just check-codestyle
