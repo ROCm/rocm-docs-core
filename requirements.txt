@@ -98,7 +98,7 @@ linkify-it-py==1.0.3
     # via myst-parser
 lxml==4.9.2
     # via doxysphinx
-markdown-it-py==2.2.0
+markdown-it-py==3.0.0
     # via
     #   mdit-py-plugins
     #   myst-parser
