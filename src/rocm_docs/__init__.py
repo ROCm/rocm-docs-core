@@ -1,9 +1,12 @@
-"""Set up variables for documentation of ROCm projects using RTD."""
+"""Defines the ROCmDocs package.
+
+Set up variables for documentation of ROCm projects
+that are using Read the Docs.
+"""
 
 from typing import Dict, List, Optional, Union
 
 import os
-import re
 
 from rocm_docs.core import setup
 
@@ -35,7 +38,6 @@ class ROCmDocs:
     ) -> None:
         """Intialize ROCmDocs."""
         self._project_name: str = project_name
-        self._version_string = version_string
         self.extensions: List[str] = []
         self.html_title: str
         self.html_theme: str
@@ -81,18 +83,6 @@ class ROCmDocs:
         """Set up default RTD variables."""
         self.extensions.append("rocm_docs")
         full_project_name = self._project_name
-        if self._version_string is None and os.path.exists("../CMakeLists.txt"):
-            with open("../CMakeLists.txt", encoding="utf8") as file:
-                for line in file.readlines():
-                    if "VERSION_STRING" in line:
-                        self._version_string = re.sub(
-                            r"^.*VERSION_STRING.*\s\"([0-9]+(?:\.[0-9]+)*).*$",
-                            "\1",
-                            line,
-                        )
-                        break
-        if self._version_string is not None and len(self._version_string) > 0:
-            full_project_name += f" {self._version_string}"
         self.html_title = full_project_name
         self.html_theme = "rocm_docs_theme"
 

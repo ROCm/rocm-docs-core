@@ -28,7 +28,9 @@ for sphinx_var in ROCmDocs.SPHINX_VARS:
 
 ### Documentation
 
-Build documentation by running the commands below:
+The `rocm-docs-core` documentation is viewable at [https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/](https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/)
+
+To build the `rocm-docs-core` documentation locally, run the commands below:
 
 ```
 pip install -r requirements.txt
