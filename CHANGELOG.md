@@ -1,3 +1,9 @@
+## v0.13.4 (2023-06-07)
+
+### Fix
+
+- **__init__.py**: stop searching CMakeLists.txt for version string
+
 ## v0.13.3 (2023-06-01)
 
 ### Fix
