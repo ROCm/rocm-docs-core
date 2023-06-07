@@ -1,4 +1,5 @@
-"""
+"""Defines the ROCmDocs package.
+
 Set up variables for documentation of ROCm projects
 that are using Read the Docs.
 """
