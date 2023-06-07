@@ -1,4 +1,7 @@
-"""Set up variables for documentation of ROCm projects using RTD."""
+"""
+Set up variables for documentation of ROCm projects
+that are using Read the Docs.
+"""
 
 from typing import Dict, List, Optional, Union
 
