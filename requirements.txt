@@ -238,7 +238,7 @@ typing-extensions==4.6.3
     #   pydata-sphinx-theme
 uc-micro-py==1.0.2
     # via linkify-it-py
-urllib3==2.0.2
+urllib3==2.0.3
     # via requests
 virtualenv==20.23.0
     # via pre-commit
