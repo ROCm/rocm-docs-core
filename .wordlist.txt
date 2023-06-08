@@ -190,6 +190,7 @@ PCI
 PCIe
 Perfetto
 performant
+perl
 PIL
 PILImage
 pragma
