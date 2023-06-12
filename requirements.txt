@@ -67,7 +67,7 @@ doxysphinx==3.3.3
     # via rocm-docs-core (pyproject.toml)
 fastjsonschema==2.17.1
     # via rocm-docs-core (pyproject.toml)
-filelock==3.12.0
+filelock==3.12.1
     # via virtualenv
 gitdb==4.0.10
     # via gitpython
