@@ -116,7 +116,7 @@ mypy-extensions==1.0.0
     # via
     #   black
     #   mypy
-myst-parser[linkify]==1.0.0
+myst-parser[linkify]==2.0.0
     # via rocm-docs-core (pyproject.toml)
 nodeenv==1.8.0
     # via pre-commit
