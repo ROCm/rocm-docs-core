@@ -135,7 +135,7 @@ platformdirs==3.5.3
     # via
     #   black
     #   virtualenv
-pre-commit==3.3.2
+pre-commit==3.3.3
     # via rocm-docs-core (pyproject.toml)
 prompt-toolkit==3.0.38
     # via questionary
