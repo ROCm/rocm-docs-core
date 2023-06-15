@@ -17,11 +17,11 @@ subtrees:
   - caption: Developer Guide
     entries:
       - file: developer_guide/commitizen
-  - caption: Demo: Doxygen Documentation Integration
+  - caption: Demo Doxygen Documentation Integration
     entries:
       - file: demo/doxygen/html/index
         title: Library API Doxygen Demo
-  - caption: Demo: Table of Contents Tree
+  - caption: Demo Table of Contents Tree
     entries:
       - url: "{url}/tree/{branch}"
       - url: ${project:python}
