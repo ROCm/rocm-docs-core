@@ -298,11 +298,20 @@ def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "external_toc_path"):
         app.config.external_toc_path = "./.sphinx/_toc.yml"  # type: ignore[attr-defined]
 
+    context = _get_context(Path(app.srcdir), mapping)
     formatting.format_toc(
         Path(app.srcdir, app.config.external_toc_template_path),
         Path(app.srcdir, app.config.external_toc_path),
-        _get_context(Path(app.srcdir), mapping),
+        context,
     )
+    # Store the context to be referenced later
+    app.config.projects_context = context  # type: ignore[attr-defined]
+
+
+def _setup_projects_context(
+    app: Sphinx, _: str, __: str, context: Dict[str, Any], ___: Any
+) -> None:
+    context["projects"] = app.config.projects_context["projects"]
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
@@ -342,6 +351,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
     # This needs to happen before external-tocs's config-inited (priority=900)
     app.connect("config-inited", _update_config)
+    app.connect("html-page-context", _setup_projects_context)
     return {"parallel_read_safe": True, "parallel_write_safe": True}
 
 
@@ -369,7 +379,7 @@ def debug_projects() -> None:
     formatting.format_toc(
         toc_in,
         toc_out,
-        _get_context(Path(), mapping),
+        context,
     )
 
 

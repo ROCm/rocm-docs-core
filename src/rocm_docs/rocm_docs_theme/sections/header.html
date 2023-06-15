@@ -13,11 +13,11 @@
                 <div class="vr vr mx-40 my-25"></div>
                 {% macro top_level_header(branch) -%}
                     {% if branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
-                    <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform <i>Future Release</i></a>
+                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform <i>Future Release</i></a>
                     {% elif "5.6." in branch %}
-                    <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform <i>Release Candidate 5.6</i></a>
+                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform <i>Release Candidate 5.6</i></a>
                     {% else %}
-                    <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform <i>{{ branch }}</i></a>
+                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform <i>{{ branch }}</i></a>
                     {% endif %}
                 {%- endmacro -%}
                 {{ top_level_header(theme_repository_branch | replace("docs/", "")) }}
