@@ -1,4 +1,3 @@
-
 <header class="common-header" >
     <nav class="navbar navbar-expand-xl">
         <div class="container-fluid main-nav rocm-header">
@@ -12,7 +11,16 @@
                     <img src="{{ pathto('_static/images/amd-header-logo.svg',1) }}" alt="AMD Logo" title="AMD Logo" width="90" class="d-inline-block align-text-top hover-opacity"/>
                 </a>
                 <div class="vr vr mx-40 my-25"></div>
-                <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform</a>
+                {% macro top_level_header(branch) -%}
+                    {% if branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
+                    <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform <i>Future Release</i></a>
+                    {% elif "5.6." in branch %}
+                    <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform <i>Release Candidate 5.6</i></a>
+                    {% else %}
+                    <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform <i>{{ branch }}</i></a>
+                    {% endif %}
+                {%- endmacro -%}
+                {{ top_level_header(theme_repository_branch | replace("docs/", "")) }}
             </div>
             <div class="icon-nav text-center d-flex ms-auto">
                 <!-- TODO: Search icon up here maybe? -->

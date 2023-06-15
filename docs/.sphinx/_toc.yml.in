@@ -14,17 +14,17 @@ subtrees:
     entries:
       - file: user_guide/projects_yaml
       - file: user_guide/article_info
-  - caption: Demo Documentation Showcase
+  - caption: Developer Guide
+    entries:
+      - file: developer_guide/commitizen
+  - caption: Demo Doxygen Documentation Integration
     entries:
       - file: demo/doxygen/html/index
         title: Library API Doxygen Demo
-  - caption: ToCTree Showcase
+  - caption: Demo Table of Contents Tree
     entries:
       - url: "{url}/tree/{branch}"
       - url: ${project:python}
       - url: ${project:rocm-docs-core}
       - url: ${project:hipify}
         title: HIPIFY
-  - caption: Developer Guide
-    entries:
-      - file: developer_guide/commitizen
