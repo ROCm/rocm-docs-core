@@ -17,7 +17,7 @@
                     {% elif "5.6." in branch %}
                     <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform <i>Release Candidate 5.6</i></a>
                     {% else %}
-                    <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform {{ branch }}</a>
+                    <a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest/">ROCm&#8482; Platform <i>{{ branch }}</i></a>
                     {% endif %}
                 {%- endmacro -%}
                 {{ top_level_header(theme_repository_branch | replace("docs/", "")) }}
