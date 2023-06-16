@@ -1,3 +1,18 @@
+## v0.14.0 (2023-06-16)
+
+### Feat
+
+- **header.html**: write to header in italics if future release or release candidate
+- **header.html**: include the version number in the top level header if the branch contains it
+- **rdcMisc.js**: toggle light/dark mode caption when changing themes
+
+### Refactor
+
+- **header.html**: make the added part in italics for top level header
+- **_toc.yml.in**: correct toc typo
+- move theme mode captions to separate js file
+- **rdcMisc.js**: use 4 spaces for tabs in rdcMisc
+
 ## v0.13.4 (2023-06-07)
 
 ### Fix
