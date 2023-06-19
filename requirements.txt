@@ -240,7 +240,7 @@ uc-micro-py==1.0.2
     # via linkify-it-py
 urllib3==2.0.3
     # via requests
-virtualenv==20.23.0
+virtualenv==20.23.1
     # via pre-commit
 wcwidth==0.2.6
     # via prompt-toolkit
