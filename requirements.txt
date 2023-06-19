@@ -63,7 +63,7 @@ docutils==0.19
     #   myst-parser
     #   pydata-sphinx-theme
     #   sphinx
-doxysphinx==3.3.3
+doxysphinx==3.3.4
     # via rocm-docs-core (pyproject.toml)
 fastjsonschema==2.17.1
     # via rocm-docs-core (pyproject.toml)
