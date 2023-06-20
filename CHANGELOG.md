@@ -1,3 +1,13 @@
+## v0.15.0 (2023-06-20)
+
+### Feat
+
+- **projects**: expose project urls to html templates
+
+### Fix
+
+- **projects.yaml**: remove hardcoding of rocm to develop
+
 ## v0.14.0 (2023-06-16)
 
 ### Feat
