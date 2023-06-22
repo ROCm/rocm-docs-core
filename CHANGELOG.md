@@ -1,3 +1,9 @@
+## v0.16.0 (2023-06-22)
+
+### Feat
+
+- Updating announcement banner
+
 ## v0.15.0 (2023-06-20)
 
 ### Feat
