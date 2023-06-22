@@ -5,7 +5,6 @@ from typing import Any, Dict
 import sys
 from pathlib import Path
 
-import yaml
 from pydata_sphinx_theme.utils import (  # type: ignore[import]
     config_provided_by_user,
     get_theme_options_dict,
@@ -36,25 +35,9 @@ def _update_repo_opts(
         theme_opts.setdefault(key, val)
 
 
-def _set_theme_announcement(
-    announcement: str, theme_opts: Dict[str, Any]
-) -> None:
-    theme_opts.setdefault("announcement", announcement)
-
-
-def _update_banner(url: str, branch: str, theme_opts: Dict[str, Any]) -> None:
-    mapping_file_loc = "data/theme_announcement.yaml"
-    announcement_yaml = (
-        importlib_resources.files("rocm_docs") / mapping_file_loc
-    )
-
-    with open(announcement_yaml, "r") as file:
-        banner_dict = yaml.safe_load(file)
-
-    if branch in banner_dict["old-branch"]:
-        _set_theme_announcement(banner_dict["old-str"], theme_opts)
-    elif branch in banner_dict["unreleased-branch"]:
-        _set_theme_announcement(banner_dict["unreleased-str"], theme_opts)
+def _update_banner(announcement_info: str, theme_opts: Dict[str, Any]) -> None:
+    if len(announcement_info) > 0:
+        theme_opts.setdefault("announcement", announcement_info)
 
 
 def _update_theme_options(app: Sphinx) -> None:
@@ -67,7 +50,7 @@ def _update_theme_options(app: Sphinx) -> None:
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
     )
 
-    _update_banner(url, branch, theme_opts)
+    _update_banner(app.config.announcement_info, theme_opts)
 
     # Default the download, edit, and fullscreen buttons to off
     for button in ["download", "edit_page", "fullscreen"]:
