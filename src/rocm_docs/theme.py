@@ -35,14 +35,7 @@ def _update_theme_options(app: Sphinx) -> None:
 
     theme_opts.setdefault(
         "announcement",
-        (
-            "ROCm Documentation is transitioning to this site. For the legacy"
-            " documentation, please visit <a href='https://docs.amd.com'"
-            " target='_blank'>docs.amd.com</a>. For more information or to"
-            " provide feedback about this documentation transition, please see"
-            " <a href='https://github.com/RadeonOpenCompute/ROCm/discussions/2169'"
-            " target='_blank'>our announcement</a>."
-        ),
+        "Welcome to ROCm Documentation's new home.",
     )
 
     # Default the download, edit, and fullscreen buttons to off
