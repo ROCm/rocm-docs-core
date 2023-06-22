@@ -1,9 +1,11 @@
 """Module to use rocm-docs-core as a theme."""
+
 from typing import Any, Dict
 
-import yaml
+import sys
 from pathlib import Path
 
+import yaml
 from pydata_sphinx_theme.utils import (  # type: ignore[import]
     config_provided_by_user,
     get_theme_options_dict,
@@ -12,8 +14,18 @@ from sphinx.application import Sphinx
 
 from rocm_docs import util
 
+if sys.version_info < (3, 9):
+    # importlib.resources either doesn't exist or lacks the files()
+    # function, so use the PyPI version:
+    import importlib_resources
+else:
+    # importlib.resources has files(), so use that:
+    import importlib.resources as importlib_resources
 
-def _update_repo_opts(srcdir: str, url: str, branch: str, theme_opts: Dict[str, Any]) -> None:
+
+def _update_repo_opts(
+    srcdir: str, url: str, branch: str, theme_opts: Dict[str, Any]
+) -> None:
     default_branch_options = {
         "use_edit_page_button": False,
         "repository_url": url,
@@ -24,29 +36,26 @@ def _update_repo_opts(srcdir: str, url: str, branch: str, theme_opts: Dict[str, 
         theme_opts.setdefault(key, val)
 
 
-def _set_theme_announcement(announcement: str ,theme_opts: Dict[str, Any]) -> None:
-    theme_opts.setdefault(
-        "announcement",
-        announcement
+def _set_theme_announcement(
+    announcement: str, theme_opts: Dict[str, Any]
+) -> None:
+    theme_opts.setdefault("announcement", announcement)
+
+
+def _update_banner(url: str, branch: str, theme_opts: Dict[str, Any]) -> None:
+    mapping_file_loc = "data/theme_announcement.yaml"
+    announcement_yaml = (
+        importlib_resources.files("rocm_docs") / mapping_file_loc
     )
 
-
-def _update_banner(url: str, branch: str ,theme_opts: Dict[str, Any]) -> None:
-    mapping_file_loc = "data/theme_announcement.yaml"
-
-    with open(mapping_file_loc, "r") as file:
+    with open(announcement_yaml, "r") as file:
         banner_dict = yaml.safe_load(file)
 
-    for main_project in banner_dict.keys():
-        if banner_dict[main_project]["url"] in url:
-            if branch in banner_dict[main_project]["latest-branch"]:
-                break
-            elif branch in banner_dict[main_project]["unreleased-branch"]:
-                _set_theme_announcement(banner_dict[main_project]["unreleased-str"])
-                break
-            else:
-                _set_theme_announcement(banner_dict[main_project]["old-str"])
-    
+    if branch in banner_dict["old-branch"]:
+        _set_theme_announcement(banner_dict["old-str"], theme_opts)
+    elif branch in banner_dict["unreleased-branch"]:
+        _set_theme_announcement(banner_dict["unreleased-str"], theme_opts)
+
 
 def _update_theme_options(app: Sphinx) -> None:
     url, branch = util.get_branch(app.srcdir)
