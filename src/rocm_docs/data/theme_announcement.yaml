@@ -1,0 +1,7 @@
+rocm: 
+  url: "https://rocm.docs.amd.com"
+  latest-branch: "docs/5.5.1"
+  unreleased-branch: ["develop", "master", "amd-master", "amd-staging"]
+  unreleased-str: "This is an unreleased version of ROCm documentation."
+  # any version that is not latest or unreleased
+  old-str: "This is an old version of ROCm documentation."

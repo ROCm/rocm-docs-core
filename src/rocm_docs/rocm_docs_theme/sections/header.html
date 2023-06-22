@@ -20,7 +20,7 @@
                     <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform <i>{{ branch }}</i></a>
                     {% endif %}
                 {%- endmacro -%}
-                {{ top_level_header(theme_repository_branch | replace("docs/", "")) }}
+                {{ top_level_header(theme_repository_branch | replace("docs-", "")) }}
             </div>
             <div class="icon-nav text-center d-flex ms-auto">
                 <!-- TODO: Search icon up here maybe? -->

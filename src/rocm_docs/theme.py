@@ -1,6 +1,7 @@
 """Module to use rocm-docs-core as a theme."""
 from typing import Any, Dict
 
+import yaml
 from pathlib import Path
 
 from pydata_sphinx_theme.utils import (  # type: ignore[import]
@@ -12,8 +13,7 @@ from sphinx.application import Sphinx
 from rocm_docs import util
 
 
-def _update_repo_opts(srcdir: str, theme_opts: Dict[str, Any]) -> None:
-    url, branch = util.get_branch(srcdir)
+def _update_repo_opts(srcdir: str, url: str, branch: str, theme_opts: Dict[str, Any]) -> None:
     default_branch_options = {
         "use_edit_page_button": False,
         "repository_url": url,
@@ -24,19 +24,41 @@ def _update_repo_opts(srcdir: str, theme_opts: Dict[str, Any]) -> None:
         theme_opts.setdefault(key, val)
 
 
+def _set_theme_announcement(announcement: str ,theme_opts: Dict[str, Any]) -> None:
+    theme_opts.setdefault(
+        "announcement",
+        announcement
+    )
+
+
+def _update_banner(url: str, branch: str ,theme_opts: Dict[str, Any]) -> None:
+    mapping_file_loc = "data/theme_announcement.yaml"
+
+    with open(mapping_file_loc, "r") as file:
+        banner_dict = yaml.safe_load(file)
+
+    for main_project in banner_dict.keys():
+        if banner_dict[main_project]["url"] in url:
+            if branch in banner_dict[main_project]["latest-branch"]:
+                break
+            elif branch in banner_dict[main_project]["unreleased-branch"]:
+                _set_theme_announcement(banner_dict[main_project]["unreleased-str"])
+                break
+            else:
+                _set_theme_announcement(banner_dict[main_project]["old-str"])
+    
+
 def _update_theme_options(app: Sphinx) -> None:
+    url, branch = util.get_branch(app.srcdir)
     theme_opts = get_theme_options_dict(app)
-    _update_repo_opts(app.srcdir, theme_opts)
+    _update_repo_opts(app.srcdir, url, branch, theme_opts)
 
     theme_opts.setdefault(
         "article_header_start",
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
     )
 
-    theme_opts.setdefault(
-        "announcement",
-        "Welcome to ROCm Documentation's new home.",
-    )
+    _update_banner(url, branch, theme_opts)
 
     # Default the download, edit, and fullscreen buttons to off
     for button in ["download", "edit_page", "fullscreen"]:
