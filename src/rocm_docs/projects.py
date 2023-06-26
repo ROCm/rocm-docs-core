@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import json
 import os
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -277,18 +278,71 @@ def _get_context(
     }
 
 
+def _update_banner_config(
+    app: Sphinx, current_project: str, branch: str, url: str
+) -> None:
+    schema_file_loc = "data/projects.schema.json"
+    schema_file = importlib_resources.files("rocm_docs") / schema_file_loc
+    with open(schema_file) as file:
+        schema_config = yaml.safe_load(file)
+
+    mapping_file_loc = "data/projects.yaml"
+    mapping_config = importlib_resources.files("rocm_docs") / mapping_file_loc
+    with open(mapping_config) as file:
+        project_dict = yaml.safe_load(file)
+
+    development_branch = schema_config["$defs"]["project"]["properties"][
+        "development_branch"
+    ]["default"]
+    print(project_dict["projects"][current_project])
+
+    if (
+        type(project_dict["projects"][current_project]) is dict
+        and "development_branch"
+        in project_dict["projects"][current_project].keys()
+    ):
+        development_branch = project_dict["projects"][current_project][
+            development_branch
+        ]
+
+    latest_version = "5.5.1"
+    latest_version_string = f"docs-{latest_version}"
+    latest_url = re.sub(r"([^\/]+$)", latest_version_string, url)
+    announcement_info = ""
+
+    if branch == latest_version_string:
+        announcement_info = "This is the latest version of ROCm documentation."
+    elif branch.startswith("docs-"):
+        # turn off Python black for this line to prevent conflict with other Python linters
+        # fmt: off
+        announcement_info = f"This is an old version of ROCm documentation. Read the <a href='{latest_url}'>latest ROCm release documentation</a> to stay informed of all our developments."
+        # fmt: on
+
+    elif branch == development_branch:
+        # fmt: off
+        announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='{latest_url}'>latest Linux release of ROCm documentation</a> for your production environments."
+        # fmt: on
+
+    app.add_config_value(
+        name="announcement_info",
+        default=announcement_info,
+        rebuild="env",
+        types=str,
+    )
+
+
 def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "intersphinx_disabled_domains"):
         app.config.intersphinx_disabled_domains = ["std"]  # type: ignore[attr-defined]
 
     remote_repository = app.config.external_projects_remote_repository
     remote_branch = app.config.external_projects_remote_branch
-    currrent_project_name = app.config.external_projects_current_project
+    current_project_name = app.config.external_projects_current_project
     default = _load_mapping(
         Path(app.srcdir),
         remote_repository,
         remote_branch,
-        currrent_project_name,
+        current_project_name,
     )
 
     mapping: Dict[str, ProjectMapping] = app.config.intersphinx_mapping
@@ -306,6 +360,10 @@ def _update_config(app: Sphinx, _: Config) -> None:
     )
     # Store the context to be referenced later
     app.config.projects_context = context  # type: ignore[attr-defined]
+
+    _update_banner_config(
+        app, current_project_name, context["branch"], context["url"]
+    )
 
 
 def _setup_projects_context(

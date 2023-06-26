@@ -1,4 +1,5 @@
 """Module to use rocm-docs-core as a theme."""
+
 from typing import Any, Dict
 
 from pathlib import Path
@@ -12,8 +13,9 @@ from sphinx.application import Sphinx
 from rocm_docs import util
 
 
-def _update_repo_opts(srcdir: str, theme_opts: Dict[str, Any]) -> None:
-    url, branch = util.get_branch(srcdir)
+def _update_repo_opts(
+    srcdir: str, url: str, branch: str, theme_opts: Dict[str, Any]
+) -> None:
     default_branch_options = {
         "use_edit_page_button": False,
         "repository_url": url,
@@ -24,19 +26,22 @@ def _update_repo_opts(srcdir: str, theme_opts: Dict[str, Any]) -> None:
         theme_opts.setdefault(key, val)
 
 
+def _update_banner(announcement_info: str, theme_opts: Dict[str, Any]) -> None:
+    if len(announcement_info) > 0:
+        theme_opts.setdefault("announcement", announcement_info)
+
+
 def _update_theme_options(app: Sphinx) -> None:
+    url, branch = util.get_branch(app.srcdir)
     theme_opts = get_theme_options_dict(app)
-    _update_repo_opts(app.srcdir, theme_opts)
+    _update_repo_opts(app.srcdir, url, branch, theme_opts)
 
     theme_opts.setdefault(
         "article_header_start",
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
     )
 
-    theme_opts.setdefault(
-        "announcement",
-        "Welcome to ROCm Documentation's new home.",
-    )
+    _update_banner(app.config.announcement_info, theme_opts)
 
     # Default the download, edit, and fullscreen buttons to off
     for button in ["download", "edit_page", "fullscreen"]:

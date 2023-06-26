@@ -20,7 +20,7 @@
                     <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform <i>{{ branch }}</i></a>
                     {% endif %}
                 {%- endmacro -%}
-                {{ top_level_header(theme_repository_branch | replace("docs/", "")) }}
+                {{ top_level_header(theme_repository_branch | replace("docs-", "")) }}
             </div>
             <div class="icon-nav text-center d-flex ms-auto">
                 <!-- TODO: Search icon up here maybe? -->
@@ -44,6 +44,7 @@
                     {{ nav_button("Infinity Hub", "https://www.amd.com/en/technologies/infinity-hub") }}
                     {{ nav_button("Support", theme_repository_url|replace("-docs", "") + "/issues/new/choose") }}
                     {{ nav_button("Feedback", "mailto:rocm-feedback@amd.com") }}
+                    <div id="readthedocs-embed-flyout"></div>
                 </ul>
             </div>
         </div>
