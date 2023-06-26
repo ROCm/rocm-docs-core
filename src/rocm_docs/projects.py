@@ -320,7 +320,7 @@ def _update_banner_config(
 
     elif branch == development_branch:
         # fmt: off
-        announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='{latest_url}'>latest Linux release of ROCm documentation</a> for your production environments."
+        announcement_info = f"This page contains proposed changes for a future release of ROCm. Read the <a href='{latest_url}'>latest Linux release of ROCm documentation</a> for your production environments."
         # fmt: on
 
     app.add_config_value(
