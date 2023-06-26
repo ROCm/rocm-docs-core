@@ -2,7 +2,6 @@
 
 from typing import Any, Dict
 
-import sys
 from pathlib import Path
 
 from pydata_sphinx_theme.utils import (  # type: ignore[import]
@@ -12,14 +11,6 @@ from pydata_sphinx_theme.utils import (  # type: ignore[import]
 from sphinx.application import Sphinx
 
 from rocm_docs import util
-
-if sys.version_info < (3, 9):
-    # importlib.resources either doesn't exist or lacks the files()
-    # function, so use the PyPI version:
-    import importlib_resources
-else:
-    # importlib.resources has files(), so use that:
-    import importlib.resources as importlib_resources
 
 
 def _update_repo_opts(

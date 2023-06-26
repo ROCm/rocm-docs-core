@@ -307,22 +307,21 @@ def _update_banner_config(
 
     latest_version = "5.5.1"
     latest_version_string = f"docs-{latest_version}"
-    latest_url = re.sub("([^\/]+$)", latest_version_string, url)
+    latest_url = re.sub(r"([^\/]+$)", latest_version_string, url)
     announcement_info = ""
 
     if branch == latest_version_string:
         announcement_info = "This is the latest version of ROCm documentation."
     elif branch.startswith("docs-"):
-        announcement_info = (
-            f"This is an old version of ROCm documentation."
-            f"The latest version is <a href='{latest_url}'>{latest_version}</a>",
-        )
+        # turn off Python black for this line to prevent conflict with other Python linters
+        # fmt: off
+        announcement_info = f"This is an old version of ROCm documentation. Read the <a href='{latest_url}'>latest ROCm release documentation</a> to stay informed of all our developments."
+        # fmt: on
 
     elif branch == development_branch:
-        announcement_info = (
-            f"This is an unreleased version of ROCm documentation."
-            f"The latest released version is <a href='{latest_url}'>{latest_version}</a>",
-        )
+        # fmt: off
+        announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='{latest_url}'>latest Linux release of ROCm documentation</a> for your production environments."
+        # fmt: on
 
     app.add_config_value(
         name="announcement_info",
