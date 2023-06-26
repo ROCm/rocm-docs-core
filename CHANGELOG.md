@@ -1,3 +1,23 @@
+## v0.17.0 (2023-06-26)
+
+### Feat
+
+- add announcement for unreleased and old branches
+
+### Fix
+
+- **header.html**: remove "docs-" from theme repo branch in header
+- update banner
+
+### Refactor
+
+- **header.html**: test rtd embed flyout div
+- **theme.py**: remove unnecessary open mode param UP015 for ruff
+- remove trailing whitespaces
+- refactor theme announcement logic
+- move banner logic to projects.py
+- include latest version url in announcement if not on latest
+
 ## v0.16.0 (2023-06-22)
 
 ### Feat
