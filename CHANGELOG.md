@@ -1,3 +1,9 @@
+## v0.17.1 (2023-06-26)
+
+### Fix
+
+- **projects.py**: use formatted string for doc latest url
+
 ## v0.17.0 (2023-06-26)
 
 ### Feat
