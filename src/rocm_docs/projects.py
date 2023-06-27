@@ -277,9 +277,10 @@ def _get_context(
     }
 
 
-def _update_banner_config(
+def _update_theme_configs(
     app: Sphinx, current_project: str, branch: str, url: str
 ) -> None:
+    """Update configurations for use in theme.py"""
     schema_file_loc = "data/projects.schema.json"
     schema_file = importlib_resources.files("rocm_docs") / schema_file_loc
     with open(schema_file) as file:
@@ -306,16 +307,21 @@ def _update_banner_config(
 
     latest_version = "5.5.1"
     latest_version_string = f"docs-{latest_version}"
+    release_candidate = "5.6"
+    release_candidate_string = f"docs-{release_candidate}"
     announcement_info = ""
 
-    if branch == latest_version_string:
+    if branch in [latest_version_string, "latest"]:
         announcement_info = "This is the latest version of ROCm documentation."
-    elif branch.startswith("docs-"):
+    elif branch.startswith(release_candidate_string):
         # turn off Python black for this line to prevent conflict with other Python linters
+        # fmt: off
+        announcement_info = "This page contains changes for a test release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+        # fmt: on
+    elif branch.startswith("docs-"):
         # fmt: off
         announcement_info = "This is an old version of ROCm documentation. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest ROCm release documentation</a> to stay informed of all our developments."
         # fmt: on
-
     elif branch == development_branch:
         # fmt: off
         announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
@@ -359,7 +365,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
     # Store the context to be referenced later
     app.config.projects_context = context  # type: ignore[attr-defined]
 
-    _update_banner_config(
+    _update_theme_configs(
         app, current_project_name, context["branch"], context["url"]
     )
 
