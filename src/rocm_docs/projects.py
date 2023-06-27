@@ -305,19 +305,17 @@ def _update_theme_configs(
             development_branch
         ]
 
-    release_candidate = project_dict["projects"]["rocm"]["release_candidate"]
-    latest_version = project_dict["projects"]["rocm"]["latest_version"]
+    latest_version = "5.5.1"
     latest_version_string = f"docs-{latest_version}"
     announcement_info = ""
 
-    if branch == latest_version_string:
+    if branch in [latest_version_string, "latest"]:
         announcement_info = "This is the latest version of ROCm documentation."
     elif branch.startswith("docs-"):
         # turn off Python black for this line to prevent conflict with other Python linters
         # fmt: off
         announcement_info = "This is an old version of ROCm documentation. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest ROCm release documentation</a> to stay informed of all our developments."
         # fmt: on
-
     elif branch == development_branch:
         # fmt: off
         announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
@@ -326,20 +324,6 @@ def _update_theme_configs(
     app.add_config_value(
         name="announcement_info",
         default=announcement_info,
-        rebuild="env",
-        types=str,
-    )
-
-    app.add_config_value(
-        name="header_latest_version",
-        default=latest_version,
-        rebuild="env",
-        types=str,
-    )
-
-    app.add_config_value(
-        name="header_release_candidate",
-        default=release_candidate,
         rebuild="env",
         types=str,
     )
