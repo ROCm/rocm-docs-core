@@ -1,3 +1,13 @@
+## v0.18.1 (2023-06-27)
+
+### Fix
+
+- **projects.py**: do not have an announcement stating the latest version
+
+### Refactor
+
+- **header.html**: revert flyout to default position for consistency
+
 ## v0.18.0 (2023-06-27)
 
 ### Feat
