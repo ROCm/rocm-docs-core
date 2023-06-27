@@ -307,12 +307,18 @@ def _update_theme_configs(
 
     latest_version = "5.5.1"
     latest_version_string = f"docs-{latest_version}"
+    release_candidate = "5.6"
+    release_candidate_string = f"docs-{release_candidate}"
     announcement_info = ""
 
     if branch in [latest_version_string, "latest"]:
         announcement_info = "This is the latest version of ROCm documentation."
-    elif branch.startswith("docs-"):
+    elif branch.startswith(release_candidate_string):
         # turn off Python black for this line to prevent conflict with other Python linters
+        # fmt: off
+        announcement_info = "This page contains changes for a test release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+        # fmt: on
+    elif branch.startswith("docs-"):
         # fmt: off
         announcement_info = "This is an old version of ROCm documentation. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest ROCm release documentation</a> to stay informed of all our developments."
         # fmt: on
