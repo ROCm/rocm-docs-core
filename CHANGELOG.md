@@ -1,3 +1,19 @@
+## v0.18.0 (2023-06-27)
+
+### Feat
+
+- add extrahead block with metadata in layout.html
+
+### Fix
+
+- update announcement for RC of ROCm
+- map rocm version in projects.yaml to header.html version number
+
+### Refactor
+
+- use theme.conf for header version numbers
+- place rocm latest version in projects.yaml
+
 ## v0.17.2 (2023-06-27)
 
 ### Fix
