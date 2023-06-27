@@ -33,7 +33,11 @@ projects:
   roctracer: https://rocm.docs.amd.com/projects/roctracer/en/${version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
   rocm-validation-suite: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
-  rocm: https://rocm.docs.amd.com/en/${version}
+  rocm: 
+    target: https://rocm.docs.amd.com/en/${version}
+    development_branch: develop
+    latest_version: 5.5.1
+    release_candidate: 5.6
   rocprim: https://rocm.docs.amd.com/projects/rocPRIM/en/${version}
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}

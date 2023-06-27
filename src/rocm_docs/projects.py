@@ -277,9 +277,10 @@ def _get_context(
     }
 
 
-def _update_banner_config(
+def _update_theme_configs(
     app: Sphinx, current_project: str, branch: str, url: str
 ) -> None:
+    """Update configurations for use in theme.py"""
     schema_file_loc = "data/projects.schema.json"
     schema_file = importlib_resources.files("rocm_docs") / schema_file_loc
     with open(schema_file) as file:
@@ -304,7 +305,7 @@ def _update_banner_config(
             development_branch
         ]
 
-    latest_version = "5.5.1"
+    latest_version = project_dict["projects"]["rocm"]["latest_version"]
     latest_version_string = f"docs-{latest_version}"
     announcement_info = ""
 
@@ -359,7 +360,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
     # Store the context to be referenced later
     app.config.projects_context = context  # type: ignore[attr-defined]
 
-    _update_banner_config(
+    _update_theme_configs(
         app, current_project_name, context["branch"], context["url"]
     )
 
