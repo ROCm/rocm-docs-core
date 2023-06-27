@@ -1,3 +1,13 @@
+## v0.17.2 (2023-06-27)
+
+### Fix
+
+- hardcode the url for ROCm docs
+
+### Refactor
+
+- **util.py**: formatting fix for ruff; return result of regex on remote_url
+
 ## v0.17.1 (2023-06-26)
 
 ### Fix
