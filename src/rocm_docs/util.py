@@ -51,8 +51,7 @@ def get_branch(
         )
         if num_subs > 0:
             return remote_url
-        remote_url = http_pattern.sub(r"\1", remote_url, count=1)
-        return remote_url
+        return http_pattern.sub(r"\1", remote_url, count=1)
 
     if os.environ.get("READTHEDOCS", ""):
         remote_url = os.environ.get("READTHEDOCS_GIT_CLONE_URL", "")
