@@ -43,6 +43,9 @@ def _update_theme_options(app: Sphinx) -> None:
 
     _update_banner(app.config.announcement_info, theme_opts)
 
+    theme_opts.setdefault("header_latest_version", app.config.header_latest_version)
+    theme_opts.setdefault("header_release_candidate", app.config.header_release_candidate)
+
     # Default the download, edit, and fullscreen buttons to off
     for button in ["download", "edit_page", "fullscreen"]:
         theme_opts.setdefault(f"use_{button}_button", False)

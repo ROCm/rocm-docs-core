@@ -305,6 +305,7 @@ def _update_theme_configs(
             development_branch
         ]
 
+    release_candidate = project_dict["projects"]["rocm"]["release_candidate"]
     latest_version = project_dict["projects"]["rocm"]["latest_version"]
     latest_version_string = f"docs-{latest_version}"
     announcement_info = ""
@@ -325,6 +326,20 @@ def _update_theme_configs(
     app.add_config_value(
         name="announcement_info",
         default=announcement_info,
+        rebuild="env",
+        types=str,
+    )
+
+    app.add_config_value(
+        name="header_latest_version",
+        default=latest_version,
+        rebuild="env",
+        types=str,
+    )
+
+    app.add_config_value(
+        name="header_release_candidate",
+        default=release_candidate,
         rebuild="env",
         types=str,
     )

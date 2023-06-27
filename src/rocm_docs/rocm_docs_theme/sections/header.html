@@ -11,16 +11,18 @@
                     <img src="{{ pathto('_static/images/amd-header-logo.svg',1) }}" alt="AMD Logo" title="AMD Logo" width="90" class="d-inline-block align-text-top hover-opacity"/>
                 </a>
                 <div class="vr vr mx-40 my-25"></div>
-                {% macro top_level_header(branch) -%}
+                {% macro top_level_header(branch, latest_version, release_candidate_version) -%}
                     {% if branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
-                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform <i>Future Release</i></a>
-                    {% elif "5.6." in branch %}
-                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform <i>Release Candidate 5.6</i></a>
+                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform Future Release</a>
+                    {% elif release_candidate_version in branch %}
+                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform Release Candidate {{ release_candidate_version }}</a>
+                    {% elif branch == "latest" %}
+                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform {{ latest_version }}</a>
                     {% else %}
-                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform <i>{{ branch }}</i></a>
+                    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform {{ branch }}</a>
                     {% endif %}
                 {%- endmacro -%}
-                {{ top_level_header(theme_repository_branch | replace("docs-", "")) }}
+                {{ top_level_header(theme_repository_branch | replace("docs-", ""), theme_header_latest_version, theme_header_release_candidate) }}
             </div>
             <div class="icon-nav text-center d-flex ms-auto">
                 <!-- TODO: Search icon up here maybe? -->
