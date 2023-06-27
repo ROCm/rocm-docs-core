@@ -312,7 +312,7 @@ def _update_theme_configs(
     announcement_info = ""
 
     if branch in [latest_version_string, "latest"]:
-        announcement_info = "This is the latest version of ROCm documentation."
+        pass
     elif branch.startswith(release_candidate_string):
         # turn off Python black for this line to prevent conflict with other Python linters
         # fmt: off
