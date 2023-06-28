@@ -305,9 +305,9 @@ def _update_theme_configs(
             development_branch
         ]
 
-    latest_version = "5.5.1"
+    latest_version = "5.6.0"
     latest_version_string = f"docs-{latest_version}"
-    release_candidate = "5.6"
+    release_candidate = "5.7"
     release_candidate_string = f"docs-{release_candidate}"
     announcement_info = ""
 
