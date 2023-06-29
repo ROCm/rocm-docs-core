@@ -1,3 +1,10 @@
+## v0.18.3 (2023-06-29)
+
+### Fix
+
+- **projects.yaml**: add more projects to yaml
+- **projects.py**: use development_branch string instead of variable
+
 ## v0.18.2 (2023-06-28)
 
 ### Fix
