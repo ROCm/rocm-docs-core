@@ -3,22 +3,25 @@ version: 1
 
 # ${version} will be replaced by the version of the (current) project in values
 projects:
-  python: https://docs.python.org/3/
-  composable-kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
+  amdmigraphx: https://rocm.docs.amd.com/projects/AMDMIGraphX/en/${version}
+  amdsmi: https://rocm.docs.amd.com/projects/amdsmi/en/${version}
+  composable_kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
   hip: https://rocm.docs.amd.com/projects/HIP/en/${version}
-  hipblaslt: https://rocm.docs.amd.com/projects/hipBLASLt/en/${version}
   hipblas: https://rocm.docs.amd.com/projects/hipBLAS/en/${version}
+  hipblaslt: https://rocm.docs.amd.com/projects/hipBLASLt/en/${version}
+  hipcc: https://rocm.docs.amd.com/projects/HIPCC/en/${version}
   hipcub: https://rocm.docs.amd.com/projects/hipCUB/en/${version}
   hipfft: https://rocm.docs.amd.com/projects/hipFFT/en/${version}
+  hipfort: https://rocm.docs.amd.com/projects/hipfort/en/${version}
   hipify:
     target: https://rocm.docs.amd.com/projects/HIPIFY/en/${version}
     development_branch: amd-staging
   hiprand: https://rocm.docs.amd.com/projects/hipRAND/en/${version}
   hipsolver: https://rocm.docs.amd.com/projects/hipSOLVER/en/${version}
   hipsparse: https://rocm.docs.amd.com/projects/hipSPARSE/en/${version}
-  migraphx: https://rocm.docs.amd.com/projects/AMDMIGraphX/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
+  python: https://docs.python.org/3/
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
   rdc: https://rocm.docs.amd.com/projects/rdc/en/${version}
   rocal: https://rocm.docs.amd.com/projects/rocAL/en/${version}
@@ -31,9 +34,12 @@ projects:
     development_branch: amd-master
   rocprofiler: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
   roctracer: https://rocm.docs.amd.com/projects/roctracer/en/${version}
-  rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
-  rocm-validation-suite: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
   rocm: https://rocm.docs.amd.com/en/${version}
+  rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
+  rocm_smi_lib:
+    target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
+    development_branch: master
+  rocmvalidationsuite: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
   rocprim: https://rocm.docs.amd.com/projects/rocPRIM/en/${version}
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}

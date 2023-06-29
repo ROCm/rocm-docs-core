@@ -302,7 +302,7 @@ def _update_theme_configs(
         in project_dict["projects"][current_project].keys()
     ):
         development_branch = project_dict["projects"][current_project][
-            development_branch
+            "development_branch"
         ]
 
     latest_version = "5.6.0"
