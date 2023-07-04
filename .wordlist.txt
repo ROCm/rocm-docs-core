@@ -69,6 +69,8 @@ Dockerfile
 DockerHub
 Doxygen
 DPM
+# Dependabot guide
+Dependabot
 # Dynamic Power Management (MI100, MI200 guides)
 DRI
 enablement
@@ -139,6 +141,10 @@ Jupyter
 KFD
 Khronos
 KVM
+# Just guide
+Codespaces
+Gitpod
+PRs
 # Kernel-based Virtual Machine (RDNA2 guide)
 LCLK
 # Link clock frequency
@@ -238,8 +244,10 @@ RST
 runtime
 runtimes
 SBIOS
-# projects_yaml
+# Projects YAML Guide (projects_yaml)
 Intersphinx
+# Python Linting Guide (python_linting)
+whitespaces
 # System BIOS (RDNA2 virt guide)
 scalability
 SDK

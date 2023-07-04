@@ -8,7 +8,7 @@ by providing ready-to-use environments for development.
 
 ## Usage
 
-### Setting up a dev environment
+### Setting up a development environment
 
 `just devenv`
 
@@ -33,7 +33,9 @@ GitHub Actions CI is extended to run these tools on PRs
 (using the `just`-based entry-points).
 
 Development container setup and settings are added
-for Visual Studio Development containers (and Github Codespaces) and Gitpod.
+for Visual Studio Development containers (and GitHub Codespaces) and Gitpod.
 
-- [Dev Container Dockerfile and Configuration](https://github.com/RadeonOpenCompute/rocm-docs-core/tree/develop/.devcontainer)
-- [Gitpod Configuration](https://github.com/RadeonOpenCompute/rocm-docs-core/blob/develop/.gitpod.yml)
+- [VS Code Dev Containers Guide](https://code.visualstudio.com/docs/devcontainers/containers)
+  - [Dev Container Dockerfile and Configuration](https://github.com/RadeonOpenCompute/rocm-docs-core/tree/develop/.devcontainer)
+- [Gitpod Guide](https://www.gitpod.io/docs/introduction/getting-started)
+  - [Gitpod Configuration](https://github.com/RadeonOpenCompute/rocm-docs-core/blob/develop/.gitpod.yml)
