@@ -52,6 +52,9 @@ projects:
   rocsparse: https://rocm.docs.amd.com/projects/rocSPARSE/en/${version}
   rocthrust: https://rocm.docs.amd.com/projects/rocThrust/en/${version}
   rocwmma: https://rocm.docs.amd.com/projects/rocWMMA/en/${version}
+  rpp:
+    target: https://rocm.docs.amd.com/projects/rpp/en/${version}
+    development_branch: master
   rtd: https://docs.readthedocs.io/en/stable/
   sphinx: https://www.sphinx-doc.org/en/master/
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
