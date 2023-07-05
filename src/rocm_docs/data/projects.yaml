@@ -27,13 +27,19 @@ projects:
   rocal: https://rocm.docs.amd.com/projects/rocAL/en/${version}
   rocalution: https://rocm.docs.amd.com/projects/rocALUTION/en/${version}
   rocblas: https://rocm.docs.amd.com/projects/rocBLAS/en/${version}
+  rocdbgapi:
+    target: https://rocm.docs.amd.com/projects/ROCdbgapi/en/${version}
+    development_branch: amd-master
   rocfft: https://rocm.docs.amd.com/projects/rocFFT/en/${version}
-  rocdbgapi: https://rocm.docs.amd.com/projects/ROCdbgapi/en/${version}
   rocgdb:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
     development_branch: amd-master
-  rocprofiler: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
-  roctracer: https://rocm.docs.amd.com/projects/roctracer/en/${version}
+  rocprofiler:
+    target: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
+    development_branch: amd-master
+  roctracer:
+    target: https://rocm.docs.amd.com/projects/roctracer/en/${version}
+    development_branch: amd-master
   rocm: https://rocm.docs.amd.com/en/${version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
   rocm_smi_lib:

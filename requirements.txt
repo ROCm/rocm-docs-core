@@ -94,8 +94,6 @@ jinja2==3.1.2
     #   sphinx
 libsass==0.22.0
     # via doxysphinx
-linkify-it-py==1.0.3
-    # via myst-parser
 lxml==4.9.2
     # via doxysphinx
 markdown-it-py==2.2.0
@@ -116,7 +114,7 @@ mypy-extensions==1.0.0
     # via
     #   black
     #   mypy
-myst-parser[linkify]==1.0.0
+myst-parser==1.0.0
     # via rocm-docs-core (pyproject.toml)
 nodeenv==1.8.0
     # via pre-commit
@@ -226,6 +224,7 @@ tomli==2.0.1
     #   black
     #   build
     #   mypy
+    #   pip-tools
     #   pyproject-hooks
 tomlkit==0.11.8
     # via commitizen
@@ -236,8 +235,6 @@ typing-extensions==4.7.1
     #   black
     #   mypy
     #   pydata-sphinx-theme
-uc-micro-py==1.0.2
-    # via linkify-it-py
 urllib3==2.0.3
     # via requests
 virtualenv==20.23.1
