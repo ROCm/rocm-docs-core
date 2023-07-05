@@ -1,3 +1,9 @@
+## v0.18.4 (2023-07-05)
+
+### Fix
+
+- **projects.yaml**: add rpp to projects.yaml
+
 ## v0.18.3 (2023-06-29)
 
 ### Fix
