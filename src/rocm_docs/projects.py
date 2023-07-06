@@ -223,7 +223,7 @@ def _fetch_projects(
 
 
 def _load_projects(
-    repo_path: Path, remote_repository: str, remote_branch: str
+    remote_repository: str, remote_branch: str
 ) -> Dict[str, _Project]:
     projects_file_loc = "data/projects.yaml"
 
@@ -286,7 +286,7 @@ def _get_context(
 
 
 def _update_theme_configs(
-    app: Sphinx, current_project: str, branch: str, url: str
+    app: Sphinx, current_project: str, branch: str
 ) -> None:
     """Update configurations for use in theme.py"""
     schema_file_loc = "data/projects.schema.json"
@@ -351,9 +351,9 @@ def _update_config(app: Sphinx, _: Config) -> None:
     remote_branch = app.config.external_projects_remote_branch
     current_project_name = app.config.external_projects_current_project
 
-    repo_path = Path(app.srcdir)
-    projects = _load_projects(repo_path, remote_repository, remote_branch)
+    projects = _load_projects(remote_repository, remote_branch)
 
+    repo_path = Path(app.srcdir)
     __, branch = util.get_branch(repo_path)
     default = _create_mapping(projects, current_project_name, branch)
 
@@ -373,9 +373,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
     # Store the context to be referenced later
     app.config.projects_context = context  # type: ignore[attr-defined]
 
-    _update_theme_configs(
-        app, current_project_name, context["branch"], context["url"]
-    )
+    _update_theme_configs(app, current_project_name, context["branch"])
 
 
 def _setup_projects_context(
@@ -430,12 +428,12 @@ def debug_projects() -> None:
 
     Provided as a debugging tool for the functionality of this module.
     """
-    repo_path = Path()
     projects = _load_projects(
-        repo_path, DEFAULT_INTERSPHINX_REPOSITORY, DEFAULT_INTERSPHINX_BRANCH
+        DEFAULT_INTERSPHINX_REPOSITORY, DEFAULT_INTERSPHINX_BRANCH
     )
     print(projects)
 
+    repo_path = Path()
     _, branch = util.get_branch(repo_path)
     mapping = _create_mapping(projects, "rocm-docs-core", branch)
     print(mapping)
