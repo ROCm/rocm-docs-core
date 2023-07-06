@@ -87,6 +87,8 @@ class _Project:
                 entry, [def_val("inventory")], def_val("development_branch")
             )
 
+        # It's okay to just index into optional fields, because jsonschema
+        # fills in any missing fields with their default values
         inventory = entry["inventory"]
         if not isinstance(inventory, list):
             inventory = [inventory]
@@ -272,14 +274,6 @@ def _load_projects(
     return projects
 
 
-def _load_mapping(
-    repo_path: Path, remote_repository: str, remote_branch: str, current_id: str
-) -> Dict[str, ProjectMapping]:
-    projects = _load_projects(repo_path, remote_repository, remote_branch)
-    _, branch = util.get_branch(repo_path)
-    return _create_mapping(projects, current_id, branch)
-
-
 def _get_context(
     repo_path: Path, mapping: Dict[str, ProjectMapping]
 ) -> Dict[str, Any]:
@@ -356,12 +350,12 @@ def _update_config(app: Sphinx, _: Config) -> None:
     remote_repository = app.config.external_projects_remote_repository
     remote_branch = app.config.external_projects_remote_branch
     current_project_name = app.config.external_projects_current_project
-    default = _load_mapping(
-        Path(app.srcdir),
-        remote_repository,
-        remote_branch,
-        current_project_name,
-    )
+
+    repo_path = Path(app.srcdir)
+    projects = _load_projects(repo_path, remote_repository, remote_branch)
+
+    __, branch = util.get_branch(repo_path)
+    default = _create_mapping(projects, current_project_name, branch)
 
     mapping: Dict[str, ProjectMapping] = app.config.intersphinx_mapping
     for key, value in default.items():
@@ -436,12 +430,14 @@ def debug_projects() -> None:
 
     Provided as a debugging tool for the functionality of this module.
     """
-    mapping = _load_mapping(
-        Path(),
-        DEFAULT_INTERSPHINX_REPOSITORY,
-        DEFAULT_INTERSPHINX_BRANCH,
-        "rocm-docs-core",
+    repo_path = Path()
+    projects = _load_projects(
+        repo_path, DEFAULT_INTERSPHINX_REPOSITORY, DEFAULT_INTERSPHINX_BRANCH
     )
+    print(projects)
+
+    _, branch = util.get_branch(repo_path)
+    mapping = _create_mapping(projects, "rocm-docs-core", branch)
     print(mapping)
     context = _get_context(Path(), mapping)
     print(context)
