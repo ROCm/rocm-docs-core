@@ -76,15 +76,17 @@ class _Project:
         return cast(Dict[str, Any], cls.yaml_schema()["$defs"]["project"])
 
     @classmethod
+    def default_value(cls, prop: str) -> str:
+        return cast(str, cls.schema()["properties"][prop]["default"])
+
+    @classmethod
     def from_yaml_entry(cls, entry: ProjectEntry) -> "_Project":
         """Create from an entry that conforms to the project schema."""
-
-        def def_val(prop: str) -> str:
-            return cast(str, cls.schema()["properties"][prop]["default"])
-
         if isinstance(entry, str):
             return _Project(
-                entry, [def_val("inventory")], def_val("development_branch")
+                entry,
+                [cls.default_value("inventory")],
+                cls.default_value("development_branch"),
             )
 
         # It's okay to just index into optional fields, because jsonschema
@@ -119,9 +121,7 @@ class _Project:
             return current_branch
 
         # Anything besides the canonical development branch links to latest docs
-        development_branch: str = cls.schema()["properties"][
-            "development_branch"
-        ]["default"]
+        development_branch: str = cls.default_value("development_branch")
         if current_project is not None:
             development_branch = current_project.development_branch
 
@@ -173,19 +173,25 @@ def _create_projects(
     }
 
 
-def _create_mapping(
-    projects: Dict[str, _Project], current_id: str, current_branch: str
-) -> Dict[str, ProjectMapping]:
-    current_project: Optional[_Project] = None
-    try:
-        current_project = projects[current_id]
-    except KeyError:
-        logger.warning(
-            f"Current project '{current_id}' not found in projects.\n"
-            "Did you forget to set 'external_projects_current_project' to "
-            "the name of the current project?"
-        )
+def _get_current_project(
+    projects: Dict[str, _Project], current_id: str
+) -> Optional[_Project]:
+    if current_id in projects:
+        return projects[current_id]
 
+    logger.warning(
+        f"Current project '{current_id}' not found in projects.\n"
+        "Did you forget to set 'external_projects_current_project' to "
+        "the name of the current project?"
+    )
+    return None
+
+
+def _create_mapping(
+    projects: Dict[str, _Project],
+    current_project: Optional[_Project],
+    current_branch: str,
+) -> Dict[str, ProjectMapping]:
     static_version = _Project.get_static_version(
         current_branch, current_project
     )
@@ -286,54 +292,27 @@ def _get_context(
 
 
 def _update_theme_configs(
-    app: Sphinx, current_project: str, branch: str
+    app: Sphinx, current_project: Optional[_Project], current_branch: str
 ) -> None:
     """Update configurations for use in theme.py"""
-    schema_file_loc = "data/projects.schema.json"
-    schema_file = importlib_resources.files("rocm_docs") / schema_file_loc
-    with open(schema_file) as file:
-        schema_config = yaml.safe_load(file)
-
-    mapping_file_loc = "data/projects.yaml"
-    mapping_config = importlib_resources.files("rocm_docs") / mapping_file_loc
-    with open(mapping_config) as file:
-        project_dict = yaml.safe_load(file)
-
-    development_branch = schema_config["$defs"]["project"]["properties"][
-        "development_branch"
-    ]["default"]
-    print(project_dict["projects"][current_project])
-
-    if (
-        type(project_dict["projects"][current_project]) is dict
-        and "development_branch"
-        in project_dict["projects"][current_project].keys()
-    ):
-        development_branch = project_dict["projects"][current_project][
-            "development_branch"
-        ]
-
     latest_version = "5.6.0"
     latest_version_string = f"docs-{latest_version}"
     release_candidate = "5.7"
     release_candidate_string = f"docs-{release_candidate}"
     announcement_info = ""
 
-    if branch in [latest_version_string, "latest"]:
+    development_branch = _Project.default_value("development_branch")
+    if current_project is not None:
+        development_branch = current_project.development_branch
+
+    if current_branch in [latest_version_string, "latest"]:
         pass
-    elif branch.startswith(release_candidate_string):
-        # turn off Python black for this line to prevent conflict with other Python linters
-        # fmt: off
+    elif current_branch.startswith(release_candidate_string):
         announcement_info = "This page contains changes for a test release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
-        # fmt: on
-    elif branch.startswith("docs-"):
-        # fmt: off
+    elif current_branch.startswith("docs-"):
         announcement_info = "This is an old version of ROCm documentation. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest ROCm release documentation</a> to stay informed of all our developments."
-        # fmt: on
-    elif branch == development_branch:
-        # fmt: off
+    elif current_branch == development_branch:
         announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
-        # fmt: on
 
     app.add_config_value(
         name="announcement_info",
@@ -349,13 +328,14 @@ def _update_config(app: Sphinx, _: Config) -> None:
 
     remote_repository = app.config.external_projects_remote_repository
     remote_branch = app.config.external_projects_remote_branch
-    current_project_name = app.config.external_projects_current_project
-
     projects = _load_projects(remote_repository, remote_branch)
 
     repo_path = Path(app.srcdir)
     __, branch = util.get_branch(repo_path)
-    default = _create_mapping(projects, current_project_name, branch)
+    current_project = _get_current_project(
+        projects, app.config.external_projects_current_project
+    )
+    default = _create_mapping(projects, current_project, branch)
 
     mapping: Dict[str, ProjectMapping] = app.config.intersphinx_mapping
     for key, value in default.items():
@@ -373,7 +353,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
     # Store the context to be referenced later
     app.config.projects_context = context  # type: ignore[attr-defined]
 
-    _update_theme_configs(app, current_project_name, context["branch"])
+    _update_theme_configs(app, current_project, branch)
 
 
 def _setup_projects_context(
@@ -433,9 +413,12 @@ def debug_projects() -> None:
     )
     print(projects)
 
+    current_project = _get_current_project(projects, "rocm-docs-core")
+    print(current_project)
+
     repo_path = Path()
     _, branch = util.get_branch(repo_path)
-    mapping = _create_mapping(projects, "rocm-docs-core", branch)
+    mapping = _create_mapping(projects, current_project, branch)
     print(mapping)
     context = _get_context(Path(), mapping)
     print(context)
