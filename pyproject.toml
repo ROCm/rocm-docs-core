@@ -113,7 +113,7 @@ warn_unused_configs = true
 warn_unused_ignores = true
 
 [tool.ruff]
-select = ["F", "E", "W", "N", "D", "UP", "RET"]
+select = ["ARG", "F", "E", "W", "N", "D", "UP", "RET"]
 ignore = ["E501", "D203", "D213", "D4"]
 target-version = "py38"
 line-length = 80

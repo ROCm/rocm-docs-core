@@ -33,8 +33,8 @@ class ROCmDocs:
     def __init__(
         self,
         project_name: str,
-        version_string: Optional[str] = None,
-        _: MaybePath = None,
+        _: Optional[str] = None,
+        __: MaybePath = None,
     ) -> None:
         """Intialize ROCmDocs."""
         self._project_name: str = project_name

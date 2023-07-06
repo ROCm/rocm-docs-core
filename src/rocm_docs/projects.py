@@ -5,6 +5,7 @@ Remote loading of intersphinx_mapping from file, templating projects in toc.yml)
 
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
+import functools
 import json
 import os
 import sys
@@ -60,20 +61,36 @@ class _Project:
     inventory: List[Union[str, None]]
     development_branch: str
 
+    @staticmethod
+    @functools.lru_cache
+    def yaml_schema() -> Dict[str, Any]:
+        base = importlib_resources.files("rocm_docs") / "data"
+        schema_file = base / "projects.schema.json"
+
+        return cast(
+            Dict[str, Any], json.load(schema_file.open(encoding="utf-8"))
+        )
+
     @classmethod
-    def from_yaml_entry(
-        cls, schema: Dict[str, Any], entry: ProjectEntry
-    ) -> "_Project":
+    def schema(cls) -> Dict[str, Any]:
+        return cast(Dict[str, Any], cls.yaml_schema()["$defs"]["project"])
+
+    @classmethod
+    def default_value(cls, prop: str) -> str:
+        return cast(str, cls.schema()["properties"][prop]["default"])
+
+    @classmethod
+    def from_yaml_entry(cls, entry: ProjectEntry) -> "_Project":
         """Create from an entry that conforms to the project schema."""
-
-        def def_val(prop: str) -> str:
-            return cast(str, schema["properties"][prop]["default"])
-
         if isinstance(entry, str):
             return _Project(
-                entry, [def_val("inventory")], def_val("development_branch")
+                entry,
+                [cls.default_value("inventory")],
+                cls.default_value("development_branch"),
             )
 
+        # It's okay to just index into optional fields, because jsonschema
+        # fills in any missing fields with their default values
         inventory = entry["inventory"]
         if not isinstance(inventory, list):
             inventory = [inventory]
@@ -87,7 +104,6 @@ class _Project:
     @classmethod
     def get_static_version(
         cls,
-        schema: Dict[str, Any],
         current_branch: str,
         current_project: Optional["_Project"],
     ) -> Optional[str]:
@@ -105,9 +121,7 @@ class _Project:
             return current_branch
 
         # Anything besides the canonical development branch links to latest docs
-        development_branch: str = schema["properties"]["development_branch"][
-            "default"
-        ]
+        development_branch: str = cls.default_value("development_branch")
         if current_project is not None:
             development_branch = current_project.development_branch
 
@@ -135,46 +149,51 @@ class _Project:
         return (self.target, tuple(self.inventory))
 
 
-def _format_mapping(
-    mapping_yaml: Union[str, Traversable], current_id: str, current_branch: str
-) -> Dict[str, ProjectMapping]:
-    base = importlib_resources.files("rocm_docs") / "data"
-    schema_file = base / "projects.schema.json"
-
-    schema = json.load(schema_file.open(encoding="utf-8"))
+def _create_projects(
+    project_yaml: Union[str, Traversable]
+) -> Dict[str, _Project]:
     contents = yaml.safe_load(
-        mapping_yaml
-        if isinstance(mapping_yaml, str)
-        else mapping_yaml.open(encoding="utf-8")
+        project_yaml
+        if isinstance(project_yaml, str)
+        else project_yaml.open(encoding="utf-8")
     )
 
     data: Dict[str, Union[int, Dict[str, ProjectEntry]]]
     try:
-        data = fastjsonschema.validate(schema, contents)
+        data = fastjsonschema.validate(_Project.yaml_schema(), contents)
     except fastjsonschema.exceptions.JsonSchemaValueException as err:
         raise InvalidMappingFileError(
             f"Mapping file is invalid: {err.message}."
         ) from err
 
-    project_schema = schema["$defs"]["project"]
     assert isinstance(data["projects"], dict)
-    projects = {
-        project_id: _Project.from_yaml_entry(project_schema, entry)
+    return {
+        project_id: _Project.from_yaml_entry(entry)
         for project_id, entry in data["projects"].items()
     }
 
-    current_project: Optional[_Project] = None
-    try:
-        current_project = projects[current_id]
-    except KeyError:
-        logger.warning(
-            f"Current project '{current_id}' not found in projects.\n"
-            "Did you forget to set 'external_projects_current_project' to "
-            "the name of the current project?"
-        )
 
+def _get_current_project(
+    projects: Dict[str, _Project], current_id: str
+) -> Optional[_Project]:
+    if current_id in projects:
+        return projects[current_id]
+
+    logger.warning(
+        f"Current project '{current_id}' not found in projects.\n"
+        "Did you forget to set 'external_projects_current_project' to "
+        "the name of the current project?"
+    )
+    return None
+
+
+def _create_mapping(
+    projects: Dict[str, _Project],
+    current_project: Optional[_Project],
+    current_branch: str,
+) -> Dict[str, ProjectMapping]:
     static_version = _Project.get_static_version(
-        project_schema, current_branch, current_project
+        current_branch, current_project
     )
     for project in projects.values():
         project.evaluate(static_version)
@@ -186,7 +205,7 @@ class MappingFileFetchError(RuntimeError):
     """Fetching the yaml file from the remote failed."""
 
 
-def _fetch_mapping(
+def _fetch_projects(
     remote_repository: str,
     remote_branch: str,
     remote_filepath: str,
@@ -209,10 +228,10 @@ def _fetch_mapping(
         ) from err
 
 
-def _load_mapping(
-    repo_path: Path, remote_repository: str, remote_branch: str, current_id: str
-) -> Dict[str, ProjectMapping]:
-    mapping_file_loc = "data/projects.yaml"
+def _load_projects(
+    remote_repository: str, remote_branch: str
+) -> Dict[str, _Project]:
+    projects_file_loc = "data/projects.yaml"
 
     def should_fetch_mappings(
         remote_repository: Optional[str], remote_branch: Optional[str]
@@ -236,19 +255,16 @@ def _load_mapping(
         )
         return True
 
-    _, branch = util.get_branch(repo_path)
-    mapping: Optional[Dict[str, ProjectMapping]] = None
+    projects: Optional[Dict[str, _Project]] = None
     if should_fetch_mappings(remote_repository, remote_branch):
         try:
-            remote_filepath = "src/rocm_docs/" + mapping_file_loc
-            mapping = _format_mapping(
-                _fetch_mapping(
+            remote_filepath = "src/rocm_docs/" + projects_file_loc
+            projects = _create_projects(
+                _fetch_projects(
                     remote_repository,
                     remote_branch,
                     remote_filepath,
-                ),
-                current_id,
-                branch,
+                )
             )
         except (MappingFileFetchError, InvalidMappingFileError) as err:
             logger.warning(
@@ -256,14 +272,12 @@ def _load_mapping(
                 "Falling back to bundled mapping."
             )
 
-    if mapping is None:
-        mapping = _format_mapping(
-            importlib_resources.files("rocm_docs") / mapping_file_loc,
-            current_id,
-            branch,
+    if projects is None:
+        projects = _create_projects(
+            importlib_resources.files("rocm_docs") / projects_file_loc
         )
 
-    return mapping
+    return projects
 
 
 def _get_context(
@@ -278,54 +292,27 @@ def _get_context(
 
 
 def _update_theme_configs(
-    app: Sphinx, current_project: str, branch: str, url: str
+    app: Sphinx, current_project: Optional[_Project], current_branch: str
 ) -> None:
     """Update configurations for use in theme.py"""
-    schema_file_loc = "data/projects.schema.json"
-    schema_file = importlib_resources.files("rocm_docs") / schema_file_loc
-    with open(schema_file) as file:
-        schema_config = yaml.safe_load(file)
-
-    mapping_file_loc = "data/projects.yaml"
-    mapping_config = importlib_resources.files("rocm_docs") / mapping_file_loc
-    with open(mapping_config) as file:
-        project_dict = yaml.safe_load(file)
-
-    development_branch = schema_config["$defs"]["project"]["properties"][
-        "development_branch"
-    ]["default"]
-    print(project_dict["projects"][current_project])
-
-    if (
-        type(project_dict["projects"][current_project]) is dict
-        and "development_branch"
-        in project_dict["projects"][current_project].keys()
-    ):
-        development_branch = project_dict["projects"][current_project][
-            "development_branch"
-        ]
-
     latest_version = "5.6.0"
     latest_version_string = f"docs-{latest_version}"
     release_candidate = "5.7"
     release_candidate_string = f"docs-{release_candidate}"
     announcement_info = ""
 
-    if branch in [latest_version_string, "latest"]:
+    development_branch = _Project.default_value("development_branch")
+    if current_project is not None:
+        development_branch = current_project.development_branch
+
+    if current_branch in [latest_version_string, "latest"]:
         pass
-    elif branch.startswith(release_candidate_string):
-        # turn off Python black for this line to prevent conflict with other Python linters
-        # fmt: off
+    elif current_branch.startswith(release_candidate_string):
         announcement_info = "This page contains changes for a test release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
-        # fmt: on
-    elif branch.startswith("docs-"):
-        # fmt: off
+    elif current_branch.startswith("docs-"):
         announcement_info = "This is an old version of ROCm documentation. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest ROCm release documentation</a> to stay informed of all our developments."
-        # fmt: on
-    elif branch == development_branch:
-        # fmt: off
+    elif current_branch == development_branch:
         announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
-        # fmt: on
 
     app.add_config_value(
         name="announcement_info",
@@ -341,13 +328,14 @@ def _update_config(app: Sphinx, _: Config) -> None:
 
     remote_repository = app.config.external_projects_remote_repository
     remote_branch = app.config.external_projects_remote_branch
-    current_project_name = app.config.external_projects_current_project
-    default = _load_mapping(
-        Path(app.srcdir),
-        remote_repository,
-        remote_branch,
-        current_project_name,
+    projects = _load_projects(remote_repository, remote_branch)
+
+    repo_path = Path(app.srcdir)
+    __, branch = util.get_branch(repo_path)
+    current_project = _get_current_project(
+        projects, app.config.external_projects_current_project
     )
+    default = _create_mapping(projects, current_project, branch)
 
     mapping: Dict[str, ProjectMapping] = app.config.intersphinx_mapping
     for key, value in default.items():
@@ -365,9 +353,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
     # Store the context to be referenced later
     app.config.projects_context = context  # type: ignore[attr-defined]
 
-    _update_theme_configs(
-        app, current_project_name, context["branch"], context["url"]
-    )
+    _update_theme_configs(app, current_project, branch)
 
 
 def _setup_projects_context(
@@ -422,12 +408,17 @@ def debug_projects() -> None:
 
     Provided as a debugging tool for the functionality of this module.
     """
-    mapping = _load_mapping(
-        Path(),
-        DEFAULT_INTERSPHINX_REPOSITORY,
-        DEFAULT_INTERSPHINX_BRANCH,
-        "rocm-docs-core",
+    projects = _load_projects(
+        DEFAULT_INTERSPHINX_REPOSITORY, DEFAULT_INTERSPHINX_BRANCH
     )
+    print(projects)
+
+    current_project = _get_current_project(projects, "rocm-docs-core")
+    print(current_project)
+
+    repo_path = Path()
+    _, branch = util.get_branch(repo_path)
+    mapping = _create_mapping(projects, current_project, branch)
     print(mapping)
     context = _get_context(Path(), mapping)
     print(context)
