@@ -4,6 +4,7 @@ from typing import Any, Dict
 
 from pathlib import Path
 
+import sphinx.util.logging
 from pydata_sphinx_theme.utils import (  # type: ignore[import]
     config_provided_by_user,
     get_theme_options_dict,
@@ -11,6 +12,8 @@ from pydata_sphinx_theme.utils import (  # type: ignore[import]
 from sphinx.application import Sphinx
 
 from rocm_docs import util
+
+logger = sphinx.util.logging.getLogger(__name__)
 
 
 def _update_repo_opts(
@@ -35,6 +38,16 @@ def _update_theme_options(app: Sphinx) -> None:
     url, branch = util.get_branch(app.srcdir)
     theme_opts = get_theme_options_dict(app)
     _update_repo_opts(app.srcdir, url, branch, theme_opts)
+
+    supported_flavors = ["rocm"]
+    flavor = theme_opts.get("flavor", "rocm")
+    if flavor not in supported_flavors:
+        logger.error(
+            f'Unsupported theme flavor "{flavor}", must be one of: {supported_flavors}.\n'
+            "Using flavor={supported_flavors[0]}"
+        )
+        flavor = supported_flavors[0]
+        theme_opts["flavor"] = flavor
 
     theme_opts.setdefault(
         "article_header_start",
