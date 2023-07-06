@@ -4,6 +4,7 @@ from typing import Any, Dict
 
 from pathlib import Path
 
+import sphinx.util.logging
 from pydata_sphinx_theme.utils import (  # type: ignore[import]
     config_provided_by_user,
     get_theme_options_dict,
@@ -11,6 +12,8 @@ from pydata_sphinx_theme.utils import (  # type: ignore[import]
 from sphinx.application import Sphinx
 
 from rocm_docs import util
+
+logger = sphinx.util.logging.getLogger(__name__)
 
 
 def _update_repo_opts(
@@ -26,9 +29,24 @@ def _update_repo_opts(
         theme_opts.setdefault(key, val)
 
 
-def _update_banner(announcement_info: str, theme_opts: Dict[str, Any]) -> None:
-    if len(announcement_info) > 0:
-        theme_opts.setdefault("announcement", announcement_info)
+def _update_banner(
+    flavor: str, version_type: util.VersionType, theme_opts: Dict[str, Any]
+) -> None:
+    if flavor != "rocm":
+        return
+
+    if version_type == util.VersionType.LATEST_RELEASE:
+        return
+
+    announcement_info: str
+    if version_type == util.VersionType.RELEASE_CANDIDATE:
+        announcement_info = "This page contains changes for a test release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+    elif version_type == util.VersionType.OLD_RELEASE:
+        announcement_info = "This is an old version of ROCm documentation. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest ROCm release documentation</a> to stay informed of all our developments."
+    elif version_type == util.VersionType.DEVELOPMENT:
+        announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+
+    theme_opts.setdefault("announcement", announcement_info)
 
 
 def _update_theme_options(app: Sphinx) -> None:
@@ -36,12 +54,23 @@ def _update_theme_options(app: Sphinx) -> None:
     theme_opts = get_theme_options_dict(app)
     _update_repo_opts(app.srcdir, url, branch, theme_opts)
 
+    supported_flavors = ["rocm"]
+    flavor = theme_opts.get("flavor", "rocm")
+    if flavor not in supported_flavors:
+        logger.error(
+            f'Unsupported theme flavor "{flavor}", must be one of: {supported_flavors}.\n'
+            "Using flavor={supported_flavors[0]}"
+        )
+        flavor = supported_flavors[0]
+        theme_opts["flavor"] = flavor
+
     theme_opts.setdefault(
         "article_header_start",
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
     )
 
-    _update_banner(app.config.announcement_info, theme_opts)
+    if hasattr(app.config, "projects_version_type"):
+        _update_banner(flavor, app.config.projects_version_type, theme_opts)
 
     # Default the download, edit, and fullscreen buttons to off
     for button in ["download", "edit_page", "fullscreen"]:
