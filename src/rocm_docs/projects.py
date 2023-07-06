@@ -299,27 +299,19 @@ def _update_theme_configs(
     latest_version_string = f"docs-{latest_version}"
     release_candidate = "5.7"
     release_candidate_string = f"docs-{release_candidate}"
-    announcement_info = ""
 
     development_branch = _Project.default_value("development_branch")
     if current_project is not None:
         development_branch = current_project.development_branch
 
     if current_branch in [latest_version_string, "latest"]:
-        pass
+        app.config.projects_version_type = util.VersionType.LATEST_RELEASE  # type: ignore[attr-defined]
     elif current_branch.startswith(release_candidate_string):
-        announcement_info = "This page contains changes for a test release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+        app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE  # type: ignore[attr-defined]
     elif current_branch.startswith("docs-"):
-        announcement_info = "This is an old version of ROCm documentation. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest ROCm release documentation</a> to stay informed of all our developments."
+        app.config.projects_version_type = util.VersionType.OLD_RELEASE  # type: ignore[attr-defined]
     elif current_branch == development_branch:
-        announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
-
-    app.add_config_value(
-        name="announcement_info",
-        default=announcement_info,
-        rebuild="env",
-        types=str,
-    )
+        app.config.projects_version_type = util.VersionType.DEVELOPMENT  # type: ignore[attr-defined]
 
 
 def _update_config(app: Sphinx, _: Config) -> None:
