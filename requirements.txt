@@ -94,7 +94,7 @@ jinja2==3.1.2
     #   sphinx
 libsass==0.22.0
     # via doxysphinx
-lxml==4.9.2
+lxml==4.9.3
     # via doxysphinx
 markdown-it-py==2.2.0
     # via
