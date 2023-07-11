@@ -1,3 +1,17 @@
+## v0.19.0 (2023-07-11)
+
+### Feat
+
+- Add "local" flavor for providing the flavor in the project
+- Add support for theme "flavors"
+
+### Refactor
+
+- **projects.py,theme.py**: Decouple announcement strings from projects.py
+- **projects.py**: Don't read projects.yaml again for release announcement
+- **projects.py**: replace uses of _load_mapping with _create_mapping
+- **projects.py**: Make Project creation more explicit
+
 ## v0.18.4 (2023-07-05)
 
 ### Fix
