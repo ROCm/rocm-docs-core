@@ -135,7 +135,7 @@ platformdirs==3.8.0
     #   virtualenv
 pre-commit==3.3.3
     # via rocm-docs-core (pyproject.toml)
-prompt-toolkit==3.0.38
+prompt-toolkit==3.0.39
     # via questionary
 pycparser==2.21
     # via cffi
