@@ -127,7 +127,7 @@ packaging==23.1
     #   sphinx
 pathspec==0.11.1
     # via black
-pip-tools==6.14.0
+pip-tools==7.0.0
     # via rocm-docs-core (pyproject.toml)
 platformdirs==3.8.1
     # via
