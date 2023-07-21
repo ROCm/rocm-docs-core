@@ -93,17 +93,25 @@ def _run_doxygen(app: Sphinx, config: Config) -> None:
             " and be readable."
         ) from err
 
+    if config["doxygen_executable"] is None:
+        doxygen_exe = shutil.which("doxygen")
+    else:
+        doxygen_path: Path = Path(config["doxygen_executable"]).absolute()
+        if doxygen_path.is_file():
+            doxygen_exe = str(doxygen_path)
+        else:
+            doxygen_exe = None
+    if doxygen_exe is None:
+        raise RuntimeError(
+            "'doxygen' command not found! Make sure that "
+            "doxygen is installed and in the PATH or specify "
+            "via doxygen_executable configuration variable."
+        )
+
     doxyfile = Path(app.confdir, config["doxyfile"]).absolute()
     if not doxyfile.is_file():
         raise ConfigError(
             f"Expected doxyfile {doxyfile} to exist and be readable."
-        )
-
-    doxygen_exe = shutil.which("doxygen")
-    if doxygen_exe is None:
-        raise RuntimeError(
-            "'doxygen' command not found! Make sure that "
-            "doxygen is installed and in the PATH"
         )
 
     # Running doxygen requires that the files are already copied because
@@ -198,6 +206,12 @@ def setup(app: Sphinx) -> dict[str, Any]:
 
     app.add_config_value(
         "doxygen_root", ".doxygen", rebuild="", types=[None, str, os.PathLike]
+    )
+    app.add_config_value(
+        "doxygen_executable",
+        None,
+        rebuild="",
+        types=[None, str, "os.PathLike[Any]"],
     )
     app.add_config_value(
         "doxyfile",
