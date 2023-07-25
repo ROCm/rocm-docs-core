@@ -94,19 +94,16 @@ def _run_doxygen(app: Sphinx, config: Config) -> None:
         ) from err
 
     if config["doxygen_executable"] is None:
-        doxygen_exe = shutil.which("doxygen")
+        cmd_path = shutil.which("doxygen")
+        if cmd_path is None:
+           raise RuntimeError(
+                "'doxygen' command not found! Make sure that "
+                "doxygen is installed and in the PATH or specify "
+                "via doxygen_executable configuration variable."
+            )
+        doxygen_exe = Path(cmd_path)
     else:
-        doxygen_path: Path = Path(config["doxygen_executable"]).absolute()
-        if doxygen_path.is_file():
-            doxygen_exe = str(doxygen_path)
-        else:
-            doxygen_exe = None
-    if doxygen_exe is None:
-        raise RuntimeError(
-            "'doxygen' command not found! Make sure that "
-            "doxygen is installed and in the PATH or specify "
-            "via doxygen_executable configuration variable."
-        )
+        doxygen_exe = Path(app.confdir, config.doxygen_executable)
 
     doxyfile = Path(app.confdir, config["doxyfile"]).absolute()
     if not doxyfile.is_file():
