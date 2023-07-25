@@ -49,7 +49,7 @@ colorama==0.4.6
     # via commitizen
 commitizen==3.5.3
     # via rocm-docs-core (pyproject.toml)
-cryptography==41.0.1
+cryptography==41.0.2
     # via pyjwt
 decli==0.6.1
     # via commitizen
