@@ -96,7 +96,7 @@ def _run_doxygen(app: Sphinx, config: Config) -> None:
     if config["doxygen_executable"] is None:
         cmd_path = shutil.which("doxygen")
         if cmd_path is None:
-           raise RuntimeError(
+            raise RuntimeError(
                 "'doxygen' command not found! Make sure that "
                 "doxygen is installed and in the PATH or specify "
                 "via doxygen_executable configuration variable."
