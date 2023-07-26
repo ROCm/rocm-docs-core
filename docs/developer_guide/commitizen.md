@@ -8,6 +8,7 @@ implement automatic release tagging based on commit messages.
 ## Commit message rules
 
 A commit message should like like this:
+
 ```text
 <type>[optional scope]: <subject>
 
@@ -15,6 +16,7 @@ A commit message should like like this:
 
 [optional footer(s)]
 ```
+
 Commit messages start with a header line that notes the type of change, followed
 by an optional list of scopes, then the description of the change.
 

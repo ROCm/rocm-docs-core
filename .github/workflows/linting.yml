@@ -12,11 +12,43 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint-rest:
+    name: "RestructuredText"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install rst-lint
+        run: pip install restructuredtext-lint
+      - name: Lint ResT files
+        run: rst-lint ${{ join(github.workspace, '/docs') }}
+
+  lint-md:
+    name: "Markdown"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Use markdownlint-cli2
+        uses: DavidAnson/markdownlint-cli2-action@v10.0.1
+        with:
+          globs: "**/*.md"
+
   spelling:
     name: "Spelling"
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Run spellcheck
-      uses: rojopolis/spellcheck-github-actions@0.30.0
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Fetch config
+        if: ${{ ! contains( github.repository, 'rocm-docs-core') }}
+        shell: sh
+        run: |
+          curl --silent --show-error --fail --location https://raw.github.com/RadeonOpenCompute/rocm-docs-core/develop/.spellcheck.yaml -O
+          curl --silent --show-error --fail --location https://raw.github.com/RadeonOpenCompute/rocm-docs-core/develop/.wordlist.txt >> .wordlist.txt
+      - name: Run spellcheck
+        uses: rojopolis/spellcheck-github-actions@0.30.0
+      - name: On fail
+        if: failure()
+        run: |
+          echo "Please check for spelling mistakes or add them to '.wordlist.txt' in either the root of this project or in rocm-docs-core."

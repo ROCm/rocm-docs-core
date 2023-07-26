@@ -12,11 +12,15 @@ ROCm Docs Core is distributed as a pip package available from PyPi as
 :gutter: 1
 
 :::{grid-item-card} Demo Documentation Showcase
+
 - {doc}`/demo/doxygen/html/index`
+
 :::
 
 :::{grid-item-card} Developer Guide
+
 - {doc}`/developer_guide/commitizen`
+
 :::
 
 ::::
