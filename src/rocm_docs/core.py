@@ -11,8 +11,8 @@ from typing import Any, Dict, Generic, List, Set, TypeVar, cast
 
 import inspect
 import os
-import re
 import sys
+import urllib.parse
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -104,18 +104,11 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
     if "READTHEDOCS" not in os.environ:
         return
 
-    if not config_provided_by_user(app, "notfound_urls_prefix"):
+    if config_provided_by_user(app, "notfound_urls_prefix"):
         return
 
-    current_version = app.config["html_context"].get("current_version", "")
-    if current_version != "":
-        current_version += "/"
-    abs_path = re.sub(
-        r"^(?:.*://)?[^/]*/(.*)/[^/]*/$",
-        r"/\1/" + current_version,
-        app.config.html_baseurl,
-    )
-    setattr(app.config, "notfound_urls_prefix", abs_path)
+    components = urllib.parse.urlparse(os.environ["READTHEDOCS_CANONICAL_URL"])
+    app.config.notfound_urls_prefix = components.path  # type: ignore[attr-defined]
 
 
 def _set_article_info(app: Sphinx, _: Config) -> None:
