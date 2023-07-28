@@ -1,3 +1,20 @@
+## v0.20.0 (2023-07-28)
+
+### Feat
+
+- Add config option to specify doxygen exe
+- Add reusable md rst linting
+- Turn linting workflow into reusable
+
+### Fix
+
+- **core.py**: fix setting up the base url for the 404 page
+- one-off indentation
+- config handling style
+- MD032
+- MD031
+- add missing mdlint config file
+
 ## v0.19.0 (2023-07-11)
 
 ### Feat
