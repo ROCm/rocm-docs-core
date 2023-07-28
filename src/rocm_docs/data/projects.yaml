@@ -27,7 +27,9 @@ projects:
   python: https://docs.python.org/3/
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
   rdc: https://rocm.docs.amd.com/projects/rdc/en/${version}
-  rocal: https://rocm.docs.amd.com/projects/rocAL/en/${version}
+  rocal:
+    target: https://rocm.docs.amd.com/projects/rocAL/en/${version}
+    development_branch: master
   rocalution: https://rocm.docs.amd.com/projects/rocALUTION/en/${version}
   rocblas: https://rocm.docs.amd.com/projects/rocBLAS/en/${version}
   rocdbgapi:
@@ -48,7 +50,9 @@ projects:
   rocm_smi_lib:
     target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
     development_branch: master
-  rocmvalidationsuite: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
+  rocmvalidationsuite:
+    target: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
+    development_branch: master
   rocprim: https://rocm.docs.amd.com/projects/rocPRIM/en/${version}
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}
