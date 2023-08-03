@@ -168,6 +168,8 @@ Nano
 Navi
 NBIO
 NBIOs
+# Linting
+linter
 # North Bridge IO (MI100, MI200 guides)
 NIC
 NICs
@@ -296,6 +298,8 @@ untrusted
 untuned
 USM
 UTIL
+# Spellcheck
+executables
 # Utility, part of AMD-IOPM-UTIL (MI100, MI200 guides)
 Vanhoucke
 VBIOS
