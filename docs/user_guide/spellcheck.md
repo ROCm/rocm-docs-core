@@ -27,3 +27,9 @@ that would be the `rocm-docs-core` folder).
 
 If the word is not meant to be a dictionary word, but is still valid
 technical terminology, wrap the word with the tilde (`) key.
+
+#### Keyword examples
+
+- File or folder names
+- Commands or arguments
+- Code blocks
