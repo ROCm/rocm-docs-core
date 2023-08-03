@@ -33,3 +33,4 @@ technical terminology, wrap the word with the tilde (`) key.
 - File or folder names
 - Commands or arguments
 - Code blocks
+- Names of executables or binaries
