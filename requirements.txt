@@ -235,7 +235,7 @@ typing-extensions==4.7.1
     #   black
     #   mypy
     #   pydata-sphinx-theme
-urllib3==2.0.3
+urllib3==2.0.4
     # via requests
 virtualenv==20.24.0
     # via pre-commit
