@@ -14,6 +14,7 @@ subtrees:
     entries:
       - file: user_guide/spellcheck
       - file: user_guide/linting
+      - file: user_guide/linking
       - file: user_guide/article_info
       - file: user_guide/doxygen_integration
   - caption: Developer Guide
