@@ -1,6 +1,6 @@
 # Linking
 
-## Cross References
+## Cross References to Other Projects
 
 When making links that cross-reference documentation sites, the following
 format should be used:
@@ -29,7 +29,7 @@ will be rendered as the following link:
 
 For other links, usual Markdown conventions should be used.
 
-### Example: Absolute Links
+### Example: Absolute Links to External Sites
 
 The following Markdown:
 
@@ -41,7 +41,7 @@ will be rendered as the following link:
 
 [Link Text](https://github.com/RadeonOpenCompute/ROCm)
 
-### Example: Relative Links
+### Example: Relative Links to Current Project
 
 The following Markdown:
 
