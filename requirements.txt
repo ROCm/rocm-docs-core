@@ -228,7 +228,7 @@ tomli==2.0.1
     #   pyproject-hooks
 tomlkit==0.12.1
     # via commitizen
-tqdm==4.65.0
+tqdm==4.66.1
     # via mpire
 typing-extensions==4.7.1
     # via
