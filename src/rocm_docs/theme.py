@@ -2,6 +2,7 @@
 
 from typing import Any, Dict
 
+import sys
 from pathlib import Path
 
 import sphinx.util.logging
@@ -13,7 +14,21 @@ from sphinx.application import Sphinx
 
 from rocm_docs import util
 
+if sys.version_info < (3, 9):
+    # importlib.resources either doesn't exist or lacks the files()
+    # function, so use the PyPI version:
+    import importlib_resources
+else:
+    # importlib.resources has files(), so use that:
+    import importlib.resources as importlib_resources
+
 logger = sphinx.util.logging.getLogger(__name__)
+
+
+def _copy_theme_util_pages(app: Sphinx) -> None:
+    """Copy over common utility pages before generating docs."""
+    pkg = importlib_resources.files("rocm_docs")
+    util.copy_from_package(app, pkg / "data/util_pages", "data/util_pages", ".")
 
 
 def _update_repo_opts(
@@ -111,6 +126,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
         "fonts.css",
     ]:
         app.add_css_file(css)
+    app.connect("config-inited", _copy_theme_util_pages)
     app.connect("builder-inited", _update_theme_options)
 
     return {

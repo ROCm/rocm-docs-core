@@ -8,11 +8,22 @@ import enum
 import functools
 import os
 import re
+import shutil
+import sys
 from pathlib import Path
 
 import github
 from git.repo import Repo
 from github.GithubException import UnknownObjectException
+from sphinx.application import Sphinx
+
+if sys.version_info < (3, 9):
+    from importlib_resources.abc import Traversable
+else:
+    if sys.version_info < (3, 11):
+        from importlib.abc import Traversable
+    else:
+        from importlib.resources.abc import Traversable
 
 
 class VersionType(enum.Enum):
@@ -117,3 +128,32 @@ def get_branch(
         branch = "branch-not-found"
 
     return "", branch
+
+
+def copy_from_package(
+    app: Sphinx, data_dir: Traversable, read_path: str, write_path: str
+) -> None:
+    """Copy files from package specified in data_dir."""
+    if not data_dir.is_dir():
+        raise NotADirectoryError(
+            f"Expected path {read_path}/{data_dir} to be traversable."
+        )
+    for entry in data_dir.iterdir():
+        entry_path: Path = Path(app.confdir) / write_path / entry.name
+        if entry.is_dir():
+            entry_path.mkdir(parents=True, exist_ok=True)
+            copy_from_package(
+                app,
+                entry,
+                read_path + "/" + entry.name,
+                write_path + "/" + entry.name,
+            )
+        else:
+            # We open the resource file as a binary stream instead
+            # of a file on disk because the latter may require
+            # unzipping and/or the creation of a temporary file.
+            # This is not the case when opening the file as a
+            # stream.
+            with entry.open("rb") as infile:
+                with open(entry_path, "wb") as out:
+                    shutil.copyfileobj(infile, out)
