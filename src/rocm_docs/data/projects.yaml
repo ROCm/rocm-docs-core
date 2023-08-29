@@ -22,6 +22,7 @@ projects:
   hiprand: https://rocm.docs.amd.com/projects/hipRAND/en/${version}
   hipsolver: https://rocm.docs.amd.com/projects/hipSOLVER/en/${version}
   hipsparse: https://rocm.docs.amd.com/projects/hipSPARSE/en/${version}
+  hiptensor: https://rocm.docs.amd.com/projects/hipTensor/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
   python: https://docs.python.org/3/
