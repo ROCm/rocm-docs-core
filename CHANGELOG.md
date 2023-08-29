@@ -1,3 +1,13 @@
+## v0.21.0 (2023-08-29)
+
+### Feat
+
+- update latest version to 5.6.1
+
+### Fix
+
+- **projects.yaml**: add dev branch for rvs and rocal
+
 ## v0.20.0 (2023-07-28)
 
 ### Feat
