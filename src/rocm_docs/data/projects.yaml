@@ -63,3 +63,4 @@ projects:
   rtd: https://docs.readthedocs.io/en/stable/
   sphinx: https://www.sphinx-doc.org/en/master/
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
+  rocmcmakebuildtools: https://rocm.docs.amd.com/projects/ROCmCMakeBuildTools/en/${version}
