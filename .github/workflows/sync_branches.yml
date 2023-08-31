@@ -1,28 +1,25 @@
-name: "Sync to develop"
+name: 'Merge Develop into Main Fast Forward Only'
 
 on:
-  workflow_call:
-    inputs:
-      sha:
-        required: true
-        type: string
   workflow_dispatch:
 
 jobs:
-  sync_branches:
+  merge:
     runs-on: ubuntu-latest
-    concurrency: sync_branches
-    name: Sync the branch with the default branch (develop)
     steps:
-    - name: Push develop forward (ff only)
-      shell: sh
-      run: |
-        REF="refs/heads/${{ github.event.repository.default_branch }}"
-        gh api "/repos/${{ github.repository }}/git/$REF"   \
-          --method PATCH                                    \
-          --header "Accept: application/vnd.github+json"    \
-          --header "X-GitHub-Api-Version: 2022-11-28"       \
-          --raw-field sha='${{ inputs.sha || github.sha }}' \
-          --field force=false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # Fetch the whole history to prevent unrelated history errors
+          fetch-depth: '0'
+          # The branch you want to checkout (usually equal to `branchtomerge`)
+          ref: 'develop'
+      - name: Merge Fast Forward
+        uses: MaximeHeckel/github-action-merge-fast-forward@v1.1.0
+        with:
+          # Branch to merge
+          branchtomerge: develop
+          # Branch that will be updated
+          branch: main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
