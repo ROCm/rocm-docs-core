@@ -1,3 +1,13 @@
+## v0.22.0 (2023-08-31)
+
+### Feat
+
+- **projects.yaml**: add hiptensor to projects.yaml
+
+### Fix
+
+- **projects.yaml**: Add ROCmCMakeBuildTools to projects.yaml
+
 ## v0.21.0 (2023-08-29)
 
 ### Feat
