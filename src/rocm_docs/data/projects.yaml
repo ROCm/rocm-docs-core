@@ -22,6 +22,7 @@ projects:
   hiprand: https://rocm.docs.amd.com/projects/hipRAND/en/${version}
   hipsolver: https://rocm.docs.amd.com/projects/hipSOLVER/en/${version}
   hipsparse: https://rocm.docs.amd.com/projects/hipSPARSE/en/${version}
+  hipsparselt: https://rocm.docs.amd.com/projects/hipSPARSELt/en/${version}
   hiptensor: https://rocm.docs.amd.com/projects/hipTensor/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
@@ -40,28 +41,28 @@ projects:
   rocgdb:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
     development_branch: amd-master
-  rocprofiler:
-    target: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
-    development_branch: amd-master
-  roctracer:
-    target: https://rocm.docs.amd.com/projects/roctracer/en/${version}
-    development_branch: amd-master
   rocm: https://rocm.docs.amd.com/en/${version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
   rocm_smi_lib:
     target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
     development_branch: master
+  rocmcmakebuildtools: https://rocm.docs.amd.com/projects/ROCmCMakeBuildTools/en/${version}
   rocmvalidationsuite:
     target: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
     development_branch: master
   rocprim: https://rocm.docs.amd.com/projects/rocPRIM/en/${version}
+  rocprofiler:
+    target: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
+    development_branch: amd-master
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}
   rocsparse: https://rocm.docs.amd.com/projects/rocSPARSE/en/${version}
   rocthrust: https://rocm.docs.amd.com/projects/rocThrust/en/${version}
+  roctracer:
+    target: https://rocm.docs.amd.com/projects/roctracer/en/${version}
+    development_branch: amd-master
   rocwmma: https://rocm.docs.amd.com/projects/rocWMMA/en/${version}
   rpp: https://rocm.docs.amd.com/projects/rpp/en/${version}
   rtd: https://docs.readthedocs.io/en/stable/
   sphinx: https://www.sphinx-doc.org/en/master/
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
-  rocmcmakebuildtools: https://rocm.docs.amd.com/projects/ROCmCMakeBuildTools/en/${version}
