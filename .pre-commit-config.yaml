@@ -12,6 +12,9 @@ repos:
       - id: check-json
       - id: check-toml
       - id: end-of-file-fixer
+      - id: file-contents-sorter
+        files: '^.wordlist.txt$'
+        args: [--unique]
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
 

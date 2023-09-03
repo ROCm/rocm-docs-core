@@ -69,7 +69,7 @@ _run-hook hook:
 	@{{python}} -m pre_commit run --all-files {{hook}}
 
 # Run basic pre-commit hooks
-hooks: (_run-hook "check-yaml ") (_run-hook "check-json") (_run-hook "check-toml") (_run-hook "end-of-file-fixer") (_run-hook "trailing-whitespace")
+hooks: (_run-hook "check-yaml") (_run-hook "check-json") (_run-hook "check-toml") (_run-hook "end-of-file-fixer") (_run-hook "file-contents-sorter") (_run-hook "trailing-whitespace")
 
 # Run linters, no files are modified
 lint +files="src": (ruff "" files) hooks
