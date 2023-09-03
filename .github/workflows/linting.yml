@@ -1,4 +1,4 @@
-name: Linting
+name: Docs Linting
 
 on:
   workflow_call:
