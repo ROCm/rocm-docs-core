@@ -1,9 +1,10 @@
+name: Code Linting
 on:
   pull_request:
 
 jobs:
   lint:
-    name: Python linting
+    name: Python
     strategy:
       matrix:
         os: ["ubuntu-latest", "windows-latest"]
