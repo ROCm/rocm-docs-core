@@ -1,3 +1,13 @@
+## v0.23.0 (2023-09-05)
+
+### Feat
+
+- copy common 404.md source file to projects
+
+### Refactor
+
+- **theme.py**: copy theme util pages on builder init
+
 ## v0.22.1 (2023-09-05)
 
 ### Fix
