@@ -1,0 +1,2 @@
+# Force lf to workaround pre-commit hook limitation
+/.wordlist.txt text eol=lf

@@ -45,4 +45,4 @@ jobs:
     - name: Check commit messages
       run: just _check-commit-range "refs/remotes/origin/${{ github.base_ref }}..HEAD"
     - name: Check linting, formatting, types
-      run: just check-codestyle
+      run: just --set verbose_errors true -- check-codestyle
