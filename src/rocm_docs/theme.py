@@ -126,7 +126,8 @@ def setup(app: Sphinx) -> Dict[str, Any]:
         "fonts.css",
     ]:
         app.add_css_file(css)
-    app.connect("config-inited", _copy_theme_util_pages)
+
+    app.connect("builder-inited", _copy_theme_util_pages, priority=400)
     app.connect("builder-inited", _update_theme_options)
 
     return {
