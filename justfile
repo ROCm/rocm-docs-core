@@ -3,8 +3,9 @@ base-python := "python"
 binfolder := if os_family() == "windows" {"Scripts"} else {"bin"}
 bindir := venvdir / binfolder
 python := bindir / "python"
-
 ruff_exe := bindir / "ruff"
+
+verbose_errors := "false"
 
 set windows-shell := ["powershell.exe", "-c"]
 
@@ -66,7 +67,7 @@ ruff +files="src": (_ruff "" files)
 fix-ruff +files="src": (_ruff "--fix --exit-non-zero-on-fix" files)
 
 _run-hook hook:
-	@{{python}} -m pre_commit run --all-files {{hook}}
+	@{{python}} -m pre_commit run --all-files {{ if verbose_errors == "true" {"--show-diff-on-failure"} else {""} }} {{hook}}
 
 # Run basic pre-commit hooks
 hooks: (_run-hook "check-yaml") (_run-hook "check-json") (_run-hook "check-toml") (_run-hook "end-of-file-fixer") (_run-hook "file-contents-sorter") (_run-hook "trailing-whitespace")
