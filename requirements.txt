@@ -20,7 +20,7 @@ black==23.7.0
     # via rocm-docs-core (pyproject.toml)
 breathe==4.35.0
     # via rocm-docs-core (pyproject.toml)
-build==0.10.0
+build==1.0.0
     # via
     #   pip-tools
     #   rocm-docs-core (pyproject.toml)
