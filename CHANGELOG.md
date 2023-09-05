@@ -1,3 +1,9 @@
+## v0.22.1 (2023-09-05)
+
+### Fix
+
+- **projects.yaml**: add hipsparselt to projects yaml
+
 ## v0.22.0 (2023-08-31)
 
 ### Feat
