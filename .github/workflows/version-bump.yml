@@ -86,9 +86,34 @@ jobs:
     secrets:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
 
+  mark-status-checks:
+    name: Mark required status checks as succeeded
+    needs: [bump-version]
+    runs-on: ubuntu-latest
+    if: needs.bump-version.outputs.bumped == 'true'
+    steps:
+    - shell: sh
+      run: |
+        REPO="${{ github.repository }}"
+        SHA="${{ needs.bump-version.outputs.sha }}"
+
+        printf '%s' "${{ vars.REQUIRED_CHECK_CONTEXTS }}" | \
+        while IFS="" read -r CONTEXT; do
+          # Mark each check as succeeded
+          gh api "/repos/$REPO/statuses/$SHA"                     \
+            --method POST                                         \
+            --header "Accept: application/vnd.github+json"        \
+            --header "X-GitHub-Api-Version: 2022-11-28"           \
+            --field state=success                                 \
+            --field description='Skipped for version bump commit' \
+            --raw-field context="$CONTEXT"
+        done
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   call-sync-branches:
     name: Trigger merge
-    needs: [bump-version]
+    needs: [bump-version, mark-status-checks]
     if: needs.bump-version.outputs.bumped == 'true'
     uses: ./.github/workflows/sync_branches.yml
     with:
