@@ -16,56 +16,27 @@ from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ConfigError
 
+from rocm_docs import util
+
 if sys.version_info < (3, 9):
     # importlib.resources either doesn't exist or lacks the files()
     # function, so use the PyPI version:
     import importlib_resources
-    from importlib_resources.abc import Traversable
 else:
     # importlib.resources has files(), so use that:
     import importlib.resources as importlib_resources
 
-    if sys.version_info < (3, 11):
-        from importlib.abc import Traversable
-    else:
-        from importlib.resources.abc import Traversable
-
 
 def _copy_files(app: Sphinx) -> None:
     """Insert additional files into workspace."""
-
-    def copy_from_package(
-        data_dir: Traversable, read_path: str, write_path: str
-    ) -> None:
-        if not data_dir.is_dir():
-            raise NotADirectoryError(
-                f"Expected path {read_path}/{data_dir} to be traversable."
-            )
-        for entry in data_dir.iterdir():
-            entry_path: Path = Path(app.confdir) / write_path / entry.name
-            if entry.is_dir():
-                entry_path.mkdir(parents=True, exist_ok=True)
-                copy_from_package(
-                    entry,
-                    read_path + "/" + entry.name,
-                    write_path + "/" + entry.name,
-                )
-            else:
-                # We open the resource file as a binary stream instead
-                # of a file on disk because the latter may require
-                # unzipping and/or the creation of a temporary file.
-                # This is not the case when opening the file as a
-                # stream.
-                with entry.open("rb") as infile:
-                    with open(entry_path, "wb") as out:
-                        shutil.copyfileobj(infile, out)
-
     pkg = importlib_resources.files("rocm_docs")
     try:
         Path(app.confdir, "_doxygen").mkdir()
     except FileExistsError:
         pass
-    copy_from_package(pkg / "data/_doxygen", "data/_doxygen", "_doxygen")
+    util.copy_from_package(
+        app, pkg / "data/_doxygen", "data/_doxygen", "_doxygen"
+    )
 
 
 def _get_config_default(config: Config, key: str) -> Any:
