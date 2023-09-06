@@ -297,7 +297,7 @@ def _update_theme_configs(
     """Update configurations for use in theme.py"""
     latest_version = "5.7"
     latest_version_string = f"docs-{latest_version}"
-    release_candidate = "5.8"
+    release_candidate = "6.0"
     release_candidate_string = f"docs-{release_candidate}"
 
     development_branch = _Project.default_value("development_branch")
