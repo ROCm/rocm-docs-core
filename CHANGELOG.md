@@ -1,3 +1,9 @@
+## v0.24.0 (2023-09-07)
+
+### Feat
+
+- **theme.conf**: update header version
+
 ## v0.23.0 (2023-09-05)
 
 ### Feat
