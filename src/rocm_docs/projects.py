@@ -295,9 +295,9 @@ def _update_theme_configs(
     app: Sphinx, current_project: Optional[_Project], current_branch: str
 ) -> None:
     """Update configurations for use in theme.py"""
-    latest_version = "5.6.1"
+    latest_version = "5.7.0"
     latest_version_string = f"docs-{latest_version}"
-    release_candidate = "5.7"
+    release_candidate = "6.0.0"
     release_candidate_string = f"docs-{release_candidate}"
 
     development_branch = _Project.default_value("development_branch")
