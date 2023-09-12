@@ -161,7 +161,7 @@ pyparsing==3.1.1
     # via doxysphinx
 pyproject-hooks==1.0.0
     # via build
-pytz==2023.3
+pytz==2023.3.post1
     # via babel
 pyyaml==6.0.1
     # via
