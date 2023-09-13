@@ -11,9 +11,15 @@
     <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform {{ version_name }}</a>
 {%- endmacro -%}
 
+{% if theme_repository_url.endswith("-docs") %}
+    {% set repo_url = theme_repository_url|replace("-docs", "") %}
+{% else %}
+    {% set repo_url = theme_repository_url %}
+{% endif %}
+
 {%
 set nav_secondary_items = {
-    "GitHub": theme_repository_url|replace("-docs", ""),
+    "GitHub": repo_url,
     "Community": "https://github.com/RadeonOpenCompute/ROCm/discussions",
     "AMD Lab Notes": "https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-readme/",
     "Infinity Hub": "https://www.amd.com/en/technologies/infinity-hub",
