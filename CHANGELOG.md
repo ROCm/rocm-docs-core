@@ -1,3 +1,9 @@
+## v0.24.1 (2023-09-13)
+
+### Fix
+
+- **header.jinja**: only modify theme_repository_url if it ends with -docs
+
 ## v0.24.0 (2023-09-07)
 
 ### Feat
