@@ -34,6 +34,13 @@ jobs:
         with:
           globs: "**/*.md"
 
+  md-link-check:
+    name: "Markdown Link Check"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: gaurav-nelson/github-action-markdown-link-check@v1
+
   spelling:
     name: "Spelling"
     runs-on: ubuntu-latest
