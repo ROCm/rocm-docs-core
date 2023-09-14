@@ -51,4 +51,5 @@ The following Markdown:
 
 will be rendered as the following link:
 
+<!-- markdown-link-check-disable-next-line -->
 [Link Text](../index)
