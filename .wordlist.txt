@@ -83,6 +83,7 @@ Gitpod
 HBM
 HCA
 HIPCC
+HIPExtension
 HIPify
 HPC
 HPCG
@@ -102,6 +103,7 @@ ISVs
 ImageNet
 InfiniBand
 Inlines
+IntelliSense
 Intersphinx
 Ioffe
 JSON
@@ -124,6 +126,7 @@ MIVisionX
 MMA
 MNIST
 MPI
+MSVC
 MVAPICH
 Makefile
 Makefiles
@@ -221,6 +224,8 @@ TCR
 TFLOPS
 TOC
 TensorFlow
+Toolset
+Toolsets
 TorchScript
 TorchServe
 Torchvision
@@ -242,6 +247,7 @@ VGPRs
 VM
 VMEM
 VMWare
+VSIX
 VSkipped
 Vanhoucke
 Vulkan
@@ -269,6 +275,7 @@ atomics
 backends
 benchmarking
 bilinear
+buildable
 bursty
 centric
 chiplet
@@ -384,12 +391,15 @@ stochastically
 strided
 subdirectory
 subexpression
+subfolder
+subfolders
 tagram
 tg
 th
 tokenize
 toolchain
 toolchains
+toolsets
 tracebacks
 uarch
 uncached
