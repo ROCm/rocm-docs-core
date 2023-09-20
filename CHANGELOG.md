@@ -1,3 +1,14 @@
+## v0.24.2 (2023-09-20)
+
+### Fix
+
+- **util.py**: Copy files relative to the source directory
+- **doxygen.py**: Only continue if existing file is directory
+
+### Refactor
+
+- **theme.py**: Simplify 404 document handling
+
 ## v0.24.1 (2023-09-13)
 
 ### Fix
