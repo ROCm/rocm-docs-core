@@ -30,10 +30,7 @@ else:
 def _copy_files(app: Sphinx) -> None:
     """Insert additional files into workspace."""
     pkg = importlib_resources.files("rocm_docs")
-    try:
-        Path(app.confdir, "_doxygen").mkdir()
-    except FileExistsError:
-        pass
+    Path(app.srcdir, "_doxygen").mkdir(exist_ok=True)
     util.copy_from_package(
         app, pkg / "data/_doxygen", "data/_doxygen", "_doxygen"
     )
