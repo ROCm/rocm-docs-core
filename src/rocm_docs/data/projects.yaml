@@ -29,6 +29,7 @@ projects:
   python: https://docs.python.org/3/
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
   rdc: https://rocm.docs.amd.com/projects/rdc/en/${version}
+  radeon: https://rocm.docs.amd.com/projects/radeon/en/${version}
   rocal:
     target: https://rocm.docs.amd.com/projects/rocAL/en/${version}
     development_branch: master
