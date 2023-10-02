@@ -176,7 +176,7 @@ requests==2.31.0
     # via
     #   pygithub
     #   sphinx
-ruff==0.0.290
+ruff==0.0.292
     # via rocm-docs-core (pyproject.toml)
 smmap==5.0.1
     # via gitdb
