@@ -47,6 +47,9 @@ projects:
     target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
     development_branch: master
   rocmcmakebuildtools: https://rocm.docs.amd.com/projects/ROCmCMakeBuildTools/en/${version}
+  rocmradeon:
+    target: https://rocm.docs.amd.com/projects/radeon/en/${version}
+    development_branch: main
   rocmvalidationsuite:
     target: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
     development_branch: master
