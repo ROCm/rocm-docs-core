@@ -118,7 +118,7 @@ myst-parser==1.0.0
     # via rocm-docs-core (pyproject.toml)
 nodeenv==1.8.0
     # via pre-commit
-packaging==23.1
+packaging==23.2
     # via
     #   black
     #   build
