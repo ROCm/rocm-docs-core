@@ -206,8 +206,6 @@ SCA
 SDK
 SDMA
 SDRAM
-SENDMSG
-SENDMSG
 SGPR
 SGPRs
 SHA
@@ -407,8 +405,6 @@ runtime
 runtimes
 sL
 scalability
-sendmsg
-sendmsg
 serializers
 shader
 sigmoid
