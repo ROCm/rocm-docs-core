@@ -2,7 +2,6 @@
 
 from typing import Any, Dict
 
-import sys
 from pathlib import Path
 
 import sphinx.util.logging
@@ -14,21 +13,7 @@ from sphinx.application import Sphinx
 
 from rocm_docs import util
 
-if sys.version_info < (3, 9):
-    # importlib.resources either doesn't exist or lacks the files()
-    # function, so use the PyPI version:
-    import importlib_resources
-else:
-    # importlib.resources has files(), so use that:
-    import importlib.resources as importlib_resources
-
 logger = sphinx.util.logging.getLogger(__name__)
-
-
-def _copy_theme_util_pages(app: Sphinx) -> None:
-    """Copy over common utility pages before generating docs."""
-    pkg = importlib_resources.files("rocm_docs")
-    util.copy_from_package(app, pkg / "data/util_pages", "data/util_pages", ".")
 
 
 def _update_repo_opts(
@@ -99,6 +84,8 @@ def _update_theme_options(app: Sphinx) -> None:
     default_config_opts = {
         "html_show_sphinx": False,
         "html_favicon": "https://www.amd.com/themes/custom/amd/favicon.ico",
+        "notfound_context": {"title": "404 - Page Not Found"},
+        "notfound_template": "404.html",
     }
     for key, default in default_config_opts.items():
         if not config_provided_by_user(app, key):
@@ -127,7 +114,6 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     ]:
         app.add_css_file(css)
 
-    app.connect("builder-inited", _copy_theme_util_pages, priority=400)
     app.connect("builder-inited", _update_theme_options)
 
     return {

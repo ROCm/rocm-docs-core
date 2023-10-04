@@ -133,13 +133,21 @@ def get_branch(
 def copy_from_package(
     app: Sphinx, data_dir: Traversable, read_path: str, write_path: str
 ) -> None:
-    """Copy files from package specified in data_dir."""
+    """Copy files from package specified in data_dir.
+
+    Args:
+      app: The `Sphinx` instance
+      data_dir: source path to package files
+      read_path: relative path corresponding to `data_dir`
+      write_path: path to store output files, relative paths are interpreted
+        relative to the sphinx source directory.
+    """
     if not data_dir.is_dir():
         raise NotADirectoryError(
             f"Expected path {read_path}/{data_dir} to be traversable."
         )
     for entry in data_dir.iterdir():
-        entry_path: Path = Path(app.confdir) / write_path / entry.name
+        entry_path: Path = Path(app.srcdir) / write_path / entry.name
         if entry.is_dir():
             entry_path.mkdir(parents=True, exist_ok=True)
             copy_from_package(
