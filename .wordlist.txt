@@ -64,6 +64,7 @@ FFTs
 FHS
 FMA
 FP
+Filesystem
 Flang
 Fortran
 GCD
@@ -82,6 +83,7 @@ GMI
 GPG
 GPR
 GPU
+GPU's
 GPUs
 GRBM
 Gitpod
@@ -90,6 +92,7 @@ HCA
 HIPCC
 HIPExtension
 HIPIFY
+HIPify
 HPC
 HPCG
 HPL
@@ -110,6 +113,7 @@ InfiniBand
 Inlines
 IntelliSense
 Intersphinx
+Intra
 Ioffe
 JSON
 Jupyter
@@ -126,6 +130,7 @@ MEM
 MERCHANTABILITY
 MFMA
 MIGraphX
+MIGraphX's
 MIOpen
 MIVisionX
 MMA
@@ -182,6 +187,7 @@ PyPi
 PyTorch
 Qcycles
 RCCL
+RDMA
 RDNA
 RHEL
 ROC
@@ -191,6 +197,7 @@ ROCdbgapi
 ROCgdb
 ROCk
 ROCm
+ROCm's
 ROCmCC
 ROCmSoftwarePlatform
 ROCr
@@ -332,6 +339,7 @@ exascale
 executables
 gfx
 grayscale
+heterogenous
 hipBLAS
 hipBLASLt
 hipCUB
@@ -341,6 +349,7 @@ hipRAND
 hipSOLVER
 hipSPARSE
 hipSPARSELt
+hipTensor
 hipify
 ib_core
 inband
@@ -349,6 +358,7 @@ inferencing
 inflight
 inlining
 installable
+intra
 invariants
 invocating
 kdb
