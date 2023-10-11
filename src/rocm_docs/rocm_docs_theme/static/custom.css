@@ -216,3 +216,7 @@ a#ot-sdk-btn {
     transform: rotate(0);
   }
 }
+
+.bd-sidebar-secondary {
+  z-index: 10001;
+}
