@@ -62,7 +62,7 @@ rocm_docs_theme = "rocm_docs.theme"
 where=["src"]
 
 [tool.setuptools.package-data]
-rocm_docs = ["data/**/*", "rocm_docs_theme/**/*"]
+rocm_docs = ["data/**/*", "rocm_docs_theme/**/*", "py.typed"]
 
 [tool.black]
 target-version = ["py38"]
