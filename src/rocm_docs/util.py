@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 import github
+from git.exc import InvalidGitRepositoryError
 from git.repo import Repo
 from github.GithubException import UnknownObjectException
 from sphinx.application import Sphinx
@@ -165,3 +166,12 @@ def copy_from_package(
             with entry.open("rb") as infile:
                 with open(entry_path, "wb") as out:
                     shutil.copyfileobj(infile, out)
+
+
+__all__ = [
+    "InvalidGitRepositoryError",
+    "VersionType",
+    "get_path_to_docs",
+    "get_branch",
+    "copy_from_package",
+]
