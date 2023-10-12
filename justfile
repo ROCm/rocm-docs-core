@@ -47,24 +47,24 @@ build:
 _format extra_args +files:
 	{{python}} -m black --config pyproject.toml {{extra_args}} {{files}}
 
-format +files="src docs": (_format "" files)
-check-format +files="src docs": (_format "--check" files)
+format +files="src tests docs": (_format "" files)
+check-format +files="src tests docs": (_format "--check" files)
 
 _isort extra_args +files:
 	{{python}} -m isort --settings-path pyproject.toml {{extra_args}} {{files}}
 
 # Sort imports
-isort +files="src docs": (_isort "" files)
+isort +files="src tests docs": (_isort "" files)
 # Check if imports are correctly sorted
-check-isort +files="src docs": (_isort "--check" files)
+check-isort +files="src tests docs": (_isort "--check" files)
 
 _ruff extra_args +files:
 	{{ruff_exe}} --config pyproject.toml {{extra_args}} {{files}}
 
 # Run ruff to lint files
-ruff +files="src": (_ruff "" files)
+ruff +files="src tests": (_ruff "" files)
 # Run ruff and autolint
-fix-ruff +files="src": (_ruff "--fix --exit-non-zero-on-fix" files)
+fix-ruff +files="src tests": (_ruff "--fix --exit-non-zero-on-fix" files)
 
 _run-hook hook:
 	@{{python}} -m pre_commit run --all-files {{ if verbose_errors == "true" {"--show-diff-on-failure"} else {""} }} {{hook}}
@@ -73,20 +73,20 @@ _run-hook hook:
 hooks: (_run-hook "check-yaml") (_run-hook "check-json") (_run-hook "check-toml") (_run-hook "end-of-file-fixer") (_run-hook "file-contents-sorter") (_run-hook "trailing-whitespace")
 
 # Run linters, no files are modified
-lint +files="src": (ruff "" files) hooks
+lint +files="src tests": (ruff "" files) hooks
 # Run linters, trying to fix errors automatically
-fix-lint +files="src": (fix-ruff files) hooks
+fix-lint +files="src tests": (fix-ruff files) hooks
 
 # Run type-checking
-mypy +files="src":
+mypy +files="src tests":
 	{{python}} -m mypy --config-file pyproject.toml {{files}}
 
 # Run formatting, linters, imports sorting, fixing errors if possible
-fix-codestyle +files="src": (fix-lint files) (isort files) (format files)
+fix-codestyle +files="src tests": (fix-lint files) (isort files) (format files)
 alias codestyle := fix-codestyle
 
 # Check formatting, linters, imports sorting
-check-codestyle +files="src": (lint files) (check-isort files) (check-format files) (mypy files)
+check-codestyle +files="src tests": (lint files) (check-isort files) (check-format files) (mypy files)
 alias check := check-codestyle
 
 docs:
