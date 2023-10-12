@@ -90,7 +90,7 @@ def _run_doxygen(app: Sphinx, config: Config) -> None:
         raise RuntimeError("Failed when running doxygen") from err
 
     _update_breathe_settings(app, doxygen_root)
-    _run_doxysphinx(app, doxygen_root, doxyfile)
+    _run_doxysphinx(app, doxygen_root, doxyfile, doxygen_exe)
 
 
 def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
@@ -131,7 +131,9 @@ def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
     setattr(app.config, "breathe_default_project", project_name)
 
 
-def _run_doxysphinx(app: Sphinx, doxygen_root: Path, doxyfile: Path) -> None:
+def _run_doxysphinx(
+    app: Sphinx, doxygen_root: Path, doxyfile: Path, doxygen_exe: Path
+) -> None:
     if not app.config.doxysphinx_enabled:
         return
 
@@ -152,6 +154,7 @@ def _run_doxysphinx(app: Sphinx, doxygen_root: Path, doxyfile: Path) -> None:
                 "-m",
                 "doxysphinx",
                 "build",
+                "--doxygen_exe=" + str(doxygen_exe.absolute()),
                 app.srcdir,
                 app.outdir,
                 doxyfile,
