@@ -16,15 +16,22 @@ from rocm_docs import util
 logger = sphinx.util.logging.getLogger(__name__)
 
 
-def _update_repo_opts(
-    srcdir: str, url: str, branch: str, theme_opts: Dict[str, Any]
-) -> None:
-    default_branch_options = {
+def _update_repo_opts(srcdir: str, theme_opts: Dict[str, Any]) -> None:
+    default_branch_options: Dict[str, Any] = {
         "use_edit_page_button": False,
-        "repository_url": url,
-        "repository_branch": branch,
-        "path_to_docs": util.get_path_to_docs(srcdir),
     }
+    try:
+        url, branch = util.get_branch(srcdir)
+        default_branch_options.update(
+            {
+                "repository_url": url,
+                "repository_branch": branch,
+                "path_to_docs": util.get_path_to_docs(srcdir),
+            }
+        )
+    except util.InvalidGitRepositoryError:
+        logger.warning("Not in a Git Directory, disabling repository buttons")
+
     for key, val in default_branch_options.items():
         theme_opts.setdefault(key, val)
 
@@ -50,9 +57,8 @@ def _update_banner(
 
 
 def _update_theme_options(app: Sphinx) -> None:
-    url, branch = util.get_branch(app.srcdir)
     theme_opts = get_theme_options_dict(app)
-    _update_repo_opts(app.srcdir, url, branch, theme_opts)
+    _update_repo_opts(app.srcdir, theme_opts)
 
     supported_flavors = ["rocm", "local"]
     flavor = theme_opts.get("flavor", "rocm")
