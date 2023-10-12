@@ -1,3 +1,14 @@
+## v0.26.0 (2023-10-12)
+
+### Feat
+
+- Set latest version to 5.7.1
+
+### Fix
+
+- Reduce footer padding https://github.com/RadeonOpenCompute/rocm-docs-core/issues/394
+- Increase z-index of content sidebar https://github.com/RadeonOpenCompute/rocm-docs-core/issues/396
+
 ## v0.25.0 (2023-10-03)
 
 ### Feat
