@@ -65,6 +65,8 @@ docutils==0.19
     #   sphinx
 doxysphinx==3.3.4
     # via rocm-docs-core (pyproject.toml)
+exceptiongroup==1.1.3
+    # via pytest
 fastjsonschema==2.18.1
     # via rocm-docs-core (pyproject.toml)
 filelock==3.12.4
@@ -81,10 +83,13 @@ imagesize==1.4.1
     # via sphinx
 importlib-metadata==6.8.0
     # via
+    #   build
     #   commitizen
     #   sphinx
 importlib-resources==5.12.0 ; python_version < "3.9"
     # via rocm-docs-core (pyproject.toml)
+iniconfig==2.0.0
+    # via pytest
 isort==5.12.0
     # via rocm-docs-core (pyproject.toml)
 jinja2==3.1.2
@@ -124,6 +129,7 @@ packaging==23.2
     #   build
     #   commitizen
     #   pydata-sphinx-theme
+    #   pytest
     #   sphinx
 pathspec==0.11.2
     # via black
@@ -133,6 +139,8 @@ platformdirs==3.11.0
     # via
     #   black
     #   virtualenv
+pluggy==1.3.0
+    # via pytest
 pre-commit==3.4.0
     # via rocm-docs-core (pyproject.toml)
 prompt-toolkit==3.0.39
@@ -161,6 +169,10 @@ pyparsing==3.1.1
     # via doxysphinx
 pyproject-hooks==1.0.0
     # via build
+pytest==7.4.2
+    # via rocm-docs-core (pyproject.toml)
+python-dateutil==2.8.2
+    # via pygithub
 pytz==2023.3.post1
     # via babel
 pyyaml==6.0.1
@@ -178,6 +190,8 @@ requests==2.31.0
     #   sphinx
 ruff==0.0.292
     # via rocm-docs-core (pyproject.toml)
+six==1.16.0
+    # via python-dateutil
 smmap==5.0.1
     # via gitdb
 snowballstemmer==2.2.0
@@ -226,6 +240,7 @@ tomli==2.0.1
     #   mypy
     #   pip-tools
     #   pyproject-hooks
+    #   pytest
 tomlkit==0.12.1
     # via commitizen
 tqdm==4.66.1
@@ -236,8 +251,11 @@ typing-extensions==4.8.0
     #   filelock
     #   mypy
     #   pydata-sphinx-theme
+    #   pygithub
 urllib3==2.0.6
-    # via requests
+    # via
+    #   pygithub
+    #   requests
 virtualenv==20.24.5
     # via pre-commit
 wcwidth==0.2.8

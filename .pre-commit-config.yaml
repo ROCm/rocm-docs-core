@@ -25,13 +25,13 @@ repos:
         entry: just mypy
         types_or: [python, pyi]
         language: system
-        exclude: ^docs/.*
+        exclude: ^docs/|^tests/(sites|templates)
       - id: ruff
         name: ruff
         entry: just ruff
         types_or: [python, pyi]
         language: system
-        exclude: ^docs/.*
+        exclude: ^docs/|^tests/(sites|templates)
         require_serial: true
       - id: isort
         name: isort

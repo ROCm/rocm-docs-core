@@ -93,6 +93,9 @@ docs:
 	{{python}} -m sphinx -j auto -T -b html -d docs/_build/doctrees \
 		--color -D language=en docs docs/_build/html
 
+test +files="tests":
+	{{python}} -m pytest {{files}}
+
 _check-commit-mesg file:
 	{{python}} -m commitizen check --allow-abort --commit-msg-file {{file}}
 
