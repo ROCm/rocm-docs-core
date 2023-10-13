@@ -130,3 +130,11 @@ markers = [
     "template_folder: use the folder as a template to copy data over it"
 ]
 addopts = ["--doctest-modules", "--ignore=tests/sites"]
+filterwarnings = """
+ignore::DeprecationWarning
+default::DeprecationWarning:rocm_docs
+default::PendingDeprecationWarning:rocm_docs
+ignore::PendingDeprecationWarning
+default::DeprecationWarning:tests
+default::DeprecationWarning:rocm_docs
+"""
