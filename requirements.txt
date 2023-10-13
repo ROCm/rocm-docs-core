@@ -248,7 +248,6 @@ tqdm==4.66.1
 typing-extensions==4.8.0
     # via
     #   black
-    #   filelock
     #   mypy
     #   pydata-sphinx-theme
     #   pygithub

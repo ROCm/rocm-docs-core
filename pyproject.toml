@@ -129,3 +129,4 @@ markers = [
     "for_all_folders: perform multiple calls based on test folders",
     "template_folder: use the folder as a template to copy data over it"
 ]
+addopts = ["--doctest-modules", "--ignore=tests/sites"]
