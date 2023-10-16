@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Generator, Iterable
+from typing import Any
 
 import re
+from collections.abc import Generator, Iterable
 from dataclasses import dataclass
 from pathlib import Path
 

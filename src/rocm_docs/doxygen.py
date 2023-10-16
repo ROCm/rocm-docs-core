@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, Union
+from typing import Any, Union
 
+import importlib.resources
 import importlib.util
 import os
 import shutil
@@ -11,25 +12,17 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import]
+from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import-untyped]
 from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ConfigError
 
 from rocm_docs import util
 
-if sys.version_info < (3, 9):
-    # importlib.resources either doesn't exist or lacks the files()
-    # function, so use the PyPI version:
-    import importlib_resources
-else:
-    # importlib.resources has files(), so use that:
-    import importlib.resources as importlib_resources
-
 
 def _copy_files(app: Sphinx) -> None:
     """Insert additional files into workspace."""
-    pkg = importlib_resources.files("rocm_docs")
+    pkg = importlib.resources.files("rocm_docs")
     Path(app.srcdir, "_doxygen").mkdir(exist_ok=True)
     util.copy_from_package(
         app, pkg / "data/_doxygen", "data/_doxygen", "_doxygen"
@@ -194,7 +187,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
             "path": Path(config.doxygen_root, "docBin", "xml"),
         },
         rebuild="",
-        types=Dict[str, Union[None, str, "os.PathLike[Any]"]],
+        types=dict[str, Union[None, str, "os.PathLike[Any]"]],
     )
     app.add_config_value("doxysphinx_enabled", False, rebuild="", types=bool)
 
