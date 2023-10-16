@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Callable
 
 from pathlib import Path
@@ -7,18 +9,22 @@ from sphinx.testing.util import SphinxTestApp
 
 import rocm_docs.projects
 
-from .sphinx import SITES_BASEFOLDER, TEMPLATE_FOLDER
+from .sphinx_fixtures import SITES_BASEFOLDER, TEMPLATE_FOLDER
 
 
 @pytest.fixture()
-def mocked_projects(monkeypatch: pytest.MonkeyPatch) -> None:
+def mocked_projects(
+    monkeypatch: pytest.MonkeyPatch,
+) -> dict[str, rocm_docs.projects._Project]:
+    projects = {
+        "a": rocm_docs.projects._Project("https://example.com/a", [], ""),
+        "b": rocm_docs.projects._Project("https://example.com/b", [], ""),
+    }
     monkeypatch.setattr(
         "rocm_docs.projects._load_projects",
-        lambda *_, **__: {
-            "a": rocm_docs.projects._Project("https://example.com/a", [], ""),
-            "b": rocm_docs.projects._Project("https://example.com/b", [], ""),
-        },
+        lambda *_, **__: projects,
     )
+    return projects
 
 
 def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
@@ -30,9 +36,9 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
 
         metafunc.parametrize(
             "build_factory",
-            map(
-                lambda x: x.relative_to(SITES_BASEFOLDER),
-                SITES_BASEFOLDER.joinpath(mark.args[0]).iterdir(),
+            (
+                x.relative_to(SITES_BASEFOLDER)
+                for x in SITES_BASEFOLDER.joinpath(mark.args[0]).iterdir()
             ),
             ids=folder_id,
             indirect=True,
@@ -41,10 +47,9 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
 
 @pytest.mark.for_all_folders("pass")
 @pytest.mark.template_folder(TEMPLATE_FOLDER)
+@pytest.mark.usefixtures("_no_unexpected_warnings", "mocked_projects")
 def test_pass(
-    mocked_projects: None,  # noqa: ARG001
     build_factory: Callable[..., SphinxTestApp],
-    no_unexpected_logs: None,  # noqa: ARG001
 ) -> None:
     app = build_factory()
     app.build()
