@@ -40,3 +40,18 @@ Vice-versa if A has set its `development_branch` to `develop` and B sets it to `
 Symbolic versions "latest" and "stable" map to themselves in other projects.
 
 Any other branch maps to "latest".
+
+## Explicitly list external projects
+
+By default the inventories of all external projects defined in `projets.yaml`
+will be downloaded. This can take a long time as it requires a network request
+for each external project.
+
+The `external_projects` configuration option can be set to a list with the names
+of remote projects to fetch inventories from & enable links to.
+The list must be a subset of the project names defined in `projects.yaml`.
+The default value of `"all"` means to fetch all projects.
+
+References to projects that are not in `external_projects` will not be resolved.
+This applies to the terms of contents too, where unresolved references will
+likely cause an error.

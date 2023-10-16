@@ -314,6 +314,33 @@ def _update_theme_configs(
         app.config.projects_version_type = util.VersionType.DEVELOPMENT  # type: ignore[attr-defined]
 
 
+def _get_external_projects(
+    app: Sphinx, default: Dict[str, ProjectMapping]
+) -> List[str]:
+    external_projects: Union[List[str], str] = app.config.external_projects
+    if external_projects == "all":
+        return list(default.keys())
+    if isinstance(external_projects, str):
+        logger.error(
+            f'Unexpected value "{external_projects}" in external_projects.\n'
+            'Must be set to a list of project names or "all" to '
+            "enable all projects defined in projects.yaml"
+        )
+        return []
+
+    unknown_projects = [p for p in external_projects if p not in default]
+    if len(unknown_projects) > 0:
+        known_projects = [f'"{p}"' for p in default]
+        unknown_projects = [f'"{p}"' for p in unknown_projects]
+        logger.error(
+            "Unknown projects: [{}] in external_projects.\n".format(
+                ", ".join(unknown_projects)
+            )
+            + "Valid projects are: [{}]".format(", ".join(known_projects))
+        )
+    return external_projects
+
+
 def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "intersphinx_disabled_domains"):
         app.config.intersphinx_disabled_domains = ["std"]  # type: ignore[attr-defined]
@@ -328,10 +355,12 @@ def _update_config(app: Sphinx, _: Config) -> None:
         projects, app.config.external_projects_current_project
     )
     default = _create_mapping(projects, current_project, branch)
+    external_projects = _get_external_projects(app, default)
 
     mapping: Dict[str, ProjectMapping] = app.config.intersphinx_mapping
     for key, value in default.items():
-        mapping.setdefault(key, value)
+        if key in external_projects:
+            mapping.setdefault(key, value)
 
     if not config_provided_by_user(app, "external_toc_path"):
         app.config.external_toc_path = "./.sphinx/_toc.yml"  # type: ignore[attr-defined]
@@ -376,6 +405,9 @@ def setup(app: Sphinx) -> Dict[str, Any]:
         lambda config: config.project,
         rebuild="env",
         types=str,
+    )
+    app.add_config_value(
+        "external_projects", "all", rebuild="env", types=[list, str]
     )
 
     def external_toc_template_default(config: Config) -> str:
