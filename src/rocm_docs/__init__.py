@@ -4,13 +4,13 @@ Set up variables for documentation of ROCm projects
 that are using Read the Docs.
 """
 
-from typing import Dict, List, Optional, Union
+from typing import TypeAlias
 
 import os
 
 from rocm_docs.core import setup
 
-MaybePath = Union[str, os.PathLike, None]
+MaybePath: TypeAlias = str | os.PathLike | None
 
 
 # Intentionally disabling the too-many-instance-attributes check in pylint
@@ -33,17 +33,17 @@ class ROCmDocs:
     def __init__(
         self,
         project_name: str,
-        _: Optional[str] = None,
+        _: str | None = None,
         __: MaybePath = None,
     ) -> None:
         """Intialize ROCmDocs."""
         self._project_name: str = project_name
-        self.extensions: List[str] = []
+        self.extensions: list[str] = []
         self.html_title: str
         self.html_theme: str
-        self.html_theme_options: Dict[str, Union[str, bool, List[str]]] = {}
+        self.html_theme_options: dict[str, str | (bool | list[str])] = {}
         self.doxygen_root: MaybePath = None
-        self.doxygen_project: Dict[str, Union[Optional[str], MaybePath]] = {
+        self.doxygen_project: dict[str, str | None | MaybePath] = {
             "name": None,
             "path": None,
         }
@@ -59,7 +59,7 @@ class ROCmDocs:
         self,
         doxygen_root: MaybePath = None,
         doxygen_path: MaybePath = None,
-        doxygen_file: Optional[str] = None,
+        doxygen_file: str | None = None,
     ) -> None:
         """Run doxygen as part of Sphinx by adding rocm_docs.doxygen."""
         if "rocm_docs.doxygen" not in self.extensions:

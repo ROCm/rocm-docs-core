@@ -1,11 +1,11 @@
 """Module to use rocm-docs-core as a theme."""
 
-from typing import Any, Dict
+from typing import Any
 
 from pathlib import Path
 
 import sphinx.util.logging
-from pydata_sphinx_theme.utils import (  # type: ignore[import]
+from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
     get_theme_options_dict,
 )
@@ -16,8 +16,8 @@ from rocm_docs import util
 logger = sphinx.util.logging.getLogger(__name__)
 
 
-def _update_repo_opts(srcdir: str, theme_opts: Dict[str, Any]) -> None:
-    default_branch_options: Dict[str, Any] = {
+def _update_repo_opts(srcdir: str, theme_opts: dict[str, Any]) -> None:
+    default_branch_options: dict[str, Any] = {
         "use_edit_page_button": False,
     }
     try:
@@ -37,7 +37,7 @@ def _update_repo_opts(srcdir: str, theme_opts: Dict[str, Any]) -> None:
 
 
 def _update_banner(
-    flavor: str, version_type: util.VersionType, theme_opts: Dict[str, Any]
+    flavor: str, version_type: util.VersionType, theme_opts: dict[str, Any]
 ) -> None:
     if flavor != "rocm":
         return
@@ -98,7 +98,7 @@ def _update_theme_options(app: Sphinx) -> None:
             setattr(app.config, key, default)
 
 
-def setup(app: Sphinx) -> Dict[str, Any]:
+def setup(app: Sphinx) -> dict[str, Any]:
     """Set up the module as a Sphinx extension."""
     app.add_js_file(
         "https://download.amd.com/js/analytics/analyticsinit.js",

@@ -7,28 +7,22 @@ ROCm documentation projects.
 
 from __future__ import annotations
 
-from typing import Any, Dict, Generic, List, Set, TypeVar, cast
+from typing import Any, Generic, TypeVar, cast
 
+import importlib.resources
 import inspect
 import os
-import sys
 import urllib.parse
 from abc import ABC, abstractmethod
 from pathlib import Path
 
 import bs4
 import git.repo
-from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import]
+from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import-untyped]
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
 T = TypeVar("T")
-
-# based on doxygen.py
-if sys.version_info < (3, 9):
-    import importlib_resources
-else:
-    import importlib.resources as importlib_resources
 
 
 class _ConfigUpdater(Generic[T], ABC):
@@ -41,7 +35,7 @@ class _ConfigUpdater(Generic[T], ABC):
         pass
 
 
-class _ConfigExtend(_ConfigUpdater[List[T]]):
+class _ConfigExtend(_ConfigUpdater[list[T]]):
     def __call__(self, key: str, app: Sphinx) -> None:
         getattr(app.config, key).extend(self.default)
 
@@ -52,12 +46,12 @@ class _ConfigDefault(_ConfigUpdater[T]):
             setattr(app.config, key, self.default)
 
 
-class _ConfigUnion(_ConfigUpdater[Set[T]]):
+class _ConfigUnion(_ConfigUpdater[set[T]]):
     def __call__(self, key: str, app: Sphinx) -> None:
         getattr(app.config, key).update(self.default)
 
 
-class _ConfigMerge(_ConfigUpdater[Dict[str, Any]]):
+class _ConfigMerge(_ConfigUpdater[dict[str, Any]]):
     def __call__(self, key: str, app: Sphinx) -> None:
         current_setting: dict[str, Any] = getattr(app.config, key)
         for item in self.default.items():
@@ -120,7 +114,7 @@ def _set_article_info(app: Sphinx, _: Config) -> None:
         return
 
     article_info = (
-        importlib_resources.files("rocm_docs")
+        importlib.resources.files("rocm_docs")
         .joinpath("rocm_docs_theme/components/article-info.html")
         .read_text(encoding="utf-8")
     )
