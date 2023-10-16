@@ -2,8 +2,10 @@
     "liveServer.settings.root": "docs/_build/html",
     "liveServer.settings.wait": 1000,
     "python.terminal.activateEnvInCurrentTerminal": true,
-    "python.formatting.provider": "black",
-    "python.formatting.blackArgs": [
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "black-formatter.args": [
         "--config",
         "pyproject.toml"
     ],
