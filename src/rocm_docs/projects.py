@@ -3,7 +3,9 @@
 Remote loading of intersphinx_mapping from file, templating projects in toc.yml).
 """
 
-from typing import Any, Dict, List, Optional, Tuple, Union, cast
+from __future__ import annotations
+
+from typing import Any, Dict, List, Tuple, Union, cast
 
 import functools
 import json
@@ -16,7 +18,9 @@ import fastjsonschema  # type: ignore[import]
 import github
 import sphinx.util.logging
 import yaml
-from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import]
+from pydata_sphinx_theme.utils import (  # type: ignore[import]
+    config_provided_by_user,
+)
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
@@ -58,12 +62,12 @@ ProjectEntry = Union[str, Dict[str, ProjectItem]]
 @dataclass
 class _Project:
     target: str
-    inventory: List[Union[str, None]]
+    inventory: list[str | None]
     development_branch: str
 
     @staticmethod
     @functools.lru_cache
-    def yaml_schema() -> Dict[str, Any]:
+    def yaml_schema() -> dict[str, Any]:
         base = importlib_resources.files("rocm_docs") / "data"
         schema_file = base / "projects.schema.json"
 
@@ -72,7 +76,7 @@ class _Project:
         )
 
     @classmethod
-    def schema(cls) -> Dict[str, Any]:
+    def schema(cls) -> dict[str, Any]:
         return cast(Dict[str, Any], cls.yaml_schema()["$defs"]["project"])
 
     @classmethod
@@ -80,7 +84,7 @@ class _Project:
         return cast(str, cls.schema()["properties"][prop]["default"])
 
     @classmethod
-    def from_yaml_entry(cls, entry: ProjectEntry) -> "_Project":
+    def from_yaml_entry(cls, entry: ProjectEntry) -> _Project:
         """Create from an entry that conforms to the project schema."""
         if isinstance(entry, str):
             return _Project(
@@ -105,8 +109,8 @@ class _Project:
     def get_static_version(
         cls,
         current_branch: str,
-        current_project: Optional["_Project"],
-    ) -> Optional[str]:
+        current_project: _Project | None,
+    ) -> str | None:
         """Returns a common static version if it exists.
 
         In some cases all remote projects will receive the same version,
@@ -130,7 +134,7 @@ class _Project:
 
         return None
 
-    def evaluate(self, static_version: Optional[str]) -> None:
+    def evaluate(self, static_version: str | None) -> None:
         """Evaluate ${version} placeholders in the inventory and target values."""
         version = (
             static_version
@@ -149,16 +153,14 @@ class _Project:
         return (self.target, tuple(self.inventory))
 
 
-def _create_projects(
-    project_yaml: Union[str, Traversable]
-) -> Dict[str, _Project]:
+def _create_projects(project_yaml: str | Traversable) -> dict[str, _Project]:
     contents = yaml.safe_load(
         project_yaml
         if isinstance(project_yaml, str)
         else project_yaml.open(encoding="utf-8")
     )
 
-    data: Dict[str, Union[int, Dict[str, ProjectEntry]]]
+    data: dict[str, int | dict[str, ProjectEntry]]
     try:
         data = fastjsonschema.validate(_Project.yaml_schema(), contents)
     except fastjsonschema.exceptions.JsonSchemaValueException as err:
@@ -174,8 +176,8 @@ def _create_projects(
 
 
 def _get_current_project(
-    projects: Dict[str, _Project], current_id: str
-) -> Optional[_Project]:
+    projects: dict[str, _Project], current_id: str
+) -> _Project | None:
     if current_id in projects:
         return projects[current_id]
 
@@ -188,10 +190,10 @@ def _get_current_project(
 
 
 def _create_mapping(
-    projects: Dict[str, _Project],
-    current_project: Optional[_Project],
+    projects: dict[str, _Project],
+    current_project: _Project | None,
     current_branch: str,
-) -> Dict[str, ProjectMapping]:
+) -> dict[str, ProjectMapping]:
     static_version = _Project.get_static_version(
         current_branch, current_project
     )
@@ -230,11 +232,11 @@ def _fetch_projects(
 
 def _load_projects(
     remote_repository: str, remote_branch: str
-) -> Dict[str, _Project]:
+) -> dict[str, _Project]:
     projects_file_loc = "data/projects.yaml"
 
     def should_fetch_mappings(
-        remote_repository: Optional[str], remote_branch: Optional[str]
+        remote_repository: str | None, remote_branch: str | None
     ) -> bool:
         if not remote_repository:
             logger.info(
@@ -255,7 +257,7 @@ def _load_projects(
         )
         return True
 
-    projects: Optional[Dict[str, _Project]] = None
+    projects: dict[str, _Project] | None = None
     if should_fetch_mappings(remote_repository, remote_branch):
         try:
             remote_filepath = "src/rocm_docs/" + projects_file_loc
@@ -281,8 +283,8 @@ def _load_projects(
 
 
 def _get_context(
-    repo_path: Path, mapping: Dict[str, ProjectMapping]
-) -> Dict[str, Any]:
+    repo_path: Path, mapping: dict[str, ProjectMapping]
+) -> dict[str, Any]:
     url, branch = util.get_branch(repo_path)
     return {
         "url": url,
@@ -292,7 +294,7 @@ def _get_context(
 
 
 def _update_theme_configs(
-    app: Sphinx, current_project: Optional[_Project], current_branch: str
+    app: Sphinx, current_project: _Project | None, current_branch: str
 ) -> None:
     """Update configurations for use in theme.py"""
     latest_version = "5.7.1"
@@ -315,9 +317,9 @@ def _update_theme_configs(
 
 
 def _get_external_projects(
-    app: Sphinx, default: Dict[str, ProjectMapping]
-) -> List[str]:
-    external_projects: Union[List[str], str] = app.config.external_projects
+    app: Sphinx, default: dict[str, ProjectMapping]
+) -> list[str]:
+    external_projects: list[str] | str = app.config.external_projects
     if external_projects == "all":
         return list(default.keys())
     if isinstance(external_projects, str):
@@ -357,7 +359,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
     default = _create_mapping(projects, current_project, branch)
     external_projects = _get_external_projects(app, default)
 
-    mapping: Dict[str, ProjectMapping] = app.config.intersphinx_mapping
+    mapping: dict[str, ProjectMapping] = app.config.intersphinx_mapping
     for key, value in default.items():
         if key in external_projects:
             mapping.setdefault(key, value)
@@ -378,12 +380,12 @@ def _update_config(app: Sphinx, _: Config) -> None:
 
 
 def _setup_projects_context(
-    app: Sphinx, _: str, __: str, context: Dict[str, Any], ___: Any
+    app: Sphinx, _: str, __: str, context: dict[str, Any], ___: Any
 ) -> None:
     context["projects"] = app.config.projects_context["projects"]
 
 
-def setup(app: Sphinx) -> Dict[str, Any]:
+def setup(app: Sphinx) -> dict[str, Any]:
     """Setup rocm_docs.projects as a sphinx extension."""
     app.setup_extension("sphinx.ext.intersphinx")
     app.setup_extension("sphinx_external_toc")

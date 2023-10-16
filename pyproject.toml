@@ -81,7 +81,7 @@ major_version_zero = true
 [tool.isort]
 # https://github.com/timothycrosley/isort/
 py_version = 38
-line_length = 100
+line_length = 80
 
 known_typing = ["typing", "types", "typing_extensions", "mypy", "mypy_extensions"]
 sections = ["FUTURE", "TYPING", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
@@ -115,13 +115,14 @@ warn_unused_configs = true
 warn_unused_ignores = true
 
 [tool.ruff]
-select = ["ARG", "F", "E", "W", "N", "D", "UP", "RET"]
+select = ["ARG","C4","D","E","F","FA","N","PT","RET","RUF","SIM","UP","W"]
 ignore = ["E501", "D203", "D213", "D4"]
 exclude = ["tests/sites", "tests/templates"]
 target-version = "py38"
 line-length = 80
 
 [tool.ruff.per-file-ignores]
+"src/**/*" = ["PT"]
 "tests/conftest.py" = ["F401", "F403"]
 "tests/test_*.py" = ["D"]
 

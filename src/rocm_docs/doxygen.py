@@ -11,7 +11,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import]
+from pydata_sphinx_theme.utils import (  # type: ignore[import]
+    config_provided_by_user,
+)
 from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ConfigError
@@ -124,7 +126,7 @@ def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
     except FileNotFoundError as err:
         raise NotADirectoryError(
             "Expected doxygen to generate the folder"
-            f" {str(doxygen_root)} but it could not be found."
+            f" {doxygen_root!s} but it could not be found."
         ) from err
 
     setattr(app.config, "breathe_projects", {project_name: str(xml_path)})
