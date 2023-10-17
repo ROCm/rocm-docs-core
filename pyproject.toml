@@ -53,6 +53,7 @@ development = [
   "pip-tools>=6.13.0",
   "pre-commit>=3.3.2",
   "ruff>=0.0.269",
+  "pytest>=7.4.2"
 ]
 
 [project.entry-points."sphinx.html_themes"]
@@ -96,6 +97,7 @@ check_untyped_defs = true
 color_output = true
 disallow_any_generics = true
 disallow_incomplete_defs = true
+exclude = ["^docs", "^tests/(sites|templates)"]
 implicit_reexport = false
 pretty = true
 python_version = 3.8
@@ -115,5 +117,26 @@ warn_unused_ignores = true
 [tool.ruff]
 select = ["ARG", "F", "E", "W", "N", "D", "UP", "RET"]
 ignore = ["E501", "D203", "D213", "D4"]
+exclude = ["tests/sites", "tests/templates"]
 target-version = "py38"
 line-length = 80
+
+[tool.ruff.per-file-ignores]
+"tests/conftest.py" = ["F401", "F403"]
+"tests/test_*.py" = ["D"]
+
+[tool.pytest.ini_options]
+markers = [
+    "for_all_folders: perform multiple calls based on test folders",
+    "template_folder: use the folder as a template to copy data over it",
+    "meta_invert_fixture: invert the meaning of the fixture for testing"
+]
+addopts = ["--doctest-modules", "--ignore=tests/sites"]
+filterwarnings = """
+ignore::DeprecationWarning
+default::DeprecationWarning:rocm_docs
+default::PendingDeprecationWarning:rocm_docs
+ignore::PendingDeprecationWarning
+default::DeprecationWarning:tests
+default::DeprecationWarning:rocm_docs
+"""
