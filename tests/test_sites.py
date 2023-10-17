@@ -11,7 +11,9 @@ from sphinx.testing.util import SphinxTestApp
 import rocm_docs.projects
 
 from .log_fixtures import ExpectLogFixture
-from .sphinx_fixtures import SITES_BASEFOLDER, TEMPLATE_FOLDER
+from .sphinx_fixtures import SITES_BASEFOLDER
+
+TEMPLATE_FOLDER = SITES_BASEFOLDER / "templates"
 
 
 @pytest.fixture()
@@ -48,13 +50,32 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
 
 
 @pytest.mark.for_all_folders("pass")
-@pytest.mark.template_folder(TEMPLATE_FOLDER)
+@pytest.mark.template_folder(TEMPLATE_FOLDER / "minimal")
 @pytest.mark.usefixtures("_no_unexpected_warnings", "mocked_projects")
-def test_pass(
+def test_e2e_pass(
     build_factory: Callable[..., SphinxTestApp],
 ) -> None:
     app = build_factory()
     app.build()
+
+
+@pytest.mark.for_all_folders("doxygen")
+@pytest.mark.template_folder(
+    TEMPLATE_FOLDER / "minimal", TEMPLATE_FOLDER / "doxygen"
+)
+@pytest.mark.usefixtures("_no_unexpected_warnings", "mocked_projects")
+def test_e2e_doxygen(
+    build_factory: Callable[..., SphinxTestApp], expect_log: ExpectLogFixture
+) -> None:
+    with expect_log(
+        "sphinx.sphinx.util.docutils",
+        "WARNING",
+        "toctree directive not expected with external-toc [etoc.toctree]",
+        required=False,
+        capture_all=True,
+    ):
+        app = build_factory()
+        app.build()
 
 
 def str_or_list_to_id(val: str | list[str]) -> str:
@@ -74,6 +95,7 @@ def create_external_project_app(
         "external_projects_current_project": "a",
         "external_projects": external_projects,
         "external_toc_template_path": TEMPLATE_FOLDER
+        / "minimal"
         / ".sphinx"
         / "_toc.yml.in",
         "external_toc_path": "_toc.yml",

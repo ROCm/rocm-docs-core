@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable, Generator, Iterator
+from typing import Any, Callable, Iterator
 
 import functools
 import shutil
@@ -32,7 +32,6 @@ def with_no_git_repo(
 
 
 SITES_BASEFOLDER = Path(__file__).parent / "sites"
-TEMPLATE_FOLDER = SITES_BASEFOLDER / "templates" / "minimal"
 
 
 @pytest.fixture()
@@ -41,7 +40,7 @@ def build_factory(
     make_app: Callable[..., SphinxTestApp],
     tmp_path: Path,
     with_no_git_repo: ExpectLogFixture.Validator,  # noqa: ARG001,
-) -> Generator[Callable[..., SphinxTestApp], None, None]:
+) -> Callable[..., SphinxTestApp]:
     """A factory to make Sphinx test applications"""
 
     def make(src_folder: Path, /, **kwargs: dict[Any, Any]) -> SphinxTestApp:
@@ -50,7 +49,8 @@ def build_factory(
 
         mark = request.node.get_closest_marker("template_folder")
         if mark is not None:
-            shutil.copytree(mark.args[0], srcdir)
+            for i, dir in enumerate(mark.args):
+                shutil.copytree(dir, srcdir, dirs_exist_ok=(i > 0))
 
         shutil.copytree(
             SITES_BASEFOLDER / src_folder, srcdir, dirs_exist_ok=True
@@ -58,9 +58,8 @@ def build_factory(
         return make_app(srcdir=sphinx_test_path(srcdir), **kwargs)
 
     if hasattr(request, "param"):
-        yield functools.partial(make, request.param)
-    else:
-        yield make
+        return functools.partial(make, request.param)
+    return make
 
 
 __all__ = ["with_no_git_repo", "build_factory"]
