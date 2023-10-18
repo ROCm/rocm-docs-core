@@ -9,4 +9,5 @@ vscode:
   extensions:
     - bungcip.better-toml
     - ms-python.python
+    - ms-python.black-formatter
     - ritwickdey.LiveServer

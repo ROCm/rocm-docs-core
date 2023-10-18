@@ -163,9 +163,8 @@ def copy_from_package(
             # unzipping and/or the creation of a temporary file.
             # This is not the case when opening the file as a
             # stream.
-            with entry.open("rb") as infile:
-                with open(entry_path, "wb") as out:
-                    shutil.copyfileobj(infile, out)
+            with entry.open("rb") as infile, open(entry_path, "wb") as out:
+                shutil.copyfileobj(infile, out)
 
 
 __all__ = [

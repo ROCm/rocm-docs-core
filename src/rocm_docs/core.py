@@ -18,7 +18,9 @@ from pathlib import Path
 
 import bs4
 import git.repo
-from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import]
+from pydata_sphinx_theme.utils import (  # type: ignore[import]
+    config_provided_by_user,
+)
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
@@ -152,7 +154,7 @@ def _set_page_article_info(
             continue
 
         article_os_info = ""
-        if "os" not in page.keys():
+        if "os" not in page:
             page["os"] = app.config.all_article_info_os
         if "linux" in page["os"]:
             article_os_info += "Linux"
@@ -163,12 +165,12 @@ def _set_page_article_info(
         modified_info = article_info.replace("<!--os-info-->", article_os_info)
 
         author = app.config.all_article_info_author
-        if "author" in page.keys():
+        if "author" in page:
             author = page["author"]
         modified_info = modified_info.replace("AMD", author)
 
         date_info: str | None = None
-        if "date" in page.keys():
+        if "date" in page:
             date_info = page["date"]
         else:
             date_info = _get_time_last_modified(repo, path_source)
@@ -178,7 +180,7 @@ def _set_page_article_info(
 
         modified_info = modified_info.replace("2023", date_info)
 
-        if "read-time" in page.keys():
+        if "read-time" in page:
             read_time = page["read-time"]
         else:
             read_time = _estimate_read_time(path_html)
