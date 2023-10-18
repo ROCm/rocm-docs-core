@@ -14,11 +14,11 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-import fastjsonschema  # type: ignore[import]
+import fastjsonschema  # type: ignore[import-untyped]
 import github
 import sphinx.util.logging
 import yaml
-from pydata_sphinx_theme.utils import (  # type: ignore[import]
+from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
 )
 from sphinx.application import Sphinx

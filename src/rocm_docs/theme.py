@@ -7,7 +7,7 @@ from typing import Any
 from pathlib import Path
 
 import sphinx.util.logging
-from pydata_sphinx_theme.utils import (  # type: ignore[import]
+from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
     get_theme_options_dict,
 )
