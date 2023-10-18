@@ -138,7 +138,7 @@ def test_external_projects_invalid_value(
 
 
 @pytest.mark.usefixtures("_no_unexpected_warnings")
-def test_external_projects_unkown_project(
+def test_external_projects_unknown_project(
     expect_log: ExpectLogFixture,
     mocked_projects: dict[str, rocm_docs.projects._Project],
     with_no_git_repo: ExpectLogFixture.Validator,

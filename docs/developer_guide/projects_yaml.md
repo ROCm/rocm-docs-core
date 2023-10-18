@@ -43,7 +43,7 @@ Any other branch maps to "latest".
 
 ## Explicitly list external projects
 
-By default the inventories of all external projects defined in `projets.yaml`
+By default the inventories of all external projects defined in `projects.yaml`
 will be downloaded. This can take a long time as it requires a network request
 for each external project.
 
