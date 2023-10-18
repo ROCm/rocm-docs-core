@@ -241,7 +241,7 @@ class ExpectLogFixture:
         """Register a new handler. See expect_log for more details"""
         levelno = logging.getLevelName(level)
         if not isinstance(levelno, int):
-            raise ValueError(f'Unkown log level "{level}"')
+            raise ValueError(f'Unknown log level "{level}"')
 
         return self.Validator(
             self._log_handler_stack.new_scope(when=when),
@@ -259,7 +259,7 @@ def expect_log(
     """Register a verifier for a log message
 
     Each call to expect_log(name, level, msg) will verify that such a log is
-    emitted at least once. This log will not trigger unkown warning checks.
+    emitted at least once. This log will not trigger unknown warning checks.
     Set capture_all to True to capture all warnings that match, not just the first.
     """
     return ExpectLogFixture(log_handler_stack, expected_logs)
