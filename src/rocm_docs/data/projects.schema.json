@@ -2,6 +2,18 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/develop/src/rocm_docs/data/projects.schema.json",
     "$defs": {
+        "doxygen": {
+            "type": ["object", "string"],
+            "description": "Relative path (from documentation root) to doxygen html folder",
+            "properties": {
+                "html": {
+                    "description": "Relative path (from documentation root) to doxygen html folder",
+                    "type": "string",
+                    "format": "uri-reference"
+                }
+            },
+            "required": ["html"]
+        },
         "project": {
             "title": "project",
             "description": "A single mapping for a project",
@@ -35,6 +47,9 @@
                     "type": "string",
                     "description": "Branch name of the \"development\" or \"mainline\" branch where development happens.",
                     "default": "develop"
+                },
+                "doxygen": {
+                    "$ref": "#/$defs/doxygen"
                 }
             },
             "required": [

@@ -30,7 +30,9 @@ def mocked_projects(
 ) -> dict[str, rocm_docs.projects._Project]:
     """Standard mocked projects for tests"""
     projects = {
-        "a": rocm_docs.projects._Project("https://example.com/a", [], ""),
+        "a": rocm_docs.projects._Project(
+            "https://example.com/a", [], "", ".doxygen/docBin/html"
+        ),
         "b": rocm_docs.projects._Project("https://example.com/b", [], ""),
     }
     mock_projects(projects)

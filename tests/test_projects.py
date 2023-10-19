@@ -6,6 +6,7 @@ import unittest.mock
 from pathlib import Path
 
 import pytest
+from sphinx.errors import ExtensionError
 
 import rocm_docs.projects
 
@@ -117,3 +118,59 @@ def test_external_projects_unknown_project(
         ),
     ):
         rocm_docs.projects._update_config(app, app.config)
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+@pytest.mark.parametrize(
+    "doxygen", ["doxygen/html", {"html": "doxygen/html"}], ids=["str", "dict"]
+)
+def test_doxygen_html_types(
+    doxygen: str | dict[str, str],
+) -> None:
+    result = rocm_docs.projects._Project._get_doxygen_html({"doxygen": doxygen})
+    assert result == "doxygen/html"
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+@pytest.mark.parametrize(
+    "doxygen_html",
+    ["https:", "//has_netloc", "has#fragment", "has?query", "/absolute"],
+)
+def test_doxygen_html_invalid(
+    doxygen_html: str,
+) -> None:
+    with pytest.raises(ExtensionError):
+        rocm_docs.projects._Project._get_doxygen_html({"doxygen": doxygen_html})
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+@pytest.mark.parametrize(
+    "current_project",
+    [None, rocm_docs.projects._Project("", [], "", None)],
+    ids=["no_current_project", "not_set"],
+)
+def test_set_doxygen_html_not_defined(
+    current_project: rocm_docs.projects._Project | None,
+) -> None:
+    app = unittest.mock.NonCallableMock()
+    app.config = unittest.mock.NonCallableMock()
+    app.config.doxygen_html = "must-not-be-changed"
+    rocm_docs.projects._set_doxygen_html(app, current_project)
+    assert app.config.doxygen_html == "must-not-be-changed"
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+def test_set_doxygen_html_mismatched(expect_log: ExpectLogFixture) -> None:
+    app = create_app(Path(""), [])
+    app.config.doxygen_html = "must-not-be-changed"
+    app.config._raw_config["doxygen_html"] = "must-not-be-changed"
+    with expect_log(
+        "sphinx.rocm_docs.projects",
+        "WARNING",
+        'The setting doxygen_html="must-not-be-changed"'
+        ' differs from projects.yaml value: "does-not-match"',
+    ):
+        rocm_docs.projects._set_doxygen_html(
+            app, rocm_docs.projects._Project("", [], "", "does-not-match")
+        )
+    assert app.config.doxygen_html == "must-not-be-changed"

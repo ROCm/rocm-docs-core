@@ -16,9 +16,13 @@ from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
 )
 from sphinx.application import Sphinx
 from sphinx.config import Config
-from sphinx.errors import ConfigError
+from sphinx.errors import ConfigError, ExtensionError
+from sphinx.util import logging, progress_message
+from sphinx.util.osutil import copyfile
 
 from rocm_docs import util
+
+logger = logging.getLogger(__name__)
 
 if sys.version_info < (3, 9):
     # importlib.resources either doesn't exist or lacks the files()
@@ -169,6 +173,22 @@ def _run_doxysphinx(
         ) from err
 
 
+def _copy_tagfile(app: Sphinx) -> None:
+    if app.config.doxygen_html is None:
+        return
+
+    if app.builder.format != "html":
+        return
+
+    src = Path(app.srcdir, app.config.doxygen_html, "tagfile.xml")
+    dst = Path(app.outdir, src.name)
+    with progress_message("copying doxygen tagfile"):
+        try:
+            copyfile(str(src), str(dst))
+        except OSError as err:
+            raise ExtensionError(f"Failed to copy tag file: {err}") from err
+
+
 def setup(app: Sphinx) -> dict[str, Any]:
     """Set up rocm_docs.doxygen as a Sphinx extension."""
     app.setup_extension("sphinx.ext.mathjax")
@@ -199,8 +219,12 @@ def setup(app: Sphinx) -> dict[str, Any]:
         types=Dict[str, Union[None, str, "os.PathLike[Any]"]],
     )
     app.add_config_value("doxysphinx_enabled", False, rebuild="", types=bool)
+    app.add_config_value("doxygen_html", None, rebuild="")
 
     # Should run before breathe sees their parameters, as we provide defaults.
     app.connect("config-inited", _run_doxygen, priority=400)
+    # Should run after projects.py's config (if enabled) as it provides values
+    # based on the contents projects.yaml, needs access to the builder
+    app.connect("builder-inited", _copy_tagfile)
 
     return {"parallel_read_safe": True, "parallel_write_safe": True}

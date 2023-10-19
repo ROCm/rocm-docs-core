@@ -49,6 +49,7 @@ def test_e2e_pass(
 def test_e2e_doxygen(
     build_factory: Callable[..., SphinxTestApp], expect_log: ExpectLogFixture
 ) -> None:
+    app: SphinxTestApp
     with expect_log(
         "sphinx.sphinx.util.docutils",
         "WARNING",
@@ -58,3 +59,6 @@ def test_e2e_doxygen(
     ):
         app = build_factory()
         app.build()
+
+    expected_tagfile = Path(app.outdir, "tagfile.xml")
+    assert expected_tagfile.is_file()

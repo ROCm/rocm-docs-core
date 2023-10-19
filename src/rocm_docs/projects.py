@@ -11,6 +11,7 @@ import functools
 import json
 import os
 import sys
+import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -23,6 +24,7 @@ from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
 )
 from sphinx.application import Sphinx
 from sphinx.config import Config
+from sphinx.errors import ExtensionError
 
 from rocm_docs import formatting, util
 
@@ -55,7 +57,7 @@ class InvalidMappingFileError(RuntimeError):
     """Mapping file has invalid format, or failed to validate."""
 
 
-ProjectItem = Union[str, None, List[Union[str, None]]]
+ProjectItem = Union[str, None, List[Union[str, None]], Dict[str, str]]
 ProjectEntry = Union[str, Dict[str, ProjectItem]]
 
 
@@ -64,6 +66,7 @@ class _Project:
     target: str
     inventory: list[str | None]
     development_branch: str
+    doxygen_html: str | None = None
 
     @staticmethod
     @functools.lru_cache
@@ -83,6 +86,33 @@ class _Project:
     def default_value(cls, prop: str) -> str:
         return cast(str, cls.schema()["properties"][prop]["default"])
 
+    @staticmethod
+    def _get_doxygen_html(entry: ProjectEntry) -> str | None:
+        assert isinstance(entry, dict)
+
+        if "doxygen" not in entry:
+            return None
+
+        doxygen_entry = entry["doxygen"]
+        assert isinstance(doxygen_entry, (dict, str))
+        if isinstance(doxygen_entry, dict):
+            doxygen_entry = doxygen_entry["html"]
+
+        # Parse as a URI, but only allow the path component
+        urlparts = urllib.parse.urlsplit(doxygen_entry)
+        for key, value in urlparts._asdict().items():
+            if key == "path" or value == "":
+                continue
+            raise ExtensionError(
+                f"URL not allowed for 'doxygen': {doxygen_entry}"
+            )
+        if urlparts.path.startswith("/"):
+            raise ExtensionError(
+                f"URL for 'doxygen' must be relative: {doxygen_entry}"
+            )
+
+        return urlparts.path
+
     @classmethod
     def from_yaml_entry(cls, entry: ProjectEntry) -> _Project:
         """Create from an entry that conforms to the project schema."""
@@ -96,6 +126,7 @@ class _Project:
         # It's okay to just index into optional fields, because jsonschema
         # fills in any missing fields with their default values
         inventory = entry["inventory"]
+        assert inventory is None or isinstance(inventory, (list, str))
         if not isinstance(inventory, list):
             inventory = [inventory]
 
@@ -103,6 +134,7 @@ class _Project:
             cast(str, entry["target"]),
             inventory,
             cast(str, entry["development_branch"]),
+            cls._get_doxygen_html(entry),
         )
 
     @classmethod
@@ -343,6 +375,25 @@ def _get_external_projects(
     return external_projects
 
 
+def _set_doxygen_html(app: Sphinx, current_project: _Project | None) -> None:
+    if current_project is None or current_project.doxygen_html is None:
+        return
+
+    if not hasattr(app.config, "doxygen_html"):
+        return
+
+    doxygen_html = current_project.doxygen_html
+    if config_provided_by_user(app, "doxygen_html"):
+        if doxygen_html != app.config.doxygen_html:
+            logger.warning(
+                f'The setting doxygen_html="{app.config.doxygen_html}"'
+                f' differs from projects.yaml value: "{doxygen_html}"'
+            )
+        return
+
+    app.config.doxygen_html = doxygen_html  # type: ignore[attr-defined]
+
+
 def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "intersphinx_disabled_domains"):
         app.config.intersphinx_disabled_domains = ["std"]  # type: ignore[attr-defined]
@@ -376,6 +427,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
     # Store the context to be referenced later
     app.config.projects_context = context  # type: ignore[attr-defined]
 
+    _set_doxygen_html(app, current_project)
     _update_theme_configs(app, current_project, branch)
 
 
