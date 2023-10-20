@@ -26,8 +26,8 @@ deps: _install-pip-tools
 	{{python}} -m mypy --non-interactive --install-types src
 
 # (Re-)lock the dependencies with pip-compile
-lock-deps:
-	{{python}} -m piptools compile --all-extras pyproject.toml
+lock-deps +extra_args="":
+	{{python}} -m piptools compile --all-extras {{extra_args}} pyproject.toml
 
 # Install git-hooks for development
 install-git-hooks:
