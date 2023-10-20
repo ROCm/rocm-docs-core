@@ -116,7 +116,7 @@ def _no_unexpected_warnings_impl(
                 if r not in expected_logs_impl:
                     self.logrecord = (
                         r.name,
-                        logging.getLevelName(r.levelname),
+                        r.levelname,
                         r.getMessage(),
                     )
                     return
