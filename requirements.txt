@@ -32,7 +32,7 @@ cffi==1.16.0
     #   pynacl
 cfgv==3.4.0
     # via pre-commit
-charset-normalizer==3.3.0
+charset-normalizer==3.3.1
     # via
     #   commitizen
     #   requests
