@@ -163,6 +163,7 @@ OCP
 OEM
 OFED
 OMP
+OMPI
 OMPT
 OMPX
 ONNX
@@ -242,6 +243,7 @@ TCR
 TFLOPS
 TensorBoard
 TensorFlow
+Tensorboard
 ToC
 TorchAudio
 TorchScript
@@ -301,6 +303,7 @@ blit
 buildable
 bursty
 cacheable
+centos
 centric
 chiplet
 cmd
@@ -328,6 +331,7 @@ deallocation
 denormalize
 deserializers
 detections
+dev
 disambiguates
 distro
 el
@@ -391,6 +395,7 @@ preq
 prerequisites
 profiler
 pseudorandom
+pytorch
 quasirandom
 reStructuredText
 reformats
@@ -426,6 +431,8 @@ subexpression
 subfolder
 subfolders
 tagram
+tensorflow
+tf
 tg
 th
 tokenize
@@ -436,6 +443,7 @@ toolsets
 torchvision
 tracebacks
 uarch
+ubuntu
 uncached
 uninstallation
 unsqueeze
