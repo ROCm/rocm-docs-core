@@ -69,6 +69,15 @@ jobs:
         cache-dependency-path: |
           pyproject.toml
           requirements.txt
+    - name: Set up Doxygen
+      uses: ssciwr/doxygen-install@v1.2.0
+      with:
+        version: 1.9.8
+    - name: Set up Graphviz
+      uses: ts-graphviz/setup-graphviz@v1.2.0
+      with:
+        ubuntu-graphviz-version: 2.42.2-6
+        windows-graphviz-version: '9.0.0'
     - name: Cache venv
       uses: actions/cache@v3.3.1
       with:
