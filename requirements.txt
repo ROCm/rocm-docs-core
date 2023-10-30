@@ -228,7 +228,7 @@ sphinxcontrib-applehelp==1.0.4
     # via sphinx
 sphinxcontrib-devhelp==1.0.2
     # via sphinx
-sphinxcontrib-doxylink==1.12.2
+sphinxcontrib-doxylink==1.12.3
     # via rocm-docs-core (pyproject.toml)
 sphinxcontrib-htmlhelp==2.0.1
     # via sphinx
