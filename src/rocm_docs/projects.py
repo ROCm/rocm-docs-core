@@ -407,18 +407,18 @@ def _update_config(app: Sphinx, _: Config) -> None:
     current_project = _get_current_project(
         projects, app.config.external_projects_current_project
     )
-    default = _create_mapping(projects, current_project, branch)
-    external_projects = _get_external_projects(app, default)
+    remote_mapping = _create_mapping(projects, current_project, branch)
+    external_projects = _get_external_projects(app, remote_mapping)
 
     mapping: dict[str, ProjectMapping] = app.config.intersphinx_mapping
-    for key, value in default.items():
+    for key, value in remote_mapping.items():
         if key in external_projects:
             mapping.setdefault(key, value)
 
     if not config_provided_by_user(app, "external_toc_path"):
         app.config.external_toc_path = "./.sphinx/_toc.yml"  # type: ignore[attr-defined]
 
-    context = _get_context(Path(app.srcdir), mapping)
+    context = _get_context(Path(app.srcdir), remote_mapping)
     formatting.format_toc(
         Path(app.srcdir, app.config.external_toc_template_path),
         Path(app.srcdir, app.config.external_toc_path),

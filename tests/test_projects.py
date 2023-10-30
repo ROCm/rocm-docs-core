@@ -72,9 +72,9 @@ def test_external_projects(
     }
     assert app.config.intersphinx_mapping == expected_mapping
 
-    expected_context = {
-        k: v.target for k, v in mocked_projects.items() if k in keys
-    }
+    # Every project is available in the HTML templates and TOC, regardless of
+    # the value of "external_projects"
+    expected_context = {k: v.target for k, v in mocked_projects.items()}
     assert app.config.projects_context["projects"] == expected_context
 
 
