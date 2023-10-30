@@ -52,6 +52,7 @@ of remote projects to fetch inventories from & enable links to.
 The list must be a subset of the project names defined in `projects.yaml`.
 The default value of `"all"` means to fetch all projects.
 
-References to projects that are not in `external_projects` will not be resolved.
-This applies to the terms of contents too, where unresolved references will
-likely cause an error.
+Intersphinx references to projects that are not in `external_projects` will not
+be resolved. References in the the TOC like `${project:project_name}` will
+continue to be resolved to the URL of `project_name`, even if `project_name` is
+not set in `external_projects` (but it's defined in `projects.yaml`).
