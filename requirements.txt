@@ -266,7 +266,7 @@ virtualenv==20.24.5
     # via pre-commit
 wcwidth==0.2.8
     # via prompt-toolkit
-wheel==0.41.2
+wheel==0.41.3
     # via pip-tools
 wrapt==1.15.0
     # via deprecated
