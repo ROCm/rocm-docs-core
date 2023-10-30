@@ -1,5 +1,5 @@
 html_theme = "rocm_docs_theme"
-extensions = ["rocm_docs", "rocm_docs.doxygen"]
+extensions = ["rocm_docs", "rocm_docs.doxygen", "sphinxcontrib.doxylink"]
 
 doxygen_project = {
     "name": "Rocm Docs Core Doxygen Legacy Test Project",

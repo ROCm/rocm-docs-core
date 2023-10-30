@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, Union
+from typing import Any, Dict, Tuple, Union, cast
 
 import importlib.util
 import os
@@ -137,6 +137,31 @@ def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
     setattr(app.config, "breathe_default_project", project_name)
 
 
+def _update_doxylink_settings(app: Sphinx, _: Config) -> None:
+    if not hasattr(app.config, "doxylink"):
+        logger.info(
+            "doxylink not enabled, skipping setting up the current" " project"
+        )
+        return
+
+    if app.config.doxygen_html is None:
+        return
+
+    # Materialize the default value, since we're about to mutate it
+    # Otherwise config.doxylink would return a temporary and any modification to
+    # it would be lost.
+    if not config_provided_by_user(app, "doxylink"):
+        app.config.doxylink = app.config.doxylink  # type: ignore [attr-defined]
+
+    doxylink = cast(
+        Dict[str, Union[Tuple[str, str], Tuple[str, str, str]]],
+        app.config.doxylink,
+    )
+    tagfile = Path(app.srcdir, app.config.doxygen_html, "tagfile.xml")
+
+    doxylink.setdefault("doxygen", (str(tagfile), str(app.config.doxygen_html)))
+
+
 def _run_doxysphinx(
     app: Sphinx, doxygen_root: Path, doxyfile: Path, doxygen_exe: Path
 ) -> None:
@@ -223,6 +248,9 @@ def setup(app: Sphinx) -> dict[str, Any]:
 
     # Should run before breathe sees their parameters, as we provide defaults.
     app.connect("config-inited", _run_doxygen, priority=400)
+    # Has to run after projects.py config-inited, as it might set
+    # doxygen_html
+    app.connect("config-inited", _update_doxylink_settings, priority=500)
     # Should run after projects.py's config (if enabled) as it provides values
     # based on the contents projects.yaml, needs access to the builder
     app.connect("builder-inited", _copy_tagfile)

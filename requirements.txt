@@ -166,13 +166,17 @@ pyjwt[crypto]==2.8.0
 pynacl==1.5.0
     # via pygithub
 pyparsing==3.1.1
-    # via doxysphinx
+    # via
+    #   doxysphinx
+    #   sphinxcontrib-doxylink
 pyproject-hooks==1.0.0
     # via build
 pytest==7.4.2
     # via rocm-docs-core (pyproject.toml)
 python-dateutil==2.8.2
-    # via pygithub
+    # via
+    #   pygithub
+    #   sphinxcontrib-doxylink
 pytz==2023.3.post1
     # via babel
 pyyaml==6.0.1
@@ -209,6 +213,7 @@ sphinx==5.3.0
     #   sphinx-design
     #   sphinx-external-toc
     #   sphinx-notfound-page
+    #   sphinxcontrib-doxylink
 sphinx-book-theme==1.0.1
     # via rocm-docs-core (pyproject.toml)
 sphinx-copybutton==0.5.2
@@ -223,6 +228,8 @@ sphinxcontrib-applehelp==1.0.4
     # via sphinx
 sphinxcontrib-devhelp==1.0.2
     # via sphinx
+sphinxcontrib-doxylink==1.12.2
+    # via rocm-docs-core (pyproject.toml)
 sphinxcontrib-htmlhelp==2.0.1
     # via sphinx
 sphinxcontrib-jsmath==1.0.1

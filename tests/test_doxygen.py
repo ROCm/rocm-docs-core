@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
+import copy
 import unittest.mock
 
 import pytest
@@ -57,3 +58,36 @@ def test_copy_tagfile_skipped(
     rocm_docs.doxygen._copy_tagfile(app)
 
     assert not outfile.exists()
+
+
+@pytest.mark.parametrize(
+    ("has_doxylink", "has_doxygen_html"),
+    [(False, True), (True, False), (False, False)],
+    ids=["no_doxylink", "no_html", "neither"],
+)
+def test_update_doxylink_settings_skipped(
+    has_doxylink: bool, has_doxygen_html: bool
+) -> None:
+    app = unittest.mock.NonCallableMock(spec=["config", "srcdir"])
+    app.srcdir = ""
+    config_spec = ["doxygen_html", "overrides", "_raw_config"]
+
+    if has_doxylink:
+        config_spec.append("doxylink")
+
+    config = unittest.mock.NonCallableMock(config_spec)
+    config.doxygen_html = "doxgen/html" if has_doxygen_html else None
+    config.overrides = []
+    config._raw_config = []
+    expected: dict[str, tuple[str, str]]
+    if has_doxylink:
+        expected = {"must-not-be-changed": ("tagfile.xml", "test-string")}
+        config.doxylink = copy.copy(expected)
+    app.config = config
+
+    rocm_docs.doxygen._update_doxylink_settings(app, config)
+
+    if has_doxylink:
+        assert app.config.doxylink == expected
+    else:
+        assert not hasattr(app.config, "doxylink")
