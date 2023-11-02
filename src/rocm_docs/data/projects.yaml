@@ -24,6 +24,9 @@ projects:
   hipsparse: https://rocm.docs.amd.com/projects/hipSPARSE/en/${version}
   hipsparselt: https://rocm.docs.amd.com/projects/hipSPARSELt/en/${version}
   hiptensor: https://rocm.docs.amd.com/projects/hipTensor/en/${version}
+  hip-vs:
+    target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
+    development_branch: master
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
   python: https://docs.python.org/3/
