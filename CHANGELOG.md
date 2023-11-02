@@ -1,3 +1,24 @@
+## v0.27.0 (2023-11-02)
+
+### Feat
+
+- **projects.yaml**: Add hip-vs
+- **doxygen.py**: automatic setup of doxylink
+- Update latest ROCm version in projects.py and theme.conf
+- **doxygen,projects**: Make doxygen tagfile available
+- **projects.py**: Allow to fetch project indices explicitly
+
+### Fix
+
+- **projects**: always resolve project references in TOC and templates
+- **util.py**: Modify RTD regex to allow for .org sites
+- **theme.py**: Partially handle not being in a git repository
+- **doxygen.py**: Pass doxygen executable to doxysphinx
+
+### Refactor
+
+- **tests**: Move project tests to separate file
+
 ## v0.26.0 (2023-10-12)
 
 ### Feat
