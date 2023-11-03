@@ -11,7 +11,6 @@ defaults:
 root: index.md
 subtrees:
   - entries:
-
     - file: user_guide/user_guide
       subtrees:
       - entries:
@@ -20,7 +19,6 @@ subtrees:
         - file: user_guide/linking
         - file: user_guide/article_info
         - file: user_guide/doxygen_integration
-
     - file: developer_guide/developer_guide
       subtrees:
       - entries:
@@ -29,12 +27,10 @@ subtrees:
         - file: developer_guide/commitizen
         - file: developer_guide/projects_yaml
         - file: developer_guide/dependabot
-
   - caption: Demo Doxygen Documentation Integration
     entries:
     - file: demo/doxygen/html/index
-      title: Library API Doxygen Demo
-    
+      title: Library API Doxygen Demo    
   - caption: Demo Table of Contents Tree
     entries:
     - url: "{url}/tree/{branch}"

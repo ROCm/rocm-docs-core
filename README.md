@@ -1,5 +1,8 @@
 # ROCm Documentation Core Utilities
 
+ROCm Docs Core is also distributed as a pip package available from PyPi as
+[rocm-docs-core](https://pypi.org/project/rocm-docs-core/)
+
 ## Purpose
 
 This repository is comprised of utilities, styling, scripts, and additional HTML content that is common to all ROCm projects' documentation. This greatly aids in maintaining the documentation, as any change to the appearance only needs to be modified in one location.
