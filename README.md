@@ -31,11 +31,15 @@ The `rocm-docs-core` documentation is viewable at [https://rocm.docs.amd.com/pro
 
 ### User Guide
 
-The User Guide provides information for users to perform common tasks with `rocm-docs-core`
+The User Guide describes how users can make use of functionality in `rocm-docs-core`
+
+It is viewable at [https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/user_guide/user_guide.html](https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/user_guide/user_guide.html)
 
 ### Developer Guide
 
-The Develop Guide provides additional information on the processes and toolchains for `rocm-docs-core`
+The Developer Guide provides additional information on the processes in toolchains for `rocm-docs-core`
+
+It is viewable at [https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/developer_guide/developer_guide.html](https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/developer_guide/developer_guide.html)
 
 ### Build Documentation Locally
 
