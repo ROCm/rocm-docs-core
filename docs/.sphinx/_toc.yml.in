@@ -10,28 +10,31 @@ defaults:
   maxdepth: 6
 root: index.md
 subtrees:
-  - caption: User Guide
-    entries:
-      - file: user_guide/spellcheck
-      - file: user_guide/linting
-      - file: user_guide/linking
-      - file: user_guide/article_info
-      - file: user_guide/doxygen_integration
-  - caption: Developer Guide
-    entries:
-      - file: developer_guide/just
-      - file: developer_guide/python_linting
-      - file: developer_guide/commitizen
-      - file: developer_guide/projects_yaml
-      - file: developer_guide/dependabot
+  - entries:
+    - file: user_guide/user_guide
+      subtrees:
+      - entries:
+        - file: user_guide/spellcheck
+        - file: user_guide/linting
+        - file: user_guide/linking
+        - file: user_guide/article_info
+        - file: user_guide/doxygen_integration
+    - file: developer_guide/developer_guide
+      subtrees:
+      - entries:
+        - file: developer_guide/just
+        - file: developer_guide/python_linting
+        - file: developer_guide/commitizen
+        - file: developer_guide/projects_yaml
+        - file: developer_guide/dependabot
   - caption: Demo Doxygen Documentation Integration
     entries:
-      - file: demo/doxygen/html/index
-        title: Library API Doxygen Demo
+    - file: demo/doxygen/html/index
+      title: Library API Doxygen Demo
   - caption: Demo Table of Contents Tree
     entries:
-      - url: "{url}/tree/{branch}"
-      - url: ${project:python}
-      - url: ${project:rocm-docs-core}
-      - url: ${project:hipify}
-        title: HIPIFY
+    - url: "{url}/tree/{branch}"
+    - url: ${project:python}
+    - url: ${project:rocm-docs-core}
+    - url: ${project:hipify}
+      title: HIPIFY
