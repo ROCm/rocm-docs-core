@@ -264,7 +264,7 @@ urllib3==2.0.7
     #   requests
 virtualenv==20.24.6
     # via pre-commit
-wcwidth==0.2.8
+wcwidth==0.2.9
     # via prompt-toolkit
 wheel==0.41.3
     # via pip-tools
