@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Tuple, Union, cast
 
+import importlib.metadata
 import importlib.util
 import os
 import shutil
@@ -178,20 +179,20 @@ def _run_doxysphinx(
             '"pip install rocm-docs-core[api_reference]")'
         )
 
+    doxyphinx_version = importlib.metadata.version("doxysphinx")
+    args = [
+        sys.executable,
+        "-m",
+        "doxysphinx",
+        "build",
+        "--doxygen_exe=" + str(doxygen_exe.absolute()),
+    ]
+    if doxyphinx_version.endswith("+tagfile.toc"):
+        args.append("--tagfile_toc")
+    args += [app.srcdir, app.outdir, str(doxyfile)]
+
     try:
-        subprocess.check_call(
-            [
-                sys.executable,
-                "-m",
-                "doxysphinx",
-                "build",
-                "--doxygen_exe=" + str(doxygen_exe.absolute()),
-                app.srcdir,
-                app.outdir,
-                doxyfile,
-            ],
-            cwd=doxygen_root,
-        )
+        subprocess.check_call(args, cwd=doxygen_root)
     except subprocess.CalledProcessError as err:
         raise RuntimeError(
             f"doxysphinx failed (exit code: {err.returncode})"
