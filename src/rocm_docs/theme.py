@@ -7,6 +7,7 @@ from typing import Any
 from pathlib import Path
 
 import sphinx.util.logging
+import urllib3
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
     get_theme_options_dict,
@@ -75,6 +76,20 @@ def _update_theme_options(app: Sphinx) -> None:
     theme_opts.setdefault(
         "article_header_start",
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
+    )
+
+    header_latest_version = urllib3.urlopen(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
+    )[0]
+    header_release_candidate = urllib3.urlopen(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
+    )[0]
+    theme_opts.setdefault(
+        "html_context",
+        {
+            "header_latest_version": header_latest_version,
+            "header_release_candidate": header_release_candidate,
+        },
     )
 
     if hasattr(app.config, "projects_version_type"):

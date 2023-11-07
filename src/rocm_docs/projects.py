@@ -18,7 +18,7 @@ from pathlib import Path
 import fastjsonschema  # type: ignore[import-untyped]
 import github
 import sphinx.util.logging
-import urllib2
+import urllib3
 import yaml
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
@@ -330,11 +330,11 @@ def _update_theme_configs(
     app: Sphinx, current_project: _Project | None, current_branch: str
 ) -> None:
     """Update configurations for use in theme.py"""
-    latest_version = urllib2.urlopen(
+    latest_version = urllib3.urlopen(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
     )[0]
     latest_version_string = f"docs-{latest_version}"
-    release_candidate = urllib2.urlopen(
+    release_candidate = urllib3.urlopen(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
     )[0]
     release_candidate_string = f"docs-{release_candidate}"
