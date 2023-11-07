@@ -93,7 +93,7 @@ def _update_theme_options(app: Sphinx) -> None:
     header_latest_version = requests.get(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
     ).text
-    header_release_candidate = requests.get(
+    header_release_candidate_version = requests.get(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
     ).text
 
@@ -102,10 +102,9 @@ def _update_theme_options(app: Sphinx) -> None:
         "html_favicon": "https://www.amd.com/themes/custom/amd/favicon.ico",
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
-        "html_context":
-        {
+        "html_context": {
             "header_latest_version": header_latest_version,
-            "header_release_candidate": header_release_candidate,
+            "header_release_candidate_version": header_release_candidate_version,
         },
     }
     for key, default in default_config_opts.items():
