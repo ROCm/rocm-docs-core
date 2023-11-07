@@ -6,8 +6,8 @@ from typing import Any
 
 from pathlib import Path
 
+import requests
 import sphinx.util.logging
-import urllib3
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
     get_theme_options_dict,
@@ -78,20 +78,6 @@ def _update_theme_options(app: Sphinx) -> None:
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
     )
 
-    header_latest_version = urllib3.urlopen(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
-    )[0]
-    header_release_candidate = urllib3.urlopen(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
-    )[0]
-    theme_opts.setdefault(
-        "html_context",
-        {
-            "header_latest_version": header_latest_version,
-            "header_release_candidate": header_release_candidate,
-        },
-    )
-
     if hasattr(app.config, "projects_version_type"):
         _update_banner(flavor, app.config.projects_version_type, theme_opts)
 
@@ -104,11 +90,23 @@ def _update_theme_options(app: Sphinx) -> None:
             0, "components/left-side-menu"
         )
 
+    header_latest_version = requests.get(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
+    ).text
+    header_release_candidate = requests.get(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
+    ).text
+
     default_config_opts = {
         "html_show_sphinx": False,
         "html_favicon": "https://www.amd.com/themes/custom/amd/favicon.ico",
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
+        "html_context":
+        {
+            "header_latest_version": header_latest_version,
+            "header_release_candidate": header_release_candidate,
+        },
     }
     for key, default in default_config_opts.items():
         if not config_provided_by_user(app, key):
