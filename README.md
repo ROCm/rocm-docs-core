@@ -17,7 +17,7 @@ This repository is comprised of utilities, styling, scripts, and additional HTML
 
 - Set `rocm_docs_theme` as the HTML theme
 - Add `rocm_docs` as an extension
-- Optionally, add `rocm_docs.doxygen` and `rocm_docs.doxylink` as extensions
+- Optionally, add `rocm_docs.doxygen` and `sphinxcontrib.doxylink` as extensions
 
 For an example, see the [test conf.py](./tests/sites/doxygen/extension/conf.py)
 
