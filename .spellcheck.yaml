@@ -12,6 +12,9 @@ matrix:
   - pyspelling.filters.context:
       context_visible_first: true
       delimiters:
+      # ReST code blocks
+      - open: '^:{2} code-block'
+        close: '^[^\s]'
       # Manual disabling via: #spellcheck-disable
       - open : '^ *<!-- *spellcheck-disable *-->$'
         content: '[\s\S]*?'
