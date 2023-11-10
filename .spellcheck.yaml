@@ -1,8 +1,7 @@
 matrix:
-- name: Markdown and RST
+- name: Markdown
   sources:
   - 'docs/**/*.md'
-  - 'docs/**/*.rst'
   aspell:
     lang: en
   dictionary:
