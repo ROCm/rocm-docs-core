@@ -16,7 +16,7 @@ babel==2.13.1
     #   sphinx
 beautifulsoup4==4.12.2
     # via pydata-sphinx-theme
-black==23.10.1
+black==23.11.0
     # via rocm-docs-core (pyproject.toml)
 breathe==4.35.0
     # via rocm-docs-core (pyproject.toml)
