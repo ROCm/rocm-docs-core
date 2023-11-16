@@ -1,3 +1,9 @@
+## v0.28.0 (2023-11-16)
+
+### Feat
+
+- **doxygen.py**: Enable doxygen extended toc with forked doxysphinx
+
 ## v0.27.0 (2023-11-02)
 
 ### Feat
