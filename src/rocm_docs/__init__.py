@@ -12,7 +12,7 @@ import os
 
 from rocm_docs.core import setup
 
-MaybePath = Union[str, os.PathLike, None]
+MaybePath = Union[str, 'os.PathLike', None]
 
 
 # Intentionally disabling the too-many-instance-attributes check in pylint
