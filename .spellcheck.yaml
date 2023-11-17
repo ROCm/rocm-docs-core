@@ -12,7 +12,10 @@ matrix:
   - pyspelling.filters.context:
       context_visible_first: true
       delimiters:
-      # ReST: code blocks
+      # RST directives
+      - open: '^\.{2}[ ]+[a-z-]+[:]{2}'
+        close: '$'
+      # ReST code blocks
       - open: '^.{2}[ ]+code-block'
         close: '^[^\s]'
       # ReST: math blocks
