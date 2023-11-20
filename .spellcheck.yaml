@@ -15,6 +15,12 @@ matrix:
       # ReST code blocks
       - open: '^.{2}[ ]+code-block'
         close: '^[^\s]'
+      # ReST math blocks
+      - open: '^.{2}[ ]+math:{2}'
+        close: '^[^\s]'
+      # ReST reference
+      - open: '^.{2}[ ]+_'
+        close: '$'
       # Manual disabling via: #spellcheck-disable
       - open : '^ *<!-- *spellcheck-disable *-->$'
         content: '[\s\S]*?'
