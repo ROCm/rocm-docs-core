@@ -248,7 +248,7 @@ tomli==2.0.1
     #   pip-tools
     #   pyproject-hooks
     #   pytest
-tomlkit==0.12.2
+tomlkit==0.12.3
     # via commitizen
 tqdm==4.66.1
     # via mpire
