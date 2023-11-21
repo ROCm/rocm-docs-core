@@ -103,8 +103,8 @@ def _update_theme_options(app: Sphinx) -> None:
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
         "html_context": {
-            "header_latest_version": header_latest_version,
-            "header_release_candidate_version": header_release_candidate_version,
+            "theme_header_latest_version": header_latest_version,
+            "theme_header_release_candidate_version": header_release_candidate_version,
         },
     }
     for key, default in default_config_opts.items():
