@@ -172,7 +172,7 @@ ul.bd-breadcrumbs li.breadcrumb-item {
   transform: rotate(0);
 }
 
-input#__primary:checked ~ .bd-container .primary-toggle>span {
+input#__primary:checked~.bd-container .primary-toggle>span {
   transform: rotate(180deg);
 }
 
@@ -199,11 +199,12 @@ a#ot-sdk-btn {
 
 /* Fix for sidebar width mismatch between Bootstrap and the Sphinx Book Theme */
 @media (min-width: 960px) {
-  input#__primary:checked ~ .bd-container .bd-sidebar-primary {
+  input#__primary:checked~.bd-container .bd-sidebar-primary {
     margin-left: -20%;
     visibility: hidden;
     opacity: 0;
   }
+
   .bd-sidebar-primary {
     flex-basis: 20%;
   }
@@ -212,7 +213,7 @@ a#ot-sdk-btn {
     transform: rotate(180deg);
   }
 
-  input#__primary:checked ~ .bd-container .primary-toggle>span {
+  input#__primary:checked~.bd-container .primary-toggle>span {
     transform: rotate(0);
   }
 }
