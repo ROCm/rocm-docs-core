@@ -613,7 +613,6 @@ header.common-header .nav-mega .mega-menu .cmp-headermenu .cmp-headermenu__tabli
 }
 
 .rst-other-versions {
-  display: none !important;
   position: absolute !important;
   background-color: #f9f9f9 !important;
   min-width: 160px !important;
