@@ -41,6 +41,9 @@ projects:
   rocdbgapi:
     target: https://rocm.docs.amd.com/projects/ROCdbgapi/en/${version}
     development_branch: amd-master
+  rocdecode:
+    target: https://rocm.docs.amd.com/projects/rocDecode/en/${version}
+    development_branch: master
   rocfft: https://rocm.docs.amd.com/projects/rocFFT/en/${version}
   rocgdb:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
