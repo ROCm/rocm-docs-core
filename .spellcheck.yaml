@@ -34,6 +34,7 @@ matrix:
 - name: Markdown
   sources:
   - 'docs/**/*.md'
+  expect_match: false
   aspell:
     lang: en
   dictionary:
@@ -88,6 +89,7 @@ matrix:
 - name: reST
   sources:
   - 'docs/**/*.rst'
+  expect_match: false
   aspell:
     lang: en
   dictionary:
