@@ -88,6 +88,8 @@ matrix:
 - name: reST
   sources:
   - 'docs/**/*.rst'
+  aspell:
+    lang: en
   dictionary:
     wordlists:
     - .wordlist.txt
