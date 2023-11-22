@@ -929,3 +929,9 @@ header.common-header
       width: 60%;
   }
 }
+
+.header-all-versions {
+  position: absolute;
+  margin-left: 90%;
+  margin-right: 10%;
+}
