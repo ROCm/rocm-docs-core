@@ -27,6 +27,9 @@ projects:
   hip-vs:
     target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
     development_branch: master
+  linux:
+    target: https://rocm.docs.amd.com/projects/rocm-install-on-linux/en/${version}
+    development_branch: main
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
   python: https://docs.python.org/3/
