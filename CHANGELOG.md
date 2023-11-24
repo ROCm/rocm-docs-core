@@ -1,3 +1,13 @@
+## v0.29.0 (2023-11-24)
+
+### Feat
+
+- **projects.yaml**: Add linux install guide to projects.yaml
+- Add new flavor - list theme
+- Add all versions link to header
+- Header name change to AMD ROCm Software
+- **projects.yaml**: Add rocDecode to projects
+
 ## v0.28.0 (2023-11-16)
 
 ### Feat
