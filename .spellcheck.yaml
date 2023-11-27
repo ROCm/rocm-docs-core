@@ -153,6 +153,10 @@ matrix:
       # Ignore reStructuredText reference
       - open: '^.{2}[ ]+_'
         close: '$'
+      # Ignore doxygen directives
+      - open: '\.\. (autodoxygenindex|doxygenfunction|doxygenstruct|doxygenclass|doxygennamespace|doxygenconcept|doxygenenum|doxygenenumvalue|doxygentypedef|doxygenunion|doxygendefine|doxygenvariable|doxygenfile|doxygengroup|autodoxygenfile|doxygenpage)::.*$\n*'
+        content: '(?P<first>(^(?P<indent>[ ]+).*$\n))(?P<other>(^([ \t]+.*|[ \t]*)$\n)*)'
+        close: '(^(?![ \t]+.*$))'
       # Manual disabling via: #spellcheck-disable
       - open : '^.. <!-- spellcheck-disable -->$'
         content: '[\s\S]*?'
