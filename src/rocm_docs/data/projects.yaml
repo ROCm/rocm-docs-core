@@ -27,6 +27,9 @@ projects:
   hip-vs:
     target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
     development_branch: master
+  linux-install:
+    target: https://rocm.docs.amd.com/projects/rocm-install-on-linux/en/${version}
+    development_branch: main
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
   python: https://docs.python.org/3/
@@ -41,6 +44,9 @@ projects:
   rocdbgapi:
     target: https://rocm.docs.amd.com/projects/ROCdbgapi/en/${version}
     development_branch: amd-master
+  rocdecode:
+    target: https://rocm.docs.amd.com/projects/rocDecode/en/${version}
+    development_branch: master
   rocfft: https://rocm.docs.amd.com/projects/rocFFT/en/${version}
   rocgdb:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
@@ -70,3 +76,6 @@ projects:
   rtd: https://docs.readthedocs.io/en/stable/
   sphinx: https://www.sphinx-doc.org/en/master/
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
+  windows-install:
+    target: https://rocm.docs.amd.com/projects/hipsdk-install-on-windows/en/${version}
+    development_branch: main
