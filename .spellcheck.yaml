@@ -150,4 +150,11 @@ matrix:
       # Ignore directives
       - open: '\.\.\s+(image|include|only)::'
         close: '$'
+      # Ignore reStructuredText reference
+      - open: '^.{2}[ ]+_'
+        close: '$'
+      # Manual disabling via: #spellcheck-disable
+      - open : '^.. <!-- spellcheck-disable -->$'
+        content: '[\s\S]*?'
+        close: '^.. <!-- spellcheck-enable -->$'
   - pyspelling.filters.url:
