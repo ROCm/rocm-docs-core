@@ -53,6 +53,7 @@ projects:
     development_branch: amd-master
   rocm: https://rocm.docs.amd.com/en/${version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
+  rocm-api-tools-list: https://rocm.docs.amd.com/en/${version}/reference/library-index.html
   rocm_smi_lib:
     target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
     development_branch: master
