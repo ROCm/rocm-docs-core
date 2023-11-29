@@ -148,7 +148,7 @@ matrix:
       - open: '\.\.\s+toctree::'
         close: '(?P<toctree>(?:((?P<indent>[ ]+).*$)|(\n))+)'
       # Ignore directives
-      - open: '\.\.\s+(image|include|only)::'
+      - open: '\.\.\s+(image|include|only|tabularcolumns)::'
         close: '$'
       # Ignore reStructuredText reference
       - open: '^.{2}[ ]+_'
