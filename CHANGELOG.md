@@ -1,3 +1,17 @@
+## v0.30.0 (2023-11-29)
+
+### Feat
+
+- Updating our links for installation subprojects
+
+### Fix
+
+- **theme.py**: Add list flavor to list of supported flavors
+
+### Refactor
+
+- Rename list theme to rocm-api-tools-list
+
 ## v0.29.0 (2023-11-24)
 
 ### Feat
