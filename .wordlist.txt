@@ -48,6 +48,7 @@ CommonMark
 Concretized
 Conda
 DGEMM
+DKMS
 DL
 DMA
 DNN
