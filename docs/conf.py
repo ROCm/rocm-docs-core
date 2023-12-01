@@ -27,6 +27,11 @@ article_pages = [
     {"file": "developer_guide/commitizen"},
 ]
 
+html_theme_options = {
+    "flavor": "rocm-docs-home"
+}
+templates_path = ["."] # Use the current folder for templates
+
 docs_core = ROCmDocs("ROCm Docs Core")
 docs_core.run_doxygen(doxygen_root="demo/doxygen", doxygen_path=".")
 docs_core.enable_api_reference()
