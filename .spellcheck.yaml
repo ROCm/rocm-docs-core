@@ -132,7 +132,7 @@ matrix:
         content: '''''*'
         close: '$'
       # Ignore reStructuredText block directives
-      - open: '\.\. (code-block|math)::.*$\n*'
+      - open: '\.\. (code-block|math|csv-table)::.*$\n*'
         content: '(?P<first>(^(?P<indent>[ ]+).*$\n))(?P<other>(^([ \t]+.*|[ \t]*)$\n)*)'
         close: '(^(?![ \t]+.*$))'
       - open: '\.\. (raw)::.*$\n*'
@@ -148,7 +148,7 @@ matrix:
       - open: '\.\.\s+toctree::'
         close: '(?P<toctree>(?:((?P<indent>[ ]+).*$)|(\n))+)'
       # Ignore directives
-      - open: '\.\.\s+(image|include|only|tabularcolumns)::'
+      - open: '\.\.\s+(image|include|only|tabularcolumns|datatemplate:nodata)::'
         close: '$'
       # Ignore reStructuredText reference
       - open: '^.{2}[ ]+_'
