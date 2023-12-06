@@ -1,3 +1,14 @@
+## v0.30.1 (2023-12-06)
+
+### Fix
+
+- **flavors**: Fix the rocm-docs-home flavor
+
+### Refactor
+
+- Don't add a subproject link as its own project in projects.yaml
+- Rename rocm-api-tools-list theme to rocm-docs-home
+
 ## v0.30.0 (2023-11-29)
 
 ### Feat
