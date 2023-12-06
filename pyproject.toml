@@ -74,7 +74,7 @@ color = true
 [tool.commitizen]
 name = "cz_conventional_commits"
 version = "0.30.0"
-version_files = ["pyproject.toml:^version"]
+version_files = ["pyproject.toml:^version", "docs/conf.py:^(version|release)"]
 tag_format = "v$version"
 annotated_tag = true
 major_version_zero = true
