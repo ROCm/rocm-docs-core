@@ -26,6 +26,7 @@ article_pages = [
 ]
 
 html_theme = "rocm_docs_theme"
+html_theme_options = {"flavor": "rocm-docs-home"}
 
 extensions = ["rocm_docs", "rocm_docs.doxygen"]
 doxygen_root = "demo/doxygen"
