@@ -90,7 +90,7 @@ importlib-resources==6.1.0 ; python_version < "3.9"
     # via rocm-docs-core (pyproject.toml)
 iniconfig==2.0.0
     # via pytest
-isort==5.12.0
+isort==5.13.0
     # via rocm-docs-core (pyproject.toml)
 jinja2==3.1.2
     # via
