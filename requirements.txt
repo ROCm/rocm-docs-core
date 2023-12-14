@@ -131,7 +131,7 @@ packaging==23.2
     #   pydata-sphinx-theme
     #   pytest
     #   sphinx
-pathspec==0.11.2
+pathspec==0.12.1
     # via black
 pip-tools==7.3.0
     # via rocm-docs-core (pyproject.toml)
