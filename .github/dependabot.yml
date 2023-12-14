@@ -9,7 +9,11 @@ updates:
     directory: "/" # Location of package manifests
     open-pull-requests-limit: 10
     schedule:
-      interval: "weekly"
+      interval: "daily"
     commit-message:
-      # Prefix all commit messages with "build: "
-      prefix: "build(deps)"
+      prefix: "build"
+    labels:
+      - "documentation"
+      - "dependencies"
+    reviewers:
+      - "samjwu"
