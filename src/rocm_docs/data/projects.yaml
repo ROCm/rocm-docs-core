@@ -29,7 +29,7 @@ projects:
     development_branch: master
   linux-install:
     target: https://rocm.docs.amd.com/projects/rocm-install-on-linux/en/${version}
-    development_branch: main
+    development_branch: develop
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
   python: https://docs.python.org/3/
@@ -78,4 +78,4 @@ projects:
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
   windows-install:
     target: https://rocm.docs.amd.com/projects/hipsdk-install-on-windows/en/${version}
-    development_branch: main
+    development_branch: develop
