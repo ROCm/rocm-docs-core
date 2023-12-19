@@ -42,5 +42,5 @@ author = "Advanced Micro Devices, Inc."
 copyright = (
     "Copyright (c) 2023 Advanced Micro Devices, Inc. All rights reserved."
 )
-version = "0.30.1"
-release = "0.30.1"
+version = "0.30.2"
+release = "0.30.2"

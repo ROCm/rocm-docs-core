@@ -1,3 +1,9 @@
+## v0.30.2 (2023-12-15)
+
+### Fix
+
+- adding linux and windows site fixes
+
 ## v0.30.1 (2023-12-06)
 
 ### Fix
