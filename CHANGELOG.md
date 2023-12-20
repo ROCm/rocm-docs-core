@@ -1,3 +1,9 @@
+## v0.30.3 (2023-12-20)
+
+### Fix
+
+- **dependabot.yml**: Change dependabot config
+
 ## v0.30.2 (2023-12-15)
 
 ### Fix
