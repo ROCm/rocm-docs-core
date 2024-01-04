@@ -328,6 +328,7 @@ PIL
 PILImage
 PowerShell
 pragma
+pre
 prebuilt
 precompiled
 prefetch
