@@ -330,8 +330,7 @@ WikiText
 Workgroups
 Writebacks
 XGBoost
-XGBoost’s
-XGBoost’s
+XGBoost's
 XGMI
 XT
 XTX
