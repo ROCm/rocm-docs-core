@@ -1,3 +1,4 @@
+AAC
 ABI
 ALU
 AMD
@@ -57,6 +58,10 @@ DPM
 DRI
 DW
 DWORD
+Dask
+DataFrame
+DataLoader
+DataParallel
 DeepSpeed
 Dependabot
 Dockerfile
@@ -74,6 +79,7 @@ FP
 Filesystem
 Flang
 Fortran
+Fuyu
 GALB
 GCD
 GCDs
@@ -133,12 +139,15 @@ JSON
 Jupyter
 KFD
 KVM
+Keras
 Khronos
 LAPACK
 LCLK
 LDS
 LLM
+LLMs
 LLVM
+LM
 LSAN
 LTS
 LoRA
@@ -151,6 +160,7 @@ MIOpen
 MIOpenGEMM
 MIVisionX
 MLIRMIOpen
+MLM
 MMA
 MNIST
 MPI
@@ -162,6 +172,7 @@ Makefiles
 Matplotlib
 Megatron
 Mellanox's
+Meta's
 MirroredStrategy
 Multicore
 Multithreaded
@@ -171,6 +182,7 @@ NBIO
 NBIOs
 NIC
 NICs
+NLI
 NLP
 NPS
 NSP
@@ -181,6 +193,7 @@ NVPTX
 Nano
 Navi
 Noncoherently
+NousResearch's
 NousResearch’s
 NumPy
 OAM
@@ -204,6 +217,7 @@ OpenSSL
 OpenVX
 PCI
 PCIe
+PEFT
 PIL
 PILImage
 PRNG
@@ -212,6 +226,7 @@ PaLM
 Pageable
 PeerDirect
 Perfetto
+PipelineParallel
 PowerShell
 PyPi
 PyTorch
@@ -275,8 +290,11 @@ TCIU
 TCP
 TCR
 TFLOPS
+TPU
+TPUs
 TensorBoard
 TensorFlow
+TensorParallel
 ToC
 TorchAudio
 TorchScript
@@ -312,7 +330,7 @@ WikiText
 Workgroups
 Writebacks
 XGBoost
-XGBoost’s
+XGBoost's
 XGMI
 XT
 XTX
@@ -339,6 +357,7 @@ backend
 backends
 benchmarking
 bilinear
+bitsandbytes
 blit
 boson
 bosons
@@ -354,6 +373,7 @@ cmake
 cmd
 coalescable
 codename
+collater
 comgr
 composable
 concretization
@@ -371,14 +391,18 @@ cuSOLVER
 cuSPARSE
 dbgapi
 deallocation
+denoise
 denoised
+denoises
 denormalize
 deserializers
 detections
 devicelibs
 dimensionality
 disambiguates
+embeddings
 enablement
+etcetera
 ethernet
 exascale
 executables
@@ -406,6 +430,7 @@ hipfort
 hpp
 hsa
 hsakmt
+hyperparameter
 hyperparameters
 ib_core
 inband
@@ -437,6 +462,8 @@ namespaces
 ocl
 optimizers
 pageable
+parallelization
+parameterization
 passthrough
 performant
 perl
@@ -446,6 +473,7 @@ prebuilt
 precompiled
 prefetch
 preprocess
+preprocessed
 preprocessing
 preq
 prerequisites
@@ -455,8 +483,11 @@ pseudorandom
 py
 quasirandom
 reStructuredText
+representativeness
 req
 resampling
+rescaling
+reusability
 roadmap
 roc
 rocAL
@@ -475,8 +506,10 @@ runtime
 runtimes
 sL
 scalability
+scalable
 serializers
 shader
+sharding
 sigmoid
 src
 stochastically
@@ -486,11 +519,16 @@ subexpression
 subfolder
 subfolders
 supercomputing
+tokenization
 tokenize
+tokenized
+tokenizer
+tokenizes
 toolchain
 toolchains
 toolset
 toolsets
+tqdm
 tracebacks
 txt
 uarch
@@ -501,6 +539,7 @@ unstacking
 unswitching
 untrusted
 untuned
+variational
 vdi
 vectorizable
 vectorization
@@ -518,7 +557,6 @@ workgroups
 writeback
 writebacks
 wrreq
-wzo
 xargs
 yaml
 zypper
