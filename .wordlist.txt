@@ -48,6 +48,7 @@ Commitizen
 CommonMark
 Concretized
 Conda
+Distro
 DGEMM
 DKMS
 DL
