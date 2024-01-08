@@ -528,6 +528,7 @@ toolchain
 toolchains
 toolset
 toolsets
+torchvision
 tqdm
 tracebacks
 txt
