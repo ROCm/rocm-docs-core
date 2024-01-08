@@ -97,7 +97,7 @@ jinja2==3.1.2
     #   commitizen
     #   myst-parser
     #   sphinx
-libsass==0.22.0
+libsass==0.23.0
     # via doxysphinx
 lxml==4.9.4
     # via doxysphinx
