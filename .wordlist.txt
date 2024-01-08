@@ -48,7 +48,6 @@ Commitizen
 CommonMark
 Concretized
 Conda
-Distro
 DGEMM
 DKMS
 DL
@@ -65,6 +64,7 @@ DataLoader
 DataParallel
 DeepSpeed
 Dependabot
+Distro
 Dockerfile
 Doxygen
 ELMo
