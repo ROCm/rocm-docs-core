@@ -111,7 +111,7 @@ mdit-py-plugins==0.3.5
     # via myst-parser
 mdurl==0.1.2
     # via markdown-it-py
-mpire==2.8.1
+mpire==2.9.0
     # via doxysphinx
 mypy==1.6.1
     # via rocm-docs-core (pyproject.toml)
