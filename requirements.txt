@@ -73,7 +73,7 @@ filelock==3.13.1
     # via virtualenv
 gitdb==4.0.11
     # via gitpython
-gitpython==3.1.40
+gitpython==3.1.41
     # via rocm-docs-core (pyproject.toml)
 identify==2.5.33
     # via pre-commit
