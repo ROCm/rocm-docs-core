@@ -38,3 +38,6 @@ subtrees:
     - url: ${project:rocm-docs-core}
     - url: ${project:hipify}
       title: HIPIFY
+  - caption: About
+    entries:
+    - file: license
