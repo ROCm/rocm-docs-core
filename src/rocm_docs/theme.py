@@ -134,7 +134,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     ]:
         app.add_css_file(css)
 
-    app.connect("builder-inited", _update_theme_options)
+    app.connect("config-inited", _update_theme_options)
 
     return {
         "parallel_read_safe": True,
