@@ -92,10 +92,10 @@ def _update_theme_options(app: Sphinx) -> None:
 
     header_latest_version = requests.get(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
-    ).text
+    ).text.strip("\r\n")
     header_release_candidate_version = requests.get(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
-    ).text
+    ).text.strip("\r\n")
 
     default_config_opts = {
         "html_show_sphinx": False,

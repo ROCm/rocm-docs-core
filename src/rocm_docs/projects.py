@@ -332,11 +332,11 @@ def _update_theme_configs(
     """Update configurations for use in theme.py"""
     latest_version = requests.get(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
-    ).text
+    ).text.strip("\r\n")
     latest_version_string = f"docs-{latest_version}"
     release_candidate = requests.get(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
-    ).text
+    ).text.strip("\r\n")
     release_candidate_string = f"docs-{release_candidate}"
 
     development_branch = _Project.default_value("development_branch")
