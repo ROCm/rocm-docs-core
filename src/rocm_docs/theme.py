@@ -102,11 +102,11 @@ def _update_theme_options(app: Sphinx) -> None:
         "html_favicon": "https://www.amd.com/themes/custom/amd/favicon.ico",
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
-        "html_context": {
-            "theme_header_latest_version": header_latest_version,
-            "theme_header_release_candidate_version": header_release_candidate_version,
-        },
     }
+
+    theme_opts.setdefault("header_latest_version", header_latest_version)
+    theme_opts.setdefault("header_release_candidate_version", header_release_candidate_version)
+
     for key, default in default_config_opts.items():
         if not config_provided_by_user(app, key):
             setattr(app.config, key, default)
