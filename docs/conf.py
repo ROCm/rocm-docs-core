@@ -19,7 +19,7 @@ article_pages = [
         "file": "index",
         "os": ["linux", "windows"],
         "author": "Author: AMD",
-        "date": "2023-05-01",
+        "date": "2023-11-03",
         "read-time": "2 min read",
     },
     {"file": "developer_guide/commitizen"},
@@ -29,6 +29,7 @@ html_theme = "rocm_docs_theme"
 html_theme_options = {"flavor": "rocm-docs-home"}
 
 extensions = ["rocm_docs", "rocm_docs.doxygen"]
+external_toc_path = "./sphinx/_toc.yml"
 doxygen_root = "demo/doxygen"
 doxysphinx_enabled = True
 doxygen_project = {
@@ -36,11 +37,11 @@ doxygen_project = {
     "path": "demo/doxygen/xml",
 }
 
-html_title = "ROCm Docs Core"
+version = "0.31.0"
+release = "0.31.0"
+html_title = f"ROCm Docs Core {version}"
 project = "ROCm Docs Core"
 author = "Advanced Micro Devices, Inc."
 copyright = (
-    "Copyright (c) 2023 Advanced Micro Devices, Inc. All rights reserved."
+    "Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved."
 )
-version = "0.31.0"
-release = "0.31.0"
