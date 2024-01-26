@@ -1,0 +1,17 @@
+{% macro top_level_header(branch, latest_version, release_candidate_version) -%}
+    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Software</a>
+{%- endmacro -%}
+
+{%
+set repo_url = theme_repository_url|replace("-internal", "")
+%}
+{%
+set nav_secondary_items = {
+    "GitHub": repo_url,
+    "Community": "https://github.com/RadeonOpenCompute/ROCm/discussions",
+    "AMD Lab Notes": "https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-readme/",
+    "Infinity Hub": "https://www.amd.com/en/technologies/infinity-hub",
+    "Support": repo_url + "/issues/new/choose",
+    "Feedback": "mailto:rocm-feedback@amd.com"
+}
+%}
