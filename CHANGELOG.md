@@ -1,3 +1,18 @@
+## v0.33.0 (2024-01-26)
+
+### Feat
+
+- **theme.py**: Add rocm-blogs to lsit of supported flavors
+- Add ROCm blogs flavor
+
+### Fix
+
+- **header.jinja**: New statement block for setting custom repo url
+
+### Refactor
+
+- **rocm-blogs/footer.jinja**: Refactor to pass Python linting
+
 ## v0.32.0 (2024-01-26)
 
 ### Feat
