@@ -20,7 +20,7 @@ with context
                 </a>
                 <div class="vr vr mx-40 my-25"></div>
                 {{ top_level_header(theme_repository_branch | replace("docs-", ""), theme_header_latest_version, theme_header_release_candidate_version) }}
-                <a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+                {{ version_list() }}
             </div>
             <div class="icon-nav text-center d-flex ms-auto">
             </div>
