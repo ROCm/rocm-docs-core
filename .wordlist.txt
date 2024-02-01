@@ -20,6 +20,7 @@ BLAS
 BMC
 BitCode
 Blit
+Bluefield
 CCD
 CDNA
 CIFAR
@@ -40,6 +41,7 @@ CSn
 CU
 CUDA
 CUs
+Cavium
 CentOS
 ChatGPT
 CoRR
@@ -48,6 +50,7 @@ Commitizen
 CommonMark
 Concretized
 Conda
+ConnectX
 DGEMM
 DKMS
 DL
@@ -171,6 +174,7 @@ Makefile
 Makefiles
 Matplotlib
 Megatron
+Mellanox
 Mellanox's
 Meta's
 MirroredStrategy
@@ -335,6 +339,7 @@ XGMI
 XT
 XTX
 Xeon
+Xilinx
 Xnack
 Xteam
 YAML
