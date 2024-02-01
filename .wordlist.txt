@@ -41,7 +41,6 @@ CSC
 CSE
 CSV
 CSn
-CSn
 CTests
 CU
 CUDA
@@ -63,7 +62,6 @@ DL
 DMA
 DNN
 DNNL
-DNNL
 DPM
 DRI
 DW
@@ -80,7 +78,6 @@ Doxygen
 ELMo
 ENDPGM
 EPYC
-ESXi
 ESXi
 FFT
 FFTs
@@ -128,7 +125,6 @@ HPCG
 HPE
 HPL
 HSA
-HSA
 HWE
 Haswell
 Higgs
@@ -166,8 +162,6 @@ LLMs
 LLVM
 LM
 LSAN
-LSAN
-LTS
 LTS
 LoRA
 MEM
@@ -263,7 +257,6 @@ ROCTracer
 ROCclr
 ROCdbgapi
 ROCgdb
-ROCk
 ROCk
 ROCm
 ROCmCC
@@ -406,7 +399,6 @@ cmake
 cmd
 coalescable
 codename
-codename
 collater
 comgr
 completers
@@ -439,7 +431,6 @@ denormalize
 deserializers
 detections
 dev
-devicelibs
 devicelibs
 devsel
 dimensionality
@@ -488,7 +479,6 @@ hipify
 hipsolver
 hipsparse
 hpp
-hsa
 hsa
 hsakmt
 hyperparameter
