@@ -1,0 +1,30 @@
+defaults:
+  numbered: False
+  maxdepth: 6
+root: index.md
+subtrees:
+  - caption: User Guide
+    entries:
+      - file: user_guide/spellcheck
+      - file: user_guide/linting
+      - file: user_guide/linking
+      - file: user_guide/article_info
+      - file: user_guide/doxygen_integration
+  - caption: Developer Guide
+    entries:
+      - file: developer_guide/just
+      - file: developer_guide/python_linting
+      - file: developer_guide/commitizen
+      - file: developer_guide/projects_yaml
+      - file: developer_guide/dependabot
+  - caption: Demo Doxygen Documentation Integration
+    entries:
+      - file: demo/doxygen/html/index
+        title: Library API Doxygen Demo
+  - caption: Demo Table of Contents Tree
+    entries:
+      - url: "http://github.com/LisaDelaney/rocm-docs-core/tree/develop"
+      - url: https://docs.python.org/3
+      - url: https://rocm.docs.amd.com/projects/rocm-docs-core/en/develop
+      - url: https://rocm.docs.amd.com/projects/HIPIFY/en/amd-staging
+        title: HIPIFY

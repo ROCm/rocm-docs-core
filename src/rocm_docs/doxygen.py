@@ -106,9 +106,9 @@ def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
     ) or config_provided_by_user(app, "breathe_default_project"):
         return
 
-    doxygen_project: dict[
-        str, None | str | os.PathLike[Any]
-    ] = app.config.doxygen_project
+    doxygen_project: dict[str, None | str | os.PathLike[Any]] = (
+        app.config.doxygen_project
+    )
 
     # To support the (legacy) ROCmDocs interface 'None' is a synonym for the
     # default value for each element of the Tuple

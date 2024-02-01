@@ -63,7 +63,7 @@ def _update_theme_options(app: Sphinx) -> None:
     theme_opts = get_theme_options_dict(app)
     _update_repo_opts(app.srcdir, theme_opts)
 
-    supported_flavors = ["rocm", "local", "rocm-docs-home"]
+    supported_flavors = ["rocm", "local", "rocm-docs-home", "rocm-blogs"]
     flavor = theme_opts.get("flavor", "rocm")
     if flavor not in supported_flavors:
         logger.error(
@@ -92,10 +92,10 @@ def _update_theme_options(app: Sphinx) -> None:
 
     header_latest_version = requests.get(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
-    ).text
+    ).text.strip("\r\n")
     header_release_candidate_version = requests.get(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
-    ).text
+    ).text.strip("\r\n")
 
     default_config_opts = {
         "html_show_sphinx": False,

@@ -1,3 +1,43 @@
+## v0.33.0 (2024-01-26)
+
+### Feat
+
+- **theme.py**: Add rocm-blogs to lsit of supported flavors
+- Add ROCm blogs flavor
+
+### Fix
+
+- **header.jinja**: New statement block for setting custom repo url
+
+### Refactor
+
+- **rocm-blogs/footer.jinja**: Refactor to pass Python linting
+
+## v0.32.0 (2024-01-26)
+
+### Feat
+
+- **theme.conf**: Update header latest version
+
+## v0.31.0 (2024-01-12)
+
+### Feat
+
+- **theme.conf**: Update header latest version
+- Read versions for theme header from link instead of setting in theme.conf
+- **projects.py**: Read header versions from link instead of hard-coding
+
+### Fix
+
+- Remove carriage return and newline when checking versions
+- **header.jinja**: Fix support link in header for rocm-docs-core
+
+### Refactor
+
+- **theme.conf**: Add back header options to theme.conf to pass RTD PR build
+- Use requests instead of urllib3
+- **theme.py**: Set html_context in default_config_opts rather than theme_opts
+
 ## v0.30.3 (2023-12-20)
 
 ### Fix
