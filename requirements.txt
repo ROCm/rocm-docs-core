@@ -47,7 +47,7 @@ click-log==0.4.0
     # via doxysphinx
 colorama==0.4.6
     # via commitizen
-commitizen==3.13.0
+commitizen==3.14.0
     # via rocm-docs-core (pyproject.toml)
 cryptography==42.0.2
     # via pyjwt
