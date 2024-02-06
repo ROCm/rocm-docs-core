@@ -1,3 +1,9 @@
+## v0.33.2 (2024-02-06)
+
+### Fix
+
+- **left-side-menu.jinja**: Set main doc link for blogs flavor
+
 ## v0.33.1 (2024-02-05)
 
 ### Fix
