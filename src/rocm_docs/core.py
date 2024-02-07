@@ -79,8 +79,9 @@ class _DefaultSettings:
             "colon_fence",
             "dollarmath",
             "fieldlist",
+            "html_image",
             "replacements",
-            "substitution"
+            "substitution",
         }
     )
     myst_heading_anchors = _ConfigDefault(3)
