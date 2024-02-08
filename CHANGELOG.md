@@ -1,3 +1,10 @@
+## v0.34.0 (2024-02-08)
+
+### Feat
+
+- **core.py**: Add html_image myst extension
+- **core.py**: Enable dollarmath myst extension for inline latex math
+
 ## v0.33.2 (2024-02-06)
 
 ### Fix
