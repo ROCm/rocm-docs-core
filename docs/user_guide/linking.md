@@ -1,6 +1,8 @@
 # Linking
 
-## Cross References to Other Projects
+## Markdown
+
+### Cross References to Other Projects
 
 When making links that cross-reference documentation sites, the following
 format should be used:
@@ -13,7 +15,7 @@ The [`projects.yaml`](https://github.com/RadeonOpenCompute/rocm-docs-core/blob/d
 configuration file contains the names of projects
 that should be used when making links that cross-reference documentation sites.
 
-### Example
+#### Example
 
 The following Markdown:
 
@@ -25,11 +27,11 @@ will be rendered as the following link:
 
 {doc}`ROCm Documentation<rocm:reference/all>`
 
-## Other
+### Other
 
 For other links, usual Markdown conventions should be used.
 
-### Example: Absolute Links to External Sites
+#### Example: Absolute Links to External Sites
 
 The following Markdown:
 
@@ -41,7 +43,7 @@ will be rendered as the following link:
 
 [Link Text](https://github.com/RadeonOpenCompute/ROCm)
 
-### Example: Relative Links to Current Project
+#### Example: Relative Links to Current Project
 
 The following Markdown:
 
@@ -52,3 +54,24 @@ The following Markdown:
 will be rendered as the following link:
 
 [Link Text](../index)
+
+## Table of Contents
+
+### Syntax
+
+Variables of the form `${<variable>}` are substituted, currently the following
+list is supported:
+
+- `${branch}` or `{branch}`: the name of the current branch
+- `${url}` or `{url}`: github url of the current project
+- `${project:<project_name>}`: base url of the documentation of `<project_name>`
+based on intersphinx_mapping
+
+#### Example
+
+```in
+    - url: "{url}/tree/{branch}"
+    - url: ${project:python}
+    - url: ${project:rocm-docs-core}
+    - url: ${project:hipify}
+```
