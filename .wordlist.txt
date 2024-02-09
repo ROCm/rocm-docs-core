@@ -329,7 +329,10 @@ UCC
 UCX
 UIF
 USM
+USM
 UTCL
+UTCL
+UTIL
 UTIL
 Uncached
 Unhandled
@@ -637,9 +640,6 @@ unswitching
 untrusted
 untuned
 upvote
-USM
-UTCL
-UTIL
 utils
 vL
 variational
