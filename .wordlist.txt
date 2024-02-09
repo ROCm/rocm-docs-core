@@ -329,10 +329,7 @@ UCC
 UCX
 UIF
 USM
-USM
 UTCL
-UTCL
-UTIL
 UTIL
 Uncached
 Unhandled
