@@ -75,7 +75,7 @@ gitdb==4.0.11
     # via gitpython
 gitpython==3.1.41
     # via rocm-docs-core (pyproject.toml)
-identify==2.5.33
+identify==2.5.34
     # via pre-commit
 idna==3.6
     # via requests
