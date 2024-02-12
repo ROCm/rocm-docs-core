@@ -157,6 +157,12 @@ class _Project:
         if current_branch.startswith("docs-"):
             return current_branch
 
+        # Release candidate always with release-staging/
+        release_candidate_string="release-staging"
+        if current_branch.startswith(release_candidate_string):
+            return current_branch
+
+        return current_branch
         # Anything besides the canonical development branch links to latest docs
         development_branch: str = cls.default_value("development_branch")
         if current_project is not None:
