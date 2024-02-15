@@ -1,3 +1,9 @@
+## v0.34.2 (2024-02-15)
+
+### Fix
+
+- **left-side-menu.jinja**: Fix main doc link for rocm flavor left side menu
+
 ## v0.34.1 (2024-02-15)
 
 ### Fix
