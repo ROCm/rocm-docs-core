@@ -12,7 +12,7 @@ import os
 
 from rocm_docs.core import setup
 
-MaybePath: TypeAlias = str | os.PathLike | None
+MaybePath: TypeAlias = str | os.PathLike[str] | None
 
 
 # Intentionally disabling the too-many-instance-attributes check in pylint
