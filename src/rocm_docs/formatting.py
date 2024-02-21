@@ -48,9 +48,11 @@ class Formatter:
         # As a special case allow `{branch}` and `url` to alias `${branch}`
         # and '${url}' respectively for backwards compatibility.
         # Otherwise the '$' is required
-        if match["prefix"] is None:
-            if match["directive"] not in ["branch", "url"]:
-                return None
+        if match["prefix"] is None and match["directive"] not in [
+            "branch",
+            "url",
+        ]:
+            return None
 
         if match["directive"] in ["branch", "url"]:
             return self._format_simple(

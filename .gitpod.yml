@@ -7,6 +7,7 @@ tasks:
 
 vscode:
   extensions:
-    - bungcip.better-toml
+    - ms-python.black-formatter
     - ms-python.python
     - ritwickdey.LiveServer
+    - tamasfe.even-better-toml

@@ -12,23 +12,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-rest:
-    name: "RestructuredText"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install rst-lint
-        run: pip install restructuredtext-lint
-      - name: Lint ResT files
-        run: rst-lint ${{ join(github.workspace, '/docs') }}
-
   lint-md:
     name: "Markdown"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Fetch config
+        shell: sh
+        run: |
+          test -f .markdownlint.yaml && echo "Using local config file" || curl --silent --show-error --fail --location https://raw.github.com/RadeonOpenCompute/rocm-docs-core/develop/.markdownlint.yaml -O
       - name: Use markdownlint-cli2
         uses: DavidAnson/markdownlint-cli2-action@v10.0.1
         with:

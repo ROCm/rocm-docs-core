@@ -67,7 +67,14 @@ class _DefaultSettings:
     copyright = _ConfigDefault("2022-2023, Advanced Micro Devices Ltd")
     # pylint: enable=redefined-builtin
     myst_enable_extensions = _ConfigUnion(
-        {"colon_fence", "fieldlist", "replacements", "substitution"}
+        {
+            "colon_fence",
+            "dollarmath",
+            "fieldlist",
+            "html_image",
+            "replacements",
+            "substitution",
+        }
     )
     myst_heading_anchors = _ConfigDefault(3)
     external_toc_exclude_missing = _ConfigDefault(False)
@@ -146,7 +153,7 @@ def _set_page_article_info(
             continue
 
         article_os_info = ""
-        if "os" not in page.keys():
+        if "os" not in page:
             page["os"] = app.config.all_article_info_os
         if "linux" in page["os"]:
             article_os_info += "Linux"
@@ -157,12 +164,12 @@ def _set_page_article_info(
         modified_info = article_info.replace("<!--os-info-->", article_os_info)
 
         author = app.config.all_article_info_author
-        if "author" in page.keys():
+        if "author" in page:
             author = page["author"]
         modified_info = modified_info.replace("AMD", author)
 
         date_info: str | None = None
-        if "date" in page.keys():
+        if "date" in page:
             date_info = page["date"]
         else:
             date_info = _get_time_last_modified(repo, path_source)
@@ -172,7 +179,7 @@ def _set_page_article_info(
 
         modified_info = modified_info.replace("2023", date_info)
 
-        if "read-time" in page.keys():
+        if "read-time" in page:
             read_time = page["read-time"]
         else:
             read_time = _estimate_read_time(path_html)

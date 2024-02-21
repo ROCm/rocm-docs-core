@@ -8,11 +8,17 @@
     {% else %}
         {% set version_name = branch %}
     {% endif %}
-    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Platform {{ version_name }}</a>
+    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Software {{ version_name }}</a>
+{%- endmacro -%}
+
+{% macro version_list() -%}
+    <a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
 {%- endmacro -%}
 
 {% if theme_repository_url.endswith("-docs") %}
     {% set repo_url = theme_repository_url|replace("-docs", "") %}
+{% elif "rocm-install-on" in theme_repository_url %}
+    {% set repo_url = "https://github.com/ROCm/ROCm" %}
 {% else %}
     {% set repo_url = theme_repository_url %}
 {% endif %}
@@ -23,7 +29,7 @@ set nav_secondary_items = {
     "Community": "https://github.com/RadeonOpenCompute/ROCm/discussions",
     "AMD Lab Notes": "https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-readme/",
     "Infinity Hub": "https://www.amd.com/en/technologies/infinity-hub",
-    "Support": theme_repository_url|replace("-docs", "") + "/issues/new/choose",
+    "Support": repo_url + "/issues/new/choose",
     "Feedback": "mailto:rocm-feedback@amd.com"
 }
 %}

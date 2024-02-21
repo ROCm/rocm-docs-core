@@ -40,3 +40,19 @@ Vice-versa if A has set its `development_branch` to `develop` and B sets it to `
 Symbolic versions "latest" and "stable" map to themselves in other projects.
 
 Any other branch maps to "latest".
+
+## Explicitly list external projects
+
+By default the inventories of all external projects defined in `projects.yaml`
+will be downloaded. This can take a long time as it requires a network request
+for each external project.
+
+The `external_projects` configuration option can be set to a list with the names
+of remote projects to fetch inventories from & enable links to.
+The list must be a subset of the project names defined in `projects.yaml`.
+The default value of `"all"` means to fetch all projects.
+
+Intersphinx references to projects that are not in `external_projects` will not
+be resolved. References in the the TOC like `${project:project_name}` will
+continue to be resolved to the URL of `project_name`, even if `project_name` is
+not set in `external_projects` (but it's defined in `projects.yaml`).

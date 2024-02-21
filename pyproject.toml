@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = 'rocm-docs-core'
-version = "0.26.0"
+version = "0.34.2"
 authors=[
   {name="Lauren Wrubleski", email="Lauren.Wrubleski@amd.com"}
 ]
@@ -51,7 +51,9 @@ development = [
   "mypy>=1.3.0",
   "pip-tools>=6.13.0",
   "pre-commit>=3.3.2",
+  "pytest>=7.4.2",
   "ruff>=0.0.269",
+  "sphinxcontrib.doxylink>=1.12.2"
 ]
 
 [project.entry-points."sphinx.html_themes"]
@@ -70,8 +72,8 @@ color = true
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.26.0"
-version_files = ["pyproject.toml:^version"]
+version = "0.34.2"
+version_files = ["pyproject.toml:^version", "docs/conf.py:^(version|release)"]
 tag_format = "v$version"
 annotated_tag = true
 major_version_zero = true
@@ -79,7 +81,7 @@ major_version_zero = true
 [tool.isort]
 # https://github.com/timothycrosley/isort/
 py_version = "310"
-line_length = 100
+line_length = 80
 
 known_typing = ["typing", "types", "typing_extensions", "mypy", "mypy_extensions"]
 sections = ["FUTURE", "TYPING", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
@@ -95,6 +97,7 @@ check_untyped_defs = true
 color_output = true
 disallow_any_generics = true
 disallow_incomplete_defs = true
+exclude = ["^docs", "^tests/(sites|templates)"]
 implicit_reexport = false
 pretty = true
 python_version = 3.10
@@ -112,7 +115,29 @@ warn_unused_configs = true
 warn_unused_ignores = true
 
 [tool.ruff]
-select = ["ARG", "F", "E", "W", "N", "D", "UP", "RET"]
+select = ["ARG","C4","D","E","F","FA","N","PT","RET","RUF","SIM","UP","W"]
 ignore = ["E501", "D203", "D213", "D4"]
 target-version = "py310"
+exclude = ["tests/sites", "tests/templates"]
 line-length = 80
+
+[tool.ruff.per-file-ignores]
+"src/**/*" = ["PT"]
+"tests/conftest.py" = ["F401", "F403"]
+"tests/test_*.py" = ["D"]
+
+[tool.pytest.ini_options]
+markers = [
+    "for_all_folders: perform multiple calls based on test folders",
+    "template_folder: use the folder as a template to copy data over it",
+    "meta_invert_fixture: invert the meaning of the fixture for testing"
+]
+addopts = ["--doctest-modules", "--ignore=tests/sites"]
+filterwarnings = """
+ignore::DeprecationWarning
+default::DeprecationWarning:rocm_docs
+default::PendingDeprecationWarning:rocm_docs
+ignore::PendingDeprecationWarning
+default::DeprecationWarning:tests
+default::DeprecationWarning:rocm_docs
+"""

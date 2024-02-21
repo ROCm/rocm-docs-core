@@ -1,10 +1,10 @@
-name: Code Linting
+name: Code
 on:
   pull_request:
 
 jobs:
   lint:
-    name: Python
+    name: Python Linting
     strategy:
       matrix:
         os: ["ubuntu-latest", "windows-latest"]
@@ -47,3 +47,49 @@ jobs:
       run: just _check-commit-range "refs/remotes/origin/${{ github.base_ref }}..HEAD"
     - name: Check linting, formatting, types
       run: just --set verbose_errors true -- check-codestyle
+
+  test:
+    name: Python Tests
+    strategy:
+      fail-fast: true
+      matrix:
+        os: ["ubuntu-latest", "windows-latest"]
+        python-version: ["3.8"]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3.5.0
+      with:
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "${{ matrix.python-version }}"
+        cache: pip
+        cache-dependency-path: |
+          pyproject.toml
+          requirements.txt
+    - name: Set up Doxygen
+      uses: ssciwr/doxygen-install@v1.2.0
+      with:
+        version: 1.9.8
+    - name: Set up Graphviz
+      uses: ts-graphviz/setup-graphviz@v1.2.0
+      with:
+        ubuntu-graphviz-version: 2.42.2-6
+        windows-graphviz-version: '9.0.0'
+    - name: Cache venv
+      uses: actions/cache@v3.3.1
+      with:
+        path: .venv
+        key: venv-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
+    - name: Install just
+      uses: extractions/setup-just@v1
+      with:
+        just-version: '1.13.0'
+    - name: Create virtual env, install requirements
+      run: just deps
+    - name: Install
+      run: just install
+    - name: Run tests
+      run: just test

@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Any, Union
+from typing import Any, Dict, Tuple, Union, cast
 
+import importlib.metadata
 import importlib.resources
 import importlib.util
 import os
@@ -15,7 +16,9 @@ from pathlib import Path
 from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import-untyped]
 from sphinx.application import Sphinx
 from sphinx.config import Config
-from sphinx.errors import ConfigError
+from sphinx.errors import ConfigError, ExtensionError
+from sphinx.util import logging, progress_message
+from sphinx.util.osutil import copyfile
 
 from rocm_docs import util
 
@@ -117,11 +120,36 @@ def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
     except FileNotFoundError as err:
         raise NotADirectoryError(
             "Expected doxygen to generate the folder"
-            f" {str(doxygen_root)} but it could not be found."
+            f" {doxygen_root!s} but it could not be found."
         ) from err
 
     setattr(app.config, "breathe_projects", {project_name: str(xml_path)})
     setattr(app.config, "breathe_default_project", project_name)
+
+
+def _update_doxylink_settings(app: Sphinx, _: Config) -> None:
+    if not hasattr(app.config, "doxylink"):
+        logger.info(
+            "doxylink not enabled, skipping setting up the current" " project"
+        )
+        return
+
+    if app.config.doxygen_html is None:
+        return
+
+    # Materialize the default value, since we're about to mutate it
+    # Otherwise config.doxylink would return a temporary and any modification to
+    # it would be lost.
+    if not config_provided_by_user(app, "doxylink"):
+        app.config.doxylink = app.config.doxylink  # type: ignore [attr-defined]
+
+    doxylink = cast(
+        Dict[str, Union[Tuple[str, str], Tuple[str, str, str]]],
+        app.config.doxylink,
+    )
+    tagfile = Path(app.srcdir, app.config.doxygen_html, "tagfile.xml")
+
+    doxylink.setdefault("doxygen", (str(tagfile), str(app.config.doxygen_html)))
 
 
 def _run_doxysphinx(
@@ -140,24 +168,40 @@ def _run_doxysphinx(
             '"pip install rocm-docs-core[api_reference]")'
         )
 
+    doxyphinx_version = importlib.metadata.version("doxysphinx")
+    args = [
+        sys.executable,
+        "-m",
+        "doxysphinx",
+        "build",
+        "--doxygen_exe=" + str(doxygen_exe.absolute()),
+    ]
+    if doxyphinx_version.endswith("+tagfile.toc"):
+        args.append("--tagfile_toc")
+    args += [app.srcdir, app.outdir, str(doxyfile)]
+
     try:
-        subprocess.check_call(
-            [
-                sys.executable,
-                "-m",
-                "doxysphinx",
-                "build",
-                "--doxygen_exe=" + str(doxygen_exe.absolute()),
-                app.srcdir,
-                app.outdir,
-                doxyfile,
-            ],
-            cwd=doxygen_root,
-        )
+        subprocess.check_call(args, cwd=doxygen_root)
     except subprocess.CalledProcessError as err:
         raise RuntimeError(
             f"doxysphinx failed (exit code: {err.returncode})"
         ) from err
+
+
+def _copy_tagfile(app: Sphinx) -> None:
+    if app.config.doxygen_html is None:
+        return
+
+    if app.builder.format != "html":
+        return
+
+    src = Path(app.srcdir, app.config.doxygen_html, "tagfile.xml")
+    dst = Path(app.outdir, src.name)
+    with progress_message("copying doxygen tagfile"):
+        try:
+            copyfile(str(src), str(dst))
+        except OSError as err:
+            raise ExtensionError(f"Failed to copy tag file: {err}") from err
 
 
 def setup(app: Sphinx) -> dict[str, Any]:
@@ -190,8 +234,15 @@ def setup(app: Sphinx) -> dict[str, Any]:
         types=dict[str, Union[None, str, "os.PathLike[Any]"]],
     )
     app.add_config_value("doxysphinx_enabled", False, rebuild="", types=bool)
+    app.add_config_value("doxygen_html", None, rebuild="")
 
     # Should run before breathe sees their parameters, as we provide defaults.
     app.connect("config-inited", _run_doxygen, priority=400)
+    # Has to run after projects.py config-inited, as it might set
+    # doxygen_html
+    app.connect("config-inited", _update_doxylink_settings, priority=500)
+    # Should run after projects.py's config (if enabled) as it provides values
+    # based on the contents projects.yaml, needs access to the builder
+    app.connect("builder-inited", _copy_tagfile)
 
     return {"parallel_read_safe": True, "parallel_write_safe": True}

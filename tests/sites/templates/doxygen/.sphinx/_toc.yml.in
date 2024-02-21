@@ -1,0 +1,11 @@
+root: index.md
+entries:
+  - file: a
+  - file: breathe
+  - file: doxylink
+  - file: .doxygen/docBin/html/index
+    title: Doxygen API Reference
+  - title: External Project A
+    url: ${project:a}
+  - title: Externale Project B
+    url: ${project:b}

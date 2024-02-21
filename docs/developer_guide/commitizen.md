@@ -33,6 +33,8 @@ Type must be one of:
 - **`style`**: Changes that do not affect the meaning of the code (white-space,
   formatting, missing semi-colons, etc)
 - **`test`**: Adding missing tests or correcting existing tests
+- **`chore`**: Other changes that don't modify source code, test or build files
+  (e.g changing `.gitignore`)
 
 The **scope** if included should be the area the change affects in parentheses
 i.e. `(theme)` for theming changes or `(deps)` for changes to the list of

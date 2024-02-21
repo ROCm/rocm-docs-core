@@ -4,7 +4,9 @@ Set up variables for documentation of ROCm projects
 that are using Read the Docs.
 """
 
-from typing import TypeAlias
+from __future__ import annotations
+
+from typing import ClassVar, TypeAlias, Union
 
 import os
 
@@ -19,7 +21,7 @@ MaybePath: TypeAlias = str | os.PathLike | None
 class ROCmDocs:
     """A class to contain all of the Sphinx variables."""
 
-    SPHINX_VARS = [
+    SPHINX_VARS: ClassVar = [
         "extensions",
         "html_title",
         "html_theme",

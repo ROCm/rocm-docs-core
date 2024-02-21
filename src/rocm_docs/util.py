@@ -76,7 +76,7 @@ def get_branch(
         remote_url = os.environ.get("READTHEDOCS_GIT_CLONE_URL", "")
         url = get_repo_url(remote_url)
         build_type = os.environ["READTHEDOCS_VERSION_TYPE"]
-        match = re.match(r"(?:.*://)?.*\.com[/:](.*)\.git", remote_url)
+        match = re.match(r"(?:.*://)?.*\.(com|io)[/:](.*)\.git", remote_url)
         assert match is not None
         repo_fqn: str = match[1]
         if build_type in ("branch", "tag"):
@@ -160,9 +160,8 @@ def copy_from_package(
             # unzipping and/or the creation of a temporary file.
             # This is not the case when opening the file as a
             # stream.
-            with entry.open("rb") as infile:
-                with open(entry_path, "wb") as out:
-                    shutil.copyfileobj(infile, out)
+            with entry.open("rb") as infile, open(entry_path, "wb") as out:
+                shutil.copyfileobj(infile, out)
 
 
 __all__ = [
