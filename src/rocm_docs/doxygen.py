@@ -23,6 +23,8 @@ from sphinx.util.osutil import copyfile
 from rocm_docs import util
 
 
+logger = logging.getLogger(__name__)
+
 def _copy_files(app: Sphinx) -> None:
     """Insert additional files into workspace."""
     pkg = importlib.resources.files("rocm_docs")
