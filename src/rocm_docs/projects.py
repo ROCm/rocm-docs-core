@@ -86,6 +86,7 @@ class _Project:
 
         doxygen_entry = entry["doxygen"]
         assert isinstance(doxygen_entry, dict) or isinstance(doxygen_entry, str)
+        
         if isinstance(doxygen_entry, dict):
             doxygen_entry = doxygen_entry["html"]
 

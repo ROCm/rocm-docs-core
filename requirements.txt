@@ -108,7 +108,7 @@ mdurl==0.1.2
     # via markdown-it-py
 mpire==2.10.0
     # via doxysphinx
-mypy==1.8.0
+mypy==1.6.1
     # via rocm-docs-core (pyproject.toml)
 mypy-extensions==1.0.0
     # via
