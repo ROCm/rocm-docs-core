@@ -1,3 +1,18 @@
+## v0.35.0 (2024-02-22)
+
+### Feat
+
+- **theme.py**: Update banner announcement about docs.amd.com redirect
+
+### Fix
+
+- Update rocm flavor header.jinja to Blogs
+- **header.jinja**: Replace Lab Notes link with Blogs
+
+### Refactor
+
+- **theme.py**: Modify new banner announcement message for latest
+
 ## v0.34.2 (2024-02-15)
 
 ### Fix
