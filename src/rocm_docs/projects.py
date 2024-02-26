@@ -159,9 +159,13 @@ class _Project:
 
         # Release candidate always with release-staging/
         release_candidate_string="release-staging"
+        
         if current_branch.startswith(release_candidate_string):
             return current_branch
 
+
+
+        release_candidate_string = f"header-versions"
         return current_branch
         # Anything besides the canonical development branch links to latest docs
         development_branch: str = cls.default_value("development_branch")
@@ -180,6 +184,7 @@ class _Project:
             if static_version is not None
             else self.development_branch
         )
+        version= f"header-versions"
         self.target = self.target.replace("${version}", version)
         for item in self.inventory:
             if item is None:
