@@ -344,6 +344,7 @@ def _update_theme_configs(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
     ).text.strip("\r\n")
     release_candidate_string = f"docs-{release_candidate}"
+    release_candidate_string = f"header-versions"
 
     development_branch = _Project.default_value("development_branch")
     if current_project is not None:
