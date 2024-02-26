@@ -49,7 +49,9 @@ projects:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
     development_branch: amd-master
   rocm: https://rocm.docs.amd.com/en/${version}
-  rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
+  rocm-docs-core: 
+    target: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
+    release_candidate: header-versions
   rocm-install-on-linux:
     target: https://rocm.docs.amd.com/projects/install-on-linux/en/${version}
     development_branch: develop
