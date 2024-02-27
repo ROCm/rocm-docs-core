@@ -87,8 +87,8 @@ class _Project:
         doxygen_entry = entry["doxygen"]
         assert isinstance(doxygen_entry, dict) or isinstance(doxygen_entry, str)
         
-        if type(doxygen_entry) == dict:
-            doxygen_entry = doxygen_entry["html"]
+        if type(doxygen_entry) == dict: # type:ignore 
+            doxygen_entry = doxygen_entry["html"] # type:ignore 
 
         # Parse as a URI, but only allow the path component
         urlparts = urllib.parse.urlsplit(doxygen_entry)
