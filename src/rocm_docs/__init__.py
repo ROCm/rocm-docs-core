@@ -6,7 +6,7 @@ that are using Read the Docs.
 
 from __future__ import annotations
 
-from typing import ClassVar, TypeAlias, Union
+from typing import ClassVar, TypeAlias
 
 import os
 

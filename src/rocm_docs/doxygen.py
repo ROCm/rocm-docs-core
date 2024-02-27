@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, Tuple, Union, cast
+from typing import Any, Union, cast
 
 import importlib.metadata
 import importlib.resources
@@ -146,7 +146,7 @@ def _update_doxylink_settings(app: Sphinx, _: Config) -> None:
         app.config.doxylink = app.config.doxylink  # type: ignore [attr-defined]
 
     doxylink = cast(
-        Dict[str, Union[Tuple[str, str], Tuple[str, str, str]]],
+        dict[str, tuple[str, str] | tuple[str, str, str]],
         app.config.doxylink,
     )
     tagfile = Path(app.srcdir, app.config.doxygen_html, "tagfile.xml")

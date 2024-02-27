@@ -115,8 +115,8 @@ warn_unused_configs = true
 warn_unused_ignores = true
 
 [tool.ruff]
-select = ["ARG","C4","D","E","F","FA","N","PT","RET","RUF","SIM","UP","W"]
-ignore = ["E501", "D203", "D213", "D4"]
+lint.select = ["ARG","C4","D","E","F","FA","N","PT","RET","RUF","SIM","UP","W"]
+lint.ignore = ["E501", "D203", "D213", "D4"]
 target-version = "py310"
 exclude = ["tests/sites", "tests/templates"]
 line-length = 80

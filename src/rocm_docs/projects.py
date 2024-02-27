@@ -5,7 +5,7 @@ Remote loading of intersphinx_mapping from file, templating projects in toc.yml)
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple, TypeAlias, Union, cast
+from typing import Any, TypeAlias, cast
 
 import functools
 import importlib.resources
@@ -85,10 +85,10 @@ class _Project:
             return None
 
         doxygen_entry = entry["doxygen"]
-        assert isinstance(doxygen_entry, dict) or isinstance(doxygen_entry, str)
-        
-        if type(doxygen_entry) == dict: # type:ignore 
-            doxygen_entry = doxygen_entry["html"] # type:ignore 
+        assert isinstance(doxygen_entry, dict | str)
+
+        if isinstance(doxygen_entry, dict): # type:ignore
+            doxygen_entry = doxygen_entry["html"] # type:ignore
 
         # Parse as a URI, but only allow the path component
         urlparts = urllib.parse.urlsplit(doxygen_entry)
@@ -118,7 +118,7 @@ class _Project:
         # It's okay to just index into optional fields, because jsonschema
         # fills in any missing fields with their default values
         inventory = entry["inventory"]
-        assert inventory is None or isinstance(inventory, (list, str))
+        assert inventory is None or isinstance(inventory, list | str)
         if not isinstance(inventory, list):
             inventory = [inventory]
 
@@ -133,7 +133,7 @@ class _Project:
     def get_static_version(
         cls,
         current_branch: str,
-        current_project: Optional["_Project"],
+        current_project: _Project | None,
     ) -> str | None:
         """Returns a common static version if it exists.
 
