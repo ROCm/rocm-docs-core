@@ -85,7 +85,10 @@ line_length = 80
 skip = [
   "src/rocm_docs/core.py",
   "src/rocm_docs/doxygen.py",
-  "src/rocm_docs/projects.py"
+  "src/rocm_docs/projects.py",
+  "src\\rocm_docs\\core.py",
+  "src\\rocm_docs\\doxygen.py",
+  "src\\rocm_docs\\projects.py",
 ]
 
 known_typing = ["typing", "types", "typing_extensions", "mypy", "mypy_extensions"]
