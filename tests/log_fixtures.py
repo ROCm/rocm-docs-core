@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import types
-from typing import Callable, Iterable, Iterator, Literal, NamedTuple
+from typing import Literal, NamedTuple
+from collections.abc import Callable, Iterable, Iterator
 
 import contextlib
 import copy
