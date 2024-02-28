@@ -21,7 +21,9 @@ import github
 import requests
 import sphinx.util.logging
 import yaml
-from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import-untyped]
+from pydata_sphinx_theme.utils import (
+    config_provided_by_user,  # type: ignore[import-untyped]
+)
 from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ExtensionError
@@ -87,8 +89,8 @@ class _Project:
         doxygen_entry = entry["doxygen"]
         assert isinstance(doxygen_entry, dict | str)
 
-        if isinstance(doxygen_entry, dict): # type:ignore
-            doxygen_entry = doxygen_entry["html"] # type:ignore
+        if isinstance(doxygen_entry, dict):  # type:ignore
+            doxygen_entry = doxygen_entry["html"]  # type:ignore
 
         # Parse as a URI, but only allow the path component
         urlparts = urllib.parse.urlsplit(doxygen_entry)

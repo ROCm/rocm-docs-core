@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import types
 from typing import Literal, NamedTuple
-from collections.abc import Callable, Iterable, Iterator
 
 import contextlib
 import copy
 import itertools
 import logging
 import unittest.mock
+from collections.abc import Callable, Iterable, Iterator
 
 import pytest
 
