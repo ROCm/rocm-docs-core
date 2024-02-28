@@ -127,7 +127,7 @@ def test_external_projects_unknown_project(
 def test_doxygen_html_types(
     doxygen: str | dict[str, str],
 ) -> None:
-    result = rocm_docs.projects._Project._get_doxygen_html({"doxygen": doxygen})
+    result = rocm_docs.projects._Project._get_doxygen_html({"doxygen": doxygen}) # type: ignore
     assert result == "doxygen/html"
 
 
