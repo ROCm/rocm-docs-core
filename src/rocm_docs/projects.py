@@ -21,7 +21,9 @@ import github
 import requests
 import sphinx.util.logging
 import yaml
-from pydata_sphinx_theme.utils import config_provided_by_user  # type: ignore[import-untyped]
+from pydata_sphinx_theme.utils import ( # type: ignore[import-untyped]
+    config_provided_by_user,
+)
 from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ExtensionError
