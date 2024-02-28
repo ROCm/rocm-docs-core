@@ -18,7 +18,7 @@ from pathlib import Path
 
 import bs4
 import git.repo
-from pydata_sphinx_theme.utils import ( # type: ignore[import-untyped]
+from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
 )
 from sphinx.application import Sphinx
