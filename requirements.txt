@@ -167,10 +167,8 @@ pyparsing==3.1.1
     #   doxysphinx
     #   sphinxcontrib-doxylink
 pyproject-hooks==1.0.0
-    # via
-    #   build
-    #   pip-tools
-pytest==8.0.1
+    # via build
+pytest==8.0.2
     # via rocm-docs-core (pyproject.toml)
 python-dateutil==2.8.2
     # via sphinxcontrib-doxylink
