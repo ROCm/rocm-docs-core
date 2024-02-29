@@ -48,8 +48,8 @@ Traversable = importlib_abc.Traversable
 Inventory = Union[str, None, Tuple[Union[str, None], ...]]
 ProjectMapping = Tuple[str, Inventory]
 
-DEFAULT_INTERSPHINX_REPOSITORY = "RadeonOpenCompute/rocm-docs-core"
-DEFAULT_INTERSPHINX_BRANCH = "develop"
+DEFAULT_INTERSPHINX_REPOSITORY = "StreamHPC/rocm-docs-core"
+DEFAULT_INTERSPHINX_BRANCH = "rocdoc-249"
 
 logger = sphinx.util.logging.getLogger(__name__)
 
