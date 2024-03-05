@@ -1,3 +1,10 @@
+## v0.35.1 (2024-03-05)
+
+### Fix
+
+- **footer.jinja**: Fix license link for rocm flavor
+- **header.jinja**: Update link to infinity hub
+
 ## v0.35.0 (2024-02-22)
 
 ### Feat
