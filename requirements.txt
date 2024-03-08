@@ -8,7 +8,7 @@ accessible-pygments==0.0.4
     # via pydata-sphinx-theme
 alabaster==0.7.16
     # via sphinx
-argcomplete==3.2.2
+argcomplete==3.2.3
     # via commitizen
 babel==2.14.0
     # via
@@ -20,7 +20,7 @@ black==24.2.0
     # via rocm-docs-core (pyproject.toml)
 breathe==4.35.0
     # via rocm-docs-core (pyproject.toml)
-build==1.0.3
+build==1.1.1
     # via
     #   pip-tools
     #   rocm-docs-core (pyproject.toml)
@@ -47,7 +47,7 @@ click-log==0.4.0
     # via doxysphinx
 colorama==0.4.6
     # via commitizen
-commitizen==3.16.0
+commitizen==3.18.0
     # via rocm-docs-core (pyproject.toml)
 cryptography==42.0.5
     # via pyjwt
@@ -81,8 +81,13 @@ idna==3.6
     # via requests
 imagesize==1.4.1
     # via sphinx
-importlib-metadata==7.0.1
-    # via commitizen
+importlib-metadata==7.0.2
+    # via
+    #   build
+    #   commitizen
+    #   sphinx
+importlib-resources==6.1.0 ; python_version < "3.9"
+    # via rocm-docs-core (pyproject.toml)
 iniconfig==2.0.0
     # via pytest
 isort==5.13.2
@@ -128,7 +133,7 @@ packaging==23.2
     #   sphinx
 pathspec==0.12.1
     # via black
-pip-tools==7.4.0
+pip-tools==7.4.1
     # via rocm-docs-core (pyproject.toml)
 platformdirs==4.2.0
     # via
@@ -162,7 +167,7 @@ pyjwt[crypto]==2.8.0
     #   pyjwt
 pynacl==1.5.0
     # via pygithub
-pyparsing==3.1.1
+pyparsing==3.1.2
     # via
     #   doxysphinx
     #   sphinxcontrib-doxylink
@@ -170,8 +175,12 @@ pyproject-hooks==1.0.0
     # via build
 pytest==8.0.2
     # via rocm-docs-core (pyproject.toml)
-python-dateutil==2.8.2
-    # via sphinxcontrib-doxylink
+python-dateutil==2.9.0.post0
+    # via
+    #   pygithub
+    #   sphinxcontrib-doxylink
+pytz==2024.1
+    # via babel
 pyyaml==6.0.1
     # via
     #   commitizen
@@ -185,7 +194,7 @@ requests==2.31.0
     # via
     #   pygithub
     #   sphinx
-ruff==0.2.2
+ruff==0.3.1
     # via rocm-docs-core (pyproject.toml)
 six==1.16.0
     # via python-dateutil
@@ -241,7 +250,7 @@ tomli==2.0.1
     #   pip-tools
     #   pyproject-hooks
     #   pytest
-tomlkit==0.12.3
+tomlkit==0.12.4
     # via commitizen
 tqdm==4.66.2
     # via mpire
