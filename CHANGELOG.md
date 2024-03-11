@@ -1,3 +1,9 @@
+## v0.36.0 (2024-03-11)
+
+### Feat
+
+- **theme.conf**: Update latest header version
+
 ## v0.35.1 (2024-03-05)
 
 ### Fix
@@ -58,7 +64,6 @@
 - Change rocm-blogs flavor top level header to ROCm Blogs
 - Change rocm-blogs second level header Lab Notes to ROCm Docs
 - Remove version list from rocm-blogs header
-- sync wordlist
 
 ## v0.33.0 (2024-01-26)
 
@@ -92,6 +97,7 @@
 ### Fix
 
 - Remove carriage return and newline when checking versions
+- sync wordlist
 - **header.jinja**: Fix support link in header for rocm-docs-core
 
 ### Refactor
@@ -355,6 +361,7 @@
 
 ### Refactor
 
+- formatting fixes for ruff linting
 - **header.html**: test rtd embed flyout div
 - **theme.py**: remove unnecessary open mode param UP015 for ruff
 - remove trailing whitespaces
@@ -516,21 +523,12 @@
 
 ## v0.10.0 (2023-05-09)
 
-### Feat
-
-- Bring into compliance with AMD styling
-
 ### Fix
 
 - Fix header on narrow screens
 - Remove left side menu & buttons
 - Fix lengths on shorter breadcrumbs
 - Add zero width spaces when testing width
-- deprecate disable_main_doc_link
-- fix breadcrumbs and scrolling
-- update ROCm Documentation url
-- Tighten secondary nav
-- Improve transitioning on resize
 
 ### Refactor
 
@@ -553,8 +551,17 @@
 
 ### Feat
 
+- Bring into compliance with AMD styling
 - **core.py**: set default publish date as time article was last modified
 - **core.py**: set default read time by counting visible words in html output
+
+### Fix
+
+- deprecate disable_main_doc_link
+- fix breadcrumbs and scrolling
+- update ROCm Documentation url
+- Tighten secondary nav
+- Improve transitioning on resize
 
 ### Refactor
 
@@ -562,8 +569,6 @@
 - merge with develop branch
 - get file modification time using git
 - import article info via importlib.resources
-- convert myst_enable_extensions to set and add configunion helper
-- **core.py**: explicitly cast to list
 
 ## v0.8.0 (2023-05-02)
 
@@ -575,7 +580,16 @@
 
 - Remove unintended CSS changes
 
+### Refactor
+
+- convert myst_enable_extensions to set and add configunion helper
+- **core.py**: explicitly cast to list
+
 ## v0.7.1 (2023-04-26)
+
+### Fix
+
+- docutil dependency
 
 ## v0.7.0 (2023-04-26)
 
