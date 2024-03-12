@@ -23,7 +23,11 @@ Some examples of how to use `doxysphinx` with `rocm-docs-core` are included belo
 
 Assuming Doxygen documentation is already configured correctly,
 several changes must be made to the configuration file (`conf.py`)
-located in the `docs` folder.
+located in the `docs` folder
+and the requirements files (`requirements.in` and `requirements.txt`)
+located in the `sphinx` folder.
+
+For the configuration file:
 
 - Include the `rocm_docs.doxygen` extension in the `extensions` list.
 
@@ -33,13 +37,38 @@ located in the `docs` folder.
 
 - Define a `doxygen_project` dictionary and set a `name` and `path`. For ROCm projects, the value of path is usually `doxygen/xml`.
 
+For the requirements files:
+
+- Specify the `api_reference` in the `requirements.in` (example: `rocm-docs-core[api_reference]==0.36.0`)
+
+- Use `pip-tools` to compile the `requirements.in`
+
+  - `pip install pip-tools`
+
+  - `pip-compile requirements.in --resolver=backtracking`
+
 Then add the Doxygen output to the table of contents (`_toc.yml.in`).
 
-This project has [Demo Doxygen Docs here](../demo/doxygen/html/index),
-which was achieved using the [configuration here](https://github.com/RadeonOpenCompute/rocm-docs-core/blob/develop/docs/conf.py)
-and the [table of contents set here](https://github.com/RadeonOpenCompute/rocm-docs-core/blob/develop/docs/sphinx/_toc.yml.in).
+Optionally, specify custom stylesheets to use in the Doxygen configuration (`Doxyfile`).
+These stylesheets are a part of `rocm-docs-core`.
 
-See [this PR for a simple example of adding a Doxygen code snippet](https://github.com/RadeonOpenCompute/rocm-docs-core/pull/222).
+- `HTML_HEADER`
+
+- `HTML_FOOTER`
+
+- `HTML_STYLESHEET`
+
+- `HTML_EXTRA_STYLESHEET`
+
+When building the documentation with the API reference enabled,
+the console output will also make configuration recommendations to make
+documentation builds succeed.
+If documentation builds are still failing, please follow the recommendations.
+
+This project has [Demo Doxygen Docs here](../demo/doxygen/html/index).
+See the [source code](https://github.com/ROCm/rocm-docs-core) for details.
 
 The `tests` folder in the `rocm-docs-core` project on GitHub
 also has example configuration files.
+
+See [this PR for a simple example of adding a Doxygen code snippet](https://github.com/RadeonOpenCompute/rocm-docs-core/pull/222).
