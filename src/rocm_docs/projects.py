@@ -5,9 +5,10 @@ Remote loading of intersphinx_mapping from file, templating projects in toc.yml)
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple, Union, cast
+from typing import Any, TypeAlias, cast
 
 import functools
+import importlib.resources
 import json
 import os
 import sys
@@ -29,24 +30,15 @@ from sphinx.errors import ExtensionError
 
 from rocm_docs import formatting, util
 
-if sys.version_info < (3, 9):
-    # importlib.resources either doesn't exist or lacks the files()
-    # function, so use the PyPI version:
-    import importlib_resources
-    import importlib_resources.abc as importlib_abc
+if sys.version_info < (3, 11):
+    import importlib.abc as importlib_abc
 else:
-    # importlib.resources has files(), so use that:
-    import importlib.resources as importlib_resources
-
-    if sys.version_info < (3, 11):
-        import importlib.abc as importlib_abc
-    else:
-        import importlib.resources.abc as importlib_abc
+    import importlib.resources.abc as importlib_abc
 
 Traversable = importlib_abc.Traversable
 
-Inventory = Union[str, None, Tuple[Union[str, None], ...]]
-ProjectMapping = Tuple[str, Inventory]
+Inventory: TypeAlias = str | None | tuple[str | None, ...]
+ProjectMapping: TypeAlias = tuple[str, Inventory]
 
 DEFAULT_INTERSPHINX_REPOSITORY = "RadeonOpenCompute/rocm-docs-core"
 DEFAULT_INTERSPHINX_BRANCH = "develop"
@@ -58,8 +50,8 @@ class InvalidMappingFileError(RuntimeError):
     """Mapping file has invalid format, or failed to validate."""
 
 
-ProjectItem = Union[str, None, List[Union[str, None]], Dict[str, str]]
-ProjectEntry = Union[str, Dict[str, ProjectItem]]
+ProjectItem: TypeAlias = str | list[str | None] | None
+ProjectEntry: TypeAlias = str | dict[str, ProjectItem]
 
 
 @dataclass
@@ -72,16 +64,16 @@ class _Project:
     @staticmethod
     @functools.lru_cache
     def yaml_schema() -> dict[str, Any]:
-        base = importlib_resources.files("rocm_docs") / "data"
+        base = importlib.resources.files("rocm_docs") / "data"
         schema_file = base / "projects.schema.json"
 
         return cast(
-            Dict[str, Any], json.load(schema_file.open(encoding="utf-8"))
+            dict[str, Any], json.load(schema_file.open(encoding="utf-8"))
         )
 
     @classmethod
     def schema(cls) -> dict[str, Any]:
-        return cast(Dict[str, Any], cls.yaml_schema()["$defs"]["project"])
+        return cast(dict[str, Any], cls.yaml_schema()["$defs"]["project"])
 
     @classmethod
     def default_value(cls, prop: str) -> str:
@@ -95,9 +87,10 @@ class _Project:
             return None
 
         doxygen_entry = entry["doxygen"]
-        assert isinstance(doxygen_entry, (dict, str))
-        if isinstance(doxygen_entry, dict):
-            doxygen_entry = doxygen_entry["html"]
+        assert isinstance(doxygen_entry, dict | str)
+
+        if isinstance(doxygen_entry, dict):  # type:ignore
+            doxygen_entry = doxygen_entry["html"]  # type:ignore
 
         # Parse as a URI, but only allow the path component
         urlparts = urllib.parse.urlsplit(doxygen_entry)
@@ -127,7 +120,7 @@ class _Project:
         # It's okay to just index into optional fields, because jsonschema
         # fills in any missing fields with their default values
         inventory = entry["inventory"]
-        assert inventory is None or isinstance(inventory, (list, str))
+        assert inventory is None or isinstance(inventory, list | str)
         if not isinstance(inventory, list):
             inventory = [inventory]
 
@@ -309,7 +302,7 @@ def _load_projects(
 
     if projects is None:
         projects = _create_projects(
-            importlib_resources.files("rocm_docs") / projects_file_loc
+            importlib.resources.files("rocm_docs") / projects_file_loc
         )
 
     return projects

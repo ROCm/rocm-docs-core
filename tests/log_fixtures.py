@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import types
-from typing import Callable, Iterable, Iterator, Literal, NamedTuple
+from typing import Literal, NamedTuple
 
 import contextlib
 import copy
 import itertools
 import logging
 import unittest.mock
+from collections.abc import Callable, Iterable, Iterator
 
 import pytest
 
