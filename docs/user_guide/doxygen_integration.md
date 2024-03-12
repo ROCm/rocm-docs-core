@@ -49,8 +49,8 @@ For the requirements files:
 
 Then add the Doxygen output to the table of contents (`_toc.yml.in`).
 
-Optionally, specify custom stylesheets to use in the Doxygen configuration (`Doxyfile`).
-These stylesheets are a part of `rocm-docs-core`.
+Optionally, specify custom style sheets to use in the Doxygen configuration (`Doxyfile`).
+These style sheets are a part of `rocm-docs-core`.
 
 - `HTML_HEADER`
 
