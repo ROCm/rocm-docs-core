@@ -44,11 +44,12 @@ def _update_banner(
 ) -> None:
     if flavor != "rocm":
         return
+    
+    if version_type == util.VersionType.LATEST_RELEASE:
+        return
 
     announcement_info: str
-    if version_type == util.VersionType.LATEST_RELEASE:
-        announcement_info = "The redirect from <a href='https://docs.amd.com'>docs.amd.com</a> to <a href='https://rocm.docs.amd.com/en/latest/'>rocm.docs.amd.com</a> will be removed in mid March. Please update any existing ROCm bookmarks or links that reference <a href='https://docs.amd.com'>docs.amd.com</a> to <a href='https://rocm.docs.amd.com/en/latest/'>rocm.docs.amd.com</a>."
-    elif version_type == util.VersionType.RELEASE_CANDIDATE:
+    if version_type == util.VersionType.RELEASE_CANDIDATE:
         announcement_info = "This page contains changes for a test release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
     elif version_type == util.VersionType.OLD_RELEASE:
         announcement_info = "This is an old version of ROCm documentation. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest ROCm release documentation</a> to stay informed of all our developments."
