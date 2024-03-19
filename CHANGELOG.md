@@ -1,3 +1,9 @@
+## v0.37.0 (2024-03-19)
+
+### Feat
+
+- **theme.py**: Remove banner on latest release
+
 ## v0.36.0 (2024-03-11)
 
 ### Feat
