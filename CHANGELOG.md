@@ -1,3 +1,9 @@
+## v0.37.1 (2024-03-21)
+
+### Fix
+
+- **theme.conf**: Create point fix for 6.0.2
+
 ## v0.37.0 (2024-03-19)
 
 ### Feat
