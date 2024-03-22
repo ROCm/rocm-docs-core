@@ -628,6 +628,7 @@ tqdm
 tracebacks
 txt
 uarch
+unallocated
 uncached
 uncorrectable
 uninstallation
