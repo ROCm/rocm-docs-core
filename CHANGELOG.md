@@ -1,3 +1,9 @@
+## v0.38.0 (2024-03-26)
+
+### Feat
+
+- **theme.conf**: Update latest version for header
+
 ## v0.37.1 (2024-03-21)
 
 ### Fix
