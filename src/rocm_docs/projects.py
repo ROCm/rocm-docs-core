@@ -48,8 +48,8 @@ Traversable = importlib_abc.Traversable
 Inventory = Union[str, None, Tuple[Union[str, None], ...]]
 ProjectMapping = Tuple[str, Inventory]
 
-DEFAULT_INTERSPHINX_REPOSITORY = "RadeonOpenCompute/rocm-docs-core"
-DEFAULT_INTERSPHINX_BRANCH = "develop"
+DEFAULT_INTERSPHINX_REPOSITORY = "StreamHPC/rocm-docs-core"
+DEFAULT_INTERSPHINX_BRANCH = "rocdoc-249"
 
 logger = sphinx.util.logging.getLogger(__name__)
 
@@ -157,6 +157,16 @@ class _Project:
         if current_branch.startswith("docs-"):
             return current_branch
 
+        # Release candidate always with release-staging/
+        release_candidate_string="release-staging"
+        
+        if current_branch.startswith(release_candidate_string):
+            return current_branch
+
+
+
+        release_candidate_string = f"header-versions"
+        return current_branch
         # Anything besides the canonical development branch links to latest docs
         development_branch: str = cls.default_value("development_branch")
         if current_project is not None:
@@ -174,6 +184,7 @@ class _Project:
             if static_version is not None
             else self.development_branch
         )
+        version= f"header-versions"
         self.target = self.target.replace("${version}", version)
         for item in self.inventory:
             if item is None:
@@ -338,6 +349,7 @@ def _update_theme_configs(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
     ).text.strip("\r\n")
     release_candidate_string = f"docs-{release_candidate}"
+    release_candidate_string = f"header-versions"
 
     development_branch = _Project.default_value("development_branch")
     if current_project is not None:
