@@ -89,7 +89,8 @@ def _run_doxygen(app: Sphinx, config: Config) -> None:
     # Running doxygen requires that the files are already copied because
     # the Doxyfile references files distributed with rocm-docs-core
     # (e.g. stylesheets)
-    _copy_files(app)
+    if app.config.doxysphinx_enabled:
+        _copy_files(app)
     try:
         subprocess.check_call([doxygen_exe, "--version"], cwd=doxygen_root)
         subprocess.check_call([doxygen_exe, doxyfile], cwd=doxygen_root)
