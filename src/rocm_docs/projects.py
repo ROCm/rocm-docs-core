@@ -67,6 +67,7 @@ class _Project:
     target: str
     inventory: list[str | None]
     development_branch: str
+    release_candidate: str
     doxygen_html: str | None = None
 
     @staticmethod
@@ -122,6 +123,7 @@ class _Project:
                 entry,
                 [cls.default_value("inventory")],
                 cls.default_value("development_branch"),
+                cls.default_value("release_candidate"),
             )
 
         # It's okay to just index into optional fields, because jsonschema
@@ -135,6 +137,7 @@ class _Project:
             cast(str, entry["target"]),
             inventory,
             cast(str, entry["development_branch"]),
+            cast(str, entry["release_candidate"]),
             cls._get_doxygen_html(entry),
         )
 
