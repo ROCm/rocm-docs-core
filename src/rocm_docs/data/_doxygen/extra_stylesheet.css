@@ -2501,5 +2501,5 @@ html[data-theme=dark] .doxygen-content .tabs-overview button.tab-button:hover .t
  Alignment for Doxygen tables (eg: Modules)
 */
 .doxygen-content .contents {
-    justify-content: flex-end;
+    justify-content: left;
 }
