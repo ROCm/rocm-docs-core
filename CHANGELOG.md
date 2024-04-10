@@ -1,3 +1,13 @@
+## v0.38.1 (2024-04-10)
+
+### Fix
+
+- **extra_stylesheet.css**: Fix flexbox positioning for doxygen content
+
+### Refactor
+
+- Specify left instead of flex-end
+
 ## v0.38.0 (2024-03-26)
 
 ### Feat
