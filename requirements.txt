@@ -77,7 +77,7 @@ gitpython==3.1.43
     # via rocm-docs-core (pyproject.toml)
 identify==2.5.35
     # via pre-commit
-idna==3.6
+idna==3.7
     # via requests
 imagesize==1.4.1
     # via sphinx
