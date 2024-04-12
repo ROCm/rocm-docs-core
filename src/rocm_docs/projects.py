@@ -17,6 +17,7 @@ from pathlib import Path
 
 import fastjsonschema  # type: ignore[import-untyped]
 import github
+import requests
 import sphinx.util.logging
 import yaml
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
@@ -329,9 +330,13 @@ def _update_theme_configs(
     app: Sphinx, current_project: _Project | None, current_branch: str
 ) -> None:
     """Update configurations for use in theme.py"""
-    latest_version = "6.0.0"
+    latest_version = requests.get(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
+    ).text.strip("\r\n")
     latest_version_string = f"docs-{latest_version}"
-    release_candidate = "6.1.0"
+    release_candidate = requests.get(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
+    ).text.strip("\r\n")
     release_candidate_string = f"docs-{release_candidate}"
 
     development_branch = _Project.default_value("development_branch")

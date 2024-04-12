@@ -75,7 +75,14 @@ class _DefaultSettings:
     copyright = _ConfigDefault("2022-2023, Advanced Micro Devices Ltd")
     # pylint: enable=redefined-builtin
     myst_enable_extensions = _ConfigUnion(
-        {"colon_fence", "fieldlist", "replacements", "substitution"}
+        {
+            "colon_fence",
+            "dollarmath",
+            "fieldlist",
+            "html_image",
+            "replacements",
+            "substitution",
+        }
     )
     myst_heading_anchors = _ConfigDefault(3)
     external_toc_exclude_missing = _ConfigDefault(False)

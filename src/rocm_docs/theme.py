@@ -6,6 +6,7 @@ from typing import Any
 
 from pathlib import Path
 
+import requests
 import sphinx.util.logging
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
@@ -62,7 +63,7 @@ def _update_theme_options(app: Sphinx) -> None:
     theme_opts = get_theme_options_dict(app)
     _update_repo_opts(app.srcdir, theme_opts)
 
-    supported_flavors = ["rocm", "local"]
+    supported_flavors = ["rocm", "local", "rocm-docs-home", "rocm-blogs"]
     flavor = theme_opts.get("flavor", "rocm")
     if flavor not in supported_flavors:
         logger.error(
@@ -89,11 +90,22 @@ def _update_theme_options(app: Sphinx) -> None:
             0, "components/left-side-menu"
         )
 
+    header_latest_version = requests.get(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
+    ).text.strip("\r\n")
+    header_release_candidate_version = requests.get(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
+    ).text.strip("\r\n")
+
     default_config_opts = {
         "html_show_sphinx": False,
         "html_favicon": "https://www.amd.com/themes/custom/amd/favicon.ico",
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
+        "html_context": {
+            "theme_header_latest_version": header_latest_version,
+            "theme_header_release_candidate_version": header_release_candidate_version,
+        },
     }
     for key, default in default_config_opts.items():
         if not config_provided_by_user(app, key):

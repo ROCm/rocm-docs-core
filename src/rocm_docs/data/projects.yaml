@@ -24,6 +24,9 @@ projects:
   hipsparse: https://rocm.docs.amd.com/projects/hipSPARSE/en/${version}
   hipsparselt: https://rocm.docs.amd.com/projects/hipSPARSELt/en/${version}
   hiptensor: https://rocm.docs.amd.com/projects/hipTensor/en/${version}
+  hip-vs:
+    target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
+    development_branch: master
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
   python: https://docs.python.org/3/
@@ -38,12 +41,21 @@ projects:
   rocdbgapi:
     target: https://rocm.docs.amd.com/projects/ROCdbgapi/en/${version}
     development_branch: amd-master
+  rocdecode:
+    target: https://rocm.docs.amd.com/projects/rocDecode/en/${version}
+    development_branch: master
   rocfft: https://rocm.docs.amd.com/projects/rocFFT/en/${version}
   rocgdb:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
     development_branch: amd-master
   rocm: https://rocm.docs.amd.com/en/${version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
+  rocm-install-on-linux:
+    target: https://rocm.docs.amd.com/projects/install-on-linux/en/${version}
+    development_branch: develop
+  rocm-install-on-windows:
+    target: https://rocm.docs.amd.com/projects/install-on-windows/en/${version}
+    development_branch: develop
   rocm_smi_lib:
     target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
     development_branch: master

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Tuple, Union, cast
 
+import importlib.metadata
 import importlib.util
 import os
 import shutil
@@ -88,7 +89,8 @@ def _run_doxygen(app: Sphinx, config: Config) -> None:
     # Running doxygen requires that the files are already copied because
     # the Doxyfile references files distributed with rocm-docs-core
     # (e.g. stylesheets)
-    _copy_files(app)
+    if app.config.doxysphinx_enabled:
+        _copy_files(app)
     try:
         subprocess.check_call([doxygen_exe, "--version"], cwd=doxygen_root)
         subprocess.check_call([doxygen_exe, doxyfile], cwd=doxygen_root)
@@ -105,9 +107,9 @@ def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
     ) or config_provided_by_user(app, "breathe_default_project"):
         return
 
-    doxygen_project: dict[
-        str, None | str | os.PathLike[Any]
-    ] = app.config.doxygen_project
+    doxygen_project: dict[str, None | str | os.PathLike[Any]] = (
+        app.config.doxygen_project
+    )
 
     # To support the (legacy) ROCmDocs interface 'None' is a synonym for the
     # default value for each element of the Tuple
@@ -178,20 +180,20 @@ def _run_doxysphinx(
             '"pip install rocm-docs-core[api_reference]")'
         )
 
+    doxyphinx_version = importlib.metadata.version("doxysphinx")
+    args = [
+        sys.executable,
+        "-m",
+        "doxysphinx",
+        "build",
+        "--doxygen_exe=" + str(doxygen_exe.absolute()),
+    ]
+    if doxyphinx_version.endswith("+tagfile.toc"):
+        args.append("--tagfile_toc")
+    args += [app.srcdir, app.outdir, str(doxyfile)]
+
     try:
-        subprocess.check_call(
-            [
-                sys.executable,
-                "-m",
-                "doxysphinx",
-                "build",
-                "--doxygen_exe=" + str(doxygen_exe.absolute()),
-                app.srcdir,
-                app.outdir,
-                doxyfile,
-            ],
-            cwd=doxygen_root,
-        )
+        subprocess.check_call(args, cwd=doxygen_root)
     except subprocess.CalledProcessError as err:
         raise RuntimeError(
             f"doxysphinx failed (exit code: {err.returncode})"

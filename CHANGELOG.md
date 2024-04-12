@@ -1,3 +1,203 @@
+## v0.38.0 (2024-03-26)
+
+### Feat
+
+- **theme.conf**: Update latest version for header
+
+## v0.37.1 (2024-03-21)
+
+### Fix
+
+- **theme.conf**: Create point fix for 6.0.2
+
+## v0.37.0 (2024-03-19)
+
+### Feat
+
+- **theme.py**: Remove banner on latest release
+
+## v0.36.0 (2024-03-11)
+
+### Feat
+
+- **theme.conf**: Update latest header version
+
+## v0.35.1 (2024-03-05)
+
+### Fix
+
+- **footer.jinja**: Fix license link for rocm flavor
+- **header.jinja**: Update link to infinity hub
+
+## v0.35.0 (2024-02-22)
+
+### Feat
+
+- **theme.py**: Update banner announcement about docs.amd.com redirect
+
+### Fix
+
+- Update rocm flavor header.jinja to Blogs
+- **header.jinja**: Replace Lab Notes link with Blogs
+
+### Refactor
+
+- **theme.py**: Modify new banner announcement message for latest
+
+## v0.34.2 (2024-02-15)
+
+### Fix
+
+- **left-side-menu.jinja**: Fix main doc link for rocm flavor left side menu
+
+## v0.34.1 (2024-02-15)
+
+### Fix
+
+- Update left side menu
+
+## v0.34.0 (2024-02-08)
+
+### Feat
+
+- **core.py**: Add html_image myst extension
+- **core.py**: Enable dollarmath myst extension for inline latex math
+
+## v0.33.2 (2024-02-06)
+
+### Fix
+
+- **left-side-menu.jinja**: Set main doc link for blogs flavor
+
+## v0.33.1 (2024-02-05)
+
+### Fix
+
+- remove old folder
+- Revert "fix: remove toc"
+- remove toc
+- remove duplicates
+- merge conflicts
+- **header.html**: Import version_list macro from header.jinja into header.html
+- Change rocm-blogs flavor top level header to ROCm Blogs
+- Change rocm-blogs second level header Lab Notes to ROCm Docs
+- Remove version list from rocm-blogs header
+
+## v0.33.0 (2024-01-26)
+
+### Feat
+
+- **theme.py**: Add rocm-blogs to lsit of supported flavors
+- Add ROCm blogs flavor
+
+### Fix
+
+- **header.jinja**: New statement block for setting custom repo url
+
+### Refactor
+
+- **rocm-blogs/footer.jinja**: Refactor to pass Python linting
+
+## v0.32.0 (2024-01-26)
+
+### Feat
+
+- **theme.conf**: Update header latest version
+
+## v0.31.0 (2024-01-12)
+
+### Feat
+
+- **theme.conf**: Update header latest version
+- Read versions for theme header from link instead of setting in theme.conf
+- **projects.py**: Read header versions from link instead of hard-coding
+
+### Fix
+
+- Remove carriage return and newline when checking versions
+- sync wordlist
+- **header.jinja**: Fix support link in header for rocm-docs-core
+
+### Refactor
+
+- **theme.conf**: Add back header options to theme.conf to pass RTD PR build
+- Use requests instead of urllib3
+- **theme.py**: Set html_context in default_config_opts rather than theme_opts
+
+## v0.30.3 (2023-12-20)
+
+### Fix
+
+- **dependabot.yml**: Change dependabot config
+
+## v0.30.2 (2023-12-15)
+
+### Fix
+
+- adding linux and windows site fixes
+
+## v0.30.1 (2023-12-06)
+
+### Fix
+
+- **flavors**: Fix the rocm-docs-home flavor
+
+### Refactor
+
+- Don't add a subproject link as its own project in projects.yaml
+- Rename rocm-api-tools-list theme to rocm-docs-home
+
+## v0.30.0 (2023-11-29)
+
+### Feat
+
+- Updating our links for installation subprojects
+
+### Fix
+
+- **theme.py**: Add list flavor to list of supported flavors
+
+### Refactor
+
+- Rename list theme to rocm-api-tools-list
+
+## v0.29.0 (2023-11-24)
+
+### Feat
+
+- **projects.yaml**: Add linux install guide to projects.yaml
+- Add new flavor - list theme
+- Add all versions link to header
+- Header name change to AMD ROCm Software
+- **projects.yaml**: Add rocDecode to projects
+
+## v0.28.0 (2023-11-16)
+
+### Feat
+
+- **doxygen.py**: Enable doxygen extended toc with forked doxysphinx
+
+## v0.27.0 (2023-11-02)
+
+### Feat
+
+- **projects.yaml**: Add hip-vs
+- **doxygen.py**: automatic setup of doxylink
+- Update latest ROCm version in projects.py and theme.conf
+- **doxygen,projects**: Make doxygen tagfile available
+- **projects.py**: Allow to fetch project indices explicitly
+
+### Fix
+
+- **projects**: always resolve project references in TOC and templates
+- **util.py**: Modify RTD regex to allow for .org sites
+- **theme.py**: Partially handle not being in a git repository
+- **doxygen.py**: Pass doxygen executable to doxysphinx
+
+### Refactor
+
+- **tests**: Move project tests to separate file
+
 ## v0.26.0 (2023-10-12)
 
 ### Feat
@@ -179,6 +379,7 @@
 
 ### Refactor
 
+- formatting fixes for ruff linting
 - **header.html**: test rtd embed flyout div
 - **theme.py**: remove unnecessary open mode param UP015 for ruff
 - remove trailing whitespaces
@@ -340,21 +541,12 @@
 
 ## v0.10.0 (2023-05-09)
 
-### Feat
-
-- Bring into compliance with AMD styling
-
 ### Fix
 
 - Fix header on narrow screens
 - Remove left side menu & buttons
 - Fix lengths on shorter breadcrumbs
 - Add zero width spaces when testing width
-- deprecate disable_main_doc_link
-- fix breadcrumbs and scrolling
-- update ROCm Documentation url
-- Tighten secondary nav
-- Improve transitioning on resize
 
 ### Refactor
 
@@ -377,8 +569,17 @@
 
 ### Feat
 
+- Bring into compliance with AMD styling
 - **core.py**: set default publish date as time article was last modified
 - **core.py**: set default read time by counting visible words in html output
+
+### Fix
+
+- deprecate disable_main_doc_link
+- fix breadcrumbs and scrolling
+- update ROCm Documentation url
+- Tighten secondary nav
+- Improve transitioning on resize
 
 ### Refactor
 
@@ -386,8 +587,6 @@
 - merge with develop branch
 - get file modification time using git
 - import article info via importlib.resources
-- convert myst_enable_extensions to set and add configunion helper
-- **core.py**: explicitly cast to list
 
 ## v0.8.0 (2023-05-02)
 
@@ -399,7 +598,16 @@
 
 - Remove unintended CSS changes
 
+### Refactor
+
+- convert myst_enable_extensions to set and add configunion helper
+- **core.py**: explicitly cast to list
+
 ## v0.7.1 (2023-04-26)
+
+### Fix
+
+- docutil dependency
 
 ## v0.7.0 (2023-04-26)
 
