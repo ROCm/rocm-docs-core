@@ -1,3 +1,37 @@
+## v0.39.0 (2024-04-17)
+
+### BREAKING CHANGE
+
+- This requires updating `.readthedocs.yaml` (`tools.python`)
+  and re-generating `requirements.txt` for all dependent projects.
+
+### Feat
+
+- **theme.py**: Update banner announcement about docs.amd.com redirect
+
+### Fix
+
+- **layout.html**: Update google-site-verification metadata
+- **header.jinja**: Update link to infinity hub
+- Update rocm flavor header.jinja to Blogs
+- **header.jinja**: Replace Lab Notes link with Blogs
+
+### Refactor
+
+- Fix mypy and isort errors
+- Apply black formatting
+- fixes for isort
+- fixes for isort
+- fixes for isort
+- mypy fixes
+- isort fixes
+- Ruff fixes
+- Fixes for ruff
+- **projects.py**: Ignore mypy limitation for dynamic type checking
+- **theme.py**: Modify new banner announcement message for latest
+- Use type instead of instanceof
+- Fix type hints and assertions to pass Python linting
+
 ## v0.38.1 (2024-04-10)
 
 ### Fix
