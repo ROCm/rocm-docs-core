@@ -13,7 +13,7 @@ jobs:
     concurrency: bump-version
     runs-on: ubuntu-latest
     env:
-      PYTHON_VERSION: "3.8"
+      PYTHON_VERSION: "3.10"
     outputs:
       bumped: ${{ steps.cz-bump.outputs.bumped }}
       revision: ${{ steps.cz-bump.outputs.revision }}

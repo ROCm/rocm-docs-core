@@ -1,7 +1,5 @@
 """Module to use rocm-docs-core as a theme."""
 
-from __future__ import annotations
-
 from typing import Any
 
 from pathlib import Path

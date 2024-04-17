@@ -6,13 +6,13 @@ that are using Read the Docs.
 
 from __future__ import annotations
 
-from typing import ClassVar, Union
+from typing import ClassVar, TypeAlias
 
 import os
 
 from rocm_docs.core import setup
 
-MaybePath = Union[str, os.PathLike, None]
+MaybePath: TypeAlias = str | os.PathLike[str] | None
 
 
 # Intentionally disabling the too-many-instance-attributes check in pylint
@@ -43,9 +43,9 @@ class ROCmDocs:
         self.extensions: list[str] = []
         self.html_title: str
         self.html_theme: str
-        self.html_theme_options: dict[str, str | bool | list[str]] = {}
+        self.html_theme_options: dict[str, str | (bool | list[str])] = {}
         self.doxygen_root: MaybePath = None
-        self.doxygen_project: dict[str, MaybePath] = {
+        self.doxygen_project: dict[str, str | None | MaybePath] = {
             "name": None,
             "path": None,
         }
