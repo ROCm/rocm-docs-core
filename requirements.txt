@@ -16,11 +16,11 @@ babel==2.14.0
     #   sphinx
 beautifulsoup4==4.12.3
     # via pydata-sphinx-theme
-black==24.2.0
+black==24.4.0
     # via rocm-docs-core (pyproject.toml)
 breathe==4.35.0
     # via rocm-docs-core (pyproject.toml)
-build==1.1.1
+build==1.2.1
     # via
     #   pip-tools
     #   rocm-docs-core (pyproject.toml)
@@ -47,7 +47,7 @@ click-log==0.4.0
     # via doxysphinx
 colorama==0.4.6
     # via commitizen
-commitizen==3.18.0
+commitizen==3.22.0
     # via rocm-docs-core (pyproject.toml)
 cryptography==42.0.5
     # via pyjwt
@@ -69,19 +69,19 @@ exceptiongroup==1.2.0
     # via pytest
 fastjsonschema==2.19.1
     # via rocm-docs-core (pyproject.toml)
-filelock==3.13.1
+filelock==3.13.4
     # via virtualenv
 gitdb==4.0.11
     # via gitpython
-gitpython==3.1.42
+gitpython==3.1.43
     # via rocm-docs-core (pyproject.toml)
 identify==2.5.35
     # via pre-commit
-idna==3.6
+idna==3.7
     # via requests
 imagesize==1.4.1
     # via sphinx
-importlib-metadata==7.0.2
+importlib-metadata==7.1.0
     # via
     #   build
     #   commitizen
@@ -111,7 +111,7 @@ mdit-py-plugins==0.3.5
     # via myst-parser
 mdurl==0.1.2
     # via markdown-it-py
-mpire==2.10.0
+mpire==2.10.1
     # via doxysphinx
 mypy==1.8.0
     # via rocm-docs-core (pyproject.toml)
@@ -123,7 +123,7 @@ myst-parser==1.0.0
     # via rocm-docs-core (pyproject.toml)
 nodeenv==1.8.0
     # via pre-commit
-packaging==23.2
+packaging==24.0
     # via
     #   black
     #   build
@@ -145,13 +145,13 @@ pre-commit==3.6.2
     # via rocm-docs-core (pyproject.toml)
 prompt-toolkit==3.0.36
     # via questionary
-pycparser==2.21
+pycparser==2.22
     # via cffi
 pydata-sphinx-theme==0.15.2
     # via
     #   rocm-docs-core (pyproject.toml)
     #   sphinx-book-theme
-pygithub==2.2.0
+pygithub==2.3.0
     # via rocm-docs-core (pyproject.toml)
 pygments==2.17.2
     # via
@@ -173,7 +173,7 @@ pyparsing==3.1.2
     #   sphinxcontrib-doxylink
 pyproject-hooks==1.0.0
     # via build
-pytest==8.0.2
+pytest==8.1.1
     # via rocm-docs-core (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via
@@ -194,7 +194,7 @@ requests==2.31.0
     # via
     #   pygithub
     #   sphinx
-ruff==0.3.1
+ruff==0.3.7
     # via rocm-docs-core (pyproject.toml)
 six==1.16.0
     # via python-dateutil
@@ -254,7 +254,7 @@ tomlkit==0.12.4
     # via commitizen
 tqdm==4.66.2
     # via mpire
-typing-extensions==4.10.0
+typing-extensions==4.11.0
     # via
     #   black
     #   mypy
@@ -264,16 +264,18 @@ urllib3==2.2.1
     # via
     #   pygithub
     #   requests
-virtualenv==20.25.1
+virtualenv==20.25.3
     # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit
-wheel==0.42.0
+wheel==0.43.0
     # via pip-tools
 wrapt==1.16.0
     # via deprecated
-zipp==3.17.0
-    # via importlib-metadata
+zipp==3.18.1
+    # via
+    #   importlib-metadata
+    #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
