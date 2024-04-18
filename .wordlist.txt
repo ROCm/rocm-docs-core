@@ -441,6 +441,7 @@ devsel
 dimensionality
 disambiguates
 distro
+doxysphinx
 el
 embeddings
 enablement
