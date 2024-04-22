@@ -139,7 +139,7 @@ platformdirs==4.2.0
     # via
     #   black
     #   virtualenv
-pluggy==1.4.0
+pluggy==1.5.0
     # via pytest
 pre-commit==3.6.2
     # via rocm-docs-core (pyproject.toml)
