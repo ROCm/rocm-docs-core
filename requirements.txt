@@ -47,7 +47,7 @@ click-log==0.4.0
     # via doxysphinx
 colorama==0.4.6
     # via commitizen
-commitizen==3.22.0
+commitizen==3.24.0
     # via rocm-docs-core (pyproject.toml)
 cryptography==42.0.5
     # via pyjwt
@@ -65,7 +65,7 @@ docutils==0.19
     #   sphinx
 doxysphinx==3.3.7
     # via rocm-docs-core (pyproject.toml)
-exceptiongroup==1.2.0
+exceptiongroup==1.2.1
     # via pytest
 fastjsonschema==2.19.1
     # via rocm-docs-core (pyproject.toml)
@@ -75,7 +75,7 @@ gitdb==4.0.11
     # via gitpython
 gitpython==3.1.43
     # via rocm-docs-core (pyproject.toml)
-identify==2.5.35
+identify==2.5.36
     # via pre-commit
 idna==3.7
     # via requests
@@ -139,7 +139,7 @@ platformdirs==4.2.0
     # via
     #   black
     #   virtualenv
-pluggy==1.4.0
+pluggy==1.5.0
     # via pytest
 pre-commit==3.6.2
     # via rocm-docs-core (pyproject.toml)
@@ -194,7 +194,7 @@ requests==2.31.0
     # via
     #   pygithub
     #   sphinx
-ruff==0.3.7
+ruff==0.4.1
     # via rocm-docs-core (pyproject.toml)
 six==1.16.0
     # via python-dateutil
