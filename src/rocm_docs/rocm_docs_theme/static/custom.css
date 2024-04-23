@@ -220,3 +220,23 @@ a#ot-sdk-btn {
 .bd-sidebar-secondary {
   z-index: 10001;
 }
+
+/* Adds horizontal scrolling to big tables */
+.format-big-table {
+  overflow-x: scroll;
+}
+
+.format-big-table table {
+  position: relative;
+}
+
+.format-big-table th.head {
+  position: sticky !important;
+  top: 0px;
+  z-index: 2;
+}
+
+.format-big-table th,
+td {
+  white-space: nowrap;
+}
