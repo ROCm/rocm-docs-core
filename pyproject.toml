@@ -76,7 +76,6 @@ version = "1.0.0"
 version_files = ["pyproject.toml:^version", "docs/conf.py:^(version|release)"]
 tag_format = "v$version"
 annotated_tag = true
-major_version_zero = true
 
 [tool.isort]
 # https://github.com/timothycrosley/isort/
