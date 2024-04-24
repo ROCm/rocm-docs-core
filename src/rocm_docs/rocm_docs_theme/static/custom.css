@@ -220,3 +220,14 @@ a#ot-sdk-btn {
 .bd-sidebar-secondary {
   z-index: 10001;
 }
+
+/* Adds horizontal scrolling container */
+.horizontal-scrolling-container {
+  overflow-x: scroll;
+}
+
+/* Draw border on Compatibility Matrix only */
+.compat-matrix th,
+.compat-matrix td {
+  border: thin solid lightgray;
+}
