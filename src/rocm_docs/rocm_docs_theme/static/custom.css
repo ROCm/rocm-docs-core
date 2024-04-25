@@ -142,20 +142,20 @@ ul.bd-breadcrumbs li.breadcrumb-item {
   }
 }
 
-@media(min-width: 960px) {
+@media (min-width: 960px) {
   .bd-sidebar-primary {
     top: 0;
     height: 100vh;
   }
 }
 
-@media(min-width: 576px) {
+@media (min-width: 576px) {
   .sbt-scroll-pixel-helper {
     top: 5.5rem !important;
   }
 }
 
-@media(min-width: 1200px) {
+@media (min-width: 1200px) {
   .sbt-scroll-pixel-helper {
     top: 9.5rem !important;
   }
@@ -166,13 +166,13 @@ ul.bd-breadcrumbs li.breadcrumb-item {
   flex-direction: column;
 }
 
-.bd-container .primary-toggle>span {
+.bd-container .primary-toggle > span {
   transform-origin: 50%, 50%;
   transition: transform 0.3s ease-in-out;
   transform: rotate(0);
 }
 
-input#__primary:checked ~ .bd-container .primary-toggle>span {
+input#__primary:checked ~ .bd-container .primary-toggle > span {
   transform: rotate(180deg);
 }
 
@@ -208,11 +208,11 @@ a#ot-sdk-btn {
     flex-basis: 20%;
   }
 
-  .bd-container .primary-toggle>span {
+  .bd-container .primary-toggle > span {
     transform: rotate(180deg);
   }
 
-  input#__primary:checked ~ .bd-container .primary-toggle>span {
+  input#__primary:checked ~ .bd-container .primary-toggle > span {
     transform: rotate(0);
   }
 }
@@ -222,21 +222,39 @@ a#ot-sdk-btn {
 }
 
 /* Adds horizontal scrolling to big tables */
-.format-big-table {
-  overflow-x: scroll;
-}
-
-.format-big-table table {
-  position: relative;
-}
-
-.format-big-table th.head {
-  position: sticky !important;
-  top: 0px;
-  z-index: 2;
+.format-big-table th {
+  background-color: var(--pst-color-background);
+  white-space: nowrap;
 }
 
 .format-big-table th,
 td {
-  white-space: nowrap;
+  border-width: 1px;
+  border-top: none;
+  border-left: none;
+}
+
+/* .format-big-table th.head { */
+/*   background-color: var(--pst-color-on-surface); */
+/* } */
+
+.format-big-table th.head:not(.stub) {
+  position: sticky;
+  top: 3rem;
+  z-index: 1;
+}
+
+.format-big-table tbody th:not(:empty) {
+  position: sticky;
+  top: 3rem;
+  z-index: 2;
+}
+
+.format-big-table tbody th {
+  border-top: none;
+  border-bottom: none;
+}
+
+.horizontal-scrolling {
+  overflow-x: scroll;
 }
