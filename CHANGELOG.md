@@ -1,3 +1,14 @@
+## v1.1.1 (2024-04-26)
+
+### Fix
+
+- **core.py**: Update Sphinx API call to doc2path
+
+### Refactor
+
+- **core.py**: Format core.py with black
+- Address mypy type warnings
+
 ## v1.1.0 (2024-04-24)
 
 ### Feat
