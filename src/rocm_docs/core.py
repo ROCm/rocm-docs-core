@@ -333,7 +333,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_config_value(
         "all_article_info_read_time", default="", rebuild="html", types=str
     )
-    app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
+    app.add_config_value("article_pages", default=[], rebuild="html", types=list)
 
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
