@@ -145,7 +145,7 @@ def _set_page_article_info(
     """
     repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
     for page in app.config.article_pages:
-        path_rel = app.project.doc2path(page["file"], basedir=False)
+        path_rel = app.project.doc2path(page["file"], False)
         path_html = Path(app.outdir, path_rel).with_suffix(".html")
         path_source = Path(app.srcdir, path_rel)
 
@@ -205,7 +205,7 @@ def _set_all_article_info(
         if docname in specific_pages:
             continue
 
-        page_rel = app.project.doc2path(docname, basedir=False)
+        page_rel = app.project.doc2path(docname, False)
         page = Path(app.outdir, page_rel).with_suffix(".html")
 
         # FIXME: This will silently skip all files when not building the default
