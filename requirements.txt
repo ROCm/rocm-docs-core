@@ -8,7 +8,7 @@ accessible-pygments==0.0.4
     # via pydata-sphinx-theme
 alabaster==0.7.16
     # via sphinx
-argcomplete==3.2.3
+argcomplete==3.3.0
     # via commitizen
 babel==2.14.0
     # via
@@ -57,7 +57,7 @@ deprecated==1.2.14
     # via pygithub
 distlib==0.3.8
     # via virtualenv
-docutils==0.19
+docutils==0.21.2
     # via
     #   breathe
     #   myst-parser
@@ -82,12 +82,7 @@ idna==3.7
 imagesize==1.4.1
     # via sphinx
 importlib-metadata==7.1.0
-    # via
-    #   build
-    #   commitizen
-    #   sphinx
-importlib-resources==6.1.0 ; python_version < "3.9"
-    # via rocm-docs-core (pyproject.toml)
+    # via commitizen
 iniconfig==2.0.0
     # via pytest
 isort==5.13.2
@@ -101,13 +96,13 @@ libsass==0.22.0
     # via doxysphinx
 lxml==4.9.4
     # via doxysphinx
-markdown-it-py==2.2.0
+markdown-it-py==3.0.0
     # via
     #   mdit-py-plugins
     #   myst-parser
 markupsafe==2.1.5
     # via jinja2
-mdit-py-plugins==0.3.5
+mdit-py-plugins==0.4.0
     # via myst-parser
 mdurl==0.1.2
     # via markdown-it-py
@@ -119,7 +114,7 @@ mypy-extensions==1.0.0
     # via
     #   black
     #   mypy
-myst-parser==1.0.0
+myst-parser==3.0.0
     # via rocm-docs-core (pyproject.toml)
 nodeenv==1.8.0
     # via pre-commit
@@ -141,7 +136,7 @@ platformdirs==4.2.1
     #   virtualenv
 pluggy==1.5.0
     # via pytest
-pre-commit==3.6.2
+pre-commit==3.7.0
     # via rocm-docs-core (pyproject.toml)
 prompt-toolkit==3.0.36
     # via questionary
@@ -162,9 +157,7 @@ pygments==2.17.2
 pyjson5==1.6.6
     # via doxysphinx
 pyjwt[crypto]==2.8.0
-    # via
-    #   pygithub
-    #   pyjwt
+    # via pygithub
 pynacl==1.5.0
     # via pygithub
 pyparsing==3.1.2
@@ -172,15 +165,13 @@ pyparsing==3.1.2
     #   doxysphinx
     #   sphinxcontrib-doxylink
 pyproject-hooks==1.0.0
-    # via build
-pytest==8.1.1
+    # via
+    #   build
+    #   pip-tools
+pytest==8.1.2
     # via rocm-docs-core (pyproject.toml)
 python-dateutil==2.9.0.post0
-    # via
-    #   pygithub
-    #   sphinxcontrib-doxylink
-pytz==2024.1
-    # via babel
+    # via sphinxcontrib-doxylink
 pyyaml==6.0.1
     # via
     #   commitizen
@@ -204,7 +195,7 @@ snowballstemmer==2.2.0
     # via sphinx
 soupsieve==2.5
     # via beautifulsoup4
-sphinx==5.3.0
+sphinx==7.3.7
     # via
     #   breathe
     #   myst-parser
@@ -250,6 +241,7 @@ tomli==2.0.1
     #   pip-tools
     #   pyproject-hooks
     #   pytest
+    #   sphinx
 tomlkit==0.12.4
     # via commitizen
 tqdm==4.66.2
@@ -273,9 +265,7 @@ wheel==0.43.0
 wrapt==1.16.0
     # via deprecated
 zipp==3.18.1
-    # via
-    #   importlib-metadata
-    #   importlib-resources
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip

@@ -17,6 +17,9 @@ _virtualenv:
 _virtualenv:
 	if (-Not (Test-Path {{venvdir}} -PathType Container)) { {{base-python}} -m venv {{venvdir}} }
 
+_install-defusedxml: _virtualenv
+	{{python}} -m pip install defusedxml
+
 _install-pip-tools: _virtualenv
 	{{python}} -m pip install pip-tools
 
@@ -93,7 +96,7 @@ docs:
 	{{python}} -m sphinx -j auto -T -b html -d docs/_build/doctrees \
 		--color -D language=en docs docs/_build/html
 
-test +files="src tests":
+test +files="src tests": _install-defusedxml
 	{{python}} -m pytest {{files}}
 
 _check-commit-mesg file:

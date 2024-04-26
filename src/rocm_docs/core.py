@@ -145,7 +145,7 @@ def _set_page_article_info(
     """
     repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
     for page in app.config.article_pages:
-        path_rel = app.project.doc2path(page["file"], basedir=False)
+        path_rel = app.project.doc2path(page["file"], False)
         path_html = Path(app.outdir, path_rel).with_suffix(".html")
         path_source = Path(app.srcdir, path_rel)
 
@@ -205,7 +205,7 @@ def _set_all_article_info(
         if docname in specific_pages:
             continue
 
-        page_rel = app.project.doc2path(docname, basedir=False)
+        page_rel = app.project.doc2path(docname, False)
         page = Path(app.outdir, page_rel).with_suffix(".html")
 
         # FIXME: This will silently skip all files when not building the default
@@ -333,7 +333,9 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_config_value(
         "all_article_info_read_time", default="", rebuild="html", types=str
     )
-    app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
+    app.add_config_value(
+        "article_pages", default=[], rebuild="html", types=list
+    )
 
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)

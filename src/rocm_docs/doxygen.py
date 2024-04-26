@@ -183,7 +183,7 @@ def _run_doxysphinx(
     ]
     if doxyphinx_version.endswith("+tagfile.toc"):
         args.append("--tagfile_toc")
-    args += [app.srcdir, app.outdir, str(doxyfile)]
+    args += [str(app.srcdir), str(app.outdir), str(doxyfile)]
 
     try:
         subprocess.check_call(args, cwd=doxygen_root)
@@ -215,19 +215,19 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.setup_extension("breathe")
 
     app.add_config_value(
-        "doxygen_root", ".doxygen", rebuild="", types=[None, str, os.PathLike]
+        "doxygen_root", ".doxygen", rebuild="", types=[str, os.PathLike]
     )
     app.add_config_value(
         "doxygen_executable",
         None,
         rebuild="",
-        types=[None, str, "os.PathLike[Any]"],
+        types=[str, os.PathLike[Any]],
     )
     app.add_config_value(
         "doxyfile",
         lambda config: Path(config.doxygen_root, "Doxyfile"),
         rebuild="",
-        types=[None, str, "os.PathLike[Any]"],
+        types=[str, os.PathLike[Any]],
     )
     app.add_config_value(
         "doxygen_project",
@@ -236,7 +236,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
             "path": Path(config.doxygen_root, "docBin", "xml"),
         },
         rebuild="",
-        types=dict[str, Union[None, str, "os.PathLike[Any]"]],
+        types=dict[str, Union[str, "os.PathLike[Any]"]],
     )
     app.add_config_value("doxysphinx_enabled", False, rebuild="", types=bool)
     app.add_config_value("doxygen_html", None, rebuild="")
