@@ -1,3 +1,17 @@
+## v1.1.0 (2024-04-24)
+
+### Feat
+
+- **theme.conf**: Update header latest version
+
+### Fix
+
+- **footer.html**: Bump year to 2024 in footer
+
+### Refactor
+
+- Correct major version for breaking change
+
 ## v1.0.0 (2024-04-17)
 
 ### BREAKING CHANGE
