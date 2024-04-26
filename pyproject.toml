@@ -47,7 +47,6 @@ development = [
   "black>=22.1",
   "build>=0.10.0",
   "commitizen>=2.42",
-  "defusedxml>=0.7.1",
   "isort>=5.12.0",
   "mypy>=1.3.0",
   "pip-tools>=6.13.0",

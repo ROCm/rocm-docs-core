@@ -53,8 +53,6 @@ cryptography==42.0.5
     # via pyjwt
 decli==0.6.1
     # via commitizen
-defusedxml==0.7.1
-    # via rocm-docs-core (pyproject.toml)
 deprecated==1.2.14
     # via pygithub
 distlib==0.3.8
