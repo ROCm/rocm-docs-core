@@ -256,7 +256,7 @@ urllib3==2.2.1
     # via
     #   pygithub
     #   requests
-virtualenv==20.26.0
+virtualenv==20.26.1
     # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit
