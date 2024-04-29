@@ -168,7 +168,7 @@ pyproject-hooks==1.1.0
     # via
     #   build
     #   pip-tools
-pytest==8.1.2
+pytest==8.2.0
     # via rocm-docs-core (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via sphinxcontrib-doxylink
