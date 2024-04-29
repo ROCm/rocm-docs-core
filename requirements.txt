@@ -51,7 +51,7 @@ commitizen==3.24.0
     # via rocm-docs-core (pyproject.toml)
 cryptography==42.0.5
     # via pyjwt
-decli==0.6.1
+decli==0.6.2
     # via commitizen
 deprecated==1.2.14
     # via pygithub
