@@ -244,7 +244,7 @@ tomli==2.0.1
     #   sphinx
 tomlkit==0.12.4
     # via commitizen
-tqdm==4.66.2
+tqdm==4.66.4
     # via mpire
 typing-extensions==4.11.0
     # via
