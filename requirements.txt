@@ -242,7 +242,7 @@ tomli==2.0.1
     #   pyproject-hooks
     #   pytest
     #   sphinx
-tomlkit==0.12.4
+tomlkit==0.12.5
     # via commitizen
 tqdm==4.66.4
     # via mpire
