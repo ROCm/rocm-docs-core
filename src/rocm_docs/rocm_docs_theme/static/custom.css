@@ -220,3 +220,89 @@ a#ot-sdk-btn {
 .bd-sidebar-secondary {
   z-index: 10001;
 }
+
+.sd-card-body.rocm-card-banner {
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.sd-card-body.rocm-card-banner>* {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  --rocm-color-card-banner-bg: 0 0 0;
+  --rocm-color-card-banner-text: white;
+}
+
+.sd-card-body.rocm-card-banner .sd-card-title {
+  margin: 0 0 0 0;
+  padding: 1rem 1rem 0.5rem;
+  background-color: var(--rocm-color-card-banner-bg);
+  background-image: linear-gradient(to right,
+                      rgb(var(--rocm-color-card-banner-bg) / 80%) 1rem,
+                      rgb(var(--rocm-color-card-banner-bg) / 15%) 10rem,
+                      transparent 16rem),
+                    linear-gradient(to top,
+                      transparent,
+                      rgb(var(--rocm-color-card-banner-bg) / 50%) 25% 60%,
+                      transparent),
+                      url(images/banner-violet.jpg);
+  background-size: cover;
+  background-position: bottom left;
+  color: var(--rocm-color-card-banner-text);
+}
+
+.sd-card-body.rocm-card-banner .sd-card-title * {
+  color: var(--rocm-color-card-banner-text);
+}
+
+.sd-card-body.rocm-card-banner>.sd-card-title a:hover {
+  color: var(--rocm-color-card-banner-text);
+}
+
+/* Hue rotation classes */
+/* .rocm-hue-1 doesn't apply any transform */
+
+.sd-card-body.rocm-hue-2 .sd-card-title {
+  filter: hue-rotate(-50deg);
+}
+
+.sd-card-body.rocm-hue-3 .sd-card-title {
+  filter: hue-rotate(-75deg);
+}
+
+.sd-card-body.rocm-hue-4 .sd-card-title {
+  filter: hue-rotate(-100deg);
+}
+
+.sd-card-body.rocm-hue-5 .sd-card-title {
+  filter: hue-rotate(-125deg);
+}
+
+.sd-card-body.rocm-hue-6 .sd-card-title {
+  filter: hue-rotate(-150deg);
+}
+
+.sd-card-body.rocm-hue-7 .sd-card-title {
+  filter: hue-rotate(-175deg);
+}
+
+.sd-card-body.rocm-hue-8 .sd-card-title {
+  filter: hue-rotate(-200deg);
+}
+
+.sd-card-body.rocm-hue-9 .sd-card-title {
+  filter: hue-rotate(-225deg);
+}
+
+.sd-card-body.rocm-hue-10 .sd-card-title {
+  filter: hue-rotate(-250deg);
+}
+
+.sd-card-body.rocm-hue-11 .sd-card-title {
+  filter: hue-rotate(-275deg);
+}
+
+.sd-card-body.rocm-hue-12 .sd-card-title {
+  filter: hue-rotate(-300deg);
+}

@@ -26,7 +26,6 @@ article_pages = [
 ]
 
 html_theme = "rocm_docs_theme"
-html_theme_options = {"flavor": "rocm-blogs"}
 
 extensions = ["rocm_docs", "rocm_docs.doxygen"]
 external_toc_path = "./sphinx/_toc.yml"
