@@ -220,3 +220,7 @@ a#ot-sdk-btn {
 .bd-sidebar-secondary {
   z-index: 10001;
 }
+
+:not(p) img {
+  margin-bottom: 1rem;
+}
