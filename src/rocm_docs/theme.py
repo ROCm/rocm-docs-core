@@ -17,6 +17,36 @@ from rocm_docs import util
 logger = sphinx.util.logging.getLogger(__name__)
 
 
+def _get_version_from_url(url: str) -> str:
+    try:
+        response = requests.get(url)
+        return response.text.strip()
+    except requests.RequestException as e:
+        print(f"Error in rocm-docs-core _get_version_from_url: {e}")
+        return ""
+
+
+def _add_custom_context(
+    app: Sphinx,  # noqa: ARG001
+    pagename: str,  # noqa: ARG001
+    templatename: str,  # noqa: ARG001
+    context: dict[str, str],
+    doctree: object,  # noqa: ARG001
+) -> None:
+    header_latest_version = _get_version_from_url(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
+    )
+
+    header_release_candidate_version = _get_version_from_url(
+        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
+    )
+
+    context["header_latest_version"] = header_latest_version
+    context["header_release_candidate_version"] = (
+        header_release_candidate_version
+    )
+
+
 def _update_repo_opts(srcdir: str, theme_opts: dict[str, Any]) -> None:
     default_branch_options: dict[str, Any] = {
         "use_edit_page_button": False,
@@ -88,12 +118,13 @@ def _update_theme_options(app: Sphinx) -> None:
             0, "components/left-side-menu"
         )
 
-    header_latest_version = requests.get(
+    header_latest_version = _get_version_from_url(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
-    ).text.strip("\r\n")
-    header_release_candidate_version = requests.get(
+    )
+
+    header_release_candidate_version = _get_version_from_url(
         "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
-    ).text.strip("\r\n")
+    )
 
     default_config_opts = {
         "html_show_sphinx": False,
@@ -101,8 +132,8 @@ def _update_theme_options(app: Sphinx) -> None:
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
         "html_context": {
-            "theme_header_latest_version": header_latest_version,
-            "theme_header_release_candidate_version": header_release_candidate_version,
+            "header_latest_version": header_latest_version,
+            "header_release_candidate_version": header_release_candidate_version,
         },
     }
     for key, default in default_config_opts.items():
@@ -132,6 +163,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     ]:
         app.add_css_file(css)
 
+    app.connect("html-page-context", _add_custom_context)
     app.connect("builder-inited", _update_theme_options)
 
     return {
