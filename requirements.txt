@@ -4,7 +4,7 @@
 #
 #    pip-compile --all-extras pyproject.toml
 #
-accessible-pygments==0.0.4
+accessible-pygments==0.0.5
     # via pydata-sphinx-theme
 alabaster==0.7.16
     # via sphinx
