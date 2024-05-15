@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, Tuple, Union, cast
+from typing import Any, Union, cast
 
 import importlib.metadata
+import importlib.resources
 import importlib.util
 import os
 import shutil
@@ -25,18 +26,10 @@ from rocm_docs import util
 
 logger = logging.getLogger(__name__)
 
-if sys.version_info < (3, 9):
-    # importlib.resources either doesn't exist or lacks the files()
-    # function, so use the PyPI version:
-    import importlib_resources
-else:
-    # importlib.resources has files(), so use that:
-    import importlib.resources as importlib_resources
-
 
 def _copy_files(app: Sphinx) -> None:
     """Insert additional files into workspace."""
-    pkg = importlib_resources.files("rocm_docs")
+    pkg = importlib.resources.files("rocm_docs")
     Path(app.srcdir, "_doxygen").mkdir(exist_ok=True)
     util.copy_from_package(
         app, pkg / "data/_doxygen", "data/_doxygen", "_doxygen"
@@ -156,7 +149,7 @@ def _update_doxylink_settings(app: Sphinx, _: Config) -> None:
         app.config.doxylink = app.config.doxylink  # type: ignore [attr-defined]
 
     doxylink = cast(
-        Dict[str, Union[Tuple[str, str], Tuple[str, str, str]]],
+        dict[str, tuple[str, str] | tuple[str, str, str]],
         app.config.doxylink,
     )
     tagfile = Path(app.srcdir, app.config.doxygen_html, "tagfile.xml")
@@ -190,7 +183,7 @@ def _run_doxysphinx(
     ]
     if doxyphinx_version.endswith("+tagfile.toc"):
         args.append("--tagfile_toc")
-    args += [app.srcdir, app.outdir, str(doxyfile)]
+    args += [str(app.srcdir), str(app.outdir), str(doxyfile)]
 
     try:
         subprocess.check_call(args, cwd=doxygen_root)
@@ -222,19 +215,19 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.setup_extension("breathe")
 
     app.add_config_value(
-        "doxygen_root", ".doxygen", rebuild="", types=[None, str, os.PathLike]
+        "doxygen_root", ".doxygen", rebuild="", types=[str, os.PathLike]
     )
     app.add_config_value(
         "doxygen_executable",
         None,
         rebuild="",
-        types=[None, str, "os.PathLike[Any]"],
+        types=[str, os.PathLike[Any]],
     )
     app.add_config_value(
         "doxyfile",
         lambda config: Path(config.doxygen_root, "Doxyfile"),
         rebuild="",
-        types=[None, str, "os.PathLike[Any]"],
+        types=[str, os.PathLike[Any]],
     )
     app.add_config_value(
         "doxygen_project",
@@ -243,7 +236,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
             "path": Path(config.doxygen_root, "docBin", "xml"),
         },
         rebuild="",
-        types=Dict[str, Union[None, str, "os.PathLike[Any]"]],
+        types=dict[str, Union[str, "os.PathLike[Any]"]],
     )
     app.add_config_value("doxysphinx_enabled", False, rebuild="", types=bool)
     app.add_config_value("doxygen_html", None, rebuild="")

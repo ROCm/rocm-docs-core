@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Generator, Iterable
+from typing import Any
 
 import re
+from collections.abc import Generator, Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -129,8 +130,9 @@ def format_toc(
 ) -> None:
     """Format the input table of contents with additional information."""
     formatter = Formatter(context)
-    with open(input_path, encoding="utf-8") as toc_in, open(
-        output_path, "w", encoding="utf-8"
-    ) as toc_out:
+    with (
+        open(input_path, encoding="utf-8") as toc_in,
+        open(output_path, "w", encoding="utf-8") as toc_out,
+    ):
         for line in formatter.skip_comments(toc_in):
             toc_out.write(formatter.format_line(line))

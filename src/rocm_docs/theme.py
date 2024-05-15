@@ -1,7 +1,5 @@
 """Module to use rocm-docs-core as a theme."""
 
-from __future__ import annotations
-
 from typing import Any
 
 from pathlib import Path
@@ -61,7 +59,7 @@ def _update_banner(
 
 def _update_theme_options(app: Sphinx) -> None:
     theme_opts = get_theme_options_dict(app)
-    _update_repo_opts(app.srcdir, theme_opts)
+    _update_repo_opts(str(app.srcdir), theme_opts)
 
     supported_flavors = ["rocm", "local", "rocm-docs-home", "rocm-blogs"]
     flavor = theme_opts.get("flavor", "rocm")
