@@ -34,11 +34,11 @@ def _add_custom_context(
     doctree: object,  # noqa: ARG001
 ) -> None:
     header_latest_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/header-versions/latest_version.txt"
     )
 
     header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/header-versions/release_candidate.txt"
     )
 
     context["header_latest_version"] = header_latest_version
