@@ -324,11 +324,11 @@ def _update_theme_configs(
 ) -> None:
     """Update configurations for use in theme.py"""
     latest_version = requests.get(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/header-versions/latest_version.txt"
     ).text.strip("\r\n")
     latest_version_string = f"docs-{latest_version}"
     release_candidate = requests.get(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/header-versions/release_candidate.txt"
     ).text.strip("\r\n")
     release_candidate_string = f"docs-{release_candidate}"
 
