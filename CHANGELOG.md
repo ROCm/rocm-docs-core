@@ -1,3 +1,11 @@
+## v1.1.2 (2024-05-16)
+
+### Fix
+
+- **projects.yaml**: add rocr-runtime
+- **custom.css**: add bottom margin to images in rst files
+- **404.html**: Remove relative link in 404.html page
+
 ## v1.1.1 (2024-04-26)
 
 ### Fix
