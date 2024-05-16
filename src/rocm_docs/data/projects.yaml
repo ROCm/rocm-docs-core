@@ -68,6 +68,9 @@ projects:
     target: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
     development_branch: amd-master
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
+  rocr-runtime:
+    target: https://rocm.docs.amd.com/projects/ROCR-Runtime/en/${version}
+    development_branch: master
   rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}
   rocsparse: https://rocm.docs.amd.com/projects/rocSPARSE/en/${version}
   rocthrust: https://rocm.docs.amd.com/projects/rocThrust/en/${version}
