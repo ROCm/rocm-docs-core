@@ -1,3 +1,14 @@
+## v1.1.3 (2024-05-22)
+
+### Fix
+
+- Get header version from URL instead of theme.conf
+
+### Refactor
+
+- **projects.py**: Use ROCm org when checking versions for banner
+- **theme.py**: Point to ROCm org instead of RadeonOpenCompute for rocm-docs-core
+
 ## v1.1.2 (2024-05-16)
 
 ### Fix
