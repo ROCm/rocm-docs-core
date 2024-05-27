@@ -33,7 +33,7 @@
 matrix:
 - name: Markdown
   sources:
-  - 'docs/**/*.md'
+  - ['docs/**/*.md', '!docs/doxygen/mainpage.md']
   expect_match: false
   aspell:
     lang: en
@@ -105,8 +105,6 @@ matrix:
         close: '\n'
       - open: '(- )?(?P<open>`+)'
         close: '(?P=open)'
-      - open: ':figure:.*'
-        close: '\n'
       # Ignore reStructuredText roles
       - open: ':(?:(class|file|func|math|ref|octicon|meth|obj)):`'
         content: '[^`]*'
@@ -148,7 +146,7 @@ matrix:
       - open: '\.\.\s+toctree::'
         close: '(?P<toctree>(?:((?P<indent>[ ]+).*$)|(\n))+)'
       # Ignore directives
-      - open: '\.\.\s+(image|include|only|tabularcolumns|datatemplate:nodata)::'
+      - open: '\.\.\s+(figure|image|include|only|tabularcolumns|datatemplate:nodata)::'
         close: '$'
       # Ignore reStructuredText reference
       - open: '^.{2}[ ]+_'
@@ -157,6 +155,10 @@ matrix:
       - open: '\.\. (autodoxygenindex|doxygenfunction|doxygenstruct|doxygenclass|doxygennamespace|doxygenconcept|doxygenenum|doxygenenumvalue|doxygentypedef|doxygenunion|doxygendefine|doxygenvariable|doxygenfile|doxygengroup|autodoxygenfile|doxygenpage)::.*$\n*'
         content: '(?P<first>(^(?P<indent>[ ]+).*$\n))(?P<other>(^([ \t]+.*|[ \t]*)$\n)*)'
         close: '(^(?![ \t]+.*$))'
+      # Ignore doxygen one line directives
+      - open: '\.\. (autodoxygenindex|doxygenfunction|doxygenstruct|doxygenclass|doxygennamespace|doxygenconcept|doxygenenum|doxygenenumvalue|doxygentypedef|doxygenunion|doxygendefine|doxygenvariable|doxygenfile|doxygengroup|autodoxygenfile|doxygenpage)::'
+        content: '[ \S]*'
+        close: '\n'
       # Manual disabling via: #spellcheck-disable
       - open : '^.. <!-- spellcheck-disable -->$'
         content: '[\s\S]*?'
