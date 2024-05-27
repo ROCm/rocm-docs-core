@@ -246,7 +246,7 @@ tomlkit==0.12.5
     # via commitizen
 tqdm==4.66.4
     # via mpire
-typing-extensions==4.11.0
+typing-extensions==4.12.0
     # via
     #   black
     #   mypy
