@@ -1,3 +1,9 @@
+## v1.2.0 (2024-05-27)
+
+### Feat
+
+- **projects.yaml**: Add rocr_debug_agent to projects.yaml
+
 ## v1.1.3 (2024-05-22)
 
 ### Fix
