@@ -71,6 +71,9 @@ projects:
   rocr-runtime:
     target: https://rocm.docs.amd.com/projects/ROCR-Runtime/en/${version}
     development_branch: master
+  rocr_debug_agent:
+    target: https://rocm.docs.amd.com/projects/rocr_debug_agent/en/${version}
+    development_branch: master
   rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}
   rocsparse: https://rocm.docs.amd.com/projects/rocSPARSE/en/${version}
   rocthrust: https://rocm.docs.amd.com/projects/rocThrust/en/${version}
