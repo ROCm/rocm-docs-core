@@ -20,6 +20,7 @@ AdaLoRA
 AddressSanitizer
 AlexNet
 Arb
+AutoAWQ
 AutoGPTQ
 BLAS
 BMC
@@ -87,6 +88,8 @@ ENDPGM
 EPEL
 EPYC
 ESXi
+EU
+ExLlama
 FFT
 FFTs
 FFmpeg
@@ -187,6 +190,7 @@ MIGraphX
 MIOpen
 MIOpenGEMM
 MIVisionX
+MLIR
 MLM
 MLP
 MMA
@@ -213,6 +217,7 @@ MyEnvironment
 MyST
 NBIO
 NBIOs
+NHWC
 NIC
 NICs
 NLI
@@ -297,6 +302,7 @@ RelWithDebInfo
 Req
 Rickle
 RoCE
+Roofline
 Ryzen
 SALU
 SBIOS
@@ -347,6 +353,8 @@ TPU
 TPUs
 TRL
 TTFT
+TTGIR
+TTIR
 Templated
 TensorBoard
 TensorFlow
@@ -377,6 +385,7 @@ VALU
 VBIOS
 VGPR
 VGPRs
+VGPU
 VM
 VMEM
 VMWare
@@ -450,6 +459,7 @@ codename
 collater
 comgr
 completers
+composability
 composable
 concretization
 config
@@ -465,6 +475,7 @@ cuRAND
 cuSOLVER
 cuSPARSE
 dataset
+dataset's
 datasets
 dataspace
 datatype
@@ -583,6 +594,7 @@ optimizers
 os
 pageable
 parallelization
+parallelize
 parameterization
 passthrough
 perfcounter
@@ -670,7 +682,9 @@ subdirectory
 subexpression
 subfolder
 subfolders
+suboptimal
 supercomputing
+templated
 th
 tokenization
 tokenize
@@ -681,10 +695,12 @@ toolchain
 toolchains
 toolset
 toolsets
+torchtune
 torchvision
 tqdm
 tracebacks
 tunable
+tunings
 txt
 uarch
 unallocated
