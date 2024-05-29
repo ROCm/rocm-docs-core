@@ -181,7 +181,7 @@ pyyaml==6.0.1
     #   sphinx-external-toc
 questionary==2.0.1
     # via commitizen
-requests==2.32.0
+requests==2.32.3
     # via
     #   pygithub
     #   sphinx
