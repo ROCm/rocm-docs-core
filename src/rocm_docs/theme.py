@@ -36,14 +36,20 @@ def _add_custom_context(
     header_latest_version = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/header-versions/latest_version.txt"
     )
+    context["header_latest_version"] = header_latest_version
 
     header_release_candidate_version = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/header-versions/release_candidate.txt"
     )
-
-    context["header_latest_version"] = header_latest_version
     context["header_release_candidate_version"] = (
         header_release_candidate_version
+    )
+
+    google_site_verification_content = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/google_site_verification.txt"
+    )
+    context["google_site_verification_content"] = (
+        google_site_verification_content
     )
 
 
