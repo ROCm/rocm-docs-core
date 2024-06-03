@@ -50,6 +50,9 @@ html[data-theme="light"] {
 /* for the dark theme */
 html[data-theme="dark"] {
   --link-color: #2899ff;
+  .line{
+    color: #fff;
+  };
 }
 
 div#site-navigation {
