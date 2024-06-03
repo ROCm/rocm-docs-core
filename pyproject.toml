@@ -37,7 +37,7 @@ requires-python = ">=3.10"
 
 [project.urls]
 repository="https://github.com/ROCm/rocm-docs-core"
-documentation="https://docs.amd.com"
+documentation="https://rocm.docs.amd.com"
 
 [project.optional-dependencies]
 api_reference = [
