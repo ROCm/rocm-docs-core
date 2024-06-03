@@ -40,7 +40,7 @@ Traversable = importlib_abc.Traversable
 Inventory: TypeAlias = str | None | tuple[str | None, ...]
 ProjectMapping: TypeAlias = tuple[str, Inventory]
 
-DEFAULT_INTERSPHINX_REPOSITORY = "RadeonOpenCompute/rocm-docs-core"
+DEFAULT_INTERSPHINX_REPOSITORY = "ROCm/rocm-docs-core"
 DEFAULT_INTERSPHINX_BRANCH = "develop"
 
 logger = sphinx.util.logging.getLogger(__name__)

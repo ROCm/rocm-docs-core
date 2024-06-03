@@ -125,11 +125,11 @@ def _update_theme_options(app: Sphinx) -> None:
         )
 
     header_latest_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/data/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
     )
 
     header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/data/release_candidate.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
     )
 
     default_config_opts = {
