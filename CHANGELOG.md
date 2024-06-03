@@ -1,3 +1,9 @@
+## v1.2.1 (2024-06-03)
+
+### Fix
+
+- **custom.css**: Change line color at dark mode of multiline list
+
 ## v1.2.0 (2024-05-27)
 
 ### Feat
