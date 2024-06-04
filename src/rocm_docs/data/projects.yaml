@@ -73,6 +73,9 @@ projects:
   rocprofiler:
     target: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
     development_branch: amd-master
+  rocprofiler-sdk:
+    target: https://rocm.docs.amd.com/projects/rocprofiler-sdk/en/${version}
+    development_branch: amd-mainline
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocr-runtime:
     target: https://rocm.docs.amd.com/projects/ROCR-Runtime/en/${version}
