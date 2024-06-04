@@ -1,3 +1,10 @@
+## v1.3.0 (2024-06-04)
+
+### Feat
+
+- **projects.yaml**: Add rocprofiler-sdk to projects
+- **projects.yaml**: add rocminfo and rocm_bandwidth_test to projects list
+
 ## v1.2.1 (2024-06-03)
 
 ### Fix
