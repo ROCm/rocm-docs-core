@@ -56,10 +56,16 @@ projects:
   rocm-install-on-windows:
     target: https://rocm.docs.amd.com/projects/install-on-windows/en/${version}
     development_branch: develop
+  rocm_bandwidth_test:
+    target: https://rocm.docs.amd.com/projects/rocm_bandwidth_test/en/${version}
+    development_branch: master
   rocm_smi_lib:
     target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
     development_branch: master
   rocmcmakebuildtools: https://rocm.docs.amd.com/projects/ROCmCMakeBuildTools/en/${version}
+  rocminfo:
+    target: https://rocm.docs.amd.com/projects/rocminfo/en/${version}
+    development_branch: master
   rocmvalidationsuite:
     target: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
     development_branch: master
