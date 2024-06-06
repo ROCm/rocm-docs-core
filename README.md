@@ -13,7 +13,7 @@ This repository is comprised of utilities, styling, scripts, and additional HTML
 
 - Install this repository as a Python package using pip
   - From PyPi: `pip install rocm-docs-core`
-  - From GitHub: `pip install git+https://github.com/RadeonOpenCompute/rocm-docs-core.git`.
+  - From GitHub: `pip install git+https://github.com/ROCm/rocm-docs-core.git`.
 
 - Set `rocm_docs_theme` as the HTML theme
 - Add `rocm_docs` as an extension

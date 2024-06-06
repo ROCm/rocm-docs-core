@@ -71,4 +71,4 @@ See the [source code](https://github.com/ROCm/rocm-docs-core) for details.
 The `tests` folder in the `rocm-docs-core` project on GitHub
 also has example configuration files.
 
-See [this PR for a simple example of adding a Doxygen code snippet](https://github.com/RadeonOpenCompute/rocm-docs-core/pull/222).
+See [this PR for a simple example of adding a Doxygen code snippet](https://github.com/ROCm/rocm-docs-core/pull/222).

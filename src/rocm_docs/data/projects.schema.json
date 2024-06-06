@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/develop/src/rocm_docs/data/projects.schema.json",
+    "$id": "https://raw.githubusercontent.com/ROCm/rocm-docs-core/develop/src/rocm_docs/data/projects.schema.json",
     "$defs": {
         "doxygen": {
             "type": ["object", "string"],

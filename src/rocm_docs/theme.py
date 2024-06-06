@@ -34,16 +34,22 @@ def _add_custom_context(
     doctree: object,  # noqa: ARG001
 ) -> None:
     header_latest_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/header-versions/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
     )
+    context["header_latest_version"] = header_latest_version
 
     header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/header-versions/release_candidate.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
     )
-
-    context["header_latest_version"] = header_latest_version
     context["header_release_candidate_version"] = (
         header_release_candidate_version
+    )
+
+    google_site_verification_content = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/google_site_verification.txt"
+    )
+    context["google_site_verification_content"] = (
+        google_site_verification_content
     )
 
 
@@ -119,11 +125,11 @@ def _update_theme_options(app: Sphinx) -> None:
         )
 
     header_latest_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
     )
 
     header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
     )
 
     default_config_opts = {

@@ -21,7 +21,7 @@ jobs:
       - name: Fetch config
         shell: sh
         run: |
-          test -f .markdownlint.yaml && echo "Using local config file" || curl --silent --show-error --fail --location https://raw.github.com/RadeonOpenCompute/rocm-docs-core/develop/.markdownlint.yaml -O
+          test -f .markdownlint.yaml && echo "Using local config file" || curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/develop/.markdownlint.yaml -O
       - name: Use markdownlint-cli2
         uses: DavidAnson/markdownlint-cli2-action@v10.0.1
         with:
@@ -37,8 +37,8 @@ jobs:
         if: ${{ ! contains( github.repository, 'rocm-docs-core') }}
         shell: sh
         run: |
-          curl --silent --show-error --fail --location https://raw.github.com/RadeonOpenCompute/rocm-docs-core/develop/.spellcheck.yaml -O
-          curl --silent --show-error --fail --location https://raw.github.com/RadeonOpenCompute/rocm-docs-core/develop/.wordlist.txt >> .wordlist.txt
+          curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/develop/.spellcheck.yaml -O
+          curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/develop/.wordlist.txt >> .wordlist.txt
       - name: Run spellcheck
         uses: rojopolis/spellcheck-github-actions@0.30.0
       - name: On fail

@@ -11,7 +11,7 @@ format should be used:
 {doc}`Text here<project_name:path/to/page_name>`
 ```
 
-The [`projects.yaml`](https://github.com/RadeonOpenCompute/rocm-docs-core/blob/develop/src/rocm_docs/data/projects.yaml)
+The [`projects.yaml`](https://github.com/ROCm/rocm-docs-core/blob/develop/src/rocm_docs/data/projects.yaml)
 configuration file contains the names of projects
 that should be used when making links that cross-reference documentation sites.
 
@@ -36,12 +36,12 @@ For other links, usual Markdown conventions should be used.
 The following Markdown:
 
 ```Markdown
-[Link Text](https://github.com/RadeonOpenCompute/ROCm)
+[Link Text](https://github.com/ROCm/ROCm)
 ```
 
 will be rendered as the following link:
 
-[Link Text](https://github.com/RadeonOpenCompute/ROCm)
+[Link Text](https://github.com/ROCm/ROCm)
 
 #### Example: Relative Links to Current Project
 
