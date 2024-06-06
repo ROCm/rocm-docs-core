@@ -1,3 +1,14 @@
+## v1.4.0 (2024-06-06)
+
+### Feat
+
+- Add google site verification content to theme context
+- Add template for google site verification content
+
+### Refactor
+
+- Get versions from data branch instead of header-versions branch
+
 ## v1.3.0 (2024-06-04)
 
 ### Feat
