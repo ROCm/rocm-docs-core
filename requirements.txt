@@ -69,7 +69,7 @@ exceptiongroup==1.2.1
     # via pytest
 fastjsonschema==2.19.1
     # via rocm-docs-core (pyproject.toml)
-filelock==3.14.0
+filelock==3.15.1
     # via virtualenv
 gitdb==4.0.11
     # via gitpython
