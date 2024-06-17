@@ -118,7 +118,7 @@ myst-parser==3.0.1
     # via rocm-docs-core (pyproject.toml)
 nodeenv==1.9.1
     # via pre-commit
-numpy==1.26.4
+numpy==2.0.0
     # via doxysphinx
 packaging==24.1
     # via
