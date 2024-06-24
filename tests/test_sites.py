@@ -36,6 +36,7 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
 def test_e2e_pass(
     build_factory: Callable[..., SphinxTestApp],
 ) -> None:
+    print("Building Sphinx app")  # Debug statement
     app = build_factory()
     app.build()
 
@@ -48,16 +49,21 @@ def test_e2e_pass(
 def test_e2e_doxygen(
     build_factory: Callable[..., SphinxTestApp], expect_log: ExpectLogFixture
 ) -> None:
+    print("Starting test_e2e_doxygen")  # Debug statement
     app: SphinxTestApp
     with expect_log(
-        "sphinx.sphinx.util.docutils",
+        "sphinx.rocm_docs.theme",
         "WARNING",
-        "toctree directive not expected with external-toc [etoc.toctree]",
+        "Not in a Git Directory, disabling repository buttons",
         required=False,
         capture_all=True,
     ):
+        print("Building Sphinx app")  # Debug statement
         app = build_factory()
         app.build()
 
     expected_tagfile = Path(app.outdir, "tagfile.xml")
+    print(
+        f"Checking for expected tagfile at {expected_tagfile}"
+    )  # Debug statement
     assert expected_tagfile.is_file()
