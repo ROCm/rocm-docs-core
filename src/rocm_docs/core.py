@@ -259,9 +259,7 @@ def _estimate_read_time(file_name: Path) -> str:
             return False
         if isinstance(element, bs4.element.Comment):
             return False
-        if element.string == "\n":
-            return False
-        return True
+        return element.string != "\n"
 
     words_per_minute = 200
     average_word_length = 5
