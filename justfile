@@ -62,7 +62,7 @@ isort +files="src tests docs": (_isort "" files)
 check-isort +files="src tests docs": (_isort "--check" files)
 
 _ruff extra_args +files:
-	{{ruff_exe}} --config pyproject.toml {{extra_args}} {{files}}
+	{{ruff_exe}} check --config pyproject.toml {{extra_args}} {{files}}
 
 # Run ruff to lint files
 ruff +files="src tests": (_ruff "" files)
