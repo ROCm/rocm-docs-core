@@ -1,3 +1,14 @@
+## v1.4.1 (2024-06-27)
+
+### Fix
+
+- **header.jinja**: Make GitHub repo url for install docs point to install docs instead of ROCm home
+
+### Refactor
+
+- **core.py**: Apply ruff suggested fix
+- **core.py**: Apply ruff suggested fix
+
 ## v1.4.0 (2024-06-06)
 
 ### Feat
