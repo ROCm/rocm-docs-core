@@ -17,8 +17,6 @@
 
 {% if theme_repository_url.endswith("-docs") %}
     {% set repo_url = theme_repository_url|replace("-docs", "") %}
-{% elif "rocm-install-on" in theme_repository_url %}
-    {% set repo_url = "https://github.com/ROCm/ROCm" %}
 {% else %}
     {% set repo_url = theme_repository_url %}
 {% endif %}
