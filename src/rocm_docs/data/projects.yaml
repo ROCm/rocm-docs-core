@@ -29,6 +29,12 @@ projects:
     development_branch: master
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
+  omniperf:
+    target: https://rocm.docs.amd.com/projects/omniperf/en/${version}
+    development_branch: main
+  omnitrace:
+    target: https://rocm.docs.amd.com/projects/omnitrace/en/${version}
+    development_branch: main
   python: https://docs.python.org/3/
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
   rdc: https://rocm.docs.amd.com/projects/rdc/en/${version}
