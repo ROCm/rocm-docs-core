@@ -1,3 +1,9 @@
+## v1.5.0 (2024-07-04)
+
+### Feat
+
+- **projects.yaml**: Add omniperf and omnitrace
+
 ## v1.4.1 (2024-06-27)
 
 ### Fix
