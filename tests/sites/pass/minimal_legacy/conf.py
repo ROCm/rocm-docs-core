@@ -1,6 +1,6 @@
 from rocm_docs import ROCmDocs
 
-docs_core = ROCmDocs("ROCm Docs Core")
+docs_core = ROCmDocs("ROCm Docs Core Test Project - Minimal Legacy")
 docs_core.setup()
 
 for sphinx_var in ROCmDocs.SPHINX_VARS:
