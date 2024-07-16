@@ -63,7 +63,7 @@ docutils==0.21.2
     #   myst-parser
     #   pydata-sphinx-theme
     #   sphinx
-doxysphinx==3.3.9
+doxysphinx==3.3.10
     # via rocm-docs-core (pyproject.toml)
 exceptiongroup==1.2.1
     # via pytest
