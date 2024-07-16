@@ -65,7 +65,7 @@ docutils==0.21.2
     #   sphinx
 doxysphinx==3.3.10
     # via rocm-docs-core (pyproject.toml)
-exceptiongroup==1.2.1
+exceptiongroup==1.2.2
     # via pytest
 fastjsonschema==2.20.0
     # via rocm-docs-core (pyproject.toml)
