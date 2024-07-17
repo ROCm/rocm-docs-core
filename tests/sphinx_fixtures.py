@@ -51,9 +51,7 @@ def build_factory(
 ) -> Callable[..., tuple[Path, Path]]:
     """A factory to prepare Sphinx source and output directories"""
 
-    def make(
-        src_folder: Path, /, **kwargs: dict[Any, Any]
-    ) -> tuple[Path, Path]:
+    def make(src_folder: Path, /) -> tuple[Path, Path]:
         srcdir = tmp_path.joinpath(src_folder)
         outdir = tmp_path.joinpath(f"{src_folder}_build")
         srcdir.parent.mkdir(parents=True, exist_ok=True)
