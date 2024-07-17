@@ -3,5 +3,5 @@ entries:
   - file: a.md
   - title: External Project A
     url: ${project:a}
-  - title: Externale Project B
+  - title: External Project B
     url: ${project:b}
