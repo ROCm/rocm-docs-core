@@ -40,7 +40,6 @@ def build_factory(
     request: pytest.FixtureRequest,
     make_app: Callable[..., SphinxTestApp],
     tmp_path: Path,
-    with_no_git_repo: ExpectLogFixture.Validator,  # noqa: ARG001,
 ) -> Callable[..., SphinxTestApp]:
     """A factory to make Sphinx test applications"""
 

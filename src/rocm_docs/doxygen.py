@@ -19,7 +19,8 @@ from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
 from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ConfigError, ExtensionError
-from sphinx.util import logging, progress_message
+from sphinx.util import logging
+from sphinx.util.display import progress_message
 from sphinx.util.osutil import copyfile
 
 from rocm_docs import util
