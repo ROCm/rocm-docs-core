@@ -76,7 +76,7 @@ def test_update_doxylink_settings_skipped(
         config_spec.append("doxylink")
 
     config = unittest.mock.NonCallableMock(config_spec)
-    config.doxygen_html = "doxgen/html" if has_doxygen_html else None
+    config.doxygen_html = "doxygen/html" if has_doxygen_html else None
     config.overrides = []
     config._raw_config = []
     expected: dict[str, tuple[str, str]]
