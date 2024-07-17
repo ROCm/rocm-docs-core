@@ -25,9 +25,9 @@ def with_no_git_repo(
     monkeypatch.setenv("ROCM_DOCS_REMOTE_DETAILS", ",")
 
     with expect_log(
-        "sphinx.rocm_docs.theme",
-        "WARNING",
-        "Not in a Git Directory, disabling repository buttons",
+        "git.exc.InvalidGitRepositoryError",
+        "ERROR",
+        "test_external_projects",
     ) as validator:
         yield validator
 
@@ -63,4 +63,4 @@ def build_factory(
     return make
 
 
-__all__ = ["build_factory"]
+__all__ = ["with_no_git_repo", "build_factory"]

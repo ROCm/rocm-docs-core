@@ -53,7 +53,9 @@ def test_external_projects(
     external_projects: list[str] | Literal["all"],
     mocked_projects: dict[str, rocm_docs.projects._Project],
     tmp_path: Path,
+    with_no_git_repo: ExpectLogFixture.Validator,
 ) -> None:
+    with_no_git_repo.required = False
     app = create_app(tmp_path, external_projects)
     rocm_docs.projects._update_config(app, app.config)
 
@@ -79,8 +81,10 @@ def test_external_projects(
 @pytest.mark.usefixtures("mocked_projects", "_no_unexpected_warnings")
 def test_external_projects_invalid_value(
     expect_log: ExpectLogFixture,
+    with_no_git_repo: ExpectLogFixture.Validator,
     tmp_path: Path,
 ) -> None:
+    with_no_git_repo.required = False
     app = create_app(tmp_path, "invalid_value")
 
     with expect_log(
@@ -97,8 +101,10 @@ def test_external_projects_invalid_value(
 def test_external_projects_unknown_project(
     expect_log: ExpectLogFixture,
     mocked_projects: dict[str, rocm_docs.projects._Project],
+    with_no_git_repo: ExpectLogFixture.Validator,
     tmp_path: Path,
 ) -> None:
+    with_no_git_repo.required = False
     # First keys of mocked_projects
     a_defined_project = next(iter(mocked_projects.keys()))
     app = create_app(tmp_path, [a_defined_project, "unknown_project", "foo"])
