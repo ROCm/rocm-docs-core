@@ -1,0 +1,7 @@
+root: index.md
+entries:
+  - file: a.md
+  - title: External Project A
+    url: ${project:a}
+  - title: External Project B
+    url: ${project:b}
