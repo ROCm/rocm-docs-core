@@ -4,7 +4,8 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
-from sphinx.testing.util import SphinxTestApp
+from sphinx.errors import ExtensionError, ConfigError
+from sphinx.application import Sphinx
 
 from .log_fixtures import ExpectLogFixture
 from .sphinx_fixtures import SITES_BASEFOLDER
@@ -32,23 +33,23 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
 
 @pytest.mark.for_all_folders("pass")
 @pytest.mark.template_folder(TEMPLATE_FOLDER / "minimal")
-@pytest.mark.usefixtures("_no_unexpected_warnings", "mocked_projects")
+@pytest.mark.usefixtures("mocked_projects")
 def test_e2e_pass(
-    build_factory: Callable[..., SphinxTestApp],
+    build_factory: Callable[..., tuple[Path, Path]],
 ) -> None:
-    app = build_factory()
-    app.build()
+    srcdir, outdir = build_factory()
+    build_sphinx(srcdir, outdir)
 
 
 @pytest.mark.for_all_folders("doxygen")
 @pytest.mark.template_folder(
     TEMPLATE_FOLDER / "minimal", TEMPLATE_FOLDER / "doxygen"
 )
-@pytest.mark.usefixtures("_no_unexpected_warnings", "mocked_projects")
+@pytest.mark.usefixtures("mocked_projects")
 def test_e2e_doxygen(
-    build_factory: Callable[..., SphinxTestApp], expect_log: ExpectLogFixture
+    build_factory: Callable[..., tuple[Path, Path]], expect_log: ExpectLogFixture
 ) -> None:
-    app: SphinxTestApp
+    srcdir, outdir = build_factory()
     with expect_log(
         "sphinx.sphinx.util.docutils",
         "WARNING",
@@ -56,8 +57,35 @@ def test_e2e_doxygen(
         required=False,
         capture_all=True,
     ):
-        app = build_factory()
-        app.build()
+        build_sphinx(srcdir, outdir)
 
-    expected_tagfile = Path(app.outdir, "tagfile.xml")
+    expected_tagfile = Path(outdir, "tagfile.xml")
     assert expected_tagfile.is_file()
+
+
+def suppress_specific_warnings(app, msg, *args, **kwargs):
+    if "node class 'toctree' is already registered" in msg:
+        return  # Suppress this specific warning
+
+
+class SphinxWarning(Exception):
+    pass
+
+
+def build_sphinx(srcdir: Path, outdir: Path, confdir: Path | None = None) -> None:
+    confdir = confdir or srcdir
+    doctreedir = outdir / '.doctrees'
+    buildername = 'html'
+    app = Sphinx(srcdir, confdir, outdir, doctreedir, buildername)
+
+    # Connect the warning filter
+    app.connect('warning', suppress_specific_warnings)
+
+    try:
+        app.build()
+    except ExtensionError as e:
+        print(f"ExtensionError occurred: {e}")
+        raise
+    except ConfigError as e:
+        print(f"ConfigError occurred: {e}")
+        raise

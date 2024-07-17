@@ -10,8 +10,8 @@ from collections.abc import Callable, Iterator
 from pathlib import Path
 
 import pytest
+from sphinx.application import Sphinx
 from sphinx.testing.path import path as sphinx_test_path
-from sphinx.testing.util import SphinxTestApp
 
 from .log_fixtures import ExpectLogFixture
 
@@ -35,16 +35,24 @@ def with_no_git_repo(
 SITES_BASEFOLDER = Path(__file__).parent / "sites"
 
 
+def build_sphinx(srcdir: Path, outdir: Path, confdir: Path | None = None) -> None:
+    confdir = confdir or srcdir
+    doctreedir = outdir / '.doctrees'
+    buildername = 'html'
+    app = Sphinx(srcdir, confdir, outdir, doctreedir, buildername)
+    app.build()
+
+
 @pytest.fixture()
 def build_factory(
     request: pytest.FixtureRequest,
-    make_app: Callable[..., SphinxTestApp],
     tmp_path: Path,
-) -> Callable[..., SphinxTestApp]:
-    """A factory to make Sphinx test applications"""
+) -> Callable[..., tuple[Path, Path]]:
+    """A factory to prepare Sphinx source and output directories"""
 
-    def make(src_folder: Path, /, **kwargs: dict[Any, Any]) -> SphinxTestApp:
+    def make(src_folder: Path, /, **kwargs: dict[Any, Any]) -> tuple[Path, Path]:
         srcdir = tmp_path.joinpath(src_folder)
+        outdir = tmp_path.joinpath(f"{src_folder}_build")
         srcdir.parent.mkdir(parents=True, exist_ok=True)
 
         mark = request.node.get_closest_marker("template_folder")
@@ -55,7 +63,7 @@ def build_factory(
         shutil.copytree(
             SITES_BASEFOLDER / src_folder, srcdir, dirs_exist_ok=True
         )
-        return make_app(srcdir=sphinx_test_path(srcdir), **kwargs)
+        return srcdir, outdir
 
     if hasattr(request, "param"):
         return functools.partial(make, request.param)
