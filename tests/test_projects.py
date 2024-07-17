@@ -52,7 +52,7 @@ def create_app(
 def test_external_projects(
     external_projects: list[str] | Literal["all"],
     mocked_projects: dict[str, rocm_docs.projects._Project],
-    tmp_path: Path
+    tmp_path: Path,
 ) -> None:
     app = create_app(tmp_path, external_projects)
     rocm_docs.projects._update_config(app, app.config)
