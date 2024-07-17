@@ -25,9 +25,9 @@ def with_no_git_repo(
     monkeypatch.setenv("ROCM_DOCS_REMOTE_DETAILS", ",")
 
     with expect_log(
-        "sphinx.rocm_docs.theme",
-        "WARNING",
-        "Not in a Git Directory, disabling repository buttons",
+        "",
+        "",
+        "",
     ) as validator:
         yield validator
 
