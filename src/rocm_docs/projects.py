@@ -337,13 +337,13 @@ def _update_theme_configs(
         development_branch = current_project.development_branch
 
     if current_branch in [latest_version_string, "latest"]:
-        app.config.projects_version_type = util.VersionType.LATEST_RELEASE  # type: ignore[attr-defined]
+        app.config.projects_version_type = util.VersionType.LATEST_RELEASE
     elif current_branch.startswith(release_candidate_string):
-        app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE  # type: ignore[attr-defined]
+        app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE
     elif current_branch.startswith("docs-"):
-        app.config.projects_version_type = util.VersionType.OLD_RELEASE  # type: ignore[attr-defined]
+        app.config.projects_version_type = util.VersionType.OLD_RELEASE
     elif current_branch == development_branch:
-        app.config.projects_version_type = util.VersionType.DEVELOPMENT  # type: ignore[attr-defined]
+        app.config.projects_version_type = util.VersionType.DEVELOPMENT
 
 
 def _get_external_projects(
@@ -389,12 +389,12 @@ def _set_doxygen_html(app: Sphinx, current_project: _Project | None) -> None:
             )
         return
 
-    app.config.doxygen_html = doxygen_html  # type: ignore[attr-defined]
+    app.config.doxygen_html = doxygen_html
 
 
 def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "intersphinx_disabled_domains"):
-        app.config.intersphinx_disabled_domains = ["std"]  # type: ignore[attr-defined]
+        app.config.intersphinx_disabled_domains = ["std"]
 
     remote_repository = app.config.external_projects_remote_repository
     remote_branch = app.config.external_projects_remote_branch
@@ -414,7 +414,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
             mapping.setdefault(key, value)
 
     if not config_provided_by_user(app, "external_toc_path"):
-        app.config.external_toc_path = "./.sphinx/_toc.yml"  # type: ignore[attr-defined]
+        app.config.external_toc_path = "./.sphinx/_toc.yml"
 
     context = _get_context(Path(app.srcdir), remote_mapping)
     formatting.format_toc(
@@ -423,7 +423,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
         context,
     )
     # Store the context to be referenced later
-    app.config.projects_context = context  # type: ignore[attr-defined]
+    app.config.projects_context = context
 
     _set_doxygen_html(app, current_project)
     _update_theme_configs(app, current_project, branch)

@@ -111,7 +111,7 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
         return
 
     components = urllib.parse.urlparse(os.environ["READTHEDOCS_CANONICAL_URL"])
-    app.config.notfound_urls_prefix = components.path  # type: ignore[attr-defined]
+    app.config.notfound_urls_prefix = components.path
 
 
 def _set_article_info(app: Sphinx, _: Config) -> None:
