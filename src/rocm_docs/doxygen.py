@@ -146,7 +146,7 @@ def _update_doxylink_settings(app: Sphinx, _: Config) -> None:
     # Otherwise config.doxylink would return a temporary and any modification to
     # it would be lost.
     if not config_provided_by_user(app, "doxylink"):
-        app.config.doxylink = app.config.doxylink  # type: ignore [attr-defined]
+        app.config.doxylink = app.config.doxylink
 
     doxylink = cast(
         dict[str, tuple[str, str] | tuple[str, str, str]],
