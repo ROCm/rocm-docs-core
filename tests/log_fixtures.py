@@ -204,7 +204,7 @@ class ExpectLogFixture:
             type: type,
             value: BaseException,
             traceback: types.TracebackType,
-        ) -> bool:
+        ) -> bool | None:
             return self._scope.__exit__(type, value, traceback)
 
         def _validate_logs(
