@@ -172,6 +172,7 @@ class _Project:
             if static_version is not None
             else self.development_branch
         )
+        gh_version = version
 
         # edge case
         if version.startswith("docs-"):
