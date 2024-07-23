@@ -27,6 +27,7 @@ projects:
   hip-vs:
     target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
     development_branch: master
+  llvm-project: https://rocm.docs.amd.com/projects/llvm-project/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
   omniperf:
@@ -82,6 +83,7 @@ projects:
   rocprofiler-sdk:
     target: https://rocm.docs.amd.com/projects/rocprofiler-sdk/en/${version}
     development_branch: amd-mainline
+  rocpydecode: https://rocm.docs.amd.com/projects/rocPyDecode/en/${version}
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocr-runtime:
     target: https://rocm.docs.amd.com/projects/ROCR-Runtime/en/${version}
