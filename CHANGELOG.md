@@ -1,3 +1,10 @@
+## v1.5.1 (2024-07-23)
+
+### Fix
+
+- Update rocPyDecode link
+- **projects.yaml**: Add llvm-project and rocpydecode
+
 ## v1.5.0 (2024-07-04)
 
 ### Feat
