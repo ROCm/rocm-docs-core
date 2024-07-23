@@ -75,7 +75,7 @@ class LogStackFixture:
             type: type,
             value: BaseException,
             traceback: types.TracebackType,
-        ) -> bool:
+        ) -> bool | None:
             return self._callbacks.__exit__(type, value, traceback)
 
     def new_scope(self, *, when: TestPhase = "call") -> Scope:
