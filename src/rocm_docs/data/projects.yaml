@@ -83,7 +83,7 @@ projects:
   rocprofiler-sdk:
     target: https://rocm.docs.amd.com/projects/rocprofiler-sdk/en/${version}
     development_branch: amd-mainline
-  rocpydecode: https://rocm.docs.amd.com/projects/rocppydecode/en/${version}
+  rocpydecode: https://rocm.docs.amd.com/projects/rocPyDecode/en/${version}
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocr-runtime:
     target: https://rocm.docs.amd.com/projects/ROCR-Runtime/en/${version}
