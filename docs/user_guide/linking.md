@@ -34,14 +34,14 @@ format should be used:
 The following Markdown:
 
 ```Markdown
-{doc}`ROCm Documentation<rocm:reference/all>`
+{doc}`ROCm Documentation<rocm:about/license>`
 {doc}`ROCm Documentation<rocm-github>`
 {doc}`ROCm Documentation<rocm-github:README.md>`
 ```
 
 will be rendered as the following links:
 
-{doc}`ROCm Documentation<rocm:reference/all>`
+{doc}`ROCm Documentation<rocm:about/license>`
 {doc}`ROCm Documentation<rocm-github>`
 {doc}`ROCm Documentation<rocm-github:README.md>`
 
