@@ -4,6 +4,10 @@
 
 ### Cross References to Other Projects
 
+The [`projects.yaml`](https://github.com/ROCm/rocm-docs-core/blob/develop/src/rocm_docs/data/projects.yaml)
+configuration file contains the names of projects
+that should be used when making links that cross-reference documentation sites.
+
 When making links that cross-reference documentation sites, the following
 format should be used:
 
@@ -11,9 +15,19 @@ format should be used:
 {doc}`Text here<project_name:path/to/page_name>`
 ```
 
-The [`projects.yaml`](https://github.com/ROCm/rocm-docs-core/blob/develop/src/rocm_docs/data/projects.yaml)
-configuration file contains the names of projects
-that should be used when making links that cross-reference documentation sites.
+When making links that cross-reference GitHub sites, the following
+format should be used:
+
+```Markdown
+{doc}`Text here<project_name-github>`
+```
+
+When making links that cross-reference files on GitHub, the following
+format should be used:
+
+```Markdown
+{doc}`Text here<project_name-file:path/to/file>`
+```
 
 #### Example
 
@@ -21,11 +35,15 @@ The following Markdown:
 
 ```Markdown
 {doc}`ROCm Documentation<rocm:reference/all>`
+{doc}`ROCm Documentation<rocm-github>`
+{doc}`ROCm Documentation<rocm-github:README.md>`
 ```
 
-will be rendered as the following link:
+will be rendered as the following links:
 
 {doc}`ROCm Documentation<rocm:reference/all>`
+{doc}`ROCm Documentation<rocm-github>`
+{doc}`ROCm Documentation<rocm-github:README.md>`
 
 ### Other
 
