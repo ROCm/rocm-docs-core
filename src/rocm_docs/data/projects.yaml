@@ -4,101 +4,207 @@ version: 1
 # ${version} will be replaced by the version of the (current) project in values
 projects:
   amdmigraphx: https://rocm.docs.amd.com/projects/AMDMIGraphX/en/${version}
+  amdmigraphx-github: https://github.com/ROCm/AMDMIGraphX/tree/${gh_version}
+  amdmigraphx-file: https://github.com/ROCm/AMDMIGraphX/blob/${gh_version}
   amdsmi: https://rocm.docs.amd.com/projects/amdsmi/en/${version}
+  amdsmi-github: https://github.com/ROCm/amdsmi/tree/${gh_version}
+  amdsmi-file: https://github.com/ROCm/amdsmi/blob/${gh_version}
   composable_kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
+  composable_kernel-github: https://github.com/ROCm/composable_kernel/tree/${gh_version}
+  composable_kernel-file: https://github.com/ROCm/composable_kernel/blob/${gh_version}
   hip: https://rocm.docs.amd.com/projects/HIP/en/${version}
+  hip-github: https://github.com/ROCm/HIP/tree/${gh_version}
+  hip-file: https://github.com/ROCm/HIP/blob/${gh_version}
   hipblas: https://rocm.docs.amd.com/projects/hipBLAS/en/${version}
+  hipblas-github: https://github.com/ROCm/hipBLAS/tree/${gh_version}
+  hipblas-file: https://github.com/ROCm/hipBLAS/blob/${gh_version}
   hipblaslt: https://rocm.docs.amd.com/projects/hipBLASLt/en/${version}
+  hipblaslt-github: https://github.com/ROCm/hipBLASLt/tree/${gh_version}
+  hipblaslt-file: https://github.com/ROCm/hipBLASLt/blob/${gh_version}
   hipcc: https://rocm.docs.amd.com/projects/HIPCC/en/${version}
+  hipcc-github: https://github.com/ROCm/HIPCC/tree/${gh_version}
+  hipcc-file: https://github.com/ROCm/HIPCC/blob/${gh_version}
   hipcub: https://rocm.docs.amd.com/projects/hipCUB/en/${version}
+  hipcub-github: https://github.com/ROCm/hipCUB/tree/${gh_version}
+  hipcub-file: https://github.com/ROCm/hipCUB/blob/${gh_version}
   hipfft: https://rocm.docs.amd.com/projects/hipFFT/en/${version}
+  hipfft-github: https://github.com/ROCm/hipFFT/tree/${gh_version}
+  hipfft-file: https://github.com/ROCm/hipFFT/blob/${gh_version}
   hipfort: https://rocm.docs.amd.com/projects/hipfort/en/${version}
+  hipfort-github: https://github.com/ROCm/hipfort/tree/${gh_version}
+  hipfort-file: https://github.com/ROCm/hipfort/blob/${gh_version}
   hipify:
     target: https://rocm.docs.amd.com/projects/HIPIFY/en/${version}
     development_branch: amd-staging
+  hipify-github: https://github.com/ROCm/HIPIFY/tree/${gh_version}
+  hipify-file: https://github.com/ROCm/HIPIFY/blob/${gh_version}
   hip-python:
     target: https://rocm.docs.amd.com/projects/hip-python/en/${version}
     development_branch: main
+  hip-python-github: https://github.com/ROCm/hip-python/tree/${gh_version}
+  hip-python-file: https://github.com/ROCm/hip-python/blob/${gh_version}
   hiprand: https://rocm.docs.amd.com/projects/hipRAND/en/${version}
+  hiprand-github: https://github.com/ROCm/hipRAND/tree/${gh_version}
+  hiprand-file: https://github.com/ROCm/hipRAND/blob/${gh_version}
   hipsolver: https://rocm.docs.amd.com/projects/hipSOLVER/en/${version}
+  hipsolver-github: https://github.com/ROCm/hipSOLVER/tree/${gh_version}
+  hipsolver-file: https://github.com/ROCm/hipSOLVER/blob/${gh_version}
   hipsparse: https://rocm.docs.amd.com/projects/hipSPARSE/en/${version}
+  hipsparse-github: https://github.com/ROCm/hipSPARSE/tree/${gh_version}
+  hipsparse-file: https://github.com/ROCm/hipSPARSE/blob/${gh_version}
   hipsparselt: https://rocm.docs.amd.com/projects/hipSPARSELt/en/${version}
+  hipsparselt-github: https://github.com/ROCm/hipSPARSELt/tree/${gh_version}
+  hipsparselt-file: https://github.com/ROCm/hipSPARSELt/blob/${gh_version}
   hiptensor: https://rocm.docs.amd.com/projects/hipTensor/en/${version}
+  hiptensor-github: https://github.com/ROCm/hipTensor/tree/${gh_version}
+  hiptensor-file: https://github.com/ROCm/hipTensor/blob/${gh_version}
   hip-vs:
     target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
     development_branch: master
   llvm-project: https://rocm.docs.amd.com/projects/llvm-project/en/${version}
+  llvm-project-github: https://github.com/ROCm/llvm-project/tree/${gh_version}
+  llvm-project-file: https://github.com/ROCm/llvm-project/blob/${gh_version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
+  miopen-github: https://github.com/ROCm/MIOpen/tree/${gh_version}
+  miopen-file: https://github.com/ROCm/MIOpen/blob/${gh_version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
+  mivisionx-github: https://github.com/ROCm/MIVisionX/tree/${gh_version}
+  mivisionx-file: https://github.com/ROCm/MIVisionX/blob/${gh_version}
   omniperf:
     target: https://rocm.docs.amd.com/projects/omniperf/en/${version}
     development_branch: main
+  omniperf-github: https://github.com/ROCm/omniperf/tree/${gh_version}
+  omniperf-file: https://github.com/ROCm/omniperf/blob/${gh_version}
   omnitrace:
     target: https://rocm.docs.amd.com/projects/omnitrace/en/${version}
     development_branch: main
+  omnitrace-github: https://github.com/ROCm/omnitrace/tree/${gh_version}
+  omnitrace-file: https://github.com/ROCm/omnitrace/blob/${gh_version}
   python: https://docs.python.org/3/
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
+  rccl-github: https://github.com/ROCm/rccl/tree/${gh_version}
+  rccl-file: https://github.com/ROCm/rccl/blob/${gh_version}
   rdc: https://rocm.docs.amd.com/projects/rdc/en/${version}
+  rdc-github: https://github.com/ROCm/rdc/tree/${gh_version}
+  rdc-file: https://github.com/ROCm/rdc/blob/${gh_version}
   radeon: https://rocm.docs.amd.com/projects/radeon/en/${version}
   rocal:
     target: https://rocm.docs.amd.com/projects/rocAL/en/${version}
     development_branch: master
+  rocal-github: https://github.com/ROCm/rocAL/tree/${gh_version}
+  rocal-file: https://github.com/ROCm/rocAL/blob/${gh_version}
   rocalution: https://rocm.docs.amd.com/projects/rocALUTION/en/${version}
+  rocalution-github: https://github.com/ROCm/rocALUTION/tree/${gh_version}
+  rocalution-file: https://github.com/ROCm/rocALUTION/blob/${gh_version}
   rocblas: https://rocm.docs.amd.com/projects/rocBLAS/en/${version}
+  rocblas-github: https://github.com/ROCm/rocBLAS/tree/${gh_version}
+  rocblas-file: https://github.com/ROCm/rocBLAS/blob/${gh_version}
   rocdbgapi:
     target: https://rocm.docs.amd.com/projects/ROCdbgapi/en/${version}
     development_branch: amd-master
+  rocdbgapi-github: https://github.com/ROCm/ROCdbgapi/tree/${gh_version}
+  rocdbgapi-file: https://github.com/ROCm/ROCdbgapi/blob/${gh_version}
   rocdecode:
     target: https://rocm.docs.amd.com/projects/rocDecode/en/${version}
     development_branch: master
+  rocdecode-github: https://github.com/ROCm/rocDecode/tree/${gh_version}
+  rocdecode-file: https://github.com/ROCm/rocDecode/blob/${gh_version}
   rocfft: https://rocm.docs.amd.com/projects/rocFFT/en/${version}
+  rocfft-github: https://github.com/ROCm/rocFFT/tree/${gh_version}
+  rocfft-file: https://github.com/ROCm/rocFFT/blob/${gh_version}
   rocgdb:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
     development_branch: amd-master
+  rocgdb-github: https://github.com/ROCm/ROCgdb/tree/${gh_version}
+  rocgdb-file: https://github.com/ROCm/ROCgdb/blob/${gh_version}
   rocm: https://rocm.docs.amd.com/en/${version}
+  rocm-github: https://github.com/ROCm/ROCm/tree/${gh_version}
+  rocm-file: https://github.com/ROCm/ROCm/blob/${gh_version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
   rocm-install-on-linux:
     target: https://rocm.docs.amd.com/projects/install-on-linux/en/${version}
     development_branch: develop
+  rocm-install-on-linux-github: https://github.com/ROCm/rocm-install-on-linux/tree/${gh_version}
+  rocm-install-on-linux-file: https://github.com/ROCm/rocm-install-on-linux/blob/${gh_version}
   rocm-install-on-windows:
     target: https://rocm.docs.amd.com/projects/install-on-windows/en/${version}
     development_branch: develop
+  rocm-install-on-windows-github: https://github.com/ROCm/rocm-install-on-windows/tree/${gh_version}
+  rocm-install-on-windows-file: https://github.com/ROCm/rocm-install-on-windows/blob/${gh_version}
   rocm_bandwidth_test:
     target: https://rocm.docs.amd.com/projects/rocm_bandwidth_test/en/${version}
     development_branch: master
+  rocm_bandwidth_test-github: https://github.com/ROCm/rocm_bandwidth_test/tree/${gh_version}
+  rocm_bandwidth_test-file: https://github.com/ROCm/rocm_bandwidth_test/blob/${gh_version}
   rocm_smi_lib:
     target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
     development_branch: master
+  rocm_smi_lib-github: https://github.com/ROCm/rocm_smi_lib/tree/${gh_version}
+  rocm_smi_lib-file: https://github.com/ROCm/rocm_smi_lib/blob/${gh_version}
   rocmcmakebuildtools: https://rocm.docs.amd.com/projects/ROCmCMakeBuildTools/en/${version}
+  rocmcmakebuildtools-github: https://github.com/ROCm/rocm-cmake/tree/${gh_version}
+  rocmcmakebuildtools-file: https://github.com/ROCm/rocm-cmake/blob/${gh_version}
   rocminfo:
     target: https://rocm.docs.amd.com/projects/rocminfo/en/${version}
     development_branch: master
+  rocminfo-github: https://github.com/ROCm/rocminfo/tree/${gh_version}
+  rocminfo-file: https://github.com/ROCm/rocminfo/blob/${gh_version}
   rocmvalidationsuite:
     target: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
     development_branch: master
+  rocmvalidationsuite-github: https://github.com/ROCm/ROCmValidationSuite/tree/${gh_version}
+  rocmvalidationsuite-file: https://github.com/ROCm/ROCmValidationSuite/blob/${gh_version}
   rocprim: https://rocm.docs.amd.com/projects/rocPRIM/en/${version}
+  rocprim-github: https://github.com/ROCm/rocPRIM/tree/${gh_version}
+  rocprim-file: https://github.com/ROCm/rocPRIM/blob/${gh_version}
   rocprofiler:
     target: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
     development_branch: amd-master
+  rocprofiler-github: https://github.com/ROCm/rocprofiler/tree/${gh_version}
+  rocprofiler-file: https://github.com/ROCm/rocprofiler/blob/${gh_version}
   rocprofiler-sdk:
     target: https://rocm.docs.amd.com/projects/rocprofiler-sdk/en/${version}
     development_branch: amd-mainline
+  rocprofiler-sdk-github: https://github.com/ROCm/rocprofiler-sdk/tree/${gh_version}
+  rocprofiler-sdk-file: https://github.com/ROCm/rocprofiler-sdk/blob/${gh_version}
   rocpydecode: https://rocm.docs.amd.com/projects/rocPyDecode/en/${version}
+  rocpydecode-github: https://github.com/ROCm/rocPyDecode/tree/${gh_version}
+  rocpydecode-file: https://github.com/ROCm/rocPyDecode/blob/${gh_version}
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
+  rocrand-github: https://github.com/ROCm/rocRAND/tree/${gh_version}
+  rocrand-file: https://github.com/ROCm/rocRAND/blob/${gh_version}
   rocr-runtime:
     target: https://rocm.docs.amd.com/projects/ROCR-Runtime/en/${version}
     development_branch: master
+  rocr-runtime-github: https://github.com/ROCm/ROCR-Runtime/tree/${gh_version}
+  rocr-runtime-file: https://github.com/ROCm/ROCR-Runtime/blob/${gh_version}
   rocr_debug_agent:
     target: https://rocm.docs.amd.com/projects/rocr_debug_agent/en/${version}
     development_branch: master
+  rocr_debug_agent-github: https://github.com/ROCm/rocr_debug_agent/tree/${gh_version}
+  rocr_debug_agent-file: https://github.com/ROCm/rocr_debug_agent/blob/${gh_version}
   rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}
+  rocsolver-github: https://github.com/ROCm/rocSOLVER/tree/${gh_version}
+  rocsolver-file: https://github.com/ROCm/rocSOLVER/blob/${gh_version}
   rocsparse: https://rocm.docs.amd.com/projects/rocSPARSE/en/${version}
+  rocsparse-github: https://github.com/ROCm/rocSPARSE/tree/${gh_version}
+  rocsparse-file: https://github.com/ROCm/rocSPARSE/blob/${gh_version}
   rocthrust: https://rocm.docs.amd.com/projects/rocThrust/en/${version}
+  rocthrust-github: https://github.com/ROCm/rocThrust/tree/${gh_version}
+  rocthrust-file: https://github.com/ROCm/rocThrust/blob/${gh_version}
   roctracer:
     target: https://rocm.docs.amd.com/projects/roctracer/en/${version}
     development_branch: amd-master
+  roctracer-github: https://github.com/ROCm/roctracer/tree/${gh_version}
+  roctracer-file: https://github.com/ROCm/roctracer/blob/${gh_version}
   rocwmma: https://rocm.docs.amd.com/projects/rocWMMA/en/${version}
+  rocwmma-github: https://github.com/ROCm/rocWMMA/tree/${gh_version}
+  rocwmma-file: https://github.com/ROCm/rocWMMA/blob/${gh_version}
   rpp: https://rocm.docs.amd.com/projects/rpp/en/${version}
+  rpp-github: https://github.com/ROCm/rpp/tree/${gh_version}
+  rpp-file: https://github.com/ROCm/rpp/blob/${gh_version}
   rtd: https://docs.readthedocs.io/en/stable/
   sphinx: https://www.sphinx-doc.org/en/master/
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
+  transferbench-github: https://github.com/ROCm/TransferBench/tree/${gh_version}
+  transferbench-file: https://github.com/ROCm/TransferBench/blob/${gh_version}

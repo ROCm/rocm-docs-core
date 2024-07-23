@@ -161,17 +161,34 @@ class _Project:
         return None
 
     def evaluate(self, static_version: str | None) -> None:
-        """Evaluate ${version} placeholders in the inventory and target values."""
+        """Evaluate ${version} placeholders in the inventory and target values.
+
+        Edge case:
+        For docs/a.b.c versions/branches, ReadtheDocs replaces the / with -
+        So handle GitHub version and RTD version differently
+        """
         version = (
             static_version
             if static_version is not None
             else self.development_branch
         )
-        self.target = self.target.replace("${version}", version)
+
+        # edge case
+        if version.startswith("docs-"):
+            gh_version = version.replace("-", "/")
+
+        if "${version}" in self.target:
+            self.target = self.target.replace("${version}", version)
+        elif "${gh_version}" in self.target:
+            self.target = self.target.replace("${gh_version}", gh_version)
+
         for item in self.inventory:
             if item is None:
                 continue
-            item = item.replace("${version}", version)
+            if "${version}" in item:
+                item = item.replace("${version}", version)
+            elif "${gh_version}" in item:
+                item = item.replace("${gh_version}", gh_version)
 
     @property
     def mapping(self) -> ProjectMapping:
