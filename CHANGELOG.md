@@ -1,3 +1,13 @@
+## v1.6.0 (2024-07-24)
+
+### Feat
+
+- **projects**: Add intersphinx links to github and files
+
+### Refactor
+
+- Set github version
+
 ## v1.5.1 (2024-07-23)
 
 ### Fix
