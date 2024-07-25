@@ -90,7 +90,7 @@ projects:
   radeon: https://rocm.docs.amd.com/projects/radeon/en/${version}
   rocal:
     target: https://rocm.docs.amd.com/projects/rocAL/en/${version}
-    development_branch: master
+    development_branch: develop
   rocal-github: https://github.com/ROCm/rocAL/tree/${gh_version}
   rocal-file: https://github.com/ROCm/rocAL/blob/${gh_version}
   rocalution: https://rocm.docs.amd.com/projects/rocALUTION/en/${version}
@@ -106,7 +106,7 @@ projects:
   rocdbgapi-file: https://github.com/ROCm/ROCdbgapi/blob/${gh_version}
   rocdecode:
     target: https://rocm.docs.amd.com/projects/rocDecode/en/${version}
-    development_branch: master
+    development_branch: develop
   rocdecode-github: https://github.com/ROCm/rocDecode/tree/${gh_version}
   rocdecode-file: https://github.com/ROCm/rocDecode/blob/${gh_version}
   rocfft: https://rocm.docs.amd.com/projects/rocFFT/en/${version}
