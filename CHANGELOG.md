@@ -1,3 +1,19 @@
+## v1.6.1 (2024-07-25)
+
+### Fix
+
+- **project.yaml**: rocDecode and rocAL default to develop branch now
+
+### Refactor
+
+- Remove unused import
+- Remove unused test code
+- Remove SphinxTestApp
+- Removed deprecated code
+- **test_projects.py**: Format with black
+- Update conf.py for site tests
+- **test_doxygen.py**: Fix typo in doxygen dir
+
 ## v1.6.0 (2024-07-24)
 
 ### Feat
