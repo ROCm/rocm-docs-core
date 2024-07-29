@@ -221,7 +221,7 @@ sphinx-notfound-page==1.0.2
     # via rocm-docs-core (pyproject.toml)
 sphinxcontrib-applehelp==2.0.0
     # via sphinx
-sphinxcontrib-devhelp==1.0.6
+sphinxcontrib-devhelp==2.0.0
     # via sphinx
 sphinxcontrib-doxylink==1.12.3
     # via rocm-docs-core (pyproject.toml)
