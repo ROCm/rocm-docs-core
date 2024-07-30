@@ -72,12 +72,12 @@ projects:
   mivisionx-file: https://github.com/ROCm/MIVisionX/blob/${gh_version}
   omniperf:
     target: https://rocm.docs.amd.com/projects/omniperf/en/${version}
-    development_branch: main
+    development_branch: amd-staging
   omniperf-github: https://github.com/ROCm/omniperf/tree/${gh_version}
   omniperf-file: https://github.com/ROCm/omniperf/blob/${gh_version}
   omnitrace:
     target: https://rocm.docs.amd.com/projects/omnitrace/en/${version}
-    development_branch: main
+    development_branch: amd-staging
   omnitrace-github: https://github.com/ROCm/omnitrace/tree/${gh_version}
   omnitrace-file: https://github.com/ROCm/omnitrace/blob/${gh_version}
   python: https://docs.python.org/3/

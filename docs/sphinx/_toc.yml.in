@@ -33,7 +33,6 @@ subtrees:
       title: Library API Doxygen Demo
   - caption: Demo Table of Contents Tree
     entries:
-    - url: "{url}"
     - url: ${project:python}
     - url: ${project:rocm-docs-core}
     - url: ${project:hipify}
