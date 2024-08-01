@@ -19,23 +19,19 @@ for information on labels.
 
 The format using a label would appear as follows:
 
-```RST
-:ref:`Text here<project_name:label_name>`
-```
+.. code-block:: RST
+    
+    :ref:`Text here<project_name:label_name>`
 
 Example
 ^^^^^^^
 
 The following RST:
 
-```RST
-{doc}`ROCm Documentation<rocm:about/license>`
+.. code-block:: RST
 
-:ref:`ROCm for AI Install<rocm:rocm-for-ai-install>`
-```
+    :ref:`ROCm for AI Install<rocm:rocm-for-ai-install>`
 
 will be rendered as the following link:
-
-{doc}`ROCm Documentation<rocm:about/license>`
 
 :ref:`ROCm for AI Install<rocm:rocm-for-ai-install>`
