@@ -16,11 +16,13 @@ subtrees:
       - entries:
         - file: user_guide/spellcheck
         - file: user_guide/linting
-        - file: user_guide/doxygen_integration
         - file: user_guide/linking
-        - entries:
-          - file: user_guide/linking_md
-          - file: user_guide/linking_rst
+          subtrees:
+          - entries:
+            - file: user_guide/linking_md
+            - file: user_guide/linking_rst
+            - file: user_guide/linking_toc
+        - file: user_guide/doxygen_integration
         - file: user_guide/article_info
     - file: developer_guide/developer_guide
       subtrees:
