@@ -15,18 +15,15 @@ format should be used:
 {doc}`Text here<project_name:path/to/page_name>`
 ```
 
-When making links that cross-reference GitHub sites, the following
-format should be used:
+Cross references to anchors or arbitrary locations in documentation
+can be done using labels.
+
+See the [Sphinx documentation on cross-referencing arbitrary locations](https://www.sphinx-doc.org/en/master/usage/referencing.html#ref-role) for information on labels.
+
+The format using a label would appear as follows:
 
 ```Markdown
-{doc}`Text here<project_name-github>`
-```
-
-When making links that cross-reference files on GitHub, the following
-format should be used:
-
-```Markdown
-{doc}`Text here<project_name-file:path/to/file>`
+:ref:`Text here<project_name:label_name>`
 ```
 
 #### Example
@@ -35,21 +32,31 @@ The following Markdown:
 
 ```Markdown
 {doc}`ROCm Documentation<rocm:about/license>`
-{doc}`ROCm Documentation<rocm-github>`
-{doc}`ROCm Documentation<rocm-github:README.md>`
 ```
 
-will be rendered as the following links:
+will be rendered as the following link:
 
 {doc}`ROCm Documentation<rocm:about/license>`
-{doc}`ROCm Documentation<rocm-github>`
-{doc}`ROCm Documentation<rocm-github:README.md>`
 
-### Other
+### Relative Links to Current Project
+
+#### Example
+
+The following Markdown:
+
+```Markdown
+[Link Text](../index)
+```
+
+will be rendered as the following link:
+
+[Link Text](../index)
+
+### Absolute Links to External Sites
 
 For other links, usual Markdown conventions should be used.
 
-#### Example: Absolute Links to External Sites
+#### Example
 
 The following Markdown:
 
@@ -60,18 +67,6 @@ The following Markdown:
 will be rendered as the following link:
 
 [Link Text](https://github.com/ROCm/ROCm)
-
-#### Example: Relative Links to Current Project
-
-The following Markdown:
-
-```Markdown
-[Link Text](../index)
-```
-
-will be rendered as the following link:
-
-[Link Text](../index)
 
 ## Table of Contents
 
