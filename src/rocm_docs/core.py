@@ -7,11 +7,11 @@ ROCm documentation projects.
 
 from __future__ import annotations
 
-from typing import Any, Dict, Generic, List, Set, TypeVar, cast
+from typing import Any, Generic, TypeVar, cast
 
+import importlib.resources
 import inspect
 import os
-import sys
 import urllib.parse
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -26,12 +26,6 @@ from sphinx.config import Config
 
 T = TypeVar("T")
 
-# based on doxygen.py
-if sys.version_info < (3, 9):
-    import importlib_resources
-else:
-    import importlib.resources as importlib_resources
-
 
 class _ConfigUpdater(Generic[T], ABC):
     def __init__(self, default: T) -> None:
@@ -43,7 +37,7 @@ class _ConfigUpdater(Generic[T], ABC):
         pass
 
 
-class _ConfigExtend(_ConfigUpdater[List[T]]):
+class _ConfigExtend(_ConfigUpdater[list[T]]):
     def __call__(self, key: str, app: Sphinx) -> None:
         getattr(app.config, key).extend(self.default)
 
@@ -54,12 +48,12 @@ class _ConfigDefault(_ConfigUpdater[T]):
             setattr(app.config, key, self.default)
 
 
-class _ConfigUnion(_ConfigUpdater[Set[T]]):
+class _ConfigUnion(_ConfigUpdater[set[T]]):
     def __call__(self, key: str, app: Sphinx) -> None:
         getattr(app.config, key).update(self.default)
 
 
-class _ConfigMerge(_ConfigUpdater[Dict[str, Any]]):
+class _ConfigMerge(_ConfigUpdater[dict[str, Any]]):
     def __call__(self, key: str, app: Sphinx) -> None:
         current_setting: dict[str, Any] = getattr(app.config, key)
         for item in self.default.items():
@@ -117,7 +111,7 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
         return
 
     components = urllib.parse.urlparse(os.environ["READTHEDOCS_CANONICAL_URL"])
-    app.config.notfound_urls_prefix = components.path  # type: ignore[attr-defined]
+    app.config.notfound_urls_prefix = components.path
 
 
 def _set_article_info(app: Sphinx, _: Config) -> None:
@@ -129,7 +123,7 @@ def _set_article_info(app: Sphinx, _: Config) -> None:
         return
 
     article_info = (
-        importlib_resources.files("rocm_docs")
+        importlib.resources.files("rocm_docs")
         .joinpath("rocm_docs_theme/components/article-info.html")
         .read_text(encoding="utf-8")
     )
@@ -151,7 +145,7 @@ def _set_page_article_info(
     """
     repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
     for page in app.config.article_pages:
-        path_rel = app.project.doc2path(page["file"], basedir=False)
+        path_rel = app.project.doc2path(page["file"], False)
         path_html = Path(app.outdir, path_rel).with_suffix(".html")
         path_source = Path(app.srcdir, path_rel)
 
@@ -211,7 +205,7 @@ def _set_all_article_info(
         if docname in specific_pages:
             continue
 
-        page_rel = app.project.doc2path(docname, basedir=False)
+        page_rel = app.project.doc2path(docname, False)
         page = Path(app.outdir, page_rel).with_suffix(".html")
 
         # FIXME: This will silently skip all files when not building the default
@@ -265,9 +259,7 @@ def _estimate_read_time(file_name: Path) -> str:
             return False
         if isinstance(element, bs4.element.Comment):
             return False
-        if element.string == "\n":
-            return False
-        return True
+        return element.string != "\n"
 
     words_per_minute = 200
     average_word_length = 5
@@ -339,7 +331,9 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_config_value(
         "all_article_info_read_time", default="", rebuild="html", types=str
     )
-    app.add_config_value("article_pages", default=[], rebuild="html", types=Any)
+    app.add_config_value(
+        "article_pages", default=[], rebuild="html", types=list
+    )
 
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)

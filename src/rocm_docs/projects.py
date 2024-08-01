@@ -5,9 +5,10 @@ Remote loading of intersphinx_mapping from file, templating projects in toc.yml)
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple, Union, cast
+from typing import Any, TypeAlias, cast
 
 import functools
+import importlib.resources
 import json
 import os
 import sys
@@ -29,26 +30,17 @@ from sphinx.errors import ExtensionError
 
 from rocm_docs import formatting, util
 
-if sys.version_info < (3, 9):
-    # importlib.resources either doesn't exist or lacks the files()
-    # function, so use the PyPI version:
-    import importlib_resources
-    import importlib_resources.abc as importlib_abc
+if sys.version_info < (3, 11):
+    import importlib.abc as importlib_abc
 else:
-    # importlib.resources has files(), so use that:
-    import importlib.resources as importlib_resources
-
-    if sys.version_info < (3, 11):
-        import importlib.abc as importlib_abc
-    else:
-        import importlib.resources.abc as importlib_abc
+    import importlib.resources.abc as importlib_abc
 
 Traversable = importlib_abc.Traversable
 
-Inventory = Union[str, None, Tuple[Union[str, None], ...]]
-ProjectMapping = Tuple[str, Inventory]
+Inventory: TypeAlias = str | None | tuple[str | None, ...]
+ProjectMapping: TypeAlias = tuple[str, Inventory]
 
-DEFAULT_INTERSPHINX_REPOSITORY = "RadeonOpenCompute/rocm-docs-core"
+DEFAULT_INTERSPHINX_REPOSITORY = "ROCm/rocm-docs-core"
 DEFAULT_INTERSPHINX_BRANCH = "develop"
 
 logger = sphinx.util.logging.getLogger(__name__)
@@ -58,8 +50,8 @@ class InvalidMappingFileError(RuntimeError):
     """Mapping file has invalid format, or failed to validate."""
 
 
-ProjectItem = Union[str, None, List[Union[str, None]], Dict[str, str]]
-ProjectEntry = Union[str, Dict[str, ProjectItem]]
+ProjectItem: TypeAlias = str | list[str | None] | None
+ProjectEntry: TypeAlias = str | dict[str, ProjectItem]
 
 
 @dataclass
@@ -72,16 +64,16 @@ class _Project:
     @staticmethod
     @functools.lru_cache
     def yaml_schema() -> dict[str, Any]:
-        base = importlib_resources.files("rocm_docs") / "data"
+        base = importlib.resources.files("rocm_docs") / "data"
         schema_file = base / "projects.schema.json"
 
         return cast(
-            Dict[str, Any], json.load(schema_file.open(encoding="utf-8"))
+            dict[str, Any], json.load(schema_file.open(encoding="utf-8"))
         )
 
     @classmethod
     def schema(cls) -> dict[str, Any]:
-        return cast(Dict[str, Any], cls.yaml_schema()["$defs"]["project"])
+        return cast(dict[str, Any], cls.yaml_schema()["$defs"]["project"])
 
     @classmethod
     def default_value(cls, prop: str) -> str:
@@ -95,9 +87,10 @@ class _Project:
             return None
 
         doxygen_entry = entry["doxygen"]
-        assert isinstance(doxygen_entry, (dict, str))
-        if isinstance(doxygen_entry, dict):
-            doxygen_entry = doxygen_entry["html"]
+        assert isinstance(doxygen_entry, dict | str)
+
+        if isinstance(doxygen_entry, dict):  # type:ignore
+            doxygen_entry = doxygen_entry["html"]  # type:ignore
 
         # Parse as a URI, but only allow the path component
         urlparts = urllib.parse.urlsplit(doxygen_entry)
@@ -127,7 +120,7 @@ class _Project:
         # It's okay to just index into optional fields, because jsonschema
         # fills in any missing fields with their default values
         inventory = entry["inventory"]
-        assert inventory is None or isinstance(inventory, (list, str))
+        assert inventory is None or isinstance(inventory, list | str)
         if not isinstance(inventory, list):
             inventory = [inventory]
 
@@ -168,17 +161,35 @@ class _Project:
         return None
 
     def evaluate(self, static_version: str | None) -> None:
-        """Evaluate ${version} placeholders in the inventory and target values."""
+        """Evaluate ${version} placeholders in the inventory and target values.
+
+        Edge case:
+        For docs/a.b.c versions/branches, ReadtheDocs replaces the / with -
+        So handle GitHub version and RTD version differently
+        """
         version = (
             static_version
             if static_version is not None
             else self.development_branch
         )
-        self.target = self.target.replace("${version}", version)
+        gh_version = version
+
+        # edge case
+        if version.startswith("docs-"):
+            gh_version = version.replace("-", "/")
+
+        if "${version}" in self.target:
+            self.target = self.target.replace("${version}", version)
+        elif "${gh_version}" in self.target:
+            self.target = self.target.replace("${gh_version}", gh_version)
+
         for item in self.inventory:
             if item is None:
                 continue
-            item = item.replace("${version}", version)
+            if "${version}" in item:
+                item = item.replace("${version}", version)
+            elif "${gh_version}" in item:
+                item = item.replace("${gh_version}", gh_version)
 
     @property
     def mapping(self) -> ProjectMapping:
@@ -309,7 +320,7 @@ def _load_projects(
 
     if projects is None:
         projects = _create_projects(
-            importlib_resources.files("rocm_docs") / projects_file_loc
+            importlib.resources.files("rocm_docs") / projects_file_loc
         )
 
     return projects
@@ -331,11 +342,11 @@ def _update_theme_configs(
 ) -> None:
     """Update configurations for use in theme.py"""
     latest_version = requests.get(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
     ).text.strip("\r\n")
     latest_version_string = f"docs-{latest_version}"
     release_candidate = requests.get(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
     ).text.strip("\r\n")
     release_candidate_string = f"docs-{release_candidate}"
 
@@ -344,13 +355,13 @@ def _update_theme_configs(
         development_branch = current_project.development_branch
 
     if current_branch in [latest_version_string, "latest"]:
-        app.config.projects_version_type = util.VersionType.LATEST_RELEASE  # type: ignore[attr-defined]
+        app.config.projects_version_type = util.VersionType.LATEST_RELEASE
     elif current_branch.startswith(release_candidate_string):
-        app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE  # type: ignore[attr-defined]
+        app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE
     elif current_branch.startswith("docs-"):
-        app.config.projects_version_type = util.VersionType.OLD_RELEASE  # type: ignore[attr-defined]
+        app.config.projects_version_type = util.VersionType.OLD_RELEASE
     elif current_branch == development_branch:
-        app.config.projects_version_type = util.VersionType.DEVELOPMENT  # type: ignore[attr-defined]
+        app.config.projects_version_type = util.VersionType.DEVELOPMENT
 
 
 def _get_external_projects(
@@ -396,12 +407,12 @@ def _set_doxygen_html(app: Sphinx, current_project: _Project | None) -> None:
             )
         return
 
-    app.config.doxygen_html = doxygen_html  # type: ignore[attr-defined]
+    app.config.doxygen_html = doxygen_html
 
 
 def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "intersphinx_disabled_domains"):
-        app.config.intersphinx_disabled_domains = ["std"]  # type: ignore[attr-defined]
+        app.config.intersphinx_disabled_domains = ["std"]
 
     remote_repository = app.config.external_projects_remote_repository
     remote_branch = app.config.external_projects_remote_branch
@@ -421,7 +432,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
             mapping.setdefault(key, value)
 
     if not config_provided_by_user(app, "external_toc_path"):
-        app.config.external_toc_path = "./.sphinx/_toc.yml"  # type: ignore[attr-defined]
+        app.config.external_toc_path = "./.sphinx/_toc.yml"
 
     context = _get_context(Path(app.srcdir), remote_mapping)
     formatting.format_toc(
@@ -430,7 +441,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
         context,
     )
     # Store the context to be referenced later
-    app.config.projects_context = context  # type: ignore[attr-defined]
+    app.config.projects_context = context
 
     _set_doxygen_html(app, current_project)
     _update_theme_configs(app, current_project, branch)

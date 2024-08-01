@@ -50,6 +50,9 @@ html[data-theme="light"] {
 /* for the dark theme */
 html[data-theme="dark"] {
   --link-color: #2899ff;
+  .line{
+    color: #fff;
+  };
 }
 
 div#site-navigation {
@@ -305,4 +308,8 @@ a#ot-sdk-btn {
 
 .sd-card-body.rocm-hue-12 .sd-card-title {
   filter: hue-rotate(-300deg);
+}
+
+:not(p) img {
+  margin-bottom: 1rem;
 }

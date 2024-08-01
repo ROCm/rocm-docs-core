@@ -1,7 +1,5 @@
 """Module to use rocm-docs-core as a theme."""
 
-from __future__ import annotations
-
 from typing import Any
 
 from pathlib import Path
@@ -17,6 +15,42 @@ from sphinx.application import Sphinx
 from rocm_docs import util
 
 logger = sphinx.util.logging.getLogger(__name__)
+
+
+def _get_version_from_url(url: str) -> str:
+    try:
+        response = requests.get(url)
+        return response.text.strip()
+    except requests.RequestException as e:
+        print(f"Error in rocm-docs-core _get_version_from_url: {e}")
+        return ""
+
+
+def _add_custom_context(
+    app: Sphinx,  # noqa: ARG001
+    pagename: str,  # noqa: ARG001
+    templatename: str,  # noqa: ARG001
+    context: dict[str, str],
+    doctree: object,  # noqa: ARG001
+) -> None:
+    header_latest_version = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
+    )
+    context["header_latest_version"] = header_latest_version
+
+    header_release_candidate_version = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
+    )
+    context["header_release_candidate_version"] = (
+        header_release_candidate_version
+    )
+
+    google_site_verification_content = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/google_site_verification.txt"
+    )
+    context["google_site_verification_content"] = (
+        google_site_verification_content
+    )
 
 
 def _update_repo_opts(srcdir: str, theme_opts: dict[str, Any]) -> None:
@@ -61,7 +95,7 @@ def _update_banner(
 
 def _update_theme_options(app: Sphinx) -> None:
     theme_opts = get_theme_options_dict(app)
-    _update_repo_opts(app.srcdir, theme_opts)
+    _update_repo_opts(str(app.srcdir), theme_opts)
 
     supported_flavors = ["rocm", "local", "rocm-docs-home", "rocm-blogs"]
     flavor = theme_opts.get("flavor", "rocm")
@@ -90,12 +124,13 @@ def _update_theme_options(app: Sphinx) -> None:
             0, "components/left-side-menu"
         )
 
-    header_latest_version = requests.get(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/latest_version.txt"
-    ).text.strip("\r\n")
-    header_release_candidate_version = requests.get(
-        "https://raw.githubusercontent.com/RadeonOpenCompute/rocm-docs-core/header-versions/release_candidate.txt"
-    ).text.strip("\r\n")
+    header_latest_version = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
+    )
+
+    header_release_candidate_version = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
+    )
 
     default_config_opts = {
         "html_show_sphinx": False,
@@ -103,8 +138,8 @@ def _update_theme_options(app: Sphinx) -> None:
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
         "html_context": {
-            "theme_header_latest_version": header_latest_version,
-            "theme_header_release_candidate_version": header_release_candidate_version,
+            "header_latest_version": header_latest_version,
+            "header_release_candidate_version": header_release_candidate_version,
         },
     }
     for key, default in default_config_opts.items():
@@ -134,6 +169,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     ]:
         app.add_css_file(css)
 
+    app.connect("html-page-context", _add_custom_context)
     app.connect("builder-inited", _update_theme_options)
 
     return {

@@ -36,6 +36,6 @@ Development container setup and settings are added
 for Visual Studio Development containers (and GitHub Codespaces) and Gitpod.
 
 - [VS Code Dev Containers Guide](https://code.visualstudio.com/docs/devcontainers/containers)
-  - [Dev Container Dockerfile and Configuration](https://github.com/RadeonOpenCompute/rocm-docs-core/tree/develop/.devcontainer)
+  - [Dev Container Dockerfile and Configuration](https://github.com/ROCm/rocm-docs-core/tree/develop/.devcontainer)
 - [Gitpod Guide](https://www.gitpod.io/docs/introduction/getting-started)
-  - [Gitpod Configuration](https://github.com/RadeonOpenCompute/rocm-docs-core/blob/develop/.gitpod.yml)
+  - [Gitpod Configuration](https://github.com/ROCm/rocm-docs-core/blob/develop/.gitpod.yml)

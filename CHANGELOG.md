@@ -1,3 +1,217 @@
+## v1.6.1 (2024-07-25)
+
+### Fix
+
+- **project.yaml**: rocDecode and rocAL default to develop branch now
+
+### Refactor
+
+- Remove unused import
+- Remove unused test code
+- Remove SphinxTestApp
+- Removed deprecated code
+- **test_projects.py**: Format with black
+- Update conf.py for site tests
+- **test_doxygen.py**: Fix typo in doxygen dir
+
+## v1.6.0 (2024-07-24)
+
+### Feat
+
+- **projects**: Add intersphinx links to github and files
+
+### Refactor
+
+- Set github version
+
+## v1.5.1 (2024-07-23)
+
+### Fix
+
+- Update rocPyDecode link
+- **projects.yaml**: Add llvm-project and rocpydecode
+
+## v1.5.0 (2024-07-04)
+
+### Feat
+
+- **projects.yaml**: Add omniperf and omnitrace
+
+## v1.4.1 (2024-06-27)
+
+### Fix
+
+- **header.jinja**: Make GitHub repo url for install docs point to install docs instead of ROCm home
+
+### Refactor
+
+- **core.py**: Apply ruff suggested fix
+- **core.py**: Apply ruff suggested fix
+
+## v1.4.0 (2024-06-06)
+
+### Feat
+
+- Add google site verification content to theme context
+- Add template for google site verification content
+
+### Refactor
+
+- Get versions from data branch instead of header-versions branch
+
+## v1.3.0 (2024-06-04)
+
+### Feat
+
+- **projects.yaml**: Add rocprofiler-sdk to projects
+- **projects.yaml**: add rocminfo and rocm_bandwidth_test to projects list
+
+## v1.2.1 (2024-06-03)
+
+### Fix
+
+- **custom.css**: Change line color at dark mode of multiline list
+
+## v1.2.0 (2024-05-27)
+
+### Feat
+
+- **projects.yaml**: Add rocr_debug_agent to projects.yaml
+
+## v1.1.3 (2024-05-22)
+
+### Fix
+
+- Get header version from URL instead of theme.conf
+
+### Refactor
+
+- **projects.py**: Use ROCm org when checking versions for banner
+- **theme.py**: Point to ROCm org instead of RadeonOpenCompute for rocm-docs-core
+
+## v1.1.2 (2024-05-16)
+
+### Fix
+
+- **projects.yaml**: add rocr-runtime
+- **custom.css**: add bottom margin to images in rst files
+- **404.html**: Remove relative link in 404.html page
+
+## v1.1.1 (2024-04-26)
+
+### Fix
+
+- **core.py**: Update Sphinx API call to doc2path
+
+### Refactor
+
+- **core.py**: Format core.py with black
+- Address mypy type warnings
+
+## v1.1.0 (2024-04-24)
+
+### Feat
+
+- **theme.conf**: Update header latest version
+
+### Fix
+
+- **footer.html**: Bump year to 2024 in footer
+
+### Refactor
+
+- Correct major version for breaking change
+
+## v1.0.0 (2024-04-17)
+
+### BREAKING CHANGE
+
+- This requires updating `.readthedocs.yaml` (`tools.python`)
+  and re-generating `requirements.txt` for all dependent projects.
+
+### Feat
+
+- **theme.py**: Update banner announcement about docs.amd.com redirect
+
+### Fix
+
+- **layout.html**: Update google-site-verification metadata
+- **header.jinja**: Update link to infinity hub
+- Update rocm flavor header.jinja to Blogs
+- **header.jinja**: Replace Lab Notes link with Blogs
+
+### Refactor
+
+- Fix mypy and isort errors
+- Apply black formatting
+- fixes for isort
+- fixes for isort
+- fixes for isort
+- mypy fixes
+- isort fixes
+- Ruff fixes
+- Fixes for ruff
+- **projects.py**: Ignore mypy limitation for dynamic type checking
+- **theme.py**: Modify new banner announcement message for latest
+- Use type instead of instanceof
+- Fix type hints and assertions to pass Python linting
+
+## v0.38.1 (2024-04-10)
+
+### Fix
+
+- **extra_stylesheet.css**: Fix flexbox positioning for doxygen content
+
+### Refactor
+
+- Specify left instead of flex-end
+
+## v0.38.0 (2024-03-26)
+
+### Feat
+
+- **theme.conf**: Update latest version for header
+
+## v0.37.1 (2024-03-21)
+
+### Fix
+
+- **theme.conf**: Create point fix for 6.0.2
+
+## v0.37.0 (2024-03-19)
+
+### Feat
+
+- **theme.py**: Remove banner on latest release
+
+## v0.36.0 (2024-03-11)
+
+### Feat
+
+- **theme.conf**: Update latest header version
+
+## v0.35.1 (2024-03-05)
+
+### Fix
+
+- **footer.jinja**: Fix license link for rocm flavor
+- **header.jinja**: Update link to infinity hub
+
+## v0.35.0 (2024-02-22)
+
+### Feat
+
+- **theme.py**: Update banner announcement about docs.amd.com redirect
+
+### Fix
+
+- Update rocm flavor header.jinja to Blogs
+- **header.jinja**: Replace Lab Notes link with Blogs
+
+### Refactor
+
+- **theme.py**: Modify new banner announcement message for latest
+
 ## v0.34.2 (2024-02-15)
 
 ### Fix
@@ -36,7 +250,6 @@
 - Change rocm-blogs flavor top level header to ROCm Blogs
 - Change rocm-blogs second level header Lab Notes to ROCm Docs
 - Remove version list from rocm-blogs header
-- sync wordlist
 
 ## v0.33.0 (2024-01-26)
 
@@ -70,6 +283,7 @@
 ### Fix
 
 - Remove carriage return and newline when checking versions
+- sync wordlist
 - **header.jinja**: Fix support link in header for rocm-docs-core
 
 ### Refactor
@@ -333,6 +547,7 @@
 
 ### Refactor
 
+- formatting fixes for ruff linting
 - **header.html**: test rtd embed flyout div
 - **theme.py**: remove unnecessary open mode param UP015 for ruff
 - remove trailing whitespaces
@@ -494,21 +709,12 @@
 
 ## v0.10.0 (2023-05-09)
 
-### Feat
-
-- Bring into compliance with AMD styling
-
 ### Fix
 
 - Fix header on narrow screens
 - Remove left side menu & buttons
 - Fix lengths on shorter breadcrumbs
 - Add zero width spaces when testing width
-- deprecate disable_main_doc_link
-- fix breadcrumbs and scrolling
-- update ROCm Documentation url
-- Tighten secondary nav
-- Improve transitioning on resize
 
 ### Refactor
 
@@ -531,8 +737,17 @@
 
 ### Feat
 
+- Bring into compliance with AMD styling
 - **core.py**: set default publish date as time article was last modified
 - **core.py**: set default read time by counting visible words in html output
+
+### Fix
+
+- deprecate disable_main_doc_link
+- fix breadcrumbs and scrolling
+- update ROCm Documentation url
+- Tighten secondary nav
+- Improve transitioning on resize
 
 ### Refactor
 
@@ -540,8 +755,6 @@
 - merge with develop branch
 - get file modification time using git
 - import article info via importlib.resources
-- convert myst_enable_extensions to set and add configunion helper
-- **core.py**: explicitly cast to list
 
 ## v0.8.0 (2023-05-02)
 
@@ -553,7 +766,16 @@
 
 - Remove unintended CSS changes
 
+### Refactor
+
+- convert myst_enable_extensions to set and add configunion helper
+- **core.py**: explicitly cast to list
+
 ## v0.7.1 (2023-04-26)
+
+### Fix
+
+- docutil dependency
 
 ## v0.7.0 (2023-04-26)
 
