@@ -1,8 +1,8 @@
 Linking in RST
 ==============
 
-ReStructured Text (RST)
------------------------
+reStructuredText (RST)
+----------------------
 
 Cross References to Arbitrary Locations in Other Projects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -2,4 +2,4 @@
 
 [Markdown](./linking_md)
 
-[ReStructured Text (RST)](./linking_rst)
+[reStructuredText (RST)](./linking_rst)
