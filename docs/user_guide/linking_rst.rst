@@ -14,13 +14,13 @@ that should be used when making links that cross-reference documentation sites.
 Cross references to anchors or arbitrary locations in documentation
 can be done using labels.
 
-See the `Sphinx documentation on cross-referencing arbitrary locations<https://www.sphinx-doc.org/en/master/usage/referencing.html#ref-role>`_
+See the `Sphinx documentation on cross-referencing arbitrary locations <https://www.sphinx-doc.org/en/master/usage/referencing.html#ref-role>`_
 for information on labels.
 
 The format using a label would appear as follows:
 
 .. code-block:: RST
-    
+
     :ref:`Text here<project_name:label_name>`
 
 Example

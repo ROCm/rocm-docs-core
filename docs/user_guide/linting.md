@@ -1,4 +1,4 @@
-# Markdown and ReStructuredText Linting
+# Linting
 
 `rocm-docs-core` has linting to ensure correct Markdown and ReStructuredText
 formatting on every pull request (PR) via GitHub Actions.

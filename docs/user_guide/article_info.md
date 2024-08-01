@@ -4,7 +4,7 @@ Article info is disabled by default and must be enabled in `conf.py`.
 
 ## Settings
 
-*Legend: `setting name (setting data type): explanation`*
+*Legend: `setting name (setting data type):` explanation*
 
 - `setting_all_article_info (bool)`: Setting this value to true will enable article info for all pages and use default values. See possible settings for default values.
 
