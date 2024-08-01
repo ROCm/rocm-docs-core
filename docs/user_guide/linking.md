@@ -32,11 +32,15 @@ The following Markdown:
 
 ```Markdown
 {doc}`ROCm Documentation<rocm:about/license>`
+
+:ref:`ROCm for AI Install<rocm:rocm-for-ai-install>`
 ```
 
 will be rendered as the following link:
 
 {doc}`ROCm Documentation<rocm:about/license>`
+
+:ref:`ROCm for AI Install<rocm:rocm-for-ai-install>`
 
 ### Relative Links to Current Project
 
