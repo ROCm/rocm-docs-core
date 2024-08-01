@@ -17,7 +17,7 @@ subtrees:
         - file: user_guide/spellcheck
         - file: user_guide/linting
         - file: user_guide/linking
-        subtree:
+        subtrees:
         - entries:
           - file: user_guide/linking_md
           - file: user_guide/linking_rst
