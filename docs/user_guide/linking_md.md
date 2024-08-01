@@ -15,6 +15,12 @@ format should be used:
 {doc}`Text here<project_name:path/to/page_name>`
 ```
 
+Cross-references are achieved via Intersphinx.
+For more information, refer to the
+[Sphinx documentation](https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html)
+or [Read the Docs documentation](https://docs.readthedocs.io/en/stable/guides/intersphinx.html)
+on Intersphinx.
+
 #### Example
 
 The following Markdown:

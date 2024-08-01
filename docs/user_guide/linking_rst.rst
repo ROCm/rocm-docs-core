@@ -23,6 +23,12 @@ The format using a label would appear as follows:
 
     :ref:`Text here<project_name:label_name>`
 
+Cross-references are achieved via Intersphinx.
+For more information, refer to the
+`Sphinx documentation <https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html>`_
+or `Read the Docs documentation <https://docs.readthedocs.io/en/stable/guides/intersphinx.html>`_
+on Intersphinx.
+
 Example
 ^^^^^^^
 
