@@ -434,6 +434,7 @@ awk
 backend
 backends
 backpropagation
+backtick
 benchmarking
 bilinear
 bitsandbytes
