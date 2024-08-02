@@ -34,3 +34,8 @@ technical terminology, wrap the word with the backtick (`) key.
 - Commands or arguments
 - Code blocks
 - Names of executables or binaries
+
+## More Information
+
+For more information, see the GitHub Action
+[spellcheck-github-actions](https://github.com/rojopolis/spellcheck-github-actions)
