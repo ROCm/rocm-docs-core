@@ -1,3 +1,14 @@
+## v1.6.2 (2024-08-06)
+
+### Fix
+
+- **projects.yaml**: Update development branches for projects
+
+### Refactor
+
+- **Doxyfile**: Remove unused tags from Doxyfile
+- **doxygen.py**: Fix warning for progress_message
+
 ## v1.6.1 (2024-07-25)
 
 ### Fix
