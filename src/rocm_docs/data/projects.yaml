@@ -6,7 +6,9 @@ projects:
   amdmigraphx: https://rocm.docs.amd.com/projects/AMDMIGraphX/en/${version}
   amdmigraphx-github: https://github.com/ROCm/AMDMIGraphX/tree/${gh_version}
   amdmigraphx-file: https://github.com/ROCm/AMDMIGraphX/blob/${gh_version}
-  amdsmi: https://rocm.docs.amd.com/projects/amdsmi/en/${version}
+  amdsmi:
+    target: https://rocm.docs.amd.com/projects/amdsmi/en/${version}
+    development_branch: amd-staging
   amdsmi-github: https://github.com/ROCm/amdsmi/tree/${gh_version}
   amdsmi-file: https://github.com/ROCm/amdsmi/blob/${gh_version}
   composable_kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
@@ -21,7 +23,9 @@ projects:
   hipblaslt: https://rocm.docs.amd.com/projects/hipBLASLt/en/${version}
   hipblaslt-github: https://github.com/ROCm/hipBLASLt/tree/${gh_version}
   hipblaslt-file: https://github.com/ROCm/hipBLASLt/blob/${gh_version}
-  hipcc: https://rocm.docs.amd.com/projects/HIPCC/en/${version}
+  hipcc:
+    target: https://rocm.docs.amd.com/projects/HIPCC/en/${version}
+    development_branch: amd-staging
   hipcc-github: https://github.com/ROCm/HIPCC/tree/${gh_version}
   hipcc-file: https://github.com/ROCm/HIPCC/blob/${gh_version}
   hipcub: https://rocm.docs.amd.com/projects/hipCUB/en/${version}
@@ -84,7 +88,9 @@ projects:
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
   rccl-github: https://github.com/ROCm/rccl/tree/${gh_version}
   rccl-file: https://github.com/ROCm/rccl/blob/${gh_version}
-  rdc: https://rocm.docs.amd.com/projects/rdc/en/${version}
+  rdc:
+    target: https://rocm.docs.amd.com/projects/rdc/en/${version}
+    development_branch: amd-staging
   rdc-github: https://github.com/ROCm/rdc/tree/${gh_version}
   rdc-file: https://github.com/ROCm/rdc/blob/${gh_version}
   radeon: https://rocm.docs.amd.com/projects/radeon/en/${version}
@@ -101,7 +107,7 @@ projects:
   rocblas-file: https://github.com/ROCm/rocBLAS/blob/${gh_version}
   rocdbgapi:
     target: https://rocm.docs.amd.com/projects/ROCdbgapi/en/${version}
-    development_branch: amd-master
+    development_branch: amd-staging
   rocdbgapi-github: https://github.com/ROCm/ROCdbgapi/tree/${gh_version}
   rocdbgapi-file: https://github.com/ROCm/ROCdbgapi/blob/${gh_version}
   rocdecode:
@@ -114,7 +120,7 @@ projects:
   rocfft-file: https://github.com/ROCm/rocFFT/blob/${gh_version}
   rocgdb:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
-    development_branch: amd-master
+    development_branch: amd-staging
   rocgdb-github: https://github.com/ROCm/ROCgdb/tree/${gh_version}
   rocgdb-file: https://github.com/ROCm/ROCgdb/blob/${gh_version}
   rocm: https://rocm.docs.amd.com/en/${version}
@@ -138,7 +144,7 @@ projects:
   rocm_bandwidth_test-file: https://github.com/ROCm/rocm_bandwidth_test/blob/${gh_version}
   rocm_smi_lib:
     target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
-    development_branch: master
+    development_branch: amd-staging
   rocm_smi_lib-github: https://github.com/ROCm/rocm_smi_lib/tree/${gh_version}
   rocm_smi_lib-file: https://github.com/ROCm/rocm_smi_lib/blob/${gh_version}
   rocmcmakebuildtools: https://rocm.docs.amd.com/projects/ROCmCMakeBuildTools/en/${version}
@@ -146,7 +152,7 @@ projects:
   rocmcmakebuildtools-file: https://github.com/ROCm/rocm-cmake/blob/${gh_version}
   rocminfo:
     target: https://rocm.docs.amd.com/projects/rocminfo/en/${version}
-    development_branch: master
+    development_branch: amd-staging
   rocminfo-github: https://github.com/ROCm/rocminfo/tree/${gh_version}
   rocminfo-file: https://github.com/ROCm/rocminfo/blob/${gh_version}
   rocmvalidationsuite:
@@ -180,7 +186,7 @@ projects:
   rocr-runtime-file: https://github.com/ROCm/ROCR-Runtime/blob/${gh_version}
   rocr_debug_agent:
     target: https://rocm.docs.amd.com/projects/rocr_debug_agent/en/${version}
-    development_branch: master
+    development_branch: amd-staging
   rocr_debug_agent-github: https://github.com/ROCm/rocr_debug_agent/tree/${gh_version}
   rocr_debug_agent-file: https://github.com/ROCm/rocr_debug_agent/blob/${gh_version}
   rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}
