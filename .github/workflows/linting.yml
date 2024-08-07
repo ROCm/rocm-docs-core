@@ -51,7 +51,9 @@ jobs:
         if: steps.check_local_spelling.outputs.check_result == 'true'
         uses: mikefarah/yq@master
         with:
-          cmd: yq m -x .spellcheck.yaml .spellcheck_local.yaml
+          cmd: yq '. as $d1 | load(".spellcheck_local.yaml") as $d2 | 
+                  ($d1 | .paths | keys | .[]) as $i ireduce($d2; 
+                  .paths[$i] = .paths[$i] // $d1.paths[$i])' .spellcheck.yaml
       - name: Run spellcheck
         uses: rojopolis/spellcheck-github-actions@0.30.0
       - name: On fail
