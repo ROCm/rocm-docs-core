@@ -33,7 +33,7 @@
 matrix:
 - name: Markdown
   sources:
-  - ['docs/**/*.md', '!docs/doxygen/mainpage.md']
+  - 'docs/**/*.md'
   - 'tools/autotag/templates/**/*.md'
   expect_match: false
   aspell:
