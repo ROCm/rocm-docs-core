@@ -38,6 +38,11 @@ jobs:
         shell: sh
         run: |
           curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/develop/.spellcheck.yaml -O
+          if [ -f .local_spellcheck.yaml ]; then
+            sudo apt-get install jq
+            mv .spellcheck.yaml .spellcheck_common.yaml
+            jq -s '.[0] * .[1]' .spellcheck_local.yaml .spellcheck_common.yaml > .spellcheck.yaml
+          fi
           curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/develop/.wordlist.txt >> .wordlist.txt
       - name: Run spellcheck
         uses: rojopolis/spellcheck-github-actions@0.30.0
