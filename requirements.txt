@@ -174,7 +174,7 @@ pytest==8.3.2
     # via rocm-docs-core (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via sphinxcontrib-doxylink
-pyyaml==6.0.1
+pyyaml==6.0.2
     # via
     #   commitizen
     #   myst-parser
