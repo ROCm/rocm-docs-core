@@ -47,11 +47,11 @@ jobs:
           else
             echo "check_result=false" >> $GITHUB_OUTPUT
           fi
-      - name: Set foobar to cool
+      - name: Merge local and common spelling config
         if: steps.check_local_spelling.outputs.check_result == 'true'
         uses: mikefarah/yq@master
         with:
-          cmd: yq eval-all '. as $item ireduce ({}; . *?+ $item)' .spellcheck.yaml .spellcheck_local.yaml
+          cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' .spellcheck.yaml .spellcheck_local.yaml
       - name: Run spellcheck
         uses: rojopolis/spellcheck-github-actions@0.30.0
       - name: On fail
