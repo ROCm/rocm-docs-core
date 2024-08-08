@@ -10,7 +10,7 @@ alabaster==0.7.16
     # via sphinx
 argcomplete==3.3.0
     # via commitizen
-babel==2.15.0
+babel==2.16.0
     # via
     #   pydata-sphinx-theme
     #   sphinx
