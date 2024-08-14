@@ -243,7 +243,7 @@ tomli==2.0.1
     #   pip-tools
     #   pytest
     #   sphinx
-tomlkit==0.13.0
+tomlkit==0.13.2
     # via commitizen
 tqdm==4.66.5
     # via mpire
