@@ -239,7 +239,7 @@ a#ot-sdk-btn {
 
 .sd-card-body.rocm-card-banner .sd-card-title {
   margin: 0 0 0 0;
-  padding: 0.5rem 1rem 0.5rem;
+  padding: 1rem 1rem 1rem;
   font-family: sans-serif;
   background-color: var(--rocm-color-card-banner-bg);
   background-image: linear-gradient(to right,
