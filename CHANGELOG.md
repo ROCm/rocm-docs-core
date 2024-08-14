@@ -1,3 +1,13 @@
+## v1.7.0 (2024-08-14)
+
+### Feat
+
+- Add css classes for card banners
+
+### Fix
+
+- **projects.yaml**: Update doc dev branch for HIP to docs/develop
+
 ## v1.6.2 (2024-08-06)
 
 ### Fix
