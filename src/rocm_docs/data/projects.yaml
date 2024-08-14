@@ -14,7 +14,9 @@ projects:
   composable_kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
   composable_kernel-github: https://github.com/ROCm/composable_kernel/tree/${gh_version}
   composable_kernel-file: https://github.com/ROCm/composable_kernel/blob/${gh_version}
-  hip: https://rocm.docs.amd.com/projects/HIP/en/${version}
+  hip:
+    target: https://rocm.docs.amd.com/projects/HIP/en/${version}
+    development_branch: docs/develop
   hip-github: https://github.com/ROCm/HIP/tree/${gh_version}
   hip-file: https://github.com/ROCm/HIP/blob/${gh_version}
   hipblas: https://rocm.docs.amd.com/projects/hipBLAS/en/${version}
