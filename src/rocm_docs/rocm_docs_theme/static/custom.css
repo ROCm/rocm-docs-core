@@ -239,7 +239,8 @@ a#ot-sdk-btn {
 
 .sd-card-body.rocm-card-banner .sd-card-title {
   margin: 0 0 0 0;
-  padding: 1rem 1rem 0.5rem;
+  padding: 1rem 1rem 1rem;
+  font-family: sans-serif;
   background-color: var(--rocm-color-card-banner-bg);
   background-image: linear-gradient(to right,
                       rgb(var(--rocm-color-card-banner-bg) / 80%) 1rem,
@@ -247,7 +248,7 @@ a#ot-sdk-btn {
                       transparent 16rem),
                     linear-gradient(to top,
                       transparent,
-                      rgb(var(--rocm-color-card-banner-bg) / 50%) 25% 60%,
+                      rgb(var(--rocm-color-card-banner-bg) / 20%) 25% 60%,
                       transparent),
                       url(images/banner-violet.jpg);
   background-size: cover;
