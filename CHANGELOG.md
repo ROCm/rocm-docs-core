@@ -1,3 +1,13 @@
+## v1.7.1 (2024-08-19)
+
+### Fix
+
+- crop image from left side
+- make cards brighter
+- adjust padding back to 1
+- change card font to san-serif and adjust padding
+- change bg image to default one from ROCm/ROCm
+
 ## v1.7.0 (2024-08-14)
 
 ### Feat
