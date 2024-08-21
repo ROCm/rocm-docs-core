@@ -1,3 +1,9 @@
+## v1.7.2 (2024-08-21)
+
+### Fix
+
+- **projects.py**: Update pattern matching for old release announcement
+
 ## v1.7.1 (2024-08-19)
 
 ### Fix
