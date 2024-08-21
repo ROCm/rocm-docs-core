@@ -11,6 +11,7 @@ import functools
 import importlib.resources
 import json
 import os
+import re
 import sys
 import urllib.parse
 from dataclasses import dataclass
@@ -354,11 +355,13 @@ def _update_theme_configs(
     if current_project is not None:
         development_branch = current_project.development_branch
 
+    doc_branch_pattern = r"^docs-\d+\.\d+\.\d+$"
+
     if current_branch in [latest_version_string, "latest"]:
         app.config.projects_version_type = util.VersionType.LATEST_RELEASE
     elif current_branch.startswith(release_candidate_string):
         app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE
-    elif current_branch.startswith("docs-"):
+    elif re.match(doc_branch_pattern, current_branch):
         app.config.projects_version_type = util.VersionType.OLD_RELEASE
     elif current_branch == development_branch:
         app.config.projects_version_type = util.VersionType.DEVELOPMENT
