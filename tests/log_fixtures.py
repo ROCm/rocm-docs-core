@@ -82,7 +82,7 @@ class LogStackFixture:
         return self.Scope(self, self.push(when=when), contextlib.ExitStack())
 
 
-@pytest.fixture()
+@pytest.fixture
 def log_handler_stack(
     caplog: pytest.LogCaptureFixture, _with_sphinx_logs: None
 ) -> LogStackFixture:
@@ -90,13 +90,13 @@ def log_handler_stack(
     return LogStackFixture(caplog)
 
 
-@pytest.fixture()
+@pytest.fixture
 def expected_logs_impl() -> set[logging.LogRecord]:
     """Implementation of expected_logs"""
     return set()
 
 
-@pytest.fixture()
+@pytest.fixture
 def _no_unexpected_warnings_impl(
     request: pytest.FixtureRequest,
     log_handler_stack: LogStackFixture,
@@ -140,7 +140,7 @@ def _no_unexpected_warnings_impl(
 
 # Must request no_unexpected_warnings_ to ensure its teardown runs *after*
 # other fixtures that request expected_logs
-@pytest.fixture()
+@pytest.fixture
 def expected_logs(
     _no_unexpected_warnings_impl: None,
     expected_logs_impl: set[logging.LogRecord],
@@ -149,7 +149,7 @@ def expected_logs(
     return expected_logs_impl
 
 
-@pytest.fixture()
+@pytest.fixture
 def _no_unexpected_warnings(
     _no_unexpected_warnings_impl: None,
 ) -> None:
@@ -253,7 +253,7 @@ class ExpectLogFixture:
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def expect_log(
     log_handler_stack: LogStackFixture, expected_logs: set[logging.LogRecord]
 ) -> ExpectLogFixture:
@@ -266,7 +266,7 @@ def expect_log(
     return ExpectLogFixture(log_handler_stack, expected_logs)
 
 
-@pytest.fixture()
+@pytest.fixture
 def _with_sphinx_logs(monkeypatch: pytest.MonkeyPatch) -> None:
     """Fixture to enable capturing sphinx logs in pytest"""
     monkeypatch.setattr("sphinx.util.logging.setup", unittest.mock.Mock())
