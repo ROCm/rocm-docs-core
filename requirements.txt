@@ -24,7 +24,7 @@ build==1.2.1
     # via
     #   pip-tools
     #   rocm-docs-core (pyproject.toml)
-certifi==2024.7.4
+certifi==2024.8.30
     # via requests
 cffi==1.17.0
     # via
