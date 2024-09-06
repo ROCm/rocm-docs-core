@@ -26,7 +26,7 @@ build==1.2.1
     #   rocm-docs-core (pyproject.toml)
 certifi==2024.8.30
     # via requests
-cffi==1.17.0
+cffi==1.17.1
     # via
     #   cryptography
     #   pynacl
