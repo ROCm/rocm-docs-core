@@ -314,3 +314,7 @@ a#ot-sdk-btn {
 :not(p) img {
   margin-bottom: 1rem;
 }
+
+#rocm-banner {
+  color: #80dfff;
+}
