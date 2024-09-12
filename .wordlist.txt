@@ -304,6 +304,7 @@ Rickle
 RoCE
 Roofline
 Ryzen
+rst
 SALU
 SBIOS
 SCA
