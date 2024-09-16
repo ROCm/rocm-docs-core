@@ -1,3 +1,13 @@
+## v1.8.0 (2024-09-16)
+
+### Feat
+
+- **custom.css**: Use light blue text for banner hyperlinks
+
+### Fix
+
+- **theme.py**: Fix phrasing of banner for old doc versions
+
 ## v1.7.2 (2024-08-21)
 
 ### Fix
