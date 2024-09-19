@@ -155,8 +155,7 @@ def _set_page_article_info(
             continue
 
         article_os_info = ""
-        if "os" not in page:
-            page["os"] = app.config.all_article_info_os
+        page.setdefault("os", app.config.all_article_info_os)
         if "linux" in page["os"]:
             article_os_info += "Linux"
         if "windows" in page["os"]:
