@@ -161,6 +161,8 @@ def _set_page_article_info(
         if "windows" in page["os"]:
             os_list.append("Windows")
         article_os_info = " and ".join(os_list)
+        if os_list:
+            article_os_info = f"Applies to {article_os_info}"
         modified_info = article_info.replace("<!--os-info-->", article_os_info)
 
         author = app.config.all_article_info_author
