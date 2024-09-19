@@ -154,14 +154,13 @@ def _set_page_article_info(
         if not path_html.is_file():
             continue
 
-        article_os_info = ""
+        os_list = []
         page.setdefault("os", app.config.all_article_info_os)
         if "linux" in page["os"]:
-            article_os_info += "Linux"
+            os_list.append("Linux")
         if "windows" in page["os"]:
-            if len(article_os_info) > 0:
-                article_os_info += " and "
-            article_os_info += "Windows"
+            os_list.append("Windows")
+        article_os_info = " and ".join(os_list)
         modified_info = article_info.replace("<!--os-info-->", article_os_info)
 
         author = app.config.all_article_info_author
