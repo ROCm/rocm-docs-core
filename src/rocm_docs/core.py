@@ -213,13 +213,14 @@ def _set_all_article_info(
         if not page.is_file():
             continue
 
-        article_os_info = ""
+        os_list = []
         if "linux" in app.config.all_article_info_os:
-            article_os_info += "Linux"
+            os_list.append("Linux")
         if "windows" in app.config.all_article_info_os:
-            if len(article_os_info) > 0:
-                article_os_info += " and "
-            article_os_info += "Windows"
+            os_list.append("Windows")
+        article_os_info = " and ".join(os_list)
+        if os_list:
+            article_os_info = f"Applies to {article_os_info}"
 
         date_info = _get_time_last_modified(repo, Path(app.srcdir, page_rel))
         if not date_info:
