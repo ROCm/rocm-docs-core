@@ -134,7 +134,7 @@ def _update_theme_options(app: Sphinx) -> None:
 
     default_config_opts = {
         "html_show_sphinx": False,
-        "html_favicon": "https://www.amd.com/themes/custom/amd/favicon.ico",
+        "html_favicon": "https://www.amd.com/content/dam/code/images/favicon/favicon.ico",
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
         "html_context": {
