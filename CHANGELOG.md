@@ -1,3 +1,9 @@
+## v1.8.2 (2024-09-24)
+
+### Fix
+
+- **theme.py**: Update path to favicon
+
 ## v1.8.1 (2024-09-17)
 
 ### Fix
