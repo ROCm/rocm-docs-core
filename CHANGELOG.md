@@ -1,3 +1,9 @@
+## v1.8.1 (2024-09-17)
+
+### Fix
+
+- **projects.yaml**: Remove non-doc cross refs
+
 ## v1.8.0 (2024-09-16)
 
 ### Feat
