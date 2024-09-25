@@ -140,7 +140,7 @@ pluggy==1.5.0
     # via pytest
 pre-commit==3.8.0
     # via rocm-docs-core (pyproject.toml)
-prompt-toolkit==3.0.36
+prompt-toolkit==3.0.48
     # via questionary
 pycparser==2.22
     # via cffi
