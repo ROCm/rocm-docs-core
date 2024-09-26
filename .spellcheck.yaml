@@ -101,6 +101,9 @@ matrix:
   - pyspelling.filters.context:
       context_visible_first: true
       delimiters:
+      # Ignore possessive endings
+      - open: '(?<=\w)''s(?!\w)'
+        close: '\b'
       # Ignore text between inline back ticks
       - open: '(div style|iframe).*'
         close: '\n'
