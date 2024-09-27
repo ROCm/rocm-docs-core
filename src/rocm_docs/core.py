@@ -319,7 +319,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     )
     app.add_config_value(
         "all_article_info_os",
-        default=["linux", "windows"],
+        default=[],
         rebuild="html",
         types=str,
     )
@@ -327,7 +327,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "all_article_info_author", default="", rebuild="html", types=str
     )
     app.add_config_value(
-        "all_article_info_date", default="2023", rebuild="html", types=str
+        "all_article_info_date", default="", rebuild="html", types=str
     )
     app.add_config_value(
         "all_article_info_read_time", default="", rebuild="html", types=str
