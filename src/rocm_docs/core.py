@@ -179,13 +179,13 @@ def _set_page_article_info(
         if not date_info:
             date_info = cast(str, app.config.all_article_info_date)
 
-        modified_info = modified_info.replace("2023", date_info)
+        modified_info = modified_info.replace("<!--date-info-->", date_info)
 
         if "read-time" in page:
             read_time = page["read-time"]
         else:
             read_time = _estimate_read_time(path_html)
-        modified_info = modified_info.replace("5 min read", read_time)
+        modified_info = modified_info.replace("<!--read-info-->", read_time)
 
         specific_pages.append(page["file"])
         _write_article_info(path_html, modified_info)
@@ -230,9 +230,9 @@ def _set_all_article_info(
         modified_info = modified_info.replace(
             "AMD", app.config.all_article_info_author
         )
-        modified_info = modified_info.replace("2023", date_info)
+        modified_info = modified_info.replace("<!--date-info-->", date_info)
         modified_info = modified_info.replace(
-            "5 min read", _estimate_read_time(page)
+            "<!--read-info-->", _estimate_read_time(page)
         )
 
         _write_article_info(page, modified_info)
