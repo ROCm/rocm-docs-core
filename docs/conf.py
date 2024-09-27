@@ -16,7 +16,7 @@ external_projects_current_project = "rocm-docs-core"
 
 setting_all_article_info = True
 
-all_article_info_os = ["linux", "windows"]
+all_article_info_os = []
 
 # specific settings override any general settings (eg: all_article_info_<field>)
 article_pages = [
