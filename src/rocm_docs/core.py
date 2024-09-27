@@ -168,7 +168,7 @@ def _set_page_article_info(
         author = app.config.all_article_info_author
         if "author" in page:
             author = page["author"]
-        modified_info = modified_info.replace("AMD", author)
+        modified_info = modified_info.replace("<!--author-info-->", author)
 
         date_info: str | None = None
         if "date" in page:
@@ -228,7 +228,7 @@ def _set_all_article_info(
 
         modified_info = article_info.replace("<!--os-info-->", article_os_info)
         modified_info = modified_info.replace(
-            "AMD", app.config.all_article_info_author
+            "<!--author-info-->", app.config.all_article_info_author
         )
         modified_info = modified_info.replace("<!--date-info-->", date_info)
         modified_info = modified_info.replace(
