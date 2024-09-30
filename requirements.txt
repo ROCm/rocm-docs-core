@@ -166,7 +166,7 @@ pyparsing==3.1.4
     # via
     #   doxysphinx
     #   sphinxcontrib-doxylink
-pyproject-hooks==1.1.0
+pyproject-hooks==1.2.0
     # via
     #   build
     #   pip-tools
