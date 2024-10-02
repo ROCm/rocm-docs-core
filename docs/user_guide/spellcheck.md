@@ -26,7 +26,7 @@ that would be the `rocm-docs-core` folder).
 ### Special keywords
 
 If the word is not meant to be a dictionary word, but is still valid
-technical terminology, wrap the word with the tilde (`) key.
+technical terminology, wrap the word with the backtick (`) key.
 
 #### Keyword examples
 
@@ -34,3 +34,8 @@ technical terminology, wrap the word with the tilde (`) key.
 - Commands or arguments
 - Code blocks
 - Names of executables or binaries
+
+## More Information
+
+For more information, see the GitHub Action
+[spellcheck-github-actions](https://github.com/rojopolis/spellcheck-github-actions)

@@ -84,11 +84,11 @@ def _update_banner(
 
     announcement_info: str
     if version_type == util.VersionType.RELEASE_CANDIDATE:
-        announcement_info = "This page contains changes for a test release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+        announcement_info = "This page contains changes for a test release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
     elif version_type == util.VersionType.OLD_RELEASE:
-        announcement_info = "This is an old version of ROCm documentation. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest ROCm release documentation</a> to stay informed of all our developments."
+        announcement_info = "This is not the latest version of ROCm documentation. See <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>ROCm documentation</a> for the latest version."
     elif version_type == util.VersionType.DEVELOPMENT:
-        announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+        announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
 
     theme_opts.setdefault("announcement", announcement_info)
 
@@ -134,7 +134,7 @@ def _update_theme_options(app: Sphinx) -> None:
 
     default_config_opts = {
         "html_show_sphinx": False,
-        "html_favicon": "https://www.amd.com/themes/custom/amd/favicon.ico",
+        "html_favicon": "https://www.amd.com/content/dam/code/images/favicon/favicon.ico",
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
         "html_context": {

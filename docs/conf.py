@@ -1,8 +1,12 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+"""Configuration file for the Sphinx documentation builder.
+
+This file only contains a selection of the most common options. For a full
+list see the documentation:
+https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+For a list of options specific to rocm-docs-core, see the user guide:
+https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/
+"""
 
 # Disable fetching projects.yaml, it would be the same as the local one anyway
 # except if a PR modifies it. We want to test with its version in that case
@@ -39,8 +43,8 @@ doxygen_project = {
     "path": "demo/doxygen/xml",
 }
 
-version = "1.6.1"
-release = "1.6.1"
+version = "1.8.1"
+release = "1.8.1"
 html_title = f"ROCm Docs Core {version}"
 project = "ROCm Docs Core"
 author = "Advanced Micro Devices, Inc."

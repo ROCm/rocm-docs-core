@@ -1,3 +1,56 @@
+## v1.8.1 (2024-09-17)
+
+### Fix
+
+- **projects.yaml**: Remove non-doc cross refs
+
+## v1.8.0 (2024-09-16)
+
+### Feat
+
+- **custom.css**: Use light blue text for banner hyperlinks
+
+### Fix
+
+- **theme.py**: Fix phrasing of banner for old doc versions
+
+## v1.7.2 (2024-08-21)
+
+### Fix
+
+- **projects.py**: Update pattern matching for old release announcement
+
+## v1.7.1 (2024-08-19)
+
+### Fix
+
+- crop image from left side
+- make cards brighter
+- adjust padding back to 1
+- change card font to san-serif and adjust padding
+- change bg image to default one from ROCm/ROCm
+
+## v1.7.0 (2024-08-14)
+
+### Feat
+
+- Add css classes for card banners
+
+### Fix
+
+- **projects.yaml**: Update doc dev branch for HIP to docs/develop
+
+## v1.6.2 (2024-08-06)
+
+### Fix
+
+- **projects.yaml**: Update development branches for projects
+
+### Refactor
+
+- **Doxyfile**: Remove unused tags from Doxyfile
+- **doxygen.py**: Fix warning for progress_message
+
 ## v1.6.1 (2024-07-25)
 
 ### Fix
