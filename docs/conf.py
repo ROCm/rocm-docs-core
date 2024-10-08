@@ -27,7 +27,7 @@ article_pages = [
         "read-time": "2 min read",
     },
     {
-        "file": "user_guide/doxygen_integration",
+        "file": "user_guide/article_info",
         "os": [],
         "author": "",
         "date": "",
