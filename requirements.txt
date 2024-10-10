@@ -55,7 +55,7 @@ decli==0.6.2
     # via commitizen
 deprecated==1.2.14
     # via pygithub
-distlib==0.3.8
+distlib==0.3.9
     # via virtualenv
 docutils==0.21.2
     # via
