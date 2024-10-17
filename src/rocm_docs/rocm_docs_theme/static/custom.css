@@ -31,12 +31,13 @@
 
 .hover-opacity {
   transition: 0.28s;
-  opacity: 1 !important;
-  z-index: auto !important;
+  z-index: 10;
+  position: relative;
 }
 
 .hover-opacity:hover {
   opacity: 0.7;
+  z-index: 10;
 }
 
 .klavika-font {
