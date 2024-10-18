@@ -15,9 +15,8 @@ external_projects = ["hipify", "python", "rocm-docs-core", "rocm"]
 external_projects_current_project = "rocm-docs-core"
 
 setting_all_article_info = True
-
-all_article_info_os = ["linux", "windows"]
-
+all_article_info_os = []
+all_article_info_author = ""
 # specific settings override any general settings (eg: all_article_info_<field>)
 article_pages = [
     {
@@ -27,7 +26,16 @@ article_pages = [
         "date": "2024-07-03",
         "read-time": "2 min read",
     },
-    {"file": "developer_guide/commitizen"},
+    {
+        "file": "user_guide/article_info",
+        "os": [],
+        "author": "",
+        "date": "",
+        "read-time": "",
+    },
+    {
+        "file": "developer_guide/commitizen",
+    },
 ]
 
 html_theme = "rocm_docs_theme"
