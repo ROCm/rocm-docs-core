@@ -1,3 +1,9 @@
+## v1.8.3 (2024-10-18)
+
+### Fix
+
+- **projects.yaml**: Update omniperf and omnitrace dev branch
+
 ## v1.8.2 (2024-09-24)
 
 ### Fix
