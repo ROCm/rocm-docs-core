@@ -8,7 +8,7 @@ accessible-pygments==0.0.5
     # via pydata-sphinx-theme
 alabaster==0.7.16
     # via sphinx
-argcomplete==3.3.0
+argcomplete==3.5.1
     # via commitizen
 babel==2.16.0
     # via
@@ -16,11 +16,11 @@ babel==2.16.0
     #   sphinx
 beautifulsoup4==4.12.3
     # via pydata-sphinx-theme
-black==24.8.0
+black==24.10.0
     # via rocm-docs-core (pyproject.toml)
 breathe==4.35.0
     # via rocm-docs-core (pyproject.toml)
-build==1.2.2
+build==1.2.2.post1
     # via
     #   pip-tools
     #   rocm-docs-core (pyproject.toml)
@@ -32,7 +32,7 @@ cffi==1.17.1
     #   pynacl
 cfgv==3.4.0
     # via pre-commit
-charset-normalizer==3.3.2
+charset-normalizer==3.4.0
     # via
     #   commitizen
     #   requests
@@ -47,15 +47,15 @@ click-log==0.4.0
     # via doxysphinx
 colorama==0.4.6
     # via commitizen
-commitizen==3.29.0
+commitizen==3.29.1
     # via rocm-docs-core (pyproject.toml)
-cryptography==43.0.1
+cryptography==43.0.3
     # via pyjwt
 decli==0.6.2
     # via commitizen
 deprecated==1.2.14
     # via pygithub
-distlib==0.3.8
+distlib==0.3.9
     # via virtualenv
 docutils==0.21.2
     # via
@@ -100,7 +100,7 @@ markdown-it-py==3.0.0
     # via
     #   mdit-py-plugins
     #   myst-parser
-markupsafe==2.1.5
+markupsafe==3.0.2
     # via jinja2
 mdit-py-plugins==0.4.2
     # via myst-parser
@@ -108,7 +108,7 @@ mdurl==0.1.2
     # via markdown-it-py
 mpire==2.10.2
     # via doxysphinx
-mypy==1.11.2
+mypy==1.12.0
     # via rocm-docs-core (pyproject.toml)
 mypy-extensions==1.0.0
     # via
@@ -138,7 +138,7 @@ platformdirs==4.3.6
     #   virtualenv
 pluggy==1.5.0
     # via pytest
-pre-commit==3.8.0
+pre-commit==4.0.1
     # via rocm-docs-core (pyproject.toml)
 prompt-toolkit==3.0.36
     # via questionary
@@ -156,17 +156,17 @@ pygments==2.18.0
     #   mpire
     #   pydata-sphinx-theme
     #   sphinx
-pyjson5==1.6.6
+pyjson5==1.6.7
     # via doxysphinx
 pyjwt[crypto]==2.9.0
     # via pygithub
 pynacl==1.5.0
     # via pygithub
-pyparsing==3.1.4
+pyparsing==3.2.0
     # via
     #   doxysphinx
     #   sphinxcontrib-doxylink
-pyproject-hooks==1.1.0
+pyproject-hooks==1.2.0
     # via
     #   build
     #   pip-tools
@@ -187,7 +187,7 @@ requests==2.32.3
     # via
     #   pygithub
     #   sphinx
-ruff==0.6.7
+ruff==0.7.0
     # via rocm-docs-core (pyproject.toml)
 six==1.16.0
     # via python-dateutil
@@ -197,7 +197,7 @@ snowballstemmer==2.2.0
     # via sphinx
 soupsieve==2.6
     # via beautifulsoup4
-sphinx==7.4.7
+sphinx==8.1.3
     # via
     #   breathe
     #   myst-parser
@@ -233,9 +233,9 @@ sphinxcontrib-qthelp==2.0.0
     # via sphinx
 sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
-termcolor==2.4.0
+termcolor==2.5.0
     # via commitizen
-tomli==2.0.1
+tomli==2.0.2
     # via
     #   black
     #   build
@@ -257,7 +257,7 @@ urllib3==2.2.3
     # via
     #   pygithub
     #   requests
-virtualenv==20.26.5
+virtualenv==20.27.0
     # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit
