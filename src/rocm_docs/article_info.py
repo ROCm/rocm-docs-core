@@ -72,15 +72,25 @@ def _set_page_article_info(
         else:
             date_info = _get_time_last_modified(repo, path_source)
 
-        if not date_info:
-            date_info = cast(str, app.config.all_article_info_date)
-
+        if date_info == "":
+            soup = bs4.BeautifulSoup(modified_info, "html.parser")
+            svg_to_remove = soup.find("span", class_="article-info-date-svg")
+            if svg_to_remove:
+                svg_to_remove.decompose()
+            modified_info = str(soup)
         modified_info = modified_info.replace("<!--date-info-->", date_info)
 
         if "read-time" in page:
             read_time = page["read-time"]
         else:
             read_time = _estimate_read_time(path_html)
+
+        if read_time == "":
+            soup = bs4.BeautifulSoup(modified_info, "html.parser")
+            svg_to_remove = soup.find("span", class_="article-info-read-time-svg")
+            if svg_to_remove:
+                svg_to_remove.decompose()
+            modified_info = str(soup)
         modified_info = modified_info.replace("<!--read-info-->", read_time)
 
         specific_pages.append(page["file"])
