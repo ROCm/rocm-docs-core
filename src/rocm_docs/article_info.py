@@ -1,3 +1,9 @@
+"""Logic to add article info to a page.
+
+For all options see the user guide:
+https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/user_guide/article_info.html
+"""
+
 from typing import Any, cast
 
 import importlib.resources
