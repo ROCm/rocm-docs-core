@@ -95,7 +95,9 @@ def _set_page_article_info(
 
         if read_time == "":
             soup = bs4.BeautifulSoup(modified_info, "html.parser")
-            svg_to_remove = soup.find("span", class_="article-info-read-time-svg")
+            svg_to_remove = soup.find(
+                "span", class_="article-info-read-time-svg"
+            )
             if svg_to_remove and isinstance(svg_to_remove, bs4.Tag):
                 svg_to_remove.decompose()
             modified_info = str(soup)
