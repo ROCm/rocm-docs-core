@@ -7,6 +7,7 @@
 {%
 set repo_url = theme_repository_url|replace("-internal", "")
 %}
+{% set repo_url = repo_url|replace("http://", "https://") %}
 {%
 set nav_secondary_items = {
     "GitHub": repo_url,
