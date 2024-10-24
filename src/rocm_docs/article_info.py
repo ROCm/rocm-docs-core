@@ -75,10 +75,12 @@ def _set_page_article_info(
         if date_info == "":
             soup = bs4.BeautifulSoup(modified_info, "html.parser")
             svg_to_remove = soup.find("span", class_="article-info-date-svg")
-            if svg_to_remove:
+            if svg_to_remove and isinstance(svg_to_remove, bs4.Tag):
                 svg_to_remove.decompose()
             modified_info = str(soup)
-        modified_info = modified_info.replace("<!--date-info-->", date_info)
+
+        if date_info is not None:
+            modified_info = modified_info.replace("<!--date-info-->", date_info)
 
         if "read-time" in page:
             read_time = page["read-time"]
@@ -88,10 +90,12 @@ def _set_page_article_info(
         if read_time == "":
             soup = bs4.BeautifulSoup(modified_info, "html.parser")
             svg_to_remove = soup.find("span", class_="article-info-read-time-svg")
-            if svg_to_remove:
+            if svg_to_remove and isinstance(svg_to_remove, bs4.Tag):
                 svg_to_remove.decompose()
             modified_info = str(soup)
-        modified_info = modified_info.replace("<!--read-info-->", read_time)
+
+        if read_time is not None:
+            modified_info = modified_info.replace("<!--read-info-->", read_time)
 
         specific_pages.append(page["file"])
         _write_article_info(path_html, modified_info)
