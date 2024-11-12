@@ -235,7 +235,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 termcolor==2.5.0
     # via commitizen
-tomli==2.0.2
+tomli==2.1.0
     # via
     #   black
     #   build
