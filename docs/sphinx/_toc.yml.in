@@ -45,4 +45,6 @@ subtrees:
       title: HIPIFY
   - caption: About
     entries:
+    - file: building_documentation
+    - file: toolchain
     - file: license
