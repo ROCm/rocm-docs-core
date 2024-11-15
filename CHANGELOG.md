@@ -1,3 +1,13 @@
+## v1.8.4 (2024-11-15)
+
+### Fix
+
+- resort import statements
+- separate import time from other import statements as time is standard python library but others are third party
+- sort import statement
+- add retry loop around http request
+- **header.jinja**: Replace http with https in repo URL
+
 ## v1.8.3 (2024-10-18)
 
 ### Fix

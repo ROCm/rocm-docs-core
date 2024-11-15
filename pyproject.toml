@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = 'rocm-docs-core'
-version = "1.8.3"
+version = "1.8.4"
 authors=[
   {name="Lauren Wrubleski", email="Lauren.Wrubleski@amd.com"}
 ]
@@ -72,7 +72,7 @@ color = true
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "1.8.3"
+version = "1.8.4"
 version_files = ["pyproject.toml:^version", "docs/conf.py:^(version|release)"]
 tag_format = "v$version"
 annotated_tag = true
