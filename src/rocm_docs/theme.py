@@ -19,6 +19,7 @@ logger = sphinx.util.logging.getLogger(__name__)
 
 MAX_RETRY = 20
 
+
 def _get_version_from_url(url: str) -> str:
     try:
         retry_counter = 0
