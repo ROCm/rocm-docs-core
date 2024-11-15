@@ -469,13 +469,13 @@ convolutional
 convolves
 cpp
 csn
-customizations
 cuBLAS
 cuFFT
 cuLIB
 cuRAND
 cuSOLVER
 cuSPARSE
+customizations
 dataset
 dataset's
 datasets
