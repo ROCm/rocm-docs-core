@@ -35,7 +35,7 @@ based on a YAML file (`_toc.yml.in`) that contains the table of contents.
 
 ## MyST
 
-[Markedly Structured Text (MyST)](https://myst-tools.org/docs/spec) is an extended flavor of Markdown ([CommonMark](https://commonmark.org/)) influenced by reStructuredText (rst) and Sphinx. It is integrated into the ROCm documentation with the [`myst-parser`](https://myst-parser.readthedocs.io/en/latest/) Sphinx extension.
+[Markedly Structured Text (MyST)](https://myst-tools.org/docs/spec) is an extended flavor of Markdown ([CommonMark](https://commonmark.org/)) influenced by reStructuredText (RST) and Sphinx. It is integrated into the ROCm documentation with the [`myst-parser`](https://myst-parser.readthedocs.io/en/latest/) Sphinx extension.
 
 See the [MyST syntax cheat sheet](https://jupyterbook.org/en/stable/reference/cheatsheet.html) at the Jupyter Book site.
 
