@@ -5,6 +5,7 @@ from typing import Any
 from pathlib import Path
 
 import requests
+import time
 import sphinx.util.logging
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
@@ -16,10 +17,18 @@ from rocm_docs import util
 
 logger = sphinx.util.logging.getLogger(__name__)
 
+MAX_RETRY = 20
 
 def _get_version_from_url(url: str) -> str:
     try:
+        retry_counter = 0
         response = requests.get(url)
+
+        # Retry in case of failure
+        while (response.status_code != 200) and (retry_counter <= MAX_RETRY):
+            time.sleep(5)
+            response = requests.get(url)
+
         return response.text.strip()
     except requests.RequestException as e:
         print(f"Error in rocm-docs-core _get_version_from_url: {e}")
