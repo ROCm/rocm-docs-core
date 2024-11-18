@@ -17,7 +17,7 @@ from rocm_docs import util
 
 logger = sphinx.util.logging.getLogger(__name__)
 
-MAX_RETRY = 20
+MAX_RETRY = 100
 
 
 def _get_version_from_url(url: str) -> str:
@@ -29,6 +29,9 @@ def _get_version_from_url(url: str) -> str:
         while (response.status_code != 200) and (retry_counter <= MAX_RETRY):
             time.sleep(5)
             response = requests.get(url)
+        
+        if retry_counter > MAX_RETRY:
+            raise requests.RequestException("Unable to acquire version within MAX_RETRY!")
 
         return response.text.strip()
     except requests.RequestException as e:
