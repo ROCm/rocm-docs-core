@@ -1,3 +1,12 @@
+## v1.8.5 (2024-11-18)
+
+### Fix
+
+- reformat to pass 'black' linting check
+- remove unnecessary space
+- delete space
+- add a check for MAX_RETRY
+
 ## v1.8.4 (2024-11-15)
 
 ### Fix
