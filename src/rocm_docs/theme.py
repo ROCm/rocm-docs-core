@@ -32,7 +32,6 @@ def _get_version_from_url(url: str) -> str:
 
         if retry_counter > MAX_RETRY:
             raise requests.RequestException("Unable to acquire version within MAX_RETRY!")
-
         return response.text.strip()
     except requests.RequestException as e:
         print(f"Error in rocm-docs-core _get_version_from_url: {e}")
