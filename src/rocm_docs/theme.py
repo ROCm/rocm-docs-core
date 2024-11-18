@@ -17,7 +17,7 @@ from rocm_docs import util
 
 logger = sphinx.util.logging.getLogger(__name__)
 
-MAX_RETRY = 20
+MAX_RETRY = 100
 
 
 def _get_version_from_url(url: str) -> str:
@@ -30,6 +30,10 @@ def _get_version_from_url(url: str) -> str:
             time.sleep(5)
             response = requests.get(url)
 
+        if retry_counter > MAX_RETRY:
+            raise requests.RequestException(
+                "Unable to acquire version within MAX_RETRY!"
+            )
         return response.text.strip()
     except requests.RequestException as e:
         print(f"Error in rocm-docs-core _get_version_from_url: {e}")
@@ -51,16 +55,16 @@ def _add_custom_context(
     header_release_candidate_version = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
     )
-    context["header_release_candidate_version"] = (
-        header_release_candidate_version
-    )
+    context[
+        "header_release_candidate_version"
+    ] = header_release_candidate_version
 
     google_site_verification_content = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/google_site_verification.txt"
     )
-    context["google_site_verification_content"] = (
-        google_site_verification_content
-    )
+    context[
+        "google_site_verification_content"
+    ] = google_site_verification_content
 
 
 def _update_repo_opts(srcdir: str, theme_opts: dict[str, Any]) -> None:
