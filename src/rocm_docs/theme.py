@@ -117,6 +117,15 @@ def _update_theme_options(app: Sphinx) -> None:
         flavor = supported_flavors[0]
         theme_opts["flavor"] = flavor
 
+    # Set default generic theme options
+    if flavor == "generic":
+        theme_opts.setdefault("header_title", "")
+        theme_opts.setdefault("header_link", "#")
+        theme_opts.setdefault("version_list_link", None)
+        theme_opts.setdefault("nav_secondary_items", {})
+        theme_opts.setdefault("license_link", None)
+        theme_opts.setdefault("license_text", "")
+
     theme_opts.setdefault(
         "article_header_start",
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
@@ -181,6 +190,14 @@ def setup(app: Sphinx) -> dict[str, Any]:
 
     app.connect("html-page-context", _add_custom_context)
     app.connect("builder-inited", _update_theme_options)
+
+    # Add theme option declarations
+    app.add_config_value("header_title", "", "html")
+    app.add_config_value("header_link", "#", "html")
+    app.add_config_value("version_list_link", None, "html")
+    app.add_config_value("nav_secondary_items", {}, "html", [dict])
+    app.add_config_value("license_link", None, "html")
+    app.add_config_value("license_text", "", "html")
 
     return {
         "parallel_read_safe": True,

@@ -1,0 +1,5 @@
+{% macro license_link() -%}
+    {% if theme_license_link %}
+        <li><a href="{{ theme_license_link }}">{{ theme_license_text if theme_license_text else "" }}</a></li>
+    {% endif %}
+{%- endmacro -%}
