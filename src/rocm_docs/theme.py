@@ -29,7 +29,7 @@ def _get_version_from_url(url: str) -> str:
         while (response.status_code != 200) and (retry_counter <= MAX_RETRY):
             time.sleep(5)
             response = requests.get(url)
-        
+
         if retry_counter > MAX_RETRY:
             raise requests.RequestException("Unable to acquire version within MAX_RETRY!")
 
