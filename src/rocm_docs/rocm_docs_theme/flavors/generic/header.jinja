@@ -1,0 +1,28 @@
+{% macro top_level_header(branch, latest_version, release_candidate_version) -%}
+    {% if theme_header_title %}
+        {% set header_title = theme_header_title %}
+    {% else %}
+        {% set header_title = project ~ " " ~ version %}
+    {% endif %}
+
+    {% if theme_header_link %}
+        {% set header_link = theme_header_link %}
+    {% else %}
+        {% set header_link = "#" %}
+    {% endif %}
+
+    <a class="klavika-font hover-opacity" href="{{ header_link }}">{{ header_title }}</a>
+{%- endmacro -%}
+
+{% macro version_list() -%}
+    {% if theme_version_list_link %}
+        <a class="header-all-versions" href="{{ theme_version_list_link }}">Version List</a>
+    {% endif %}
+{%- endmacro -%}
+
+{%
+set nav_secondary_items = theme_nav_secondary_items if theme_nav_secondary_items else {
+    "GitHub": theme_repository_url if theme_repository_url else "#",
+    "Support": (theme_repository_url + "/issues/new/choose") if theme_repository_url else "#"
+}
+%}

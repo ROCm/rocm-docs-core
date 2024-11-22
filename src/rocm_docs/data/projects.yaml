@@ -63,6 +63,7 @@ projects:
   rocgdb:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
     development_branch: amd-staging
+  rocjpeg: https://rocm.docs.amd.com/projects/rocJPEG/en/${version}
   rocm: https://rocm.docs.amd.com/en/${version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
   rocm-install-on-linux:
@@ -88,9 +89,15 @@ projects:
   rocprofiler:
     target: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
     development_branch: amd-master
+  rocprofiler-compute:
+    target: https://rocm.docs.amd.com/projects/rocprofiler-compute/en/${version}
+    development_branch: amd-staging
   rocprofiler-sdk:
     target: https://rocm.docs.amd.com/projects/rocprofiler-sdk/en/${version}
     development_branch: amd-mainline
+  rocprofiler-systems:
+    target: https://rocm.docs.amd.com/projects/rocprofiler-systems/en/${version}
+    development_branch: amd-staging
   rocpydecode: https://rocm.docs.amd.com/projects/rocPyDecode/en/${version}
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocr-runtime:
