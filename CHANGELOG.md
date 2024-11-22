@@ -1,3 +1,10 @@
+## v1.9.0 (2024-11-22)
+
+### Feat
+
+- add generic theme flavor
+- **projects.yaml**: add rocprof-sys, rocprof-comp, and rocJPEG
+
 ## v1.8.5 (2024-11-18)
 
 ### Fix
