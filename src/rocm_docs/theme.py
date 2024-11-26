@@ -21,14 +21,17 @@ MAX_RETRY = 100
 
 
 def _get_version_from_url(url: str) -> str:
+    headers = {
+        "User-Agent": "alexxu-amd"
+    }
     try:
         retry_counter = 0
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
 
         # Retry in case of failure
         while (response.status_code != 200) and (retry_counter <= MAX_RETRY):
             time.sleep(5)
-            response = requests.get(url)
+            response = requests.get(url, headers=headers)
 
         if retry_counter > MAX_RETRY:
             raise requests.RequestException(
@@ -55,16 +58,16 @@ def _add_custom_context(
     header_release_candidate_version = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
     )
-    context[
-        "header_release_candidate_version"
-    ] = header_release_candidate_version
+    context["header_release_candidate_version"] = (
+        header_release_candidate_version
+    )
 
     google_site_verification_content = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/google_site_verification.txt"
     )
-    context[
-        "google_site_verification_content"
-    ] = google_site_verification_content
+    context["google_site_verification_content"] = (
+        google_site_verification_content
+    )
 
 
 def _update_repo_opts(srcdir: str, theme_opts: dict[str, Any]) -> None:
