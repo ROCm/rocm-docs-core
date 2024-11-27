@@ -1,3 +1,9 @@
+## v1.9.1 (2024-11-27)
+
+### Fix
+
+- add User-Agent headers to github request
+
 ## v1.9.0 (2024-11-22)
 
 ### Feat
