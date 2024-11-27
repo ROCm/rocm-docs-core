@@ -21,14 +21,15 @@ MAX_RETRY = 100
 
 
 def _get_version_from_url(url: str) -> str:
+    headers = {"User-Agent": "alexxu-amd"}
     try:
         retry_counter = 0
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
 
         # Retry in case of failure
         while (response.status_code != 200) and (retry_counter <= MAX_RETRY):
             time.sleep(5)
-            response = requests.get(url)
+            response = requests.get(url, headers=headers)
 
         if retry_counter > MAX_RETRY:
             raise requests.RequestException(
