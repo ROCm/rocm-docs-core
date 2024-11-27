@@ -1,3 +1,19 @@
+## v1.9.0 (2024-11-22)
+
+### Feat
+
+- add generic theme flavor
+- **projects.yaml**: add rocprof-sys, rocprof-comp, and rocJPEG
+
+## v1.8.5 (2024-11-18)
+
+### Fix
+
+- reformat to pass 'black' linting check
+- remove unnecessary space
+- delete space
+- add a check for MAX_RETRY
+
 ## v1.8.4 (2024-11-15)
 
 ### Fix
