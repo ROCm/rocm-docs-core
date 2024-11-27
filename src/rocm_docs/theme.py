@@ -112,7 +112,13 @@ def _update_theme_options(app: Sphinx) -> None:
     theme_opts = get_theme_options_dict(app)
     _update_repo_opts(str(app.srcdir), theme_opts)
 
-    supported_flavors = ["rocm", "local", "rocm-docs-home", "rocm-blogs"]
+    supported_flavors = [
+        "rocm",
+        "local",
+        "rocm-docs-home",
+        "rocm-blogs",
+        "generic",
+    ]
     flavor = theme_opts.get("flavor", "rocm")
     if flavor not in supported_flavors:
         logger.error(
