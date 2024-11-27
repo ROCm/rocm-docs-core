@@ -21,9 +21,7 @@ MAX_RETRY = 100
 
 
 def _get_version_from_url(url: str) -> str:
-    headers = {
-        "User-Agent": "alexxu-amd"
-    }
+    headers = {"User-Agent": "alexxu-amd"}
     try:
         retry_counter = 0
         response = requests.get(url, headers=headers)
