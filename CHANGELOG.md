@@ -1,3 +1,9 @@
+## v1.9.2 (2024-11-28)
+
+### Fix
+
+- add "generic" to supported_flavors list
+
 ## v1.9.1 (2024-11-27)
 
 ### Fix
