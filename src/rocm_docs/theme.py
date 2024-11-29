@@ -115,6 +115,7 @@ def _update_theme_options(app: Sphinx) -> None:
     supported_flavors = [
         "rocm",
         "local",
+        "instinct",
         "rocm-docs-home",
         "rocm-blogs",
         "generic",
