@@ -1,3 +1,9 @@
+## v1.10.0 (2024-11-29)
+
+### Feat
+
+- Added Instinct flavor
+
 ## v1.9.2 (2024-11-28)
 
 ### Fix
