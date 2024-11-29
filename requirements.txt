@@ -67,7 +67,7 @@ doxysphinx==3.3.12
     # via rocm-docs-core (pyproject.toml)
 exceptiongroup==1.2.2
     # via pytest
-fastjsonschema==2.20.0
+fastjsonschema==2.21.0
     # via rocm-docs-core (pyproject.toml)
 filelock==3.16.1
     # via virtualenv
