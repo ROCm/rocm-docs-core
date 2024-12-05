@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Commitizen enforces conventional commits and implements automatic release tagging based on commit messages."
+        "keywords": "Commit on ROCm docs core , Conventional commit on ROCm docs core, Commit messages on ROCm docs core, Commit using Commitizen, Commitizen, ROCm docs core developer guide"
+---
+
 # Commitizen
 
 The ROCm Docs Core repository uses

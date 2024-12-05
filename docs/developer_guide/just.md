@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Just is a command runner used to quickly setup an environment for documentation development"
+        "keywords": "Development environment for ROCm docs core, Environment for documentation development, Development environment for ROCm documentation, Just, ROCm docs core developer guide"
+---
+
 # Just
 
 [`just`](https://github.com/casey/just) is a command runner used to
