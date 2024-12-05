@@ -1,3 +1,26 @@
+## v1.11.0 (2024-12-05)
+
+### Feat
+
+- **projects.yaml**: Add tensile to intersphinx mapping
+
+### Fix
+
+- **article_info.py**: Remove svg if article info is empty
+- **core.py**: Apply os list for article info fix for all article info option
+- **article-info.html**: Only add apply to string if os list is not empty
+
+### Refactor
+
+- **article_info.py**: Apply mypy type check suggestions
+- **article-info.html**: Add custom class to span with svgs in article info
+- **core.py**: Split out article info logic into article_info.py
+- Remove default author
+- Modify markers in article-info.html
+- **core.py**: Set default OS and date to empty
+- **core.py**: Join article os info from list
+- **core.py**: Set default article info os using all_article_info_os if not present
+
 ## v1.10.0 (2024-11-29)
 
 ### Feat
