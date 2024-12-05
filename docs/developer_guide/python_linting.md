@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Tools used for checking correctness in Python code"
+        "keywords": "Python linting tool, Check correctness in Python code, ROCm docs core developer guide"
+---
+
 # Python Linting
 
 The following list of tools is used for checking correctness in Python code.

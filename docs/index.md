@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "A collection of utilities, styling, scripts, and additional HTML content common to all ROCm projects’ documentation"
+        "keywords": "ROCm documentation configuration, ROCm documentation customization, ROCm documentation tool, ROCm docs core developer guide"
+---
+
 # ROCm Docs Core
 
 ROCm Docs Core is a collection of utilities, styling, scripts and additional
