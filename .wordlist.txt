@@ -544,6 +544,7 @@ hipsparse
 hpp
 hsa
 hsakmt
+html
 hyperparameter
 ib_core
 inband
@@ -583,6 +584,7 @@ mkdir
 mlirmiopen
 mtypes
 mvffr
+myst
 namespace
 namespaces
 natively
