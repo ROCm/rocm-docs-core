@@ -557,6 +557,7 @@ inlining
 installable
 instantiation
 interprocedural
+intersphinx
 intra
 invariants
 invocating
