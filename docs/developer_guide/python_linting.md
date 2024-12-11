@@ -2,7 +2,7 @@
 myst:
     html_meta:
         "description": "Tools used for checking correctness in Python code"
-        "keywords": "Python linting tool, Check correctness in Python code, ROCm docs core developer guide"
+        "keywords": "Python linting tool, Error checker, Documentation configuration"
 ---
 
 # Python Linting

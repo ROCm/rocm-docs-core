@@ -2,7 +2,7 @@
 myst:
     html_meta:
         "description": "Setting up links in Markdown to other projects, current project and external sites in ROCm documentation"
-        "keywords": "Markdown links in ROCm documentation, Project linking, Project reference, Adding links in Markdown, ROCm docs core user guide"
+        "keywords": "Markdown links, Project linking, Project reference, Adding links in Markdown, Documentation settings"
 ---
 
 # Linking in Markdown

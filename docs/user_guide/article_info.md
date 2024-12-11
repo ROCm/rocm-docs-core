@@ -2,7 +2,7 @@
 myst:
     html_meta:
         "description": "Setting article info in ROCm documentation"
-        "keywords": "Configuring ROCm documentation, Article info, ROCm docs core user guide"
+        "keywords": "Documentation settings, Display document information, Display article metadata, Display document metadata"
 ---
 
 # Article Info

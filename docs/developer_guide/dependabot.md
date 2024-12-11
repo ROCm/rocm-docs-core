@@ -2,7 +2,7 @@
 myst:
     html_meta:
         "description": "Dependabot is automated dependency management tool"
-        "keywords": "Automated dependency management tool, Dependency management for ROCm documentation, Dependabot, ROCm docs core developer guide"
+        "keywords": "Automated dependency management tool, Dependency management, Dependabot, Documentation dependencies"
 ---
 
 # Dependabot

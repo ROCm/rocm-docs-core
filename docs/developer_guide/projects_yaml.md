@@ -2,7 +2,7 @@
 myst:
     html_meta:
         "description": "Defining external intersphinx project mapping"
-        "keywords": "External intersphinx project mapping, Project mapping in ROCm docs core, ROCm docs core developer guide"
+        "keywords": "Intersphinx, project mapping, Documentation configuration"
 ---
 
 # External Intersphinx Project Mapping

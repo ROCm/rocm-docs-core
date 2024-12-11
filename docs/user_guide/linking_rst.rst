@@ -1,6 +1,6 @@
 .. meta::
    :description: Setting up links in RST to other projects, current project and external sites in ROCm documentation
-   :keywords: RST links in ROCm documentation, Project linking, Project reference, Adding links in RST, ROCm docs core user guide
+   :keywords: RST links, Project linking, Project reference, Adding links in RST, Documentation settings
 
 
 Linking in RST

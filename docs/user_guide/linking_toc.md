@@ -2,7 +2,7 @@
 myst:
     html_meta:
         "description": "Setting up links in the Table of Contents for ROCm documentation"
-        "keywords": "Links in TOC, Links in table of content, ROCm documentation TOC, ROCm documentation table of content, ROCm docs core user guide"
+        "keywords": "Links in TOC, Links in table of content, Documentation TOC, Documentation table of content, Document index, Documentation settings"
 ---
 
 # Linking in the Table of Contents
