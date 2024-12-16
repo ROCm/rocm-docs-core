@@ -1,3 +1,9 @@
+## v1.12.0 (2024-12-16)
+
+### Feat
+
+- Instinct documentation link in ROCm docs
+
 ## v1.11.0 (2024-12-05)
 
 ### Feat
