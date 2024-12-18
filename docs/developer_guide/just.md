@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Just is a command runner used to quickly setup an environment for documentation development"
+        "keywords": "Documentation development environment, Environment for documentation development, Just, Documentation configuration"
+---
+
 # Just
 
 [`just`](https://github.com/casey/just) is a command runner used to

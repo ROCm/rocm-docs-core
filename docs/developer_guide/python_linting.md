@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Tools used for checking correctness in Python code"
+        "keywords": "Python linting tool, Error checker, Documentation configuration"
+---
+
 # Python Linting
 
 The following list of tools is used for checking correctness in Python code.
