@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Setting article info in ROCm documentation"
+        "keywords": "Documentation settings, Display document information, Display article metadata, Display document metadata"
+---
+
 # Article Info
 
 Article info is disabled by default and must be enabled in `conf.py`.
