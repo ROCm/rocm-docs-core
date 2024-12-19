@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Defining external intersphinx project mapping"
+        "keywords": "Intersphinx, project mapping, Documentation configuration"
+---
+
 # External Intersphinx Project Mapping
 
 Projects should be defined in `projects.yaml` and should set which key they correspond to by setting external_projects_current_project to this key.
