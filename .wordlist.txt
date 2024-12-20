@@ -544,6 +544,7 @@ hipsparse
 hpp
 hsa
 hsakmt
+html
 hyperparameter
 ib_core
 inband
@@ -556,6 +557,7 @@ inlining
 installable
 instantiation
 interprocedural
+intersphinx
 intra
 invariants
 invocating
@@ -583,6 +585,7 @@ mkdir
 mlirmiopen
 mtypes
 mvffr
+myst
 namespace
 namespaces
 natively

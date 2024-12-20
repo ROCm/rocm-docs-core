@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Dependabot is automated dependency management tool"
+        "keywords": "Automated dependency management tool, Dependency management, Dependabot, Documentation dependencies"
+---
+
 # Dependabot
 
 Dependabot is automated dependency management tool.

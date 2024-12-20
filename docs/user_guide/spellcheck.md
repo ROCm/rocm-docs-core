@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Rocm docs core has spell checks run on every pull request"
+        "keywords": "Spell check in ROCm documentation, Spell check in ROCm docs core, ROCm docs core user guide"
+---
+
 # Spell Check
 
 `rocm-docs-core` has spell checks run on every pull request (PR) via GitHub Actions.

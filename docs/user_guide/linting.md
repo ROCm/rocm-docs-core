@@ -1,3 +1,10 @@
+---
+myst:
+    html_meta:
+        "description": "Linting ensures correct Markdown and ReStructuredText formatting on every pull request"
+        "keywords": "Formatting PR, Formatting pull requests, Linting checks, Documentation settings"
+---
+
 # Linting
 
 `rocm-docs-core` has linting to ensure correct Markdown and ReStructuredText
