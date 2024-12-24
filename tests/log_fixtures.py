@@ -273,11 +273,11 @@ def _with_sphinx_logs(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 __all__ = [
-    "_no_unexpected_warnings_impl",
     "_no_unexpected_warnings",
+    "_no_unexpected_warnings_impl",
     "_with_sphinx_logs",
     "expect_log",
-    "expected_logs_impl",
     "expected_logs",
+    "expected_logs_impl",
     "log_handler_stack",
 ]

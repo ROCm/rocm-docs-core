@@ -167,7 +167,7 @@ def copy_from_package(
 __all__ = [
     "InvalidGitRepositoryError",
     "VersionType",
-    "get_path_to_docs",
-    "get_branch",
     "copy_from_package",
+    "get_branch",
+    "get_path_to_docs",
 ]

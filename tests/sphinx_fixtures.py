@@ -69,4 +69,4 @@ def build_factory(
     return make
 
 
-__all__ = ["with_no_git_repo", "build_factory"]
+__all__ = ["build_factory", "with_no_git_repo"]
