@@ -13,7 +13,7 @@ from sphinx.application import Sphinx
 from .log_fixtures import ExpectLogFixture
 
 
-@pytest.fixture
+@pytest.fixture()
 def with_no_git_repo(
     monkeypatch: pytest.MonkeyPatch,
     expect_log: ExpectLogFixture,
@@ -42,7 +42,7 @@ def build_sphinx(
     app.build()
 
 
-@pytest.fixture
+@pytest.fixture()
 def build_factory(
     request: pytest.FixtureRequest,
     tmp_path: Path,

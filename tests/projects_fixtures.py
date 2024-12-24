@@ -9,7 +9,7 @@ import pytest
 import rocm_docs.projects
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_projects(
     monkeypatch: pytest.MonkeyPatch,
 ) -> Callable[[dict[str, rocm_docs.projects._Project]], None]:
@@ -24,7 +24,7 @@ def mock_projects(
     return do_mock
 
 
-@pytest.fixture
+@pytest.fixture()
 def mocked_projects(
     mock_projects: Callable[[dict[str, rocm_docs.projects._Project]], None],
 ) -> dict[str, rocm_docs.projects._Project]:
