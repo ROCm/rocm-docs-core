@@ -144,7 +144,7 @@ prompt-toolkit==3.0.36
     # via questionary
 pycparser==2.22
     # via cffi
-pydata-sphinx-theme==0.16.0
+pydata-sphinx-theme==0.16.1
     # via
     #   rocm-docs-core (pyproject.toml)
     #   sphinx-book-theme
