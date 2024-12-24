@@ -29,7 +29,7 @@ def test_scope_of_log_stack(expect_log: ExpectLogFixture) -> None:
 
 
 @pytest.mark.usefixtures("_no_unexpected_warnings")
-@pytest.mark.meta_invert_fixture()
+@pytest.mark.meta_invert_fixture
 def test_unexpected_warnings() -> None:
     logger.warning("An unexpected warning")
 

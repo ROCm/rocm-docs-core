@@ -89,4 +89,4 @@ class ROCmDocs:
         self.html_theme = "rocm_docs_theme"
 
 
-__all__ = ["setup", "ROCmDocs"]
+__all__ = ["ROCmDocs", "setup"]
