@@ -181,7 +181,7 @@ pyyaml==6.0.2
     #   pre-commit
     #   rocm-docs-core (pyproject.toml)
     #   sphinx-external-toc
-questionary==2.0.1
+questionary==2.1.0
     # via commitizen
 requests==2.32.3
     # via
