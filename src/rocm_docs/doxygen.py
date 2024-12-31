@@ -23,18 +23,17 @@ from sphinx.util import logging
 from sphinx.util.display import progress_message
 from sphinx.util.osutil import copyfile
 
-from rocm_docs import util
-
 logger = logging.getLogger(__name__)
 
 
 def _copy_files(app: Sphinx) -> None:
     """Insert additional files into workspace."""
-    pkg = importlib.resources.files("rocm_docs")
-    Path(app.srcdir, "_doxygen").mkdir(exist_ok=True)
-    util.copy_from_package(
-        app, pkg / "data/_doxygen", "data/_doxygen", "_doxygen"
-    )
+    with importlib.resources.path("rocm_docs", "") as pkg_path:
+        shutil.copytree(
+            pkg_path / "data/_doxygen",
+            Path(app.srcdir, "_doxygen"),
+            dirs_exist_ok=True,
+        )
 
 
 def _get_config_default(config: Config, key: str) -> Any:
