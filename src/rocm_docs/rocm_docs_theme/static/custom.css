@@ -221,7 +221,7 @@ a#ot-sdk-btn {
 }
 
 .bd-sidebar-secondary {
-  z-index: 10001;
+  z-index: 2000;
 }
 
 .sd-card-body.rocm-card-banner {
