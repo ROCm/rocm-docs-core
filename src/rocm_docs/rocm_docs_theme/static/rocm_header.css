@@ -4,7 +4,7 @@ header.common-header {
     font-size: 1rem;
     line-height: 1.5rem;
     margin-bottom: 0;
-    z-index: 10000;
+    z-index: 2000;
 }
 
 header.common-header a {
@@ -751,7 +751,7 @@ header.common-header .icon-nav .icon-item ul.dropdown-menu {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.24);
   padding-bottom: 0;
   transform: translateX(40%);
-  z-index: 9999;
+  z-index: 1999;
 }
 
 header.common-header
