@@ -4,8 +4,7 @@ header.common-header {
     font-size: 1rem;
     line-height: 1.5rem;
     margin-bottom: 0;
-    /* readthedocs flyout z-index is 3000, setting header z-index to be
-    below 3000 to avoid covering the flyout */
+    /* readthedocs flyout z-index is 3000, setting header z-index to be below 3000 to avoid covering the flyout. */
     z-index: 2000; 
 }
 
