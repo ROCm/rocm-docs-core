@@ -221,6 +221,9 @@ a#ot-sdk-btn {
 }
 
 .bd-sidebar-secondary {
+  /* Header z-index is 2000, flyout z-index is 3000.
+  Setting sidebar's z-index to be between 2000 and 3000 to hover over the header
+  without covering the flyout. */
   z-index: 2001;
 }
 
