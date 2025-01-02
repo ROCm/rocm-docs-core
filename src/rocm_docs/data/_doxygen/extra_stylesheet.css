@@ -597,7 +597,7 @@ html[data-theme=dark] {
 }
 
 .doxygen-content #MSearchSelectWindow, .doxygen-content #MSearchResultsWindow {
-    z-index: 9999;
+    z-index: 1999;
 }
 
 .doxygen-content #MSearchBox.MSearchBoxActive {
