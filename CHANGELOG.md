@@ -1,3 +1,11 @@
+## v1.12.1 (2025-01-02)
+
+### Fix
+
+- scale down z-axis of multiple elements to preent covering flyout
+- reducing sidebar z-index
+- Replace copy_from_package with shutil.copytree
+
 ## v1.12.0 (2024-12-16)
 
 ### Feat
