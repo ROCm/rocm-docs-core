@@ -115,7 +115,6 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
 def setup(app: Sphinx) -> dict[str, Any]:
     """Set up rocm_docs.core as a Sphinx extension."""
     required_extensions = [
-        "myst_parser",
         "notfound.extension",
         "rocm_docs.projects",
         "sphinx_copybutton",
@@ -125,6 +124,12 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "sphinx.ext.doctest",
         "sphinx.ext.duration",
     ]
+
+    # check for other extensions like myst_nb
+    optional_extensions = [
+        "myst_parser"
+    ]
+    
     for ext in required_extensions:
         app.setup_extension(ext)
 
