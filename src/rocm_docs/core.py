@@ -125,6 +125,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "sphinx.ext.duration",
     ]
 
+    # check for other extensions like myst_nb
     optional_extensions = [
         "myst_parser"
     ]
