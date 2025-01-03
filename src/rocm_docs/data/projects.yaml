@@ -33,7 +33,7 @@ projects:
   hip-vs:
     target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
     development_branch: master
-  instinct: https://dcgpu.docs.amd.com/
+  instinct: https://instinct.docs.amd.com/
   llvm-project: https://rocm.docs.amd.com/projects/llvm-project/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
