@@ -1,3 +1,9 @@
+## v1.13.0 (2025-01-06)
+
+### Feat
+
+- Update new url for Instinct docs
+
 ## v1.12.1 (2025-01-02)
 
 ### Fix
