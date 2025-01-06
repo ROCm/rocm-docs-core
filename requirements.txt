@@ -187,7 +187,7 @@ requests==2.32.3
     # via
     #   pygithub
     #   sphinx
-ruff==0.8.4
+ruff==0.8.6
     # via rocm-docs-core (pyproject.toml)
 six==1.17.0
     # via python-dateutil
