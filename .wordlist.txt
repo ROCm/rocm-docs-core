@@ -170,6 +170,7 @@ KFD
 KVM
 Keras
 Khronos
+Kubernetes
 LAPACK
 LCLK
 LDS
