@@ -150,7 +150,7 @@ pydata-sphinx-theme==0.16.1
     #   sphinx-book-theme
 pygithub==2.5.0
     # via rocm-docs-core (pyproject.toml)
-pygments==2.19.0
+pygments==2.19.1
     # via
     #   accessible-pygments
     #   mpire
