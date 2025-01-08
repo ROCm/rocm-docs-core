@@ -57,5 +57,5 @@ html_title = f"ROCm Docs Core {version}"
 project = "ROCm Docs Core"
 author = "Advanced Micro Devices, Inc."
 copyright = (
-    "Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved."
+    "Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved."
 )
