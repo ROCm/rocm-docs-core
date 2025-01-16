@@ -33,8 +33,7 @@
 matrix:
 - name: Markdown
   sources:
-  - 'docs/**/*.md'
-  - 'tools/autotag/templates/**/*.md'
+  - *md_list
   expect_match: false
   aspell:
     lang: en
@@ -89,7 +88,7 @@ matrix:
   - pyspelling.filters.url:
 - name: reST
   sources:
-  - 'docs/**/*.rst'
+  - *rst_list
   expect_match: false
   aspell:
     lang: en
