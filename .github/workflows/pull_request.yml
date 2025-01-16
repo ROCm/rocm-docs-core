@@ -73,6 +73,10 @@ jobs:
       uses: ssciwr/doxygen-install@v1.2.0
       with:
         version: 1.9.8
+    - name: List available Graphviz versions
+      run: |
+        sudo apt update
+        apt-cache madison graphviz
     - name: Set up Graphviz
       uses: ts-graphviz/setup-graphviz@v2.0.2
       with:
