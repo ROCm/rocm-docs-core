@@ -80,7 +80,7 @@ jobs:
     - name: Set up Graphviz
       uses: ts-graphviz/setup-graphviz@v2.0.2
       with:
-        ubuntu-graphviz-version: 2.42.4-2build2
+        ubuntu-graphviz-version: latest
         windows-graphviz-version: '9.0.0'
     - name: Cache venv
       uses: actions/cache@v3.3.1
