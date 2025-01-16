@@ -74,9 +74,9 @@ jobs:
       with:
         version: 1.9.8
     - name: Set up Graphviz
-      uses: ts-graphviz/setup-graphviz@v1.2.0
+      uses: ts-graphviz/setup-graphviz@v2.0.2
       with:
-        ubuntu-graphviz-version: 2.42.2-6
+        ubuntu-graphviz-version: 2.42.2-9ubuntu0.1
         windows-graphviz-version: '9.0.0'
     - name: Cache venv
       uses: actions/cache@v3.3.1
