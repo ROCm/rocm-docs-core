@@ -82,6 +82,8 @@ jobs:
       with:
         ubuntu-graphviz-version: latest
         windows-graphviz-version: '9.0.0'
+    - name: Verify Graphviz version
+      run: dot -V
     - name: Cache venv
       uses: actions/cache@v3.3.1
       with:
