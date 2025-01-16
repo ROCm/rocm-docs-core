@@ -37,21 +37,13 @@ jobs:
         if: ${{ ! contains( github.repository, 'rocm-docs-core') }}
         shell: sh
         run: |
-          curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/develop/.spellcheck.yaml -O
-          curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/develop/.wordlist.txt >> .wordlist.txt
-      - name: Check local spelling file
-        id: check_local_spelling
+          curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/local_spellcheck_file/.spellcheck.global.yaml -O
+          curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/local_spellcheck_file/.spellcheck.template.yaml -O
+          curl --silent --show-error --fail --location https://raw.github.com/ROCm/rocm-docs-core/local_spellcheck_file/.wordlist.txt >> .wordlist.txt
+      - name: Concatenate YAML files
+        shell: sh
         run: |
-          if [ -f .spellcheck_local.yaml ]; then
-            echo "check_result=true" >> $GITHUB_OUTPUT
-          else
-            echo "check_result=false" >> $GITHUB_OUTPUT
-          fi
-      - name: Merge local and common spelling config
-        if: steps.check_local_spelling.outputs.check_result == 'true'
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq '. *= load(".spellcheck_local.yaml")' .spellcheck.yaml
+          cat .spellcheck.global.yaml .spellcheck.local.yaml .spellcheck.template.yaml > .spellcheck.yaml
       - name: Run spellcheck
         uses: rojopolis/spellcheck-github-actions@0.30.0
       - name: On fail
