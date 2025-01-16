@@ -80,7 +80,7 @@ jobs:
     - name: Set up Graphviz
       uses: ts-graphviz/setup-graphviz@v2.0.2
       with:
-        ubuntu-graphviz-version: latest
+        ubuntu-graphviz-version: 2.42.2-9ubuntu0.1
         windows-graphviz-version: '9.0.0'
     - name: Verify Graphviz version
       run: dot -V
