@@ -1,6 +1,9 @@
 sources_md_global: &md_global_list
   - ['docs/**/*.md', '!docs/doxygen/mainpage.md']
+  - ['tools/autotag/templates/**/*.md', '!tools/autotag/templates/**/5*.md', '!tools/autotag/templates/**/6.0*.md', '!tools/autotag/templates/**/6.1*.md']
 
 sources_rst_global: &rst_global_list
   - ['docs/**/*.rst']
 
+sources_cpp_global: &cpp_global_list
+  - []

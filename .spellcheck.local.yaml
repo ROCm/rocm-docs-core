@@ -1,7 +1,9 @@
 sources_md: &md_list
   - *md_global_list
-  - ['tools/autotag/templates/**/*.md', '!tools/autotag/templates/**/5*.md', '!tools/autotag/templates/**/6.0*.md', '!tools/autotag/templates/**/6.1*.md']
 
 sources_rst: &rst_list
   - *rst_global_list
+
+sources_cpp: &cpp_list
+  - *cpp_global_list
 

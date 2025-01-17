@@ -164,3 +164,9 @@ matrix:
         content: '[\s\S]*?'
         close: '^.. <!-- spellcheck-enable -->$'
   - pyspelling.filters.url:
+- name: Cpp
+  sources:
+  - *cpp_list
+  pipeline:
+  - pyspelling.filters.cpp
+      line_comments: false
