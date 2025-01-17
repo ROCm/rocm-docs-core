@@ -1,6 +1,6 @@
 {%
 from "flavors/" ~ theme_flavor ~ "/footer.jinja" import
-    license_link
+    license_link, beta_watermark
 with context
 %}
 <footer class="rocm-footer">
@@ -34,6 +34,10 @@ with context
     </div>
 </footer>
 
-<!-- <div id="rdc-watermark-container">
-    <img id="rdc-watermark" src="{{ pathto('_static/images/alpha-watermark.svg',1) }}" alt="DRAFT watermark"/>
-</div> -->
+
+{% if beta_watermark %}
+<div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="{{ pathto('_static/images/beta-watermark.svg',1) }}" alt="DRAFT watermark"/>
+</div>
+{% endif %}
+
