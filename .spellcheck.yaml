@@ -33,7 +33,8 @@
 matrix:
 - name: Markdown
   sources:
-  - *md_list
+  - ['docs/**/*.md', '!docs/doxygen/mainpage.md']
+  - ['tools/autotag/templates/**/*.md', '!tools/autotag/templates/**/5*.md', '!tools/autotag/templates/**/6.0*.md', '!tools/autotag/templates/**/6.1*.md']
   expect_match: false
   aspell:
     lang: en
@@ -88,7 +89,7 @@ matrix:
   - pyspelling.filters.url:
 - name: reST
   sources:
-  - *rst_list
+  - ['docs/**/*.rst']
   expect_match: false
   aspell:
     lang: en
@@ -166,7 +167,7 @@ matrix:
   - pyspelling.filters.url:
 - name: Cpp
   sources:
-  - *cpp_list
+  - []
   pipeline:
-  - pyspelling.filters.cpp
+  - pyspelling.filters.cpp:
       line_comments: false

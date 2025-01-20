@@ -1,9 +1,7 @@
-sources_md: &md_list
-  - *md_global_list
-
-sources_rst: &rst_list
-  - *rst_global_list
-
-sources_cpp: &cpp_list
-  - *cpp_global_list
-
+matrix:
+- name: Markdown
+  sources:
+  - ['docs/**/**/*.md']
+- name: reST
+  sources:
+  - ['docs/**/**/*.rst']
