@@ -87,6 +87,8 @@ matrix:
         content: '[^\n]+'
         close: ')=$'
   - pyspelling.filters.url:
+      urls: false
+      emails: false
 - name: reST
   sources:
   - ['docs/**/*.rst']
@@ -165,6 +167,8 @@ matrix:
         content: '[\s\S]*?'
         close: '^.. <!-- spellcheck-enable -->$'
   - pyspelling.filters.url:
+      urls: false
+      emails: false
 - name: Cpp
   sources:
   - []
