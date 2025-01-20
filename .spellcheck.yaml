@@ -165,7 +165,6 @@ matrix:
         content: '[\s\S]*?'
         close: '^.. <!-- spellcheck-enable -->$'
   - pyspelling.filters.url:
-      urls: false
 - name: Cpp
   sources:
   - []
