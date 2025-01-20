@@ -168,6 +168,8 @@ matrix:
 - name: Cpp
   sources:
   - []
+  expect_match: false
   pipeline:
   - pyspelling.filters.cpp:
+      block_comments: false
       line_comments: false
