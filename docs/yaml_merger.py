@@ -38,6 +38,8 @@ def load_yaml(file_path: str) -> Any:
 def merge_matrix_entries(default_entries: List[Dict], user_entries: List[Dict]) -> List[Dict]:
     """
     Merge matrix entries, combining sources only for entries with matching names.
+    - Skip merging if the 'sources' list in the user entries is empty.
+    - If the main configuration has an empty 'sources' list, replace it with the user's list.
     """
     result = default_entries.copy()
     default_map = {entry.get('name'): entry for entry in result}
@@ -45,8 +47,22 @@ def merge_matrix_entries(default_entries: List[Dict], user_entries: List[Dict]) 
     for user_entry in user_entries:
         user_name = user_entry.get('name')
         if user_name and user_name in default_map:
-            if 'sources' in user_entry and isinstance(user_entry['sources'], list):
-                default_map[user_name]['sources'].extend(user_entry['sources'])
+            if 'sources' in user_entry:
+                user_sources = user_entry['sources']
+
+                # Skip merging if user sources are empty
+                if not user_sources or all(not source for source in user_sources):
+                    continue
+
+                # Check the main configuration's sources
+                default_sources = default_map[user_name].get('sources', [])
+
+                # If the main config's sources are empty, replace them
+                if not default_sources or all(not source for source in default_sources):
+                    default_map[user_name]['sources'] = user_sources
+                else:
+                    # Otherwise, merge the lists
+                    default_map[user_name]['sources'].extend(user_sources)
 
     return result
 
