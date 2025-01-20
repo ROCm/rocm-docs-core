@@ -1,6 +1,0 @@
-sources_md_global: &md_global_list
-  - ['docs/**/*.md', '!docs/doxygen/mainpage.md']
-
-sources_rst_global: &rst_global_list
-  - ['docs/**/*.rst']
-

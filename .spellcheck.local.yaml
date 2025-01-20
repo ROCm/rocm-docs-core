@@ -1,7 +1,10 @@
 matrix:
 - name: Markdown
   sources:
-  - ['docs/**/**/*.md']
+  - []
 - name: reST
   sources:
-  - ['docs/**/**/*.rst']
+  - []
+- name: Cpp
+  sources:
+  - []
