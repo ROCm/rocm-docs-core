@@ -1,3 +1,9 @@
+## v1.14.1 (2025-01-21)
+
+### Fix
+
+- replace myst-parser with myst-nb for notebook support
+
 ## v1.14.0 (2025-01-21)
 
 ### Feat
