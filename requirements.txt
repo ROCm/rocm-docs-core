@@ -6,10 +6,17 @@
 #
 accessible-pygments==0.0.5
     # via pydata-sphinx-theme
-alabaster==0.7.16
+alabaster==1.0.0
     # via sphinx
 argcomplete==3.5.3
     # via commitizen
+asttokens==3.0.0
+    # via stack-data
+attrs==24.3.0
+    # via
+    #   jsonschema
+    #   jupyter-cache
+    #   referencing
 babel==2.16.0
     # via
     #   pydata-sphinx-theme
@@ -41,18 +48,29 @@ click==8.1.8
     #   black
     #   click-log
     #   doxysphinx
+    #   jupyter-cache
     #   pip-tools
     #   sphinx-external-toc
 click-log==0.4.0
     # via doxysphinx
 colorama==0.4.6
     # via commitizen
+comm==0.2.2
+    # via ipykernel
 commitizen==4.1.0
     # via rocm-docs-core (pyproject.toml)
+contourpy==1.3.1
+    # via matplotlib
 cryptography==44.0.0
     # via pyjwt
+cycler==0.12.1
+    # via matplotlib
+debugpy==1.8.12
+    # via ipykernel
 decli==0.6.2
     # via commitizen
+decorator==5.1.1
+    # via ipython
 deprecated==1.2.15
     # via pygithub
 distlib==0.3.9
@@ -66,35 +84,73 @@ docutils==0.21.2
 doxysphinx==3.3.12
     # via rocm-docs-core (pyproject.toml)
 exceptiongroup==1.2.2
-    # via pytest
+    # via
+    #   ipython
+    #   pytest
+executing==2.1.0
+    # via stack-data
 fastjsonschema==2.21.1
-    # via rocm-docs-core (pyproject.toml)
-filelock==3.16.1
+    # via
+    #   nbformat
+    #   rocm-docs-core (pyproject.toml)
+filelock==3.17.0
     # via virtualenv
+fonttools==4.55.4
+    # via matplotlib
 gitdb==4.0.12
     # via gitpython
 gitpython==3.1.44
     # via rocm-docs-core (pyproject.toml)
-identify==2.6.5
+greenlet==3.1.1
+    # via sqlalchemy
+identify==2.6.6
     # via pre-commit
 idna==3.10
     # via requests
 imagesize==1.4.1
     # via sphinx
-importlib-metadata==8.5.0
-    # via commitizen
+importlib-metadata==8.6.1
+    # via
+    #   jupyter-cache
+    #   myst-nb
 iniconfig==2.0.0
     # via pytest
+ipykernel==6.29.5
+    # via myst-nb
+ipython==8.31.0
+    # via
+    #   ipykernel
+    #   myst-nb
 isort==5.13.2
     # via rocm-docs-core (pyproject.toml)
+jedi==0.19.2
+    # via ipython
 jinja2==3.1.5
     # via
     #   commitizen
     #   myst-parser
     #   sphinx
+jsonschema==4.23.0
+    # via nbformat
+jsonschema-specifications==2024.10.1
+    # via jsonschema
+jupyter-cache==1.0.1
+    # via myst-nb
+jupyter-client==8.6.3
+    # via
+    #   ipykernel
+    #   nbclient
+jupyter-core==5.7.2
+    # via
+    #   ipykernel
+    #   jupyter-client
+    #   nbclient
+    #   nbformat
+kiwisolver==1.4.8
+    # via matplotlib
 libsass==0.22.0
     # via doxysphinx
-lxml==4.9.4
+lxml==5.2.1
     # via doxysphinx
 markdown-it-py==3.0.0
     # via
@@ -102,6 +158,12 @@ markdown-it-py==3.0.0
     #   myst-parser
 markupsafe==3.0.2
     # via jinja2
+matplotlib==3.10.0
+    # via doxysphinx
+matplotlib-inline==0.1.7
+    # via
+    #   ipykernel
+    #   ipython
 mdit-py-plugins==0.4.2
     # via myst-parser
 mdurl==0.1.2
@@ -114,34 +176,66 @@ mypy-extensions==1.0.0
     # via
     #   black
     #   mypy
-myst-parser==4.0.0
+myst-nb==1.1.2
     # via rocm-docs-core (pyproject.toml)
+myst-parser==4.0.0
+    # via myst-nb
+nbclient==0.10.2
+    # via
+    #   jupyter-cache
+    #   myst-nb
+nbformat==5.10.4
+    # via
+    #   jupyter-cache
+    #   myst-nb
+    #   nbclient
+nest-asyncio==1.6.0
+    # via ipykernel
 nodeenv==1.9.1
     # via pre-commit
 numpy==1.26.4
-    # via doxysphinx
+    # via
+    #   contourpy
+    #   doxysphinx
+    #   matplotlib
 packaging==24.2
     # via
     #   black
     #   build
     #   commitizen
-    #   pydata-sphinx-theme
+    #   ipykernel
+    #   matplotlib
     #   pytest
     #   sphinx
+parso==0.8.4
+    # via jedi
 pathspec==0.12.1
     # via black
+pexpect==4.9.0
+    # via ipython
+pillow==11.1.0
+    # via matplotlib
 pip-tools==7.4.1
     # via rocm-docs-core (pyproject.toml)
 platformdirs==4.3.6
     # via
     #   black
+    #   jupyter-core
     #   virtualenv
 pluggy==1.5.0
     # via pytest
-pre-commit==4.0.1
+pre-commit==4.1.0
     # via rocm-docs-core (pyproject.toml)
 prompt-toolkit==3.0.50
-    # via questionary
+    # via
+    #   ipython
+    #   questionary
+psutil==6.1.1
+    # via ipykernel
+ptyprocess==0.7.0
+    # via pexpect
+pure-eval==0.2.3
+    # via stack-data
 pycparser==2.22
     # via cffi
 pydata-sphinx-theme==0.16.1
@@ -153,6 +247,7 @@ pygithub==2.5.0
 pygments==2.19.1
     # via
     #   accessible-pygments
+    #   ipython
     #   mpire
     #   pydata-sphinx-theme
     #   sphinx
@@ -165,6 +260,7 @@ pynacl==1.5.0
 pyparsing==3.2.1
     # via
     #   doxysphinx
+    #   matplotlib
     #   sphinxcontrib-doxylink
 pyproject-hooks==1.2.0
     # via
@@ -173,20 +269,37 @@ pyproject-hooks==1.2.0
 pytest==8.3.4
     # via rocm-docs-core (pyproject.toml)
 python-dateutil==2.9.0.post0
-    # via sphinxcontrib-doxylink
+    # via
+    #   jupyter-client
+    #   matplotlib
+    #   sphinxcontrib-doxylink
 pyyaml==6.0.2
     # via
     #   commitizen
+    #   jupyter-cache
+    #   myst-nb
     #   myst-parser
     #   pre-commit
     #   rocm-docs-core (pyproject.toml)
     #   sphinx-external-toc
+pyzmq==26.2.0
+    # via
+    #   ipykernel
+    #   jupyter-client
 questionary==2.1.0
     # via commitizen
+referencing==0.36.1
+    # via
+    #   jsonschema
+    #   jsonschema-specifications
 requests==2.32.3
     # via
     #   pygithub
     #   sphinx
+rpds-py==0.22.3
+    # via
+    #   jsonschema
+    #   referencing
 ruff==0.9.2
     # via rocm-docs-core (pyproject.toml)
 six==1.17.0
@@ -200,6 +313,7 @@ soupsieve==2.6
 sphinx==8.1.3
     # via
     #   breathe
+    #   myst-nb
     #   myst-parser
     #   pydata-sphinx-theme
     #   rocm-docs-core (pyproject.toml)
@@ -233,6 +347,12 @@ sphinxcontrib-qthelp==2.0.0
     # via sphinx
 sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
+sqlalchemy==2.0.37
+    # via jupyter-cache
+stack-data==0.6.3
+    # via ipython
+tabulate==0.9.0
+    # via jupyter-cache
 termcolor==2.5.0
     # via commitizen
 tomli==2.2.1
@@ -245,14 +365,33 @@ tomli==2.2.1
     #   sphinx
 tomlkit==0.13.2
     # via commitizen
+tornado==6.4.2
+    # via
+    #   ipykernel
+    #   jupyter-client
 tqdm==4.67.1
     # via mpire
+traitlets==5.14.3
+    # via
+    #   comm
+    #   ipykernel
+    #   ipython
+    #   jupyter-client
+    #   jupyter-core
+    #   matplotlib-inline
+    #   nbclient
+    #   nbformat
 typing-extensions==4.12.2
     # via
     #   black
+    #   commitizen
+    #   ipython
     #   mypy
+    #   myst-nb
     #   pydata-sphinx-theme
     #   pygithub
+    #   referencing
+    #   sqlalchemy
 urllib3==2.3.0
     # via
     #   pygithub
