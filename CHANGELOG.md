@@ -1,3 +1,15 @@
+## v1.14.0 (2025-01-21)
+
+### Feat
+
+- add new project gpuaidev to projects.yaml
+
+### Fix
+
+- Update .wordlist.txt to include Kubernetes
+- update copyright year to 2025 in docs and tests
+- **footer.html**: update copyright year to 2025
+
 ## v1.13.0 (2025-01-06)
 
 ### Feat
