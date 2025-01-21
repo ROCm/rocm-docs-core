@@ -126,10 +126,9 @@ def setup(app: Sphinx) -> dict[str, Any]:
     ]
 
     # check for other extensions like myst_nb
-    optional_extensions = [
-        "myst_parser"
-    ]
-    
+    # optional_extensions = [
+    #     "myst_parser"
+    # ]
     for ext in required_extensions:
         app.setup_extension(ext)
 
