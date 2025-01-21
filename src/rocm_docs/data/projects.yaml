@@ -8,6 +8,9 @@ projects:
     target: https://rocm.docs.amd.com/projects/amdsmi/en/${version}
     development_branch: amd-staging
   composable_kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
+  gpuaidev-docs:
+    target: https://rocm.docs.amd.com/projects/ai-developer-hub/en/${version}
+    development_branch: main
   hip:
     target: https://rocm.docs.amd.com/projects/HIP/en/${version}
     development_branch: docs/develop
