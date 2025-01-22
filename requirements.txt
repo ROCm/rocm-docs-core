@@ -87,7 +87,7 @@ exceptiongroup==1.2.2
     # via
     #   ipython
     #   pytest
-executing==2.1.0
+executing==2.2.0
     # via stack-data
 fastjsonschema==2.21.1
     # via
