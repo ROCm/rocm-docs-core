@@ -300,7 +300,7 @@ rpds-py==0.22.3
     # via
     #   jsonschema
     #   referencing
-ruff==0.9.2
+ruff==0.9.3
     # via rocm-docs-core (pyproject.toml)
 six==1.17.0
     # via python-dateutil
