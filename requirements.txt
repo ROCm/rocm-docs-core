@@ -288,7 +288,7 @@ pyzmq==26.2.0
     #   jupyter-client
 questionary==2.1.0
     # via commitizen
-referencing==0.36.1
+referencing==0.36.2
     # via
     #   jsonschema
     #   jsonschema-specifications
