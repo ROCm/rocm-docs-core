@@ -121,7 +121,7 @@ ipython==8.31.0
     # via
     #   ipykernel
     #   myst-nb
-isort==5.13.2
+isort==6.0.0
     # via rocm-docs-core (pyproject.toml)
 jedi==0.19.2
     # via ipython
