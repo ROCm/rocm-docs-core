@@ -1,3 +1,14 @@
+## v1.15.0 (2025-01-29)
+
+### Feat
+
+- add rocm develop hub to instinct flavor
+- add AI developer Hub link to header.
+
+### Fix
+
+- captalize 'D' from 'developer'
+
 ## v1.14.1 (2025-01-21)
 
 ### Fix
