@@ -186,7 +186,7 @@ def _estimate_read_time(file_name: Path) -> str:
     with open(file_name, encoding="utf-8") as file:
         html = file.read()
     soup = bs4.BeautifulSoup(html, "html.parser")
-    page_text = soup.findAll(text=True)
+    page_text = soup.find_all(text=True)
     visible_page_text = filter(is_visible, page_text)
     average_word_count = (
         sum(len(line) for line in visible_page_text) / average_word_length
