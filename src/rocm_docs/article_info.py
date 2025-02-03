@@ -180,7 +180,7 @@ def _estimate_read_time(file_name: Path) -> str:
         if isinstance(element, bs4.element.Comment):
             return False
         return element.string != "\n"
-    
+
     def count_words(text):
         words = re.findall(r'\w+', text)
         return len(words)
