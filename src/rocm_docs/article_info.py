@@ -8,6 +8,7 @@ from typing import Any, cast
 
 import importlib.resources
 import os
+import re
 from pathlib import Path
 
 import bs4
@@ -180,17 +181,18 @@ def _estimate_read_time(file_name: Path) -> str:
             return False
         return element.string != "\n"
 
+    def count_words(text):
+        words = re.findall(r"\w+", text)
+        return len(words)
+
     words_per_minute = 200
-    average_word_length = 5
 
     with open(file_name, encoding="utf-8") as file:
         html = file.read()
     soup = bs4.BeautifulSoup(html, "html.parser")
-    page_text = soup.findAll(text=True)
+    page_text = soup.find_all(text=True)
     visible_page_text = filter(is_visible, page_text)
-    average_word_count = (
-        sum(len(line) for line in visible_page_text) / average_word_length
-    )
+    average_word_count = sum(count_words(line) for line in visible_page_text)
     time_minutes = int(max(1, round(average_word_count / words_per_minute)))
     return f"{time_minutes} min read time"
 
