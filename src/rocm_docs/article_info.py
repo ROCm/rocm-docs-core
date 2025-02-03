@@ -182,7 +182,7 @@ def _estimate_read_time(file_name: Path) -> str:
         return element.string != "\n"
 
     def count_words(text):
-        words = re.findall(r'\w+', text)
+        words = re.findall(r"\w+", text)
         return len(words)
 
     words_per_minute = 200
@@ -192,9 +192,7 @@ def _estimate_read_time(file_name: Path) -> str:
     soup = bs4.BeautifulSoup(html, "html.parser")
     page_text = soup.find_all(text=True)
     visible_page_text = filter(is_visible, page_text)
-    average_word_count = (
-        sum(count_words(line) for line in visible_page_text)
-    )
+    average_word_count = sum(count_words(line) for line in visible_page_text)
     time_minutes = int(max(1, round(average_word_count / words_per_minute)))
     return f"{time_minutes} min read time"
 
