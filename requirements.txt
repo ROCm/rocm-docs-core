@@ -17,7 +17,7 @@ attrs==25.1.0
     #   jsonschema
     #   jupyter-cache
     #   referencing
-babel==2.16.0
+babel==2.17.0
     # via
     #   pydata-sphinx-theme
     #   sphinx
