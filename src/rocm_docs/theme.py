@@ -189,6 +189,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_js_file("renameVersionLinks.js", loading_method="async")
     app.add_js_file("rdcMisc.js", loading_method="async")
     app.add_js_file("theme_mode_captions.js", loading_method="async")
+    app.add_js_file("search.js", loading_method="defer")
     here = Path(__file__).parent.resolve()
     theme_path = here / "rocm_docs_theme"
     app.add_html_theme("rocm_docs_theme", str(theme_path))
