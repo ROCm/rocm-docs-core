@@ -1,3 +1,20 @@
+## v1.16.0 (2025-02-11)
+
+### Feat
+
+- add custom javascript to trigger RTD new search interface
+- migrate js files from rtd
+- add javascript function to trigger search model
+
+### Fix
+
+- remove unnecessary js files
+
+### Refactor
+
+- **article_info.py**: Count words with regex
+- **article_info.py**: Change findAll to find_all for bs4 4.13.0
+
 ## v1.15.0 (2025-01-29)
 
 ### Feat
