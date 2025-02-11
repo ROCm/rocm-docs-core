@@ -24,7 +24,7 @@ jobs:
           pyproject.toml
           requirements.txt
     - name: Cache venv
-      uses: actions/cache@v3.3.1
+      uses: actions/cache@v4.2.0
       with:
         path: .venv
         key: venv-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
@@ -33,7 +33,7 @@ jobs:
     - run: echo "PRE_COMMIT_HOME=$GITHUB_WORKSPACE/.cache/pre-commit" >> "$GITHUB_ENV"
       if: ${{ !startsWith(matrix.os, 'windows') }}
     - name: Cache pre-commit
-      uses: actions/cache@v3.3.1
+      uses: actions/cache@v4.2.0
       with:
         path: ${{ env.PRE_COMMIT_HOME }}
         key: pre-commit-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -79,7 +79,7 @@ jobs:
         ubuntu-graphviz-version: 2.42.2-9ubuntu0.1
         windows-graphviz-version: '9.0.0'
     - name: Cache venv
-      uses: actions/cache@v3.3.1
+      uses: actions/cache@v4.2.0
       with:
         path: .venv
         key: venv-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}

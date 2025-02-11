@@ -31,7 +31,7 @@ jobs:
             pyproject.toml
             requirements.txt
       - name: Set up cache
-        uses: actions/cache@v3.3.1
+        uses: actions/cache@v4.2.0
         with:
           path: .venv
           key: venv-${{ env.PYTHON_VERSION }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
