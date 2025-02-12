@@ -178,7 +178,7 @@ mypy-extensions==1.0.0
     #   mypy
 myst-nb==1.2.0
     # via rocm-docs-core (pyproject.toml)
-myst-parser==4.0.0
+myst-parser==4.0.1
     # via myst-nb
 nbclient==0.10.2
     # via
