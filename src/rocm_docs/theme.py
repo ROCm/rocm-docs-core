@@ -119,6 +119,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "rocm-docs-home",
         "rocm-blogs",
         "generic",
+        "rocm-ds",
     ]
     flavor = theme_opts.get("flavor", "rocm")
     if flavor not in supported_flavors:
