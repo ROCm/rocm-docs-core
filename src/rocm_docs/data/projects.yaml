@@ -70,6 +70,9 @@ projects:
   rocjpeg: https://rocm.docs.amd.com/projects/rocJPEG/en/${version}
   rocm: https://rocm.docs.amd.com/en/${version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
+  rocm-ds:
+    target: https://rocm.docs.amd.com/projects/rocm-ds/en/${version}
+    development_branch: develop
   rocm-install-on-linux:
     target: https://rocm.docs.amd.com/projects/install-on-linux/en/${version}
     development_branch: develop
