@@ -1,3 +1,14 @@
+## v1.17.0 (2025-02-19)
+
+### Feat
+
+- add rocm-ds to project list
+- add rocm-ds flavor
+
+### Fix
+
+- unify rocm docs menu item
+
 ## v1.16.0 (2025-02-11)
 
 ### Feat
