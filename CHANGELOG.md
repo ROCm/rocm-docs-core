@@ -1,3 +1,10 @@
+## v1.17.1 (2025-03-03)
+
+### Fix
+
+- prevent rocm-ds using rocm latest version
+- add version_list() definition
+
 ## v1.17.0 (2025-02-19)
 
 ### Feat
