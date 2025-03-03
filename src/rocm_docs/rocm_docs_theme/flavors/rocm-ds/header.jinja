@@ -1,8 +1,6 @@
 {% macro top_level_header(branch, latest_version, release_candidate_version) -%}
     {% if branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
         {% set version_name = "Future Release" %}
-    {% elif branch == "latest" %}
-        {% set version_name = latest_version %}
     {% else %}
         {% set version_name = branch %}
     {% endif %}
@@ -16,6 +14,12 @@
 {% endif %}
 
 {% set repo_url = repo_url|replace("http://", "https://") %}
+
+{% macro version_list() -%}
+    {% if theme_version_list_link %}
+        <a class="header-all-versions" href="{{ theme_version_list_link }}">Version List</a>
+    {% endif %}
+{%- endmacro -%}
 
 {%
 set nav_secondary_items = {
