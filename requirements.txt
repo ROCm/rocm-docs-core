@@ -125,7 +125,7 @@ isort==6.0.1
     # via rocm-docs-core (pyproject.toml)
 jedi==0.19.2
     # via ipython
-jinja2==3.1.5
+jinja2==3.1.6
     # via
     #   commitizen
     #   myst-parser
