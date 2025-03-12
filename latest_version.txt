@@ -1,1 +1,3 @@
-6.3.3
+ROCm: 6.3.3
+AI-Developer-Hub: v2.0
+ROCm-DS: v1.0.0
