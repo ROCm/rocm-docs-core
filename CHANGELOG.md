@@ -1,3 +1,15 @@
+## v1.18.0 (2025-03-12)
+
+### Feat
+
+- add ai-developer-hub flavor
+
+### Fix
+
+- fix linting
+- fix typo
+- remove -docs suffix for consistency
+
 ## v1.17.1 (2025-03-03)
 
 ### Fix
