@@ -684,6 +684,7 @@ src
 stochastically
 strided
 struct
+subdirectories
 subdirectory
 subexpression
 subfolder
