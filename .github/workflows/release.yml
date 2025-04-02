@@ -50,6 +50,6 @@ jobs:
         with:
           name: dist-python${{ env.PYTHON_VERSION }}
           path: dist
-      - uses: pypa/gh-action-pypi-publish@v1.8.5
+      - uses: pypa/gh-action-pypi-publish@v1.12.4
         with:
           password: ${{ secrets.PYPI_TOKEN }}
