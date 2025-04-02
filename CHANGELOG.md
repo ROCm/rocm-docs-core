@@ -1,3 +1,10 @@
+## v1.18.2 (2025-04-02)
+
+### Fix
+
+- change label from 'Statement on Forced Labor' to 'Supply Chain Transparency' for consistency with amd.com
+- fix a broken link in the footer
+
 ## v1.18.1 (2025-03-12)
 
 ### Fix
