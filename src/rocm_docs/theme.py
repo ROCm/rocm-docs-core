@@ -189,7 +189,6 @@ def setup(app: Sphinx) -> dict[str, Any]:
     )
     app.add_js_file("code_word_breaks.js", loading_method="async")
     app.add_js_file("renameVersionLinks.js", loading_method="async")
-    app.add_js_file("rdcMisc.js", loading_method="async")
     app.add_js_file("theme_mode_captions.js", loading_method="async")
     app.add_js_file("search.js", loading_method="defer")
     here = Path(__file__).parent.resolve()
