@@ -381,7 +381,7 @@ traitlets==5.14.3
     #   matplotlib-inline
     #   nbclient
     #   nbformat
-typing-extensions==4.13.1
+typing-extensions==4.13.2
     # via
     #   black
     #   commitizen
