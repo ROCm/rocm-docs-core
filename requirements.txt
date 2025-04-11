@@ -65,7 +65,7 @@ cryptography==44.0.2
     # via pyjwt
 cycler==0.12.1
     # via matplotlib
-debugpy==1.8.13
+debugpy==1.8.14
     # via ipykernel
 decli==0.6.2
     # via commitizen
