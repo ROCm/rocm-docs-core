@@ -226,7 +226,7 @@ pluggy==1.5.0
     # via pytest
 pre-commit==4.2.0
     # via rocm-docs-core (pyproject.toml)
-prompt-toolkit==3.0.50
+prompt-toolkit==3.0.51
     # via
     #   ipython
     #   questionary
