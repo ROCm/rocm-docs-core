@@ -1,3 +1,9 @@
+## v1.18.3 (2025-05-02)
+
+### Fix
+
+- add a hardcoded change that updates ROCm-DS header version, will implement a more robust solution after EA
+
 ## v1.18.2 (2025-04-02)
 
 ### Fix
