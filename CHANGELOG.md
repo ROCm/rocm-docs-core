@@ -1,3 +1,9 @@
+## v1.18.4 (2025-05-02)
+
+### Fix
+
+- remove header tab 'github', 'support' and 'community' due to private status of the repo
+
 ## v1.18.3 (2025-05-02)
 
 ### Fix
