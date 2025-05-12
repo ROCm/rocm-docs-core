@@ -251,7 +251,7 @@ pygments==2.19.1
     #   mpire
     #   pydata-sphinx-theme
     #   sphinx
-pyjson5==1.6.8
+pyjson5==1.6.9
     # via doxysphinx
 pyjwt[crypto]==2.10.1
     # via pygithub
