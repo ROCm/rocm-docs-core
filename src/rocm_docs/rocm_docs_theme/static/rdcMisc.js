@@ -87,5 +87,4 @@ $(document).ready(function () {
         console.error("ResizeObserver not supported.")
     }
     fixBreadcrumbItems();
-    //test
 })
