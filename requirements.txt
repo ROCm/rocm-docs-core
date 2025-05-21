@@ -43,7 +43,7 @@ charset-normalizer==3.4.2
     # via
     #   commitizen
     #   requests
-click==8.2.0
+click==8.2.1
     # via
     #   black
     #   click-log
