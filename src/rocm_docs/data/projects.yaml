@@ -20,14 +20,19 @@ projects:
     target: https://rocm.docs.amd.com/projects/HIPCC/en/${version}
     development_branch: amd-staging
   hipcub: https://rocm.docs.amd.com/projects/hipCUB/en/${version}
+  hipdf: https://rocm.docs.amd.com/projects/hipDF/en/${version}
   hipfft: https://rocm.docs.amd.com/projects/hipFFT/en/${version}
   hipfort: https://rocm.docs.amd.com/projects/hipfort/en/${version}
+  hipgraph:
+    target: https://rocm.docs.amd.com/projects/hipGRAPH/en/${version}
+    development_branch: develop
   hipify:
     target: https://rocm.docs.amd.com/projects/HIPIFY/en/${version}
     development_branch: amd-staging
   hip-python:
     target: https://rocm.docs.amd.com/projects/hip-python/en/${version}
     development_branch: main
+  hipmm: https://rocm.docs.amd.com/projects/hipMM/en/${version}
   hiprand: https://rocm.docs.amd.com/projects/hipRAND/en/${version}
   hipsolver: https://rocm.docs.amd.com/projects/hipSOLVER/en/${version}
   hipsparse: https://rocm.docs.amd.com/projects/hipSPARSE/en/${version}
@@ -67,11 +72,17 @@ projects:
   rocgdb:
     target: https://rocm.docs.amd.com/projects/ROCgdb/en/${version}
     development_branch: amd-staging
+  rocgraph:
+    target: https://rocm.docs.amd.com/projects/rocGRAPH/en/${version}
+    development_branch: develop
   rocjpeg: https://rocm.docs.amd.com/projects/rocJPEG/en/${version}
   rocm: https://rocm.docs.amd.com/en/${version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
   rocm-ds:
     target: https://rocm.docs.amd.com/projects/rocm-ds/en/${version}
+    development_branch: develop
+  rocm-ds-internal:
+    target: https://rocm.docs.amd.com/projects/rocm-ds-internal/en/${version}
     development_branch: develop
   rocm-install-on-linux:
     target: https://rocm.docs.amd.com/projects/install-on-linux/en/${version}
@@ -113,6 +124,9 @@ projects:
   rocr_debug_agent:
     target: https://rocm.docs.amd.com/projects/rocr_debug_agent/en/${version}
     development_branch: amd-staging
+  rocshmem:
+    target: https://rocm.docs.amd.com/projects/rocSHMEM/en/${version}
+    development_branch: develop
   rocsolver: https://rocm.docs.amd.com/projects/rocSOLVER/en/${version}
   rocsparse: https://rocm.docs.amd.com/projects/rocSPARSE/en/${version}
   rocthrust: https://rocm.docs.amd.com/projects/rocThrust/en/${version}
