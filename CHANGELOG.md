@@ -1,3 +1,13 @@
+## v1.19.0 (2025-05-26)
+
+### Feat
+
+- **projects.yaml**: Add new ROCm-DS components and rocSHMEM to projects.yaml
+
+### Fix
+
+- Update LICENSE.txt
+
 ## v1.18.4 (2025-05-02)
 
 ### Fix
