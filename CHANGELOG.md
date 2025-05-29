@@ -1,3 +1,9 @@
+## v1.19.1 (2025-05-29)
+
+### Fix
+
+- repo publication approved; revert back menu items
+
 ## v1.19.0 (2025-05-26)
 
 ### Feat
