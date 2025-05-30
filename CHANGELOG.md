@@ -1,3 +1,9 @@
+## v1.20.0 (2025-05-30)
+
+### Feat
+
+- **projects.yaml**: Add new component rocm-compute-viewer to projects.yaml
+
 ## v1.19.1 (2025-05-29)
 
 ### Fix
