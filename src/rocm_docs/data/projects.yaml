@@ -104,6 +104,9 @@ projects:
     target: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
     development_branch: master
   rocprim: https://rocm.docs.amd.com/projects/rocPRIM/en/${version}
+  rocprof-compute-viewer:
+    target: https://rocm.docs.amd.com/projects/rocprof-compute-viewer/en/${version}
+    development_branch: amd-mainline
   rocprofiler:
     target: https://rocm.docs.amd.com/projects/rocprofiler/en/${version}
     development_branch: amd-master
