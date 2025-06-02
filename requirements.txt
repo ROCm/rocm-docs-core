@@ -67,7 +67,7 @@ cycler==0.12.1
     # via matplotlib
 debugpy==1.8.14
     # via ipykernel
-decli==0.6.2
+decli==0.6.3
     # via commitizen
 decorator==5.2.1
     # via ipython
