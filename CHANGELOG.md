@@ -1,3 +1,9 @@
+## v1.20.1 (2025-06-09)
+
+### Fix
+
+- Pin pydata-sphinx-theme ver to fix sidebar
+
 ## v1.20.0 (2025-05-30)
 
 ### Feat
