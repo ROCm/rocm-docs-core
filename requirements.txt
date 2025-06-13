@@ -280,7 +280,7 @@ pyyaml==6.0.2
     #   pre-commit
     #   rocm-docs-core (pyproject.toml)
     #   sphinx-external-toc
-pyzmq==26.4.0
+pyzmq==27.0.0
     # via
     #   ipykernel
     #   jupyter-client
