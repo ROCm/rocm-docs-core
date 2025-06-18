@@ -264,7 +264,7 @@ pyproject-hooks==1.2.0
     # via
     #   build
     #   pip-tools
-pytest==8.4.0
+pytest==8.4.1
     # via rocm-docs-core (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via
