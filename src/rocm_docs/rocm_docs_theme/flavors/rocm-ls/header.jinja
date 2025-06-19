@@ -1,0 +1,37 @@
+{% macro top_level_header(branch, latest_version, release_candidate_version) -%}
+    {% if branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
+        {% set version_name = "Future Release" %}
+    {% elif branch == "latest" %}
+        {% set version_name = "25.05" %}
+    {% else %}
+        {% set version_name = branch %}
+    {% endif %}
+    <a class="klavika-font hover-opacity" href="{{ projects['rocm-ds'] }}">ROCm Data Science {{ version_name }}</a>
+{%- endmacro -%}
+
+{% if theme_repository_url.endswith("-docs") %}
+    {% set repo_url = theme_repository_url|replace("-docs", "") %}
+{% else %}
+    {% set repo_url = theme_repository_url %}
+{% endif %}
+
+{% set repo_url = repo_url|replace("http://", "https://") %}
+
+{% macro version_list() -%}
+    {% if theme_version_list_link %}
+        <a class="header-all-versions" href="{{ theme_version_list_link }}">Version List</a>
+    {% endif %}
+{%- endmacro -%}
+
+{%
+set nav_secondary_items = {
+    "GitHub": repo_url,
+    "Community": "https://github.com/ROCm/ROCm/discussions",
+    "Blogs": "https://rocm.blogs.amd.com/",
+    "ROCm&#8482; Docs": "https://rocm.docs.amd.com",
+    "ROCm Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
+    "Instinct&#8482; Docs": "https://instinct.docs.amd.com",
+    "Infinity Hub": "https://www.amd.com/en/developer/resources/infinity-hub.html",
+    "Support": repo_url + "/issues/new/choose"
+}
+%}
