@@ -19,6 +19,7 @@ projects:
   hipcc:
     target: https://rocm.docs.amd.com/projects/HIPCC/en/${version}
     development_branch: amd-staging
+  hipcim: https://rocm.docs.amd.com/projects/hipcim/en/${version}
   hipcub: https://rocm.docs.amd.com/projects/hipCUB/en/${version}
   hipdf: https://rocm.docs.amd.com/projects/hipDF/en/${version}
   hipfft: https://rocm.docs.amd.com/projects/hipFFT/en/${version}
@@ -81,9 +82,15 @@ projects:
   rocm-ds:
     target: https://rocm.docs.amd.com/projects/rocm-ds/en/${version}
     development_branch: develop
+  rocm-ls:
+    target: https://rocm.docs.amd.com/projects/rocm-ls/en/${version}
+    development_branch: develop
   rocm-ds-internal:
     target: https://rocm.docs.amd.com/projects/rocm-ds-internal/en/${version}
     development_branch: develop
+  rocm-ls-internal:
+    target: https://rocm.docs.amd.com/projects/rocm-ls-internal/en/${version}
+    development_branch: main
   rocm-install-on-linux:
     target: https://rocm.docs.amd.com/projects/install-on-linux/en/${version}
     development_branch: develop
