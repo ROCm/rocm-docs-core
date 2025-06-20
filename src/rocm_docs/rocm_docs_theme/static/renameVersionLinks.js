@@ -1,5 +1,5 @@
 function renameVersionLinks() {
-    $('div.rst-other-versions dl:first-child a').each( function () {
+    $('readthedocs-flyout dl.versions dd>a').each( function () {
         const text = $(this).text();
         const versionRegEx = /^.*((?:[0-9]+\.){2}[0-9]+).*$/g;
         if (versionRegEx.test(text)) {
@@ -23,5 +23,5 @@ function waitForSelector(selector, callback, backoff=100, max=15) {
 }
 
 $(document).ready(() => {
-    waitForSelector('div.rst-versions', renameVersionLinks);
+    waitForSelector('readthedocs-flyout dl.versions', renameVersionLinks);
 })
