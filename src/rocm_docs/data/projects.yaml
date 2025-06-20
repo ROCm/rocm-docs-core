@@ -82,6 +82,9 @@ projects:
   rocm-ds:
     target: https://rocm.docs.amd.com/projects/rocm-ds/en/${version}
     development_branch: develop
+  rocm-ls:
+    target: https://rocm.docs.amd.com/projects/rocm-ls/en/${version}
+    development_branch: develop
   rocm-ds-internal:
     target: https://rocm.docs.amd.com/projects/rocm-ds-internal/en/${version}
     development_branch: develop
