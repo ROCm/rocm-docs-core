@@ -1,3 +1,11 @@
+## v1.21.0 (2025-06-23)
+
+### Feat
+
+- Add rocm-ls project
+- correct project name
+- Add hipcim and rocm-ls theme
+
 ## v1.20.1 (2025-06-09)
 
 ### Fix
