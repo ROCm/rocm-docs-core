@@ -1,3 +1,9 @@
+## v1.21.1 (2025-06-24)
+
+### Fix
+
+- add missing theme name to supported_flavors list
+
 ## v1.21.0 (2025-06-23)
 
 ### Feat
