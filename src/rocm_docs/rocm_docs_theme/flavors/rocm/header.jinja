@@ -4,7 +4,7 @@
     {% elif branch == "latest" %}
         {% set version_name = latest_version %}
     {% else %}
-        {% set version_name = branch %}
+        {% set version_name = branch.replace('-', ' ').title() %}
     {% endif %}
     <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Software {{ version_name }}</a>
 {%- endmacro -%}
