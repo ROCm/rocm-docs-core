@@ -6,12 +6,21 @@ on:
     branches: [develop, main]
   pull_request:
     branches: [develop, main]
+  repository_dispatch:
+    types: [localspellcheck_updated]
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
 jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decode config
+        run: |
+          echo "${{ github.event.client_payload.configBase64}}" \
+            | base64 -d > .spellcheck.local.yaml
   lint-md:
     name: "Markdown"
     runs-on: ubuntu-latest
