@@ -211,7 +211,7 @@ pathspec==0.12.1
     #   mypy
 pexpect==4.9.0
     # via ipython
-pillow==11.2.1
+pillow==11.3.0
     # via matplotlib
 pip-tools==7.4.1
     # via rocm-docs-core (pyproject.toml)
