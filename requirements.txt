@@ -94,7 +94,7 @@ fonttools==4.59.0
     # via matplotlib
 gitdb==4.0.12
     # via gitpython
-gitpython==3.1.44
+gitpython==3.1.45
     # via rocm-docs-core (pyproject.toml)
 greenlet==3.2.3
     # via sqlalchemy
