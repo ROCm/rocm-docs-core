@@ -55,12 +55,20 @@ def get_branch(
         return (remote_details[0], remote_details[1])
 
     def get_repo_url(remote_url: str) -> str:
-        ssh_pattern = re.compile(r"git@(\w+(?:\.\w+)+):(.*)\.git")
+        ssh_pattern = re.compile(r"git@(\w+(?:\.\w+)+):(.*?)(?:\.git)?$")
+        custom_ssh_pattern = re.compile(r"git@([^:]+):(.*?)(?:\.git)?$")
         http_pattern = re.compile(r"(https?://.+)\.git")
-        remote_url, num_subs = ssh_pattern.subn(
+        remote_url, ssh_num_subs = ssh_pattern.subn(
             r"http://\1/\2", remote_url, count=1
         )
-        if num_subs > 0:
+        if ssh_num_subs > 0:
+            return remote_url
+        # If ssh prefix does not follow git@xxx.xxx format,
+        # the user could be using a secondary SSH key for EMU
+        remote_url, custom_ssh_num_subs = custom_ssh_pattern.subn(
+            r"http://github.com/\2", remote_url, count=1
+        )
+        if custom_ssh_num_subs > 0:
             return remote_url
         return http_pattern.sub(r"\1", remote_url, count=1)
 
