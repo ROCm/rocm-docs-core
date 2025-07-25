@@ -55,7 +55,7 @@ click-log==0.4.0
     # via doxysphinx
 colorama==0.4.6
     # via commitizen
-comm==0.2.2
+comm==0.2.3
     # via ipykernel
 commitizen==4.8.3
     # via rocm-docs-core (pyproject.toml)
