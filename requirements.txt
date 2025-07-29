@@ -75,7 +75,7 @@ deprecated==1.2.18
     # via pygithub
 distlib==0.4.0
     # via virtualenv
-docutils==0.21.2
+docutils==0.22
     # via
     #   myst-parser
     #   pydata-sphinx-theme
