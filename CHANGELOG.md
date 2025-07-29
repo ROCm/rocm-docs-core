@@ -1,3 +1,9 @@
+## v1.22.0 (2025-07-29)
+
+### Feat
+
+- add configurable version value for the header
+
 ## v1.21.1 (2025-06-24)
 
 ### Fix
