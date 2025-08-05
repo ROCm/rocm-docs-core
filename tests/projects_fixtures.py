@@ -31,9 +31,9 @@ def mocked_projects(
     """Standard mocked projects for tests"""
     projects = {
         "a": rocm_docs.projects._Project(
-            "https://example.com/a", [], "", ".doxygen/docBin/html"
+            "https://example.com/a", [], "", [], ".doxygen/docBin/html"
         ),
-        "b": rocm_docs.projects._Project("https://example.com/b", [], ""),
+        "b": rocm_docs.projects._Project("https://example.com/b", [], "", []),
     }
     mock_projects(projects)
     return projects
