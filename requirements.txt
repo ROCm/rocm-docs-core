@@ -110,7 +110,7 @@ importlib-metadata==8.7.0
     #   myst-nb
 iniconfig==2.1.0
     # via pytest
-ipykernel==6.30.0
+ipykernel==6.30.1
     # via myst-nb
 ipython==8.37.0
     # via
