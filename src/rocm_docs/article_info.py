@@ -16,6 +16,9 @@ import git.repo
 from sphinx.application import Sphinx
 from sphinx.config import Config
 
+import sphinx.util.logging
+
+logger = sphinx.util.logging.getLogger(__name__)
 
 def set_article_info(app: Sphinx, _: Config) -> None:
     """Add article info headers to HTML pages."""
@@ -46,7 +49,11 @@ def _set_page_article_info(
 
     The pages can be set in "article_pages" of the Sphinx configuration.
     """
-    repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
+    if "ROCM_DOCS_REMOTE_DETAILS" in os.environ:
+        logger.warning("Disabling GIT query")
+    else:
+        repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
+
     for page in app.config.article_pages:
         path_rel = app.project.doc2path(page["file"], False)
         path_html = Path(app.outdir, path_rel).with_suffix(".html")
@@ -77,7 +84,11 @@ def _set_page_article_info(
         if "date" in page:
             date_info = page["date"]
         else:
-            date_info = _get_time_last_modified(repo, path_source)
+            if "ROCM_DOCS_REMOTE_DETAILS" in os.environ:
+                logger.warning("Disabling GIT query for date")
+                date_info = ""
+            else:
+                date_info = _get_time_last_modified(repo, path_source)
 
         if date_info == "":
             soup = bs4.BeautifulSoup(modified_info, "html.parser")
@@ -118,7 +129,11 @@ def _set_all_article_info(
     Pages that have specific settings (configured by "article_pages") are
     skipped.
     """
-    repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
+    if "ROCM_DOCS_REMOTE_DETAILS" in os.environ:
+        logger.warning("Disabling GIT query")
+    else:
+        repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
+
     for docname in app.project.docnames:
         # skip pages with specific settings
         if docname in specific_pages:
@@ -141,7 +156,12 @@ def _set_all_article_info(
         if os_list:
             article_os_info = f"Applies to {article_os_info}"
 
-        date_info = _get_time_last_modified(repo, Path(app.srcdir, page_rel))
+        if "ROCM_DOCS_REMOTE_DETAILS" in os.environ:
+            logger.warning("Disabling GIT query for date")
+            date_info = ""
+        else:
+            date_info = _get_time_last_modified(repo, Path(app.srcdir, page_rel))
+
         if not date_info:
             date_info = cast(str, app.config.all_article_info_date)
 
