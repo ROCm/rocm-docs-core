@@ -13,7 +13,7 @@ projects:
     development_branch: main
   hip:
     target: https://rocm.docs.amd.com/projects/HIP/en/${version}
-    development_branch: docs/develop
+    development_branch: docs-develop
   hipblas: https://rocm.docs.amd.com/projects/hipBLAS/en/${version}
   hipblaslt: https://rocm.docs.amd.com/projects/hipBLASLt/en/${version}
   hipcc:
@@ -97,6 +97,7 @@ projects:
   rocm-install-on-windows:
     target: https://rocm.docs.amd.com/projects/install-on-windows/en/${version}
     development_branch: develop
+    valid_versions: [docs-6.4.2, docs-6.2.4, docs-6.1.2]
   rocm_bandwidth_test:
     target: https://rocm.docs.amd.com/projects/rocm_bandwidth_test/en/${version}
     development_branch: master

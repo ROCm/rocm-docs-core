@@ -22,6 +22,7 @@ import github
 import requests
 import sphinx.util.logging
 import yaml
+from packaging.version import Version
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
 )
@@ -43,6 +44,7 @@ ProjectMapping: TypeAlias = tuple[str, Inventory]
 
 DEFAULT_INTERSPHINX_REPOSITORY = "ROCm/rocm-docs-core"
 DEFAULT_INTERSPHINX_BRANCH = "develop"
+DOCS_VERSION_PATTERN = r"^docs-\d+\.\d+\.\d+$"
 
 logger = sphinx.util.logging.getLogger(__name__)
 
@@ -60,6 +62,7 @@ class _Project:
     target: str
     inventory: list[str | None]
     development_branch: str
+    valid_versions: list[str | None]
     doxygen_html: str | None = None
 
     @staticmethod
@@ -116,6 +119,7 @@ class _Project:
                 entry,
                 [cls.default_value("inventory")],
                 cls.default_value("development_branch"),
+                [],  # No valid_versions for simple string entries
             )
 
         # It's okay to just index into optional fields, because jsonschema
@@ -125,10 +129,18 @@ class _Project:
         if not isinstance(inventory, list):
             inventory = [inventory]
 
+        valid_versions = entry.get("valid_versions", [])
+        assert valid_versions is None or isinstance(valid_versions, list | str)
+        if not isinstance(valid_versions, list):
+            valid_versions = (
+                [valid_versions] if valid_versions is not None else []
+            )
+
         return _Project(
             cast(str, entry["target"]),
             inventory,
             cast(str, entry["development_branch"]),
+            valid_versions,
             cls._get_doxygen_html(entry),
         )
 
@@ -148,7 +160,8 @@ class _Project:
             return current_branch
 
         # Past release versions always with docs/
-        if current_branch.startswith("docs-"):
+        regex = re.compile(DOCS_VERSION_PATTERN)
+        if regex.match(current_branch):
             return current_branch
 
         # Anything besides the canonical development branch links to latest docs
@@ -160,6 +173,55 @@ class _Project:
             return "latest"
 
         return None
+
+    def _find_best_valid_version(self, target_version: str) -> str:
+        """Find the best matching valid version for this project.
+
+        If valid_versions is empty, return the target_version as-is.
+        Otherwise, find the closest valid version.
+        """
+        if not self.valid_versions:
+            return target_version
+
+        # If target version is in valid versions, use it directly
+        if target_version in self.valid_versions:
+            return target_version
+
+        # For specific docs- versions, find the closest valid version
+        regex = re.compile(DOCS_VERSION_PATTERN)
+        if regex.match(target_version):
+            doc_versions = [
+                version
+                for version in self.valid_versions
+                if version and regex.match(version)
+            ]
+            if doc_versions:
+                try:
+
+                    def calc_version(version_str: str) -> Version:
+                        return Version(version_str.replace("docs-", ""))
+
+                    target_version_value = calc_version(target_version)
+                    valid_versions = [
+                        (calc_version(v), v) for v in doc_versions
+                    ]
+                    valid_versions.sort(reverse=True)  # sort versions
+
+                    # Find first version <= target
+                    for version_value, version_string in valid_versions:
+                        if version_value <= target_version_value:
+                            return version_string
+
+                    # Return last valid version, if target version is smaller
+                    # than any valid versions.
+                    return valid_versions[-1][1]
+                except ValueError:
+                    # If we can't parse the version, use the the target_version
+                    # as-is.
+                    pass
+
+        # Fallback: return the target_version as-is.
+        return target_version
 
     def evaluate(self, static_version: str | None) -> None:
         """Evaluate ${version} placeholders in the inventory and target values.
@@ -173,6 +235,10 @@ class _Project:
             if static_version is not None
             else self.development_branch
         )
+
+        # Apply valid_versions filtering
+        version = self._find_best_valid_version(version)
+
         gh_version = version
 
         # edge case
@@ -184,13 +250,13 @@ class _Project:
         elif "${gh_version}" in self.target:
             self.target = self.target.replace("${gh_version}", gh_version)
 
-        for item in self.inventory:
+        for i, item in enumerate(self.inventory):
             if item is None:
                 continue
             if "${version}" in item:
-                item = item.replace("${version}", version)
+                self.inventory[i] = item.replace("${version}", version)
             elif "${gh_version}" in item:
-                item = item.replace("${gh_version}", gh_version)
+                self.inventory[i] = item.replace("${gh_version}", gh_version)
 
     @property
     def mapping(self) -> ProjectMapping:

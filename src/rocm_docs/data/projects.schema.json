@@ -48,6 +48,22 @@
                     "description": "Branch name of the \"development\" or \"mainline\" branch where development happens.",
                     "default": "develop"
                 },
+                "valid_versions": {
+                    "default": null,
+                    "description": "List of the valid versions",
+                    "type": [
+                        "array",
+                        "string",
+                        "null"
+                    ],
+                    "uniqueItems": true,
+                    "items": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
                 "doxygen": {
                     "$ref": "#/$defs/doxygen"
                 }
