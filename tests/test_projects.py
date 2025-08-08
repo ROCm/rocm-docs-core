@@ -146,7 +146,7 @@ def test_doxygen_html_invalid(
 @pytest.mark.usefixtures("_no_unexpected_warnings")
 @pytest.mark.parametrize(
     "current_project",
-    [None, rocm_docs.projects._Project("", [], "", None)],
+    [None, rocm_docs.projects._Project("", [], "", [], None)],
     ids=["no_current_project", "not_set"],
 )
 def test_set_doxygen_html_not_defined(
@@ -171,6 +171,6 @@ def test_set_doxygen_html_mismatched(expect_log: ExpectLogFixture) -> None:
         ' differs from projects.yaml value: "does-not-match"',
     ):
         rocm_docs.projects._set_doxygen_html(
-            app, rocm_docs.projects._Project("", [], "", "does-not-match")
+            app, rocm_docs.projects._Project("", [], "", [], "does-not-match")
         )
     assert app.config.doxygen_html == "must-not-be-changed"
