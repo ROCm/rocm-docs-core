@@ -147,7 +147,7 @@ libsass==0.22.0
     # via doxysphinx
 lxml==5.2.1
     # via doxysphinx
-markdown-it-py==3.0.0
+markdown-it-py==4.0.0
     # via
     #   mdit-py-plugins
     #   myst-parser
