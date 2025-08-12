@@ -355,7 +355,7 @@ termcolor==2.5.0
     # via commitizen
 tomlkit==0.13.3
     # via commitizen
-tornado==6.5.1
+tornado==6.5.2
     # via
     #   ipykernel
     #   jupyter-client
