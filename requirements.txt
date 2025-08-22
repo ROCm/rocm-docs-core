@@ -145,7 +145,7 @@ kiwisolver==1.4.9
     # via matplotlib
 libsass==0.22.0
     # via doxysphinx
-lxml==5.2.1
+lxml==6.0.1
     # via doxysphinx
 markdown-it-py==3.0.0
     # via
