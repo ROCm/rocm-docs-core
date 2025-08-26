@@ -1,3 +1,14 @@
+## v1.23.0 (2025-08-26)
+
+### Feat
+
+- add aqlprofile to project list
+- Add valid versions mapping
+
+### Fix
+
+- add edge cases to SSH pattern matching
+
 ## v1.22.0 (2025-07-29)
 
 ### Feat
