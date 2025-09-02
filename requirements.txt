@@ -88,7 +88,7 @@ fastjsonschema==2.21.1
     # via
     #   nbformat
     #   rocm-docs-core (pyproject.toml)
-filelock==3.18.0
+filelock==3.19.1
     # via virtualenv
 fonttools==4.59.0
     # via matplotlib
