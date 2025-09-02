@@ -1,0 +1,38 @@
+<script>
+    window.CHATBOT_SOURCE = "{{ chatbot.source }}";
+</script>
+<div id="assistant">
+    <button id="assistant-toggle">
+        <span class="material-symbols-outlined">chat_bubble</span>
+    </button>
+    <div id="assistant-window">
+        <header id="chat-header">
+            <h2>ROCm Assistant</h2>
+            <div id="chat-header-controls">
+                <button id="chat-minimize" class="chat-control-button" aria-label="Minimize chat">
+                    <span class="material-symbols-outlined">collapse_content</span>
+                </button>
+                <button id="chat-maximize" class="chat-control-button" aria-label="Maximize chat">
+                    <span class="material-symbols-outlined">expand_content</span>
+                </button>
+                <button id="chat-close" class="chat-control-button" aria-label="Close chat">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+        </header>
+        <ul id="chat-body">
+            <li class="chat-message incoming">
+                <p>Welcome to the ROCm Documentation!</p>
+                <p>How can I assist you today?</p>
+            </li>
+        </ul>
+        <div id="chat-footer">
+            <div>
+                <textarea id="user-input" placeholder="Ask anything about ROCm" required></textarea>
+                <button id="send-button" aria-label="Send">
+                    <span class="material-symbols-outlined">send</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,229 @@
+#assistant {
+    z-index: 3000;
+    position: fixed;
+    bottom: 30px;
+    right: 35px;
+}
+
+#assistant.fullscreen {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(60, 60, 60, 0.45);
+}
+
+#assistant-toggle {
+    outline: none;
+    border: none;
+    height: 64px;
+    width: 64px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 24px var(--pst-color-surface);
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    visibility: visible;
+}
+
+#assistant-toggle span {
+    font-size: 40px;
+}
+
+#assistant.active #assistant-toggle {
+    visibility: hidden;
+}
+
+#assistant-window {
+    background: var(--pst-color-background);
+    height: 60vh;
+    min-height: 400px;
+    width: 40vh;
+    min-width: 400px;
+    border-radius: 15px;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+    transform: scale(0.5);
+    transform-origin: bottom right;
+    transition: all 0.1s ease;
+    box-shadow: 0 0 24px var(--pst-color-surface);
+    display: flex;
+    flex-direction: column;
+}
+
+#assistant.fullscreen #assistant-window {
+    height: 90vh;
+    width: 50vw;
+    transform: scale(1);
+    margin: auto;
+}
+
+#assistant.active #assistant-window {
+    visibility: visible;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+#chat-header {
+    background: #1a1a1b;
+    min-width: fit-content;
+    padding: 16px 0;
+    position: relative;
+    text-align: center;
+    height: fit-content;
+}
+
+#chat-header h2 {
+    margin: 10px;
+    color: #fff;
+}
+
+#chat-header-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+#assistant:not(.fullscreen) #chat-minimize {
+    display: none;
+}
+
+#assistant.fullscreen #chat-maximize {
+    display: none;
+}
+
+.chat-control-button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    transition: 0.1s;
+    display: flex;
+    color: var(--pst-color-border);
+    border: transparent;
+    align-items: center;
+    background: transparent;
+    justify-content: center;
+}
+
+#chat-body {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 0;
+    margin: 0;
+}
+
+#chat-body .chat-message {
+    width: fit-content;
+    padding: 12px 16px;
+    border-radius: 10px;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#chat-body .chat-message p {
+    overflow-wrap: break-word;
+}
+
+#chat-body .outgoing {
+    max-width: 75%;
+    color: var(--pst-color-on-surface);
+    background: var(--pst-color-surface);
+    align-self: flex-end;
+}
+
+#chat-body .incoming{
+    color: var(--pst-color-text-base);
+}
+
+#chat-footer {
+    padding: 10px;
+}
+
+#chat-footer div {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    height: fit-content;
+    background-clip: content-box;
+    background-color: var(--pst-color-on-background);
+    border-radius: 29px;
+    border: var(--pst-color-border) 1px solid;
+    box-sizing: border-box;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#user-input {
+    height: 56px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px 15px 15px 24px;
+    border: none;
+    outline: none;
+    resize: none;
+    max-height: 180px;
+    overflow: auto;
+    font-size: 1rem;
+    background: transparent;
+}
+
+#send-button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    margin: 8px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    transition: 0.1s;
+    pointer-events: none;
+    align-self: flex-end;
+    display: flex;
+    background: var(--pst-color-surface);
+    color: var(--pst-color-on-surface);
+    border: 1px solid var(--pst-color-border);
+    align-items: center;
+}
+
+#user-input:valid ~ #send-button {
+    visibility: visible;
+    color: var(--pst-color-surface);
+    background: var(--pst-color-on-surface);
+    border: none;
+    pointer-events: auto;
+}
+
+#send-button span {
+    font-size: 28px;
+    margin: auto;
+}

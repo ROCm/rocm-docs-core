@@ -8,3 +8,6 @@
       </div>
     {%- endif %}
   </p>
+{% if chatbot and chatbot.source %}
+    {% include "components/assistant.html" %}
+{% endif %}
