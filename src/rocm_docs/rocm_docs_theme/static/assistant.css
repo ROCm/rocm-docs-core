@@ -1,8 +1,8 @@
 #assistant {
     z-index: 3000;
     position: fixed;
-    bottom: 30px;
-    right: 35px;
+    bottom: 120px; /* account for flyout */
+    right: 20px;
 }
 
 #assistant.fullscreen {
@@ -147,6 +147,19 @@
 
 #chat-body .chat-message p {
     overflow-wrap: break-word;
+    margin-bottom: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+#chat-body .chat-message code {
+    font-size: .875em;
+    font-weight: 500;
+    padding: .15rem .3rem;
+}
+
+#chat-body .chat-message .incoming code {
+    background: var(--pst-color-surface);
+    border-radius: .25rem;
 }
 
 #chat-body .outgoing {

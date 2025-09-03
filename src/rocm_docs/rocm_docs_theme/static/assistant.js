@@ -14,34 +14,41 @@ const minimizeButton = document.getElementById("chat-minimize");
 
 const defaultInputHeight = userInput.scrollHeight;
 
-function createChatMessage(message, incoming) {
-    const chatMessage = document.createElement("li");
+function groupParagraphs(text) {
+    // group by newlines
+    // remove all empty lines
+    // wrap paragraphs
+    return text
+        .split(/\r?\n/)
+        .filter(line => line.trim() !== "")
+        .map(line => `<p>${line}</p>`)
+        .join("");
+}
 
-    const messageText = document.createElement("p");
-    chatMessage.appendChild(messageText);
-
-    let messageType = incoming ? "incoming" : "outgoing";
-    chatMessage.classList.add("chat-message", messageType);
-
-    messageText.textContent = message;
-
-    return chatMessage;
+function inlineCode(text) {
+    return text
+        .replace(/`([^`]+)`/g, (_, code) => `<code>${code}</code>`);
 }
 
 function setChatMessage(message, content) {
-    // message: <li> element, content: string
-    const p = message.querySelector('p');
-    if (p) {
-        p.textContent = content;
-
-        chatbox.scrollTo(0, chatbox.scrollHeight);
-    }
+    // message: <li> element
+    message.innerHTML = content;
+    chatbox.scrollTo(0, chatbox.scrollHeight);
 }
 
 function displayMessage(input, incoming) {
-    let message = createChatMessage(input, incoming);
-
+    const message = document.createElement("li");
     chatbox.appendChild(message);
+
+    let messageType = incoming ? "incoming" : "outgoing";
+    message.classList.add("chat-message", messageType);
+
+    if (incoming) {
+        message.innerHTML = input;
+    } else {
+        message.innerHTML = groupParagraphs(inlineCode(input));
+    }
+
     chatbox.scrollTo(0, chatbox.scrollHeight);
 
     return message;
@@ -138,6 +145,12 @@ document.addEventListener("mousedown", (event) => {
     }
 
     assistant.classList.remove("active");
+});
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && assistant.classList.contains("fullscreen")) {
+        assistant.classList.remove("fullscreen");
+    }
 });
     
 assistantToggle.addEventListener("click", () => {
