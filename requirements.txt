@@ -82,7 +82,7 @@ docutils==0.21.2
     #   sphinx
 doxysphinx==3.3.12
     # via rocm-docs-core (pyproject.toml)
-executing==2.2.0
+executing==2.2.1
     # via stack-data
 fastjsonschema==2.21.1
     # via
