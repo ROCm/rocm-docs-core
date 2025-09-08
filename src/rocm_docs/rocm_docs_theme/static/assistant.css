@@ -157,7 +157,7 @@
     padding: .15rem .3rem;
 }
 
-#chat-body .chat-message .incoming code {
+#chat-body .chat-message.incoming code {
     background: var(--pst-color-surface);
     border-radius: .25rem;
 }
