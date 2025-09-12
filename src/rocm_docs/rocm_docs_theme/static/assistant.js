@@ -1,5 +1,5 @@
 // connection to server
-let socket;
+const API_URL = window.CHATBOT_SOURCE;
 
 const assistant = document.getElementById("assistant");
 const assistantToggle = document.getElementById("assistant-toggle");
@@ -66,88 +66,38 @@ function displayMessage(message) {
     return message;
 }
 
-function connectWebSocket() {
-    console.log(window.CHATBOT_SOURCE);
-    const ws = new WebSocket(window.CHATBOT_SOURCE);
-    ws.onclose = () => {
-        setTimeout(connectWebSocket, 5000);
-    };
-    ws.onerror = () => {
-        ws.close();
-    };
-    return ws;
-}
-
-function getWebSocket() {
-    if (!socket || socket.readyState === WebSocket.CLOSED) {
-        socket = connectWebSocket();
-    }
-    return socket;
-}
-
 async function generateResponse(query) {
-    return new Promise((resolve) => {
-        let socket = getWebSocket();
+    try {
+        const response = await fetch(API_URL + "/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                content: query
+            })
+        });
 
-        function parseResponse(event) {
-            socket.removeEventListener('message', parseResponse);
-            try {
-                const data = JSON.parse(event.data);
-                resolve(data.response);
-            } catch (e) {
-                resolve("Sorry, the server response could not be processed.");
-            }
+        if (!response.ok) {
+            return "Sorry, the server could not be reached.";
         }
 
-        socket.addEventListener('message', parseResponse);
-
-        message = JSON.stringify({type: "ask_query", query: query});
-
-        if (socket.readyState === WebSocket.OPEN) {
-            socket.send(message);
-        } else if (socket.readyState === WebSocket.CONNECTING) {
-            socket.addEventListener('open', function handleOpen() {
-                socket.send(message);
-                socket.removeEventListener('open', handleOpen);
-            });
-        }
-
-        // if socket closes before response, handle as error
-        socket.addEventListener('close', () => {
-            socket.removeEventListener('message', parseResponse);
-            resolve("Sorry, the server could not be reached.");
-        }, { once: true });
-    });
+        const data = await response.json();
+        return data.response;
+    } catch (e) {
+        return "Sorry, the server response could not be processed.";
+    }
 }
 
 async function clearHistory() {
-    return new Promise((resolve) => {
-        let socket = getWebSocket();
-
-        function parseResponse(event) {
-            socket.removeEventListener('message', parseResponse);
-            resolve(true);
-        }
-
-        socket.addEventListener('message', parseResponse);
-
-        let message = JSON.stringify({type: "clear_history"});
-
-        if (socket.readyState === WebSocket.OPEN) {
-            socket.send(message);
-        } else if (socket.readyState === WebSocket.CONNECTING) {
-            socket.addEventListener('open', function handleOpen() {
-                socket.send(message);
-                socket.removeEventListener('open', handleOpen);
-            });
-        }
-
-        // if socket closes before response, handle as error
-        socket.addEventListener('close', () => {
-            socket.removeEventListener('message', parseResponse);
-            resolve(false);
-        }, { once: true });
-    });
+    try {
+        const response = await fetch(API_URL + "/clear", {
+            method: "POST"
+        });
+        return response.ok;
+    } catch (e) {
+        return false;
+    }
 }
 
 async function sendMessage(input) {
@@ -186,6 +136,7 @@ async function loadChat() {
     const messages = await getChatMessages();
     if (messages && messages.length > 0) {
         chatbox.innerHTML = "";
+        displayMessage(createMessage(welcomeMessage, "incoming"));
         for (const msg of messages) {
             const message = createMessage(msg.message, msg.type);
             displayMessage(message);
@@ -286,9 +237,6 @@ async function clearDatabase() {
         };
     });
 }
-
-// initialize server connection on load
-connectWebSocket();
 
 window.addEventListener('DOMContentLoaded', loadChat);
 
