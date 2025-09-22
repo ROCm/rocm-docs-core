@@ -95,6 +95,12 @@ projects:
   rocm-ds-internal:
     target: https://rocm.docs.amd.com/projects/rocm-ds-internal/en/${version}
     development_branch: develop
+  rocm-rag:
+    target: https://rocm.docs.amd.com/projects/rocm-rag/en/${version}
+    development_branch: main
+  rocm-rag-internal:
+    target: https://rocm.docs.amd.com/projects/rocm-rag-internal/en/${version}
+    development_branch: main
   rocm-ls-internal:
     target: https://rocm.docs.amd.com/projects/rocm-ls-internal/en/${version}
     development_branch: main
