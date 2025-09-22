@@ -53,6 +53,7 @@ projects:
   llvm-project: https://rocm.docs.amd.com/projects/llvm-project/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
+  monai: https://rocm.docs.amd.com/projects/monai/en/${version}
   omniperf:
     target: https://rocm.docs.amd.com/projects/omniperf/en/${version}
     development_branch: amd-staging
