@@ -14,6 +14,10 @@ projects:
   gpuaidev:
     target: https://rocm.docs.amd.com/projects/ai-developer-hub/en/${version}
     development_branch: main
+  gsplat-internal:
+    target: https://rocm.docs.amd.com/projects/gsplat-internal/en/${version}
+    development_branch: amd-integration
+  gsplat: https://rocm.docs.amd.com/projects/gsplat/en/${version}
   hip:
     target: https://rocm.docs.amd.com/projects/HIP/en/${version}
     development_branch: docs-develop
@@ -153,7 +157,3 @@ projects:
   sphinx: https://www.sphinx-doc.org/en/master/
   tensile: https://rocm.docs.amd.com/projects/Tensile/en/${version}
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
-  gsplat-internal:
-    target: https://rocm.docs.amd.com/projects/gsplat-internal/en/${version}
-    development_branch: amd-integration
-  gsplat: https://rocm.docs.amd.com/projects/gsplat/en/${version}
