@@ -122,6 +122,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "rocm-ds",
         "ai-developer-hub",
         "rocm-ls",
+        "gsplat",
     ]
     flavor = theme_opts.get("flavor", "rocm")
     if flavor not in supported_flavors:

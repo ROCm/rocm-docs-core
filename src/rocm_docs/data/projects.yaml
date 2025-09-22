@@ -14,6 +14,10 @@ projects:
   gpuaidev:
     target: https://rocm.docs.amd.com/projects/ai-developer-hub/en/${version}
     development_branch: main
+  gsplat-internal:
+    target: https://rocm.docs.amd.com/projects/gsplat-internal/en/${version}
+    development_branch: amd-integration
+  gsplat: https://rocm.docs.amd.com/projects/gsplat/en/${version}
   hip:
     target: https://rocm.docs.amd.com/projects/HIP/en/${version}
     development_branch: docs-develop
