@@ -153,7 +153,7 @@ projects:
   sphinx: https://www.sphinx-doc.org/en/master/
   tensile: https://rocm.docs.amd.com/projects/Tensile/en/${version}
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
-  gsplat-internal: 
+  gsplat-internal:
     target: https://rocm.docs.amd.com/projects/gsplat-internal/en/${version}
     development_branch: amd-integration
   gsplat: https://rocm.docs.amd.com/projects/gsplat/en/${version}
