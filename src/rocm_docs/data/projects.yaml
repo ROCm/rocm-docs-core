@@ -14,6 +14,10 @@ projects:
   gpuaidev:
     target: https://rocm.docs.amd.com/projects/ai-developer-hub/en/${version}
     development_branch: main
+  gsplat-internal:
+    target: https://rocm.docs.amd.com/projects/gsplat-internal/en/${version}
+    development_branch: amd-integration
+  gsplat: https://rocm.docs.amd.com/projects/gsplat/en/${version}
   hip:
     target: https://rocm.docs.amd.com/projects/HIP/en/${version}
     development_branch: docs-develop
@@ -49,6 +53,10 @@ projects:
   llvm-project: https://rocm.docs.amd.com/projects/llvm-project/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
+  monai:
+    target: https://rocm.docs.amd.com/projects/monai/en/${version}
+    development_branch: amd-integration
+  monai-internal: https://rocm.docs.amd.com/projects/monai-internal/en/${version}
   omniperf:
     target: https://rocm.docs.amd.com/projects/omniperf/en/${version}
     development_branch: amd-staging
@@ -91,6 +99,12 @@ projects:
   rocm-ds-internal:
     target: https://rocm.docs.amd.com/projects/rocm-ds-internal/en/${version}
     development_branch: develop
+  rocm-rag:
+    target: https://rocm.docs.amd.com/projects/rocm-rag/en/${version}
+    development_branch: main
+  rocm-rag-internal:
+    target: https://rocm.docs.amd.com/projects/rocm-rag-internal/en/${version}
+    development_branch: main
   rocm-ls-internal:
     target: https://rocm.docs.amd.com/projects/rocm-ls-internal/en/${version}
     development_branch: main
