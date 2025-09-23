@@ -23,12 +23,6 @@
 
 {% set repo_url = repo_url|replace("http://", "https://") %}
 
-{% macro version_list() -%}
-    {% if theme_version_list_link %}
-        <a class="header-all-versions" href="{{ theme_version_list_link }}">Version List</a>
-    {% endif %}
-{%- endmacro -%}
-
 {%
 set nav_secondary_items = {
     "GitHub": repo_url,
