@@ -1,3 +1,9 @@
+## v1.24.1 (2025-09-23)
+
+### Fix
+
+- fix versions.html linking for rocm-ls flavour
+
 ## v1.24.0 (2025-09-23)
 
 ### Feat
