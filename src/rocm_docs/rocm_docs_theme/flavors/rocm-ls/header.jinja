@@ -20,9 +20,7 @@
 {% set repo_url = repo_url|replace("http://", "https://") %}
 
 {% macro version_list() -%}
-    {% if theme_version_list_link %}
-        <a class="header-all-versions" href="{{ theme_version_list_link }}">Version List</a>
-    {% endif %}
+    <a class="header-all-versions" href="https://rocm.docs.amd.com/projects/rocm-ls-internal/en/amd-pbhandar-docs_test/release/versions.html">Version List</a>
 {%- endmacro -%}
 
 {%
