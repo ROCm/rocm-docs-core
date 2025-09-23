@@ -11,6 +11,10 @@
     <a class="klavika-font hover-opacity" href="{{ projects['rocm-ls'] }}">ROCm Life Science {{ version_name }}</a>
 {%- endmacro -%}
 
+{% macro version_list() -%}
+    <a class="header-all-versions" href="https://rocm.docs.amd.com/projects/rocm-ls/en/latest/release/versions.html">Version list</a>
+{%- endmacro -%}
+
 {% if theme_repository_url.endswith("-docs") %}
     {% set repo_url = theme_repository_url|replace("-docs", "") %}
 {% else %}
