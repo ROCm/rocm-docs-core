@@ -1,3 +1,20 @@
+## v1.24.0 (2025-09-23)
+
+### Feat
+
+- add monai-internal
+- add monai and ROCm-LS version list
+- fix no new line
+- Add new flavour rocm-rag
+- fix black formatting issue
+- fix bug
+- fix bug
+- Add new flavour gsplat
+
+### Fix
+
+- Change monai development_branch to amd-integration
+
 ## v1.23.0 (2025-08-26)
 
 ### Feat
