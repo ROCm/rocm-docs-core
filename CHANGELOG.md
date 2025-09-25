@@ -1,3 +1,9 @@
+## v1.25.0 (2025-09-25)
+
+### Feat
+
+- Remove ROCm-Rag and gsplat from left hand side menu
+
 ## v1.24.1 (2025-09-23)
 
 ### Fix
