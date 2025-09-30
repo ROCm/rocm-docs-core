@@ -1,0 +1,33 @@
+{% macro top_level_header(branch, latest_version, release_candidate_version) -%}
+    {% if docs_header_version %}
+        {% set version_name = docs_header_version %}
+    {% elif branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
+        {% set version_name = "Future Release" %}
+    {% elif branch == "latest" %}
+        {% set version_name = latest_version %}
+    {% else %}
+        {% set version_name = branch %}
+    {% endif %}
+    <a class="klavika-font hover-opacity" href="{{ projects['enterprise-ai'] }}">Enterprise AI</a>
+{%- endmacro -%}
+
+
+{% set repo_url = repo_url|replace("http://", "https://") %}
+
+{% macro version_list() -%}
+    {% if theme_version_list_link %}
+        <a class="header-all-versions" href="{{ theme_version_list_link }}">Version List</a>
+    {% endif %}
+{%- endmacro -%}
+
+{%
+set nav_secondary_items = theme_nav_secondary_items if theme_nav_secondary_items else {
+    "GitHub": theme_repository_url if theme_repository_url else "#",
+    "Community": "https://github.com/ROCm/ROCm/discussions",
+    "Blogs": "https://rocm.blogs.amd.com/",
+    "Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
+    "ROCm&#8482; Docs": "https://rocm.docs.amd.com",
+    "Enterprise AI": "https://enterprise-ai.docs.amd.com",
+    "Support": (theme_repository_url + "/issues/new/choose") if theme_repository_url else "#"
+}
+%}
