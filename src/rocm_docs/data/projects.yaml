@@ -10,6 +10,9 @@ projects:
   aqlprofile:
     target: https://rocm.docs.amd.com/projects/aqlprofile/en/${version}
     development_branch: amd-staging
+  enterprise-ai: 
+    target: https://enterprise-ai.docs.amd.com/en/${version}
+    development_branch: main
   composable_kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
   gpuaidev:
     target: https://rocm.docs.amd.com/projects/ai-developer-hub/en/${version}
