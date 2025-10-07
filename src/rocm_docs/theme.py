@@ -107,6 +107,23 @@ def _update_banner(
 
     theme_opts.setdefault("announcement", announcement_info)
 
+def _update_banner_rocm_ls(
+    flavor: str, version_type: util.VersionType, theme_opts: dict[str, Any]
+) -> None:
+    if flavor != "rocm-ls":
+        return
+
+    if version_type == util.VersionType.LATEST_RELEASE:
+        return
+
+    announcement_info: str
+    if version_type == util.VersionType.OLD_RELEASE:
+        announcement_info = "This is not the latest version of ROCm-LS documentation. See <a id='rocm-banner' href='https://rocm.docs.amd.com/projects/rocm-ls/en/latest/'>ROCm-LS documentation</a> for the latest version."
+    elif version_type == util.VersionType.DEVELOPMENT:
+        announcement_info = "This page contains proposed changes for a future release of ROCm-LS. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/projects/rocm-ls/en/latest/'>latest release of ROCm documentation</a> for your production environments."
+
+    theme_opts.setdefault("announcement", announcement_info)
+
 
 def _update_theme_options(app: Sphinx) -> None:
     theme_opts = get_theme_options_dict(app)
@@ -150,6 +167,7 @@ def _update_theme_options(app: Sphinx) -> None:
 
     if hasattr(app.config, "projects_version_type"):
         _update_banner(flavor, app.config.projects_version_type, theme_opts)
+        _update_banner_rocm_ls(flavor, app.config.projects_version_type, theme_opts)
 
     # Default the download, edit, and fullscreen buttons to off
     for button in ["download", "edit_page", "fullscreen"]:
