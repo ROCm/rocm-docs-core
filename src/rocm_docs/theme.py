@@ -120,7 +120,7 @@ def _update_banner_rocm_ls(
     if version_type == util.VersionType.OLD_RELEASE:
         announcement_info = "This is not the latest version of ROCm-LS documentation. See <a id='rocm-banner' href='https://rocm.docs.amd.com/projects/rocm-ls/en/latest/'>ROCm-LS documentation</a> for the latest version."
     elif version_type == util.VersionType.DEVELOPMENT:
-        announcement_info = "This page contains proposed changes for a future release of ROCm-LS. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/projects/rocm-ls/en/latest/'>latest release of ROCm documentation</a> for your production environments."
+        announcement_info = "This page contains proposed changes for a future release of ROCm-LS. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/projects/rocm-ls/en/latest/'>latest release of ROCm-LS documentation</a> for your production environments."
 
     theme_opts.setdefault("announcement", announcement_info)
 
