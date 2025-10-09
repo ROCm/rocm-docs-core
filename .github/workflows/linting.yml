@@ -28,7 +28,7 @@ jobs:
           globs: "**/*.md"
 
   lint-rst:
-    name: "Markdown"
+    name: "reStructuredText"
     runs-on: ubuntu-latest
 
     steps:
