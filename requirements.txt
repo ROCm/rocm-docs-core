@@ -153,7 +153,7 @@ markdown-it-py==3.0.0
     #   myst-parser
 markupsafe==3.0.2
     # via jinja2
-matplotlib==3.10.5
+matplotlib==3.10.7
     # via doxysphinx
 matplotlib-inline==0.1.7
     # via
