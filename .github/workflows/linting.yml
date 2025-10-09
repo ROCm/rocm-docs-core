@@ -44,7 +44,7 @@ jobs:
           pip install rstcheck
       - name: Run rstcheck
         run: |
-          rstcheck **/*.rst
+          rstcheck */*.rst
 
   spelling:
     name: "Spelling"
