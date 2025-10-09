@@ -27,6 +27,43 @@ jobs:
         with:
           globs: "**/*.md"
 
+  vale:
+    name: "Vale"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Optionally fetch default Vale config and styles from your central docs repo
+      # - name: Fetch Vale config and styles
+      #   shell: sh
+      #   run: |
+      #     test -f .vale.ini && echo "Using local Vale config" || \
+      #     curl --silent --show-error --fail --location \
+      #     https://raw.githubusercontent.com/ROCm/rocm-docs-core/develop/.vale.ini -O
+
+      #     if [ ! -d ".github/styles" ]; then
+      #       mkdir -p .github/styles
+      #       curl --silent --show-error --fail --location \
+      #       https://raw.githubusercontent.com/ROCm/rocm-docs-core/develop/.github/styles/Vale/Headings.yml \
+      #       -o .github/styles/Vale/Headings.yml
+      #     fi
+
+      # Install parser for RST
+      - name: Install docutils
+        run: sudo apt-get update && sudo apt-get install -y python3-docutils
+
+      - name: Vale Lint
+        uses: errata-ai/vale-action@v2.1.1
+        with:
+          version: 2.17.0
+          # Lint both Markdown and RST files
+          files: '["docs", "src"]'
+          globs: "**/*.{md,rst}"
+          reporter: github-pr-check
+          fail_on_error: true
+          vale_flags: "--config=.vale.ini"
+
   spelling:
     name: "Spelling"
     runs-on: ubuntu-latest
