@@ -199,7 +199,6 @@
     border: none;
     outline: none;
     resize: none;
-    max-height: 180px;
     overflow: auto;
     font-size: 1rem;
     background: transparent;

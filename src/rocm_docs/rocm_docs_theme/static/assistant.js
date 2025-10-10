@@ -21,8 +21,14 @@ const welcomeMessage
     = "<p>Welcome to the ROCm Documentation!</p>"
     + "<p>How can I assist you today?</p>";
 
-const CHAT_HISTORY_DB = "ROCmChatDB";
+const CHAT_HISTORY_DB = "chat_database";
 const CHAT_HISTORY_STORE = "chat_history";
+const CHAT_SESSION_STORE = "chat_session";
+
+const SESSION_ID_KEY = "session_id";
+
+const CHAT_TIMEOUT = 30000;
+const CLEAR_TIMEOUT = 15000;
 
 function groupParagraphs(text) {
     // group by newlines
@@ -66,7 +72,10 @@ function displayMessage(message) {
     return message;
 }
 
-async function generateResponse(query) {
+async function generateResponse(query, sessionId, url) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT);
+    
     try {
         const response = await fetch(API_URL + "/chat", {
             method: "POST",
@@ -74,28 +83,53 @@ async function generateResponse(query) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                content: query
-            })
+                content: query,
+                session_id: sessionId,
+                current_url: url
+            }),
+            signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
-            return "Sorry, the server could not be reached.";
+            return { content: "Sorry, the server could not be reached." };
         }
 
-        const data = await response.json();
-        return data.response;
+        return await response.json();
     } catch (e) {
-        return "Sorry, the server response could not be processed.";
+        clearTimeout(timeoutId);
+        if (e.name === 'AbortError') {
+            return {
+                content: "Sorry, the request timed out. Please try again."
+            };
+        }
+        return {
+            content: "Sorry, the server response could not be processed."
+        };
     }
 }
 
-async function clearHistory() {
+async function clearHistory(sessionId) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), CLEAR_TIMEOUT);
+    
     try {
         const response = await fetch(API_URL + "/clear", {
-            method: "POST"
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                session_id: sessionId
+            }),
+            signal: controller.signal
         });
+        clearTimeout(timeoutId);
+
         return response.ok;
     } catch (e) {
+        clearTimeout(timeoutId);
+
         return false;
     }
 }
@@ -120,11 +154,21 @@ async function sendMessage(input) {
     const incoming = createMessage("<p>Awaiting...</p>", "incoming");
     displayMessage(incoming);
 
-    // display the new generated response
-    const response = await generateResponse(input);
+    const sessionId = await getChatId();
+    const currentUrl = window.location.href;
 
+    const response = await generateResponse(input, sessionId, currentUrl);
+
+    // new session id means that either the current id is invalid or there is
+    // no current session
+    const newSessionId = response.session_id
+    if (newSessionId && sessionId !== newSessionId) {
+        await saveChatId(newSessionId);
+    }
+    
     // set generated response, and then save it
-    setChatMessage(incoming, response);
+    const message = response.content
+    setChatMessage(incoming, message);
     await saveChatMessage(incoming, "incoming");
 
     sendButton.disabled = false;
@@ -154,7 +198,9 @@ async function clearChat() {
     const initialMessage = createMessage(welcomeMessage, "incoming");
     displayMessage(initialMessage);
 
-    await clearHistory();
+    const sessionId = await getChatId();
+
+    await clearHistory(sessionId);
     await clearDatabase();
 
     sendButton.disabled = false;
@@ -175,6 +221,9 @@ async function openChatHistoryDatabase() {
                     autoIncrement: true
                 }
             );
+            database.createObjectStore(
+                CHAT_SESSION_STORE
+            );
             return database;
         }
 
@@ -186,6 +235,37 @@ async function openChatHistoryDatabase() {
             reject(request.error);
         };
     });
+}
+
+async function saveChatId(id) {
+    const database = await openChatHistoryDatabase();
+    const store = database
+        .transaction(CHAT_SESSION_STORE, "readwrite")
+        .objectStore(CHAT_SESSION_STORE);
+
+    store.put(
+        { id: id },
+        SESSION_ID_KEY
+    );
+}
+
+async function getChatId() {
+    const database = await openChatHistoryDatabase();
+    const store = database
+        .transaction(CHAT_SESSION_STORE, "readonly")
+        .objectStore(CHAT_SESSION_STORE);
+
+    const request = store.get(SESSION_ID_KEY);
+
+    return new Promise((resolve) => {
+       request.onsuccess = (event) => {
+           resolve(request.result);
+       };
+
+       request.onerror = (event) => {
+           resolve(null)
+       };
+   });
 }
 
 async function saveChatMessage(message, type) {
