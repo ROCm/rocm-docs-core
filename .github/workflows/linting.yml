@@ -33,12 +33,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+      - run: npm install -g mdx2vast
+
       # For reStructuredText users:
       - name: Install Docutils for RST linting
         run: pip install docutils
-
-      - uses: actions/setup-node@v4
-      - run: npm install -g mdx2vast
 
       - uses: errata-ai/vale-action@v2.1.1
         with:
