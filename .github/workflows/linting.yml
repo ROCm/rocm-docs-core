@@ -34,8 +34,8 @@ jobs:
       - uses: actions/checkout@v4
 
       # For reStructuredText users:
-      - name: Install docutils
-        run: sudo apt-get install -y docutils
+      - name: Install Docutils for RST linting
+        run: pip install docutils
 
       - uses: actions/setup-node@v4
       - run: npm install -g mdx2vast
