@@ -33,6 +33,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # For reStructuredText users:
+      - name: Install docutils
+        run: sudo apt-get install -y docutils
+
       - uses: actions/setup-node@v4
       - run: npm install -g mdx2vast
 
