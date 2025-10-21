@@ -41,6 +41,19 @@ def _get_version_from_url(url: str) -> str:
         return ""
 
 
+def _parse_version(version_string: str) -> dict[str, str]:
+    """
+    Parse latest_version.txt from rocm-docs-core data branch. The output
+    is a dictionary of site_name : latest_version.
+
+    e.g.
+    {"ROCm": "7.0.2", "AI-Developer-Hub": "v7.0", "ROCm-DS": "25.05"}
+    """
+    header_latest_version_list = [site_version.split(":") for site_version in version_string.split("\n")]
+    header_latest_version_dict = {site_version_pair[0].strip():site_version_pair[1].strip() for site_version_pair in header_latest_version_list}
+    return header_latest_version_dict
+
+
 def _add_custom_context(
     app: Sphinx,  # noqa: ARG001
     pagename: str,  # noqa: ARG001
@@ -51,14 +64,7 @@ def _add_custom_context(
     latest_version_list = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
     )
-    # Parse version file into a dict (site: latest_version)
-    # e.g. {"ROCm": "7.0.2", "AI-Developer-Hub": "v7.0", "ROCm-DS": "25.05"}
-    header_latest_version_list = [site_version.split(":") for site_version in latest_version_list.split("\n")]
-    header_latest_version_dict = {site_version_pair[0].strip():site_version_pair[1].strip() for site_version_pair in header_latest_version_list}
-    context["header_latest_version_rocm"] = header_latest_version_dict["ROCm"]
-    context["header_latest_version_ai_developer_hub"] = header_latest_version_dict["AI-Developer-Hub"]
-    context["header_latest_version_rocm_ds"] = header_latest_version_dict["ROCm-DS"]
-
+    context["header_latest_version"] = _parse_version(latest_version_list)
 
     header_release_candidate_version = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
@@ -181,7 +187,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
         "html_context": {
-            "header_latest_version": header_latest_version,
+            "header_latest_version": _parse_version(header_latest_version),
             "header_release_candidate_version": header_release_candidate_version,
         },
     }
