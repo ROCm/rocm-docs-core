@@ -48,10 +48,17 @@ def _add_custom_context(
     context: dict[str, str],
     doctree: object,  # noqa: ARG001
 ) -> None:
-    header_latest_version = _get_version_from_url(
+    latest_version_list = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
     )
-    context["header_latest_version"] = header_latest_version
+    # Parse version file into a dict (site: latest_version)
+    # e.g. {"ROCm": "7.0.2", "AI-Developer-Hub": "v7.0", "ROCm-DS": "25.05"}
+    header_latest_version_list = [site_version.split(":") for site_version in latest_version_list.split("\n")]
+    header_latest_version_dict = {site_version_pair[0].strip():site_version_pair[1].strip() for site_version_pair in header_latest_version_list}
+    context["header_latest_version_rocm"] = header_latest_version_dict["ROCm"]
+    context["header_latest_version_ai_developer_hub"] = header_latest_version_dict["AI-Developer-Hub"]
+    context["header_latest_version_rocm_ds"] = header_latest_version_dict["ROCm-DS"]
+
 
     header_release_candidate_version = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"

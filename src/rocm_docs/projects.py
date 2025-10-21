@@ -408,10 +408,13 @@ def _update_theme_configs(
     app: Sphinx, current_project: _Project | None, current_branch: str
 ) -> None:
     """Update configurations for use in theme.py"""
-    latest_version = requests.get(
+    latest_site_version_list = requests.get(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
-    ).text.strip("\r\n")
-    latest_version_string = f"docs-{latest_version}"
+    ).text.strip("\r\n").split("\n")
+    latest_version_list = [site_verison.split(":")[1].strip() for site_verison in latest_site_version_list] # Extract verison number, e.g. ['7.0.2', 'v7.0', '25.05']
+    latest_version_string_list = [f"docs-{latest_version}" for latest_version in latest_version_list]
+    latest_version_string_list.append("latest")
+    latest_version_string_list += latest_version_list # Some sites does not have 'docs-' prefix
     release_candidate = requests.get(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
     ).text.strip("\r\n")
@@ -423,7 +426,7 @@ def _update_theme_configs(
 
     doc_branch_pattern = r"^docs-\d+\.\d+\.\d+$"
 
-    if current_branch in [latest_version_string, "latest"]:
+    if current_branch in latest_version_string_list:
         app.config.projects_version_type = util.VersionType.LATEST_RELEASE
     elif current_branch.startswith(release_candidate_string):
         app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE
