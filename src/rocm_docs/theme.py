@@ -42,13 +42,11 @@ def _get_version_from_url(url: str) -> str:
 
 
 def _parse_version(version_string: str) -> dict[str, str]:
-    """Parse latest_version.txt from rocm-docs-core data branch. The output
-    is a dictionary of site_name : latest_version.
+    """Parse latest_version.txt and output a dictionary of site_name : latest_version.
 
-    e.g.
+    Example:
     {"ROCm": "7.0.2", "AI-Developer-Hub": "v7.0", "ROCm-DS": "25.05"}
     """
-
     header_latest_version_list = [site_version.split(":") for site_version in version_string.split("\n")]
     return {site_version_pair[0].strip():site_version_pair[1].strip() for site_version_pair in header_latest_version_list}
 
