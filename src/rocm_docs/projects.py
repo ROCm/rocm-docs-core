@@ -25,7 +25,6 @@ import yaml
 from packaging.version import Version
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
-    get_theme_options_dict,
 )
 from sphinx.application import Sphinx
 from sphinx.config import Config

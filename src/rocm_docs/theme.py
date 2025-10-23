@@ -4,7 +4,6 @@ from typing import Any
 
 import time
 from pathlib import Path
-from typing import Union
 
 import requests
 import sphinx.util.logging
@@ -43,8 +42,7 @@ def _get_version_from_url(url: str) -> str:
 
 
 def _parse_version(version_string: str) -> dict[str, str]:
-    """
-    Parse latest_version.txt from rocm-docs-core data branch. The output
+    """Parse latest_version.txt from rocm-docs-core data branch. The output
     is a dictionary of site_name : latest_version.
 
     e.g.
@@ -59,7 +57,7 @@ def _add_custom_context(
     app: Sphinx,  # noqa: ARG001
     pagename: str,  # noqa: ARG001
     templatename: str,  # noqa: ARG001
-    context: dict[str, Union[str, dict[str, str]]],
+    context: dict[str, str | dict[str, str]],
     doctree: object,  # noqa: ARG001
 ) -> None:
     latest_version_list = _get_version_from_url(
