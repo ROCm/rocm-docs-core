@@ -516,11 +516,15 @@ def _update_config(app: Sphinx, _: Config) -> None:
         Path(app.srcdir, app.config.external_toc_path),
         context,
     )
+
+    if not config_provided_by_user(app, "html_theme_options"):
+        app.config.html_theme_options = {"flavor": "rocm"}
+
     # Store the context to be referenced later
     app.config.projects_context = context
 
     _set_doxygen_html(app, current_project)
-    _update_theme_configs(app, current_project, branch, app.config.html_theme_options["flavor"])
+    _update_theme_configs(app, current_project, branch, app.config.html_theme_options.get("flavor", "rocm"))
 
 
 def _setup_projects_context(
