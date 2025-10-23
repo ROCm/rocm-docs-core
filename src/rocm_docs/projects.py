@@ -406,13 +406,11 @@ def _get_context(
 
 
 def _update_theme_configs(
-    app: Sphinx, current_project: _Project | None, current_branch: str
+    app: Sphinx, current_project: _Project | None, current_branch: str, flavor: str
 ) -> None:
     """Update configurations for use in theme.py"""
-    theme_opts = get_theme_options_dict(app)
-    flavor = theme_opts.get("flavor", "rocm")
     latest_version_list = requests.get(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/alexxu12/rocm-ds-version-list/latest_version.txt"
     ).text.strip()
     latest_version_dict = theme._parse_version(latest_version_list)
     latest_version = latest_version_dict.get(flavor, "latest")
@@ -522,7 +520,7 @@ def _update_config(app: Sphinx, _: Config) -> None:
     app.config.projects_context = context
 
     _set_doxygen_html(app, current_project)
-    _update_theme_configs(app, current_project, branch)
+    _update_theme_configs(app, current_project, branch, app.config.html_theme_options["flavor"])
 
 
 def _setup_projects_context(

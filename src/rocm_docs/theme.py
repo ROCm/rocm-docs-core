@@ -62,7 +62,7 @@ def _add_custom_context(
     doctree: object,  # noqa: ARG001
 ) -> None:
     latest_version_list = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/alexxu12/rocm-ds-version-list/latest_version.txt"
     )
     context["header_latest_version"] = _parse_version(latest_version_list)
 
@@ -174,7 +174,7 @@ def _update_theme_options(app: Sphinx) -> None:
         )
 
     header_latest_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/alexxu12/rocm-ds-version-list/latest_version.txt"
     )
 
     header_release_candidate_version = _get_version_from_url(
