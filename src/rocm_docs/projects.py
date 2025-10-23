@@ -25,6 +25,7 @@ import yaml
 from packaging.version import Version
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
+    get_theme_options_dict,
 )
 from sphinx.application import Sphinx
 from sphinx.config import Config
@@ -408,13 +409,18 @@ def _update_theme_configs(
     app: Sphinx, current_project: _Project | None, current_branch: str
 ) -> None:
     """Update configurations for use in theme.py"""
+    theme_opts = get_theme_options_dict(app)
+    flavor = theme_opts.get("flavor", "rocm")
     latest_version_list = requests.get(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
     ).text.strip()
-    latest_version_list = list(theme._parse_version(latest_version_list).values()) # Extract verison number, e.g. ['7.0.2', 'v7.0', '25.05']
-    latest_version_string_list = [f"docs-{latest_version}" for latest_version in latest_version_list]
-    latest_version_string_list.append("latest")
-    latest_version_string_list += latest_version_list # Some sites does not have 'docs-' prefix
+    latest_version_dict = theme._parse_version(latest_version_list)
+    latest_version = latest_version_dict.get(flavor, "latest")
+    latest_version_string_list = ["latest"]
+    if latest_version != "latest":
+        # Some component's docs branch has "docs-" prefix, others do not
+        latest_version_string_list += [f"docs-{latest_version}", latest_version]
+
     release_candidate = requests.get(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
     ).text.strip("\r\n")
