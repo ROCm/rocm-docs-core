@@ -30,7 +30,7 @@ from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ExtensionError
 
-from rocm_docs import formatting, util, theme
+from rocm_docs import formatting, theme, util
 
 if sys.version_info < (3, 11):
     import importlib.abc as importlib_abc
