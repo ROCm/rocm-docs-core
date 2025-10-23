@@ -410,7 +410,7 @@ def _update_theme_configs(
 ) -> None:
     """Update configurations for use in theme.py"""
     latest_version_list = requests.get(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/alexxu12/rocm-ds-version-list/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
     ).text.strip()
     latest_version_dict = theme._parse_version(latest_version_list)
     latest_version = latest_version_dict.get(flavor, "latest")
