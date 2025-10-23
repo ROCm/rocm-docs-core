@@ -4,6 +4,7 @@ from typing import Any
 
 import time
 from pathlib import Path
+from typing import Union
 
 import requests
 import sphinx.util.logging
@@ -58,7 +59,7 @@ def _add_custom_context(
     app: Sphinx,  # noqa: ARG001
     pagename: str,  # noqa: ARG001
     templatename: str,  # noqa: ARG001
-    context: dict[str, str],
+    context: dict[str, Union[str, dict[str, str]]],
     doctree: object,  # noqa: ARG001
 ) -> None:
     latest_version_list = _get_version_from_url(
