@@ -13,7 +13,7 @@ projects:
   composable_kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
   cvs:
     target: https://rocm.docs.amd.com/projects/cvs/en/${version}
-    development_branch: main
+    development_branch: main 
   gpuaidev:
     target: https://rocm.docs.amd.com/projects/ai-developer-hub/en/${version}
     development_branch: main
