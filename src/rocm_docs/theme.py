@@ -47,8 +47,13 @@ def _parse_version(version_string: str) -> dict[str, str]:
     Example:
     {"ROCm": "7.0.2", "AI-Developer-Hub": "v7.0", "ROCm-DS": "25.05"}
     """
-    header_latest_version_list = [site_version.split(":") for site_version in version_string.split("\n")]
-    return {site_version_pair[0].strip():site_version_pair[1].strip() for site_version_pair in header_latest_version_list}
+    header_latest_version_list = [
+        site_version.split(":") for site_version in version_string.split("\n")
+    ]
+    return {
+        site_version_pair[0].strip(): site_version_pair[1].strip()
+        for site_version_pair in header_latest_version_list
+    }
 
 
 def _add_custom_context(

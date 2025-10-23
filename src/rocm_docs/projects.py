@@ -405,7 +405,10 @@ def _get_context(
 
 
 def _update_theme_configs(
-    app: Sphinx, current_project: _Project | None, current_branch: str, flavor: str
+    app: Sphinx,
+    current_project: _Project | None,
+    current_branch: str,
+    flavor: str,
 ) -> None:
     """Update configurations for use in theme.py"""
     latest_version_list = requests.get(
@@ -523,7 +526,12 @@ def _update_config(app: Sphinx, _: Config) -> None:
     app.config.projects_context = context
 
     _set_doxygen_html(app, current_project)
-    _update_theme_configs(app, current_project, branch, app.config.html_theme_options.get("flavor", "rocm"))
+    _update_theme_configs(
+        app,
+        current_project,
+        branch,
+        app.config.html_theme_options.get("flavor", "rocm"),
+    )
 
 
 def _setup_projects_context(
