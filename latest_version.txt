@@ -1,1 +1,4 @@
-7.0.2
+rocm: 7.0.2
+ai-developer-hub: v7.0
+rocm-ds: 25.05
+
