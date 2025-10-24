@@ -4,7 +4,7 @@
     {% elif branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
         {% set version_name = "Future Release" %}
     {% elif branch == "latest" %}
-        {% set version_name = "25.05" %}
+        {% set version_name = latest_version["rocm-ds"] %}
     {% else %}
         {% set version_name = branch %}
     {% endif %}
@@ -20,9 +20,7 @@
 {% set repo_url = repo_url|replace("http://", "https://") %}
 
 {% macro version_list() -%}
-    {% if theme_version_list_link %}
-        <a class="header-all-versions" href="{{ theme_version_list_link }}">Version List</a>
-    {% endif %}
+    <a class="header-all-versions" href="https://rocm.docs.amd.com/projects/rocm-ds/en/latest/release/versions.html">Version List</a>
 {%- endmacro -%}
 
 {%

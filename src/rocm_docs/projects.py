@@ -30,7 +30,7 @@ from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ExtensionError
 
-from rocm_docs import formatting, util
+from rocm_docs import formatting, theme, util
 
 if sys.version_info < (3, 11):
     import importlib.abc as importlib_abc
@@ -405,15 +405,24 @@ def _get_context(
 
 
 def _update_theme_configs(
-    app: Sphinx, current_project: _Project | None, current_branch: str
+    app: Sphinx,
+    current_project: _Project | None,
+    current_branch: str,
+    flavor: str,
 ) -> None:
     """Update configurations for use in theme.py"""
-    latest_version = requests.get(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
-    ).text.strip("\r\n")
-    latest_version_string = f"docs-{latest_version}"
+    latest_version_list = requests.get(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
+    ).text.strip()
+    latest_version_dict = theme._parse_version(latest_version_list)
+    latest_version = latest_version_dict.get(flavor, "latest")
+    latest_version_string_list = ["latest"]
+    if latest_version != "latest":
+        # Some component's docs branch has "docs-" prefix, others do not
+        latest_version_string_list += [f"docs-{latest_version}", latest_version]
+
     release_candidate = requests.get(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
     ).text.strip("\r\n")
     release_candidate_string = f"docs-{release_candidate}"
 
@@ -423,7 +432,7 @@ def _update_theme_configs(
 
     doc_branch_pattern = r"^docs-\d+\.\d+\.\d+$"
 
-    if current_branch in [latest_version_string, "latest"]:
+    if current_branch in latest_version_string_list:
         app.config.projects_version_type = util.VersionType.LATEST_RELEASE
     elif current_branch.startswith(release_candidate_string):
         app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE
@@ -509,11 +518,20 @@ def _update_config(app: Sphinx, _: Config) -> None:
         Path(app.srcdir, app.config.external_toc_path),
         context,
     )
+
+    if not config_provided_by_user(app, "html_theme_options"):
+        app.config.html_theme_options = {"flavor": "rocm"}
+
     # Store the context to be referenced later
     app.config.projects_context = context
 
     _set_doxygen_html(app, current_project)
-    _update_theme_configs(app, current_project, branch)
+    _update_theme_configs(
+        app,
+        current_project,
+        branch,
+        app.config.html_theme_options.get("flavor", "rocm"),
+    )
 
 
 def _setup_projects_context(
