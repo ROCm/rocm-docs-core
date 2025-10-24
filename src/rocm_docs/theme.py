@@ -41,20 +41,35 @@ def _get_version_from_url(url: str) -> str:
         return ""
 
 
+def _parse_version(version_string: str) -> dict[str, str]:
+    """Parse latest_version.txt and output a dictionary of site_name : latest_version.
+
+    Example:
+    {"ROCm": "7.0.2", "AI-Developer-Hub": "v7.0", "ROCm-DS": "25.05"}
+    """
+    header_latest_version_list = [
+        site_version.split(":") for site_version in version_string.split("\n")
+    ]
+    return {
+        site_version_pair[0].strip(): site_version_pair[1].strip()
+        for site_version_pair in header_latest_version_list
+    }
+
+
 def _add_custom_context(
     app: Sphinx,  # noqa: ARG001
     pagename: str,  # noqa: ARG001
     templatename: str,  # noqa: ARG001
-    context: dict[str, str],
+    context: dict[str, str | dict[str, str]],
     doctree: object,  # noqa: ARG001
 ) -> None:
-    header_latest_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
+    latest_version_list = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
     )
-    context["header_latest_version"] = header_latest_version
+    context["header_latest_version"] = _parse_version(latest_version_list)
 
     header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
     )
     context["header_release_candidate_version"] = (
         header_release_candidate_version
@@ -161,11 +176,11 @@ def _update_theme_options(app: Sphinx) -> None:
         )
 
     header_latest_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/latest_version.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
     )
 
     header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/release_candidate.txt"
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
     )
 
     default_config_opts = {
@@ -174,7 +189,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
         "html_context": {
-            "header_latest_version": header_latest_version,
+            "header_latest_version": _parse_version(header_latest_version),
             "header_release_candidate_version": header_release_candidate_version,
         },
     }
