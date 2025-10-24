@@ -1,3 +1,29 @@
+## v1.27.0 (2025-10-24)
+
+### Feat
+
+- target latest_versions.txt from new_data branch
+- parse modified latest_version.txt
+- add version list to rocm-ds flavor
+- add new flavour CVS
+
+### Fix
+
+- linting
+- reformat docstring according to linting
+- linting
+- linting
+- add a case considering when html_theme_options is not defined
+- fix typing
+- change the way flavor gets pass down
+- fix header banner error for non-rocm components
+- change version name to match flavor name
+- Radeon page projects.yaml update
+
+### Refactor
+
+- refactor parse version code
+
 ## v1.26.0 (2025-10-01)
 
 ### Feat
