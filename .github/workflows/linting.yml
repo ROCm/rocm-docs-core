@@ -37,24 +37,10 @@ jobs:
         if: ${{ ! contains( github.repository, 'rocm-docs-core') }}
         shell: sh
         run: |
-          curl --silent --show-error --fail --location https://raw.githubusercontent.com/ROCm/rocm-docs-core/develop/.github/workflows/yaml_merger.py -o .github/workflows/yaml_merger.py
           curl --silent --show-error --fail --location https://raw.githubusercontent.com/ROCm/rocm-docs-core/develop/.spellcheck.yaml -O
           curl --silent --show-error --fail --location https://raw.githubusercontent.com/ROCm/rocm-docs-core/develop/.wordlist.txt >> .wordlist.txt
-      - name: Check local spelling file
-        id: check_local_spelling
-        run: |
-          if [ -f .spellcheck.local.yaml ]; then
-            echo "check_result=true" >> $GITHUB_OUTPUT
-          else
-            echo "check_result=false" >> $GITHUB_OUTPUT
-          fi
-      - name: Merge local and main YAML files
-        if: steps.check_local_spelling.outputs.check_result == 'true'
-        shell: sh
-        run: |
-          python3 .github/workflows/yaml_merger.py .spellcheck.yaml .spellcheck.local.yaml .spellcheck.yaml
       - name: Run spellcheck
-        uses: rojopolis/spellcheck-github-actions@0.46.0
+        uses: rojopolis/spellcheck-github-actions@0.52.0
       - name: On fail
         if: failure()
         run: |
