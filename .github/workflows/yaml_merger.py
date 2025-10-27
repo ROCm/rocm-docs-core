@@ -37,9 +37,13 @@ def load_yaml(file_path: str) -> Any:
 
 def merge_matrix_entries(default_entries: List[Dict], user_entries: List[Dict]) -> List[Dict]:
     """
-    Merge matrix entries, combining sources only for entries with matching names.
-    - Skip merging if the 'sources' list in the user entries is empty.
-    - If the main configuration has an empty 'sources' list, replace it with the user's list.
+    Merge matrix entries, combining sources for entries with matching names.
+
+    Supports merge modes via '_merge_mode' key in user entries:
+    - 'overwrite': Replace default sources entirely
+    - 'append': Add to the end of default sources (default behavior)
+
+    Skip merging if the 'sources' list in the user entries is empty.
     """
     result = default_entries.copy()
     default_map = {entry.get('name'): entry for entry in result}
@@ -49,6 +53,9 @@ def merge_matrix_entries(default_entries: List[Dict], user_entries: List[Dict]) 
         if user_name and user_name in default_map:
             if 'sources' in user_entry:
                 user_sources = user_entry['sources']
+
+                # Get merge mode (default to 'append')
+                merge_mode = user_entry.get('_merge_mode', 'append')
 
                 # Skip merging if user sources are empty
                 if not user_sources or all(not source for source in user_sources):
@@ -60,9 +67,18 @@ def merge_matrix_entries(default_entries: List[Dict], user_entries: List[Dict]) 
                 # If the main config's sources are empty, replace them
                 if not default_sources or all(not source for source in default_sources):
                     default_map[user_name]['sources'] = user_sources
+                elif merge_mode == 'overwrite':
+                    # Overwrite mode: replace entirely
+                    default_map[user_name]['sources'] = user_sources
+                    print(f"  → Overwriting sources for '{user_name}'")
                 else:
-                    # Otherwise, merge the lists
+                    # Default append mode
                     default_map[user_name]['sources'].extend(user_sources)
+                    print(f"  → Appending sources for '{user_name}'")
+
+                # Remove the _merge_mode key from the final output if present
+                if '_merge_mode' in default_map[user_name]:
+                    del default_map[user_name]['_merge_mode']
 
     return result
 
@@ -115,6 +131,12 @@ if __name__ == '__main__':
     parser.add_argument('output', help='Path to save merged configuration')
 
     args = parser.parse_args()
+
+    print(f"\nMerging YAML configurations...")
+    print(f"Template: {args.template}")
+    print(f"Local:    {args.local}")
+    print(f"Output:   {args.output}")
+    print()
 
     # Load configurations
     template_config = load_yaml(args.template)
