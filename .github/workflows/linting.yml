@@ -23,7 +23,7 @@ jobs:
         run: |
           test -f .markdownlint.yaml && echo "Using local config file" || curl --silent --show-error --fail --location https://raw.githubusercontent.com/ROCm/rocm-docs-core/develop/.markdownlint.yaml -O
       - name: Use markdownlint-cli2
-        uses: DavidAnson/markdownlint-cli2-action@v10.0.1
+        uses: DavidAnson/markdownlint-cli2-action@v20.0.0
         with:
           globs: "**/*.md"
 
