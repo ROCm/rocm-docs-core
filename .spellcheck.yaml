@@ -47,7 +47,7 @@ matrix:
       # Manual disabling via: #spellcheck-disable
       - open : '^ *<!-- *spellcheck-disable *-->$'
         content: '[\s\S]*?'
-        close: '^ *<!-- *spellcheck-enable *-->$'
+        close: '(^ *<!-- *spellcheck-enable *-->$|\Z)'
       # Ignore URLs in [text](URL)
       - open : '\[[^]]*?]\('
         content: '[^)]*?'
@@ -119,7 +119,7 @@ matrix:
         close: '\n'
       # Ignore reStructuredText literals
       - open: '::$'
-        close: '(?P<literal>(?:((?P<indent>[ ]+).*$)|(\n))+)'
+        close: '((?P<literal>(?:((?P<indent>[ ]+).*$)|(\n))+)|\Z)'
       # Ignore reStructuredText hyperlinks
       - open: '\s'
         content: '\w*'
@@ -135,9 +135,9 @@ matrix:
       # Ignore reStructuredText block directives
       - open: '\.\. (code-block|math|csv-table)::.*$\n*'
         content: '(?P<first>(^(?P<indent>[ ]+).*$\n))(?P<other>(^([ \t]+.*|[ \t]*)$\n)*)'
-        close: '(^(?![ \t]+.*$))'
+        close: '(^(?![ \t]+.*$)|\Z)'
       - open: '\.\. (raw)::.*$\n*'
-        close: '^\s*$'
+        close: '(^\s*$|\Z)'
       # Ignore reStructuredText substitution definitions
       - open: '^\.\. \|[^|]+\|'
         close: '$'
@@ -147,7 +147,7 @@ matrix:
         close: '\|_?'
       # Ignore reStructuredText toctree
       - open: '\.\.\s+toctree::'
-        close: '(?P<toctree>(?:((?P<indent>[ ]+).*$)|(\n))+)'
+        close: '((?P<toctree>(?:((?P<indent>[ ]+).*$)|(\n))+)|\Z)'
       # Ignore directives
       - open: '\.\.\s+(figure|image|include|only|tabularcolumns|datatemplate:nodata)::'
         close: '$'
@@ -157,7 +157,7 @@ matrix:
       # Ignore doxygen directives
       - open: '\.\. (autodoxygenindex|doxygenfunction|doxygenstruct|doxygenclass|doxygennamespace|doxygenconcept|doxygenenum|doxygenenumvalue|doxygentypedef|doxygenunion|doxygendefine|doxygenvariable|doxygenfile|doxygengroup|autodoxygenfile|doxygenpage)::.*$\n*'
         content: '(?P<first>(^(?P<indent>[ ]+).*$\n))(?P<other>(^([ \t]+.*|[ \t]*)$\n)*)'
-        close: '(^(?![ \t]+.*$))'
+        close: '(^(?![ \t]+.*$)|\Z)'
       # Ignore doxygen one line directives
       - open: '\.\. (autodoxygenindex|doxygenfunction|doxygenstruct|doxygenclass|doxygennamespace|doxygenconcept|doxygenenum|doxygenenumvalue|doxygentypedef|doxygenunion|doxygendefine|doxygenvariable|doxygenfile|doxygengroup|autodoxygenfile|doxygenpage)::'
         content: '[ \S]*'
@@ -165,7 +165,7 @@ matrix:
       # Manual disabling via: #spellcheck-disable
       - open : '^.. <!-- spellcheck-disable -->$'
         content: '[\s\S]*?'
-        close: '^.. <!-- spellcheck-enable -->$'
+        close: '(^.. <!-- spellcheck-enable -->$|\Z)'
   - pyspelling.filters.url:
 - name: Cpp
   # The sources below are simply a placeholder as it cannot be empty
