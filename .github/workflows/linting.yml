@@ -54,7 +54,7 @@ jobs:
         run: |
           python3 .github/workflows/yaml_merger.py .spellcheck.yaml .spellcheck.local.yaml .spellcheck.yaml
       - name: Run spellcheck
-        uses: rojopolis/spellcheck-github-actions@0.46.0
+        uses: rojopolis/spellcheck-github-actions@0.52.0
       - name: On fail
         if: failure()
         run: |
