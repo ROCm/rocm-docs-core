@@ -4,11 +4,11 @@
     {% elif branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
         {% set version_name = "Future Release" %}
     {% elif branch == "latest" %}
-        {% set version_name = latest_version["rocm"] %}
+        {% set version_name = latest_version %}
     {% else %}
         {% set version_name = branch %}
     {% endif %}
-    <a class="klavika-font hover-opacity" href="{{ projects['instinct'] }}">Instinct&#8482; Documentation</a>
+    <a class="klavika-font hover-opacity" href="{{ projects['enterprise-ai'] }}">Enterprise AI</a>
 {%- endmacro -%}
 
 
