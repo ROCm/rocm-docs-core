@@ -119,6 +119,11 @@ def _update_banner(
         announcement_info = "This is not the latest version of ROCm documentation. See <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>ROCm documentation</a> for the latest version."
     elif version_type == util.VersionType.DEVELOPMENT:
         announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+    elif version_type == util.VersionType.PREVIEW:
+        announcement_info = "This page contains changes for a preview version of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/preview/'>ROCm preview documentation</a> for upcoming features and changes."
+    elif version_type == util.VersionType.ROCm_LATEST_RELEASE:
+        preview_version = _get_version_from_url(
+        announcement_info = "ROCm 7.9.0 is a technology preview release built with <a id='rocm-banner' href='https://github.com/ROCm/TheRock/'>TheRock</a>. See ROCm Preview documentation for more information."
 
     theme_opts.setdefault("announcement", announcement_info)
 
