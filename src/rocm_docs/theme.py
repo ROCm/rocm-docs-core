@@ -109,7 +109,7 @@ def _update_banner(
     if flavor != "rocm":
         return
 
-    if version_type == util.VersionType.LATEST_RELEASE:
+    if version_type == util.VersionType.OTHER_LATEST_RELEASE:
         return
 
     announcement_info: str
