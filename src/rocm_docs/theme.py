@@ -125,7 +125,7 @@ def _update_banner(
         preview_version = _get_version_from_url(
             "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/preview_version.txt"
         )
-        announcement_info = f"ROCm {preview_version} is a technology preview release built with <a id='rocm-banner' href='https://github.com/ROCm/TheRock/'>TheRock</a>. See <a id='rocm-banner' href='https://rocm.docs.amd.com/en/{preview_version}}-preview/'>ROCm Preview documentation</a> for more information."
+        announcement_info = f"ROCm {preview_version} is a technology preview release built with <a id='rocm-banner' href='https://github.com/ROCm/TheRock/'>TheRock</a>. See <a id='rocm-banner' href='https://rocm.docs.amd.com/en/{preview_version}-preview/'>ROCm Preview documentation</a> for more information."
 
     theme_opts.setdefault("announcement", announcement_info)
 
