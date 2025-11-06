@@ -433,7 +433,7 @@ def _update_theme_configs(
     doc_branch_pattern = r"^docs-\d+\.\d+\.\d+$"
 
     if flavor == "rocm" and current_branch in latest_version_string_list:
-        app.config.projects_version_type = util.VersionType.ROCm_LATEST_RELEASE
+        app.config.projects_version_type = util.VersionType.ROCM_LATEST_RELEASE
     elif flavor != "rocm" and current_branch in latest_version_string_list:
         app.config.projects_version_type = util.VersionType.OTHER_LATEST_RELEASE
     elif current_branch.startswith(release_candidate_string):
