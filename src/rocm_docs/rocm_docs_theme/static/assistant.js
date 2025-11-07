@@ -301,19 +301,43 @@ async function getChatMessages() {
 
 async function clearDatabase() {
     const database = await openChatHistoryDatabase();
-    const store = database
+    const history = database
         .transaction(CHAT_HISTORY_STORE, "readwrite")
         .objectStore(CHAT_HISTORY_STORE);
 
-    const request = store.clear();
+    const session = database
+        .transaction(CHAT_SESSION_STORE, "readwrite")
+        .objectStore(CHAT_SESSION_STORE);
+
+    const clearHistoryRequest = history.clear();
+    const clearSessionRequest = session.clear();
 
     return new Promise((resolve, reject) => {
-        request.onsuccess = (event) => {
-            resolve(request.result); // array
+        let historyCleared = false;
+        let sessionCleared = false;
+
+        const checkCompletion = () => {
+            if (historyCleared && sessionCleared) {
+                resolve();
+            }
         };
 
-        request.onerror = (event) => {
-            reject(request.error);
+        clearHistoryRequest.onsuccess = (event) => {
+            historyCleared = true;
+            checkCompletion();
+        };
+
+        clearHistoryRequest.onerror = (event) => {
+            reject(clearHistoryRequest.error);
+        };
+
+        clearSessionRequest.onsuccess = (event) => {
+            sessionCleared = true;
+            checkCompletion();
+        };
+
+        clearSessionRequest.onerror = (event) => {
+            reject(clearSessionRequest.error);
         };
     });
 }
