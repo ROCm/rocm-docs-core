@@ -47,10 +47,10 @@
 
 #assistant-window {
     background: var(--pst-color-background);
-    height: 60vh;
+    height: 80vh;
     min-height: 400px;
     width: 40vh;
-    min-width: 400px;
+    min-width: 600px;
     border-radius: 15px;
     overflow: hidden;
     visibility: hidden;
@@ -157,19 +157,32 @@
     padding: .15rem .3rem;
 }
 
+#chat-body .chat-message pre {
+    margin: 0;
+}
+
+#chat-body .chat-message pre code {
+    font-size: 1em;
+}
+
 #chat-body .chat-message.incoming code {
     background: var(--pst-color-surface);
     border-radius: .25rem;
 }
 
+#chat-body .chat-message :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0.25em 0;
+}
+
 #chat-body .outgoing {
-    max-width: 75%;
+    max-width: 80%;
     color: var(--pst-color-on-surface);
     background: var(--pst-color-surface);
     align-self: flex-end;
 }
 
 #chat-body .incoming{
+    max-width: 100%;
     color: var(--pst-color-text-base);
 }
 
