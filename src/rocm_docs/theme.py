@@ -129,7 +129,7 @@ def _update_banner(
     elif version_type == util.VersionType.PREVIEW:
         announcement_info = f"This is ROCm {preview_version} technology preview release documentation. For production purposes, use <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>ROCm {latest_version} documentation</a>."
     elif version_type == util.VersionType.ROCM_LATEST_RELEASE:
-        announcement_info = f"The ROCm {preview_version} technology preview release documentation is available at <a id='rocm-banner' href='https://rocm.docs.amd.com/en/{preview_version}-preview/'>ROCm Preview documentation</a>. For production purposes, continue to use ROCm {latest_version} documentation"
+        announcement_info = f"The ROCm {preview_version} technology preview release documentation is available at <a id='rocm-banner' href='https://rocm.docs.amd.com/en/{preview_version}-preview/'>ROCm Preview documentation</a>. For production purposes, continue to use ROCm {latest_version} documentation."
 
     theme_opts.setdefault("announcement", announcement_info)
 
