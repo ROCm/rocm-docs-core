@@ -113,6 +113,13 @@ def _update_banner(
         return
 
     announcement_info: str
+    preview_version = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/preview_version.txt"
+    )
+    latest_version_string = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
+    )
+    latest_version = _parse_version(latest_version_string).get("rocm", "latest")
     if version_type == util.VersionType.RELEASE_CANDIDATE:
         announcement_info = "This page contains changes for a test release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
     elif version_type == util.VersionType.OLD_RELEASE:
@@ -120,12 +127,9 @@ def _update_banner(
     elif version_type == util.VersionType.DEVELOPMENT:
         announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
     elif version_type == util.VersionType.PREVIEW:
-        announcement_info = "This is ROCm preview release documentation and not the latest version. See <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>ROCm documentation</a> for the latest version."
+        announcement_info = f"This is ROCm {preview_version} technology preview release documentation. For production purposes, use <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>ROCm {latest_version} documentation</a>."
     elif version_type == util.VersionType.ROCM_LATEST_RELEASE:
-        preview_version = _get_version_from_url(
-            "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/preview_version.txt"
-        )
-        announcement_info = f"ROCm {preview_version} is a technology preview release built with <a id='rocm-banner' href='https://github.com/ROCm/TheRock/'>TheRock</a>. See <a id='rocm-banner' href='https://rocm.docs.amd.com/en/{preview_version}-preview/'>ROCm Preview documentation</a> for more information."
+        announcement_info = f"The ROCm {preview_version} technology preview release documentation is available at <a id='rocm-banner' href='https://rocm.docs.amd.com/en/{preview_version}-preview/'>ROCm Preview documentation</a>. For production purposes, continue to use ROCm {latest_version} documentation"
 
     theme_opts.setdefault("announcement", announcement_info)
 
