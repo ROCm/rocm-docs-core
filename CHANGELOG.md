@@ -1,3 +1,18 @@
+## v1.28.0 (2025-11-10)
+
+### Feat
+
+- adjust banner content
+- dynamically define preview version
+- add more banner type for preview
+
+### Fix
+
+- rewording
+- rewording
+- change no banner version definition
+- delete extra bracket
+
 ## v1.27.0 (2025-10-24)
 
 ### Feat
