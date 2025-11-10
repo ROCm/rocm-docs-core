@@ -432,14 +432,18 @@ def _update_theme_configs(
 
     doc_branch_pattern = r"^docs-\d+\.\d+\.\d+$"
 
-    if current_branch in latest_version_string_list:
-        app.config.projects_version_type = util.VersionType.LATEST_RELEASE
+    if flavor == "rocm" and current_branch in latest_version_string_list:
+        app.config.projects_version_type = util.VersionType.ROCM_LATEST_RELEASE
+    elif flavor != "rocm" and current_branch in latest_version_string_list:
+        app.config.projects_version_type = util.VersionType.OTHER_LATEST_RELEASE
     elif current_branch.startswith(release_candidate_string):
         app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE
     elif re.match(doc_branch_pattern, current_branch):
         app.config.projects_version_type = util.VersionType.OLD_RELEASE
     elif current_branch == development_branch:
         app.config.projects_version_type = util.VersionType.DEVELOPMENT
+    elif current_branch.endswith("preview"):
+        app.config.projects_version_type = util.VersionType.PREVIEW
 
 
 def _get_external_projects(

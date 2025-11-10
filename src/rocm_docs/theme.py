@@ -109,16 +109,27 @@ def _update_banner(
     if flavor != "rocm":
         return
 
-    if version_type == util.VersionType.LATEST_RELEASE:
+    if version_type == util.VersionType.OTHER_LATEST_RELEASE:
         return
 
     announcement_info: str
+    preview_version = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/preview_version.txt"
+    )
+    latest_version_string = _get_version_from_url(
+        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
+    )
+    latest_version = _parse_version(latest_version_string).get("rocm", "latest")
     if version_type == util.VersionType.RELEASE_CANDIDATE:
         announcement_info = "This page contains changes for a test release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
     elif version_type == util.VersionType.OLD_RELEASE:
         announcement_info = "This is not the latest version of ROCm documentation. See <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>ROCm documentation</a> for the latest version."
     elif version_type == util.VersionType.DEVELOPMENT:
         announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+    elif version_type == util.VersionType.PREVIEW:
+        announcement_info = f"This is ROCm {preview_version} technology preview release documentation. For production use, refer to <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>ROCm {latest_version} documentation</a>."
+    elif version_type == util.VersionType.ROCM_LATEST_RELEASE:
+        announcement_info = f"The ROCm {preview_version} technology preview release documentation is available at <a id='rocm-banner' href='https://rocm.docs.amd.com/en/{preview_version}-preview/'>ROCm Preview documentation</a>. For production use, continue to use ROCm {latest_version} documentation."
 
     theme_opts.setdefault("announcement", announcement_info)
 
