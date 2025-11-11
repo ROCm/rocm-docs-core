@@ -4,7 +4,7 @@
     {% elif branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
         {% set version_name = "Future Release" %}
     {% elif branch == "latest" %}
-        {% set version_name = latest_version["amdgpu-docs"] %}
+        {% set version_name = latest_version["amdgpu"] %}
     {% else %}
         {% set version_name = branch %}
     {% endif %}
