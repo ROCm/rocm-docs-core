@@ -2,4 +2,4 @@ rocm: 7.1.0
 ai-developer-hub: v7.0
 rocm-ds: 25.05
 rocm-ls: 25.09
-amdgpu-docs: 30.20.0
+amdgpu: 30.20.0
