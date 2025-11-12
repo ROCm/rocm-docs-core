@@ -203,7 +203,7 @@ packaging==25.0
     #   pydata-sphinx-theme
     #   pytest
     #   sphinx
-parso==0.8.4
+parso==0.8.5
     # via jedi
 pathspec==0.12.1
     # via
