@@ -1,3 +1,14 @@
+## v1.29.0 (2025-11-12)
+
+### Feat
+
+- add amdgpu flavor
+
+### Fix
+
+- rename variable to match flavor name to latest_version.txt key name
+- reorder if logic
+
 ## v1.28.0 (2025-11-10)
 
 ### Feat
