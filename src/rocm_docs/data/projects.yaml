@@ -3,6 +3,12 @@ version: 1
 
 # ${version} will be replaced by the version of the (current) project in values
 projects:
+  amdgpu-docs:
+    target: https://instinct.docs.amd.com/projects/amdgpu-docs/en/latest/
+    development_branch: develop
+  amdgpu-docs-internal:
+    target: https://instinct.docs.amd.com/projects/amdgpu-docs-internal/en/latest/
+    development_branch: develop
   amdmigraphx: https://rocm.docs.amd.com/projects/AMDMIGraphX/en/${version}
   amdsmi:
     target: https://rocm.docs.amd.com/projects/amdsmi/en/${version}
