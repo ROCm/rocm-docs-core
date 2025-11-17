@@ -91,6 +91,9 @@ async function generateResponse(query, sessionId, url) {
         });
         clearTimeout(timeoutId);
 
+        if (response.status === 429) {
+            return { content: "Sorry, you've sent too many requests. Please wait a moment before trying again." };
+        }
         if (!response.ok) {
             return { content: "Sorry, the server could not be reached." };
         }
