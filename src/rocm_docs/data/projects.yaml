@@ -29,7 +29,7 @@ projects:
   gsplat: https://rocm.docs.amd.com/projects/gsplat/en/${version}
   hip:
     target: https://rocm.docs.amd.com/projects/HIP/en/${version}
-    development_branch: docs-develop
+    development_branch: develop
   hipblas: https://rocm.docs.amd.com/projects/hipBLAS/en/${version}
   hipblaslt: https://rocm.docs.amd.com/projects/hipBLASLt/en/${version}
   hipcc:
