@@ -215,7 +215,7 @@ pillow==11.3.0
     # via matplotlib
 pip-tools==7.5.0
     # via rocm-docs-core (pyproject.toml)
-platformdirs==4.3.8
+platformdirs==4.5.0
     # via
     #   black
     #   jupyter-core
