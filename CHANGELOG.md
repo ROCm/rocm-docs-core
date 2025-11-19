@@ -1,3 +1,13 @@
+## v1.30.0 (2025-11-19)
+
+### Feat
+
+- add rocm-finance & rocm-simulaiton flavors
+
+### Fix
+
+- HIP develop branch update
+
 ## v1.29.0 (2025-11-12)
 
 ### Feat
