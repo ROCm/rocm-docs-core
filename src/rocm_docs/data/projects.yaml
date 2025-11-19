@@ -111,11 +111,21 @@ projects:
   rocm-ds-internal:
     target: https://rocm.docs.amd.com/projects/rocm-ds-internal/en/${version}
     development_branch: develop
+  rocm-finance:
+    target: https://rocm.docs.amd.com/projects/rocm-finance/en/${version}
+  rocm-finance-internal:
+    target: https://rocm.docs.amd.com/projects/rocm-finance-internal/en/${version}
+    development_branch: main
   rocm-rag:
     target: https://rocm.docs.amd.com/projects/rocm-rag/en/${version}
     development_branch: main
   rocm-rag-internal:
     target: https://rocm.docs.amd.com/projects/rocm-rag-internal/en/${version}
+    development_branch: main
+  rocm-simulation:
+    target: https://rocm.docs.amd.com/projects/rocm-simulation/en/${version}
+  rocm-simulation-internal:
+    target: https://rocm.docs.amd.com/projects/rocm-simulation-internal/en/${version}
     development_branch: main
   rocm-ls-internal:
     target: https://rocm.docs.amd.com/projects/rocm-ls-internal/en/${version}
