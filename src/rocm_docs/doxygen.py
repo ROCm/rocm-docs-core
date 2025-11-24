@@ -23,6 +23,8 @@ from sphinx.util import logging
 from sphinx.util.display import progress_message
 from sphinx.util.osutil import copyfile
 
+from rocm_docs import doxygen_toc_expander
+
 logger = logging.getLogger(__name__)
 
 
@@ -92,6 +94,16 @@ def _run_doxygen(app: Sphinx, config: Config) -> None:
 
     _update_breathe_settings(app, doxygen_root)
     _run_doxysphinx(app, doxygen_root, doxyfile, doxygen_exe)
+    
+    # Expand TOC with Doxygen children AFTER doxysphinx completes
+    # At this point, doxysphinx has copied HTML files to the output directory
+    # This modifies _toc.yml.in (template) so that when projects.py generates
+    # _toc.yml, it includes all the Doxygen child pages
+    try:
+        doxygen_toc_expander.expand_toc_template(app, doxygen_root)
+    except Exception as e:
+        # Log warning but don't fail the build if TOC expansion fails
+        logger.warning(f"Could not expand TOC with Doxygen children: {e}")
 
 
 def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
