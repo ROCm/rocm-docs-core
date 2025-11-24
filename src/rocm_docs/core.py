@@ -150,8 +150,25 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "article_pages", default=[], rebuild="html", types=list
     )
 
+    app.add_config_value(
+        "doxygen_toc_enabled", 
+        default=True, 
+        rebuild="html", 
+        types=bool
+    )
+
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
     app.connect("config-inited", _DefaultSettings.update_config)
     app.connect("build-finished", article_info.set_article_info, priority=1000)
+    app.connect("build-finished", _inject_doxygen_to_sphinx_toc, priority=1001)
+    
     return {"parallel_read_safe": True, "parallel_write_safe": True}
+
+def _inject_doxygen_to_sphinx_toc(app: Sphinx, _: Config) -> None:
+    """Inject Doxygen navigation into Sphinx pages' TOC."""
+    try:
+        from rocm_docs import doxygen_to_sphinx_toc
+        doxygen_to_sphinx_toc._inject_doxygen_to_sphinx_toc(app, _)
+    except ImportError:
+        pass
