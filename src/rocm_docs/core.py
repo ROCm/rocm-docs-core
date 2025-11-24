@@ -128,6 +128,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     for ext in required_extensions:
         app.setup_extension(ext)
 
+    # Article info configuration
     app.add_config_value(
         "setting_all_article_info", default=False, rebuild="html", types=str
     )
@@ -150,8 +151,24 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "article_pages", default=[], rebuild="html", types=list
     )
 
+    # Doxygen TOC auto-expansion configuration
+    # These are used by doxygen_toc_expander module
+    app.add_config_value(
+        "doxygen_toc_auto_expand",
+        default=False,
+        rebuild="env",
+        types=bool,
+    )
+    app.add_config_value(
+        "doxygen_toc_max_children",
+        default=50,
+        rebuild="env",
+        types=int,
+    )
+
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
     app.connect("config-inited", _DefaultSettings.update_config)
     app.connect("build-finished", article_info.set_article_info, priority=1000)
+    
     return {"parallel_read_safe": True, "parallel_write_safe": True}
