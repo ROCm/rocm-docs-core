@@ -150,8 +150,38 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "article_pages", default=[], rebuild="html", types=list
     )
 
+    app.add_config_value(
+        "doxygen_toc_enabled", 
+        default=True, 
+        rebuild="html", 
+        types=bool
+    )
+    app.add_config_value(
+        "doxygen_toc_position", 
+        default="left", 
+        rebuild="html", 
+        types=str
+    )
+    app.add_config_value(
+        "doxygen_toc_style", 
+        default="fixed", 
+        rebuild="html", 
+        types=str
+    )
+
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
     app.connect("config-inited", _DefaultSettings.update_config)
     app.connect("build-finished", article_info.set_article_info, priority=1000)
+    app.connect("build-finished", _inject_doxygen_toc, priority=1001)
+    
     return {"parallel_read_safe": True, "parallel_write_safe": True}
+
+def _inject_doxygen_toc(app: Sphinx, _: Config) -> None:
+    """Inject TOC into Doxygen pages if doxygen_toc extension is available."""
+    try:
+        from rocm_docs import doxygen_toc_enhanced
+        doxygen_toc_enhanced._inject_toc_to_doxygen_pages(app, _)
+    except ImportError:
+        # Extension not available, skip
+        pass
