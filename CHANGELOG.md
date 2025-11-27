@@ -1,3 +1,9 @@
+## v1.30.1 (2025-11-27)
+
+### Fix
+
+- fix rocm-simulation flavor
+
 ## v1.30.0 (2025-11-19)
 
 ### Feat
