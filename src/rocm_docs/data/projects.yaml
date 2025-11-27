@@ -150,7 +150,7 @@ projects:
   rocmvalidationsuite:
     target: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
     development_branch: master
-  roc-optiq: 
+  roc-optiq:
     target: https://rocm.docs.amd.com/projects/roc-optiq/en/${version}
     development_branch: main
   rocprim: https://rocm.docs.amd.com/projects/rocPRIM/en/${version}
