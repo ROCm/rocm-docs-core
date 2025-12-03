@@ -151,7 +151,7 @@ projects:
     target: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
     development_branch: master
   roc-optiq:
-    target: https://rocm.docs.amd.com/projects/roc-optiq/en/${version}
+    target: https://rocm.docs.amd.com/projects/roc-optiq/en/${version} 
     development_branch: main
   rocprim: https://rocm.docs.amd.com/projects/rocPRIM/en/${version}
   rocprof-compute-viewer:
