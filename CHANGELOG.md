@@ -1,3 +1,14 @@
+## v1.31.0 (2025-12-08)
+
+### Feat
+
+- add new flavour Optiq
+- add new flavour Optiq
+
+### Fix
+
+- **themes**: make expansion toolkit headings consistent
+
 ## v1.30.1 (2025-11-27)
 
 ### Fix
