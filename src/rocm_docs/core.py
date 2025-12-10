@@ -80,7 +80,7 @@ class _DefaultSettings:
     external_toc_exclude_missing = _ConfigDefault(False)
     epub_show_urls = _ConfigDefault("footnote")
     exclude_patterns = _ConfigExtend(["_build", "Thumbs.db", ".DS_Store"])
-    numfig = _ConfigDefault(True)
+    numfig = _ConfigDefault(False)
     linkcheck_timeout = _ConfigDefault(10)
     linkcheck_request_headers = _ConfigMerge(
         {
