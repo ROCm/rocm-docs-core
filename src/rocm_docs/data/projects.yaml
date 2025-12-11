@@ -43,6 +43,9 @@ projects:
   hipdf: https://rocm.docs.amd.com/projects/hipDF/en/${version}
   hipdnn: https://rocm.docs.amd.com/projects/hipDNN/en/${version}
   hipfft: https://rocm.docs.amd.com/projects/hipFFT/en/${version}
+  hipfile:
+    target: https://rocm.docs.amd.com/projects/hipFile/en/${version}
+    development_branch: develop
   hipfort: https://rocm.docs.amd.com/projects/hipfort/en/${version}
   hipgraph:
     target: https://rocm.docs.amd.com/projects/hipGRAPH/en/${version}
