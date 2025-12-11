@@ -35,7 +35,7 @@ projects:
   hipcc:
     target: https://rocm.docs.amd.com/projects/HIPCC/en/${version}
     development_branch: amd-staging
-  hipcim: https://rocm.docs.amd.com/projects/hipcim/en/${version}
+  hipcim: https://rocm.docs.amd.com/projects/hipCIM/en/${version}
   hipcub: https://rocm.docs.amd.com/projects/hipCUB/en/${version}
   hipdf: https://rocm.docs.amd.com/projects/hipDF/en/${version}
   hipfft: https://rocm.docs.amd.com/projects/hipFFT/en/${version}
