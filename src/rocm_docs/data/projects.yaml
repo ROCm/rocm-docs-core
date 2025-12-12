@@ -59,6 +59,9 @@ projects:
     target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
     development_branch: master
   instinct: https://instinct.docs.amd.com/
+  lightgbm:
+    target: https://rocm.docs.amd.com/projects/lightgbm/en/${version}
+    development_branch: master
   llvm-project: https://rocm.docs.amd.com/projects/llvm-project/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
@@ -191,4 +194,7 @@ projects:
   rtd: https://docs.readthedocs.io/en/stable/
   sphinx: https://www.sphinx-doc.org/en/master/
   tensile: https://rocm.docs.amd.com/projects/Tensile/en/${version}
+  thundergbm:
+    target: https://rocm.docs.amd.com/projects/thundergbm/en/${version}
+    development_branch: master
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
