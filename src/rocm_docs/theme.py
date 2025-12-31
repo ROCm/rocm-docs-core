@@ -224,6 +224,10 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_js_file("rdcMisc.js", loading_method="async")
     app.add_js_file("theme_mode_captions.js", loading_method="async")
     app.add_js_file("search.js", loading_method="defer")
+    app.add_js_file(
+        "https://cdn.jsdelivr.net/gh/donghwa-amd/DOCm@release/dist/src/assistant.js",
+        type="module"
+    )
     here = Path(__file__).parent.resolve()
     theme_path = here / "rocm_docs_theme"
     app.add_html_theme("rocm_docs_theme", str(theme_path))
@@ -232,6 +236,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "rocm_header.css",
         "rocm_footer.css",
         "fonts.css",
+        "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
     ]:
         app.add_css_file(css)
 
