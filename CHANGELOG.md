@@ -1,3 +1,9 @@
+## v1.31.2 (2026-01-14)
+
+### Fix
+
+- Override image paths for non-existent images
+
 ## v1.31.1 (2025-12-11)
 
 ### Fix
