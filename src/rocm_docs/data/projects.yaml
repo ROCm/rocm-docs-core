@@ -192,7 +192,7 @@ projects:
   rpp: https://rocm.docs.amd.com/projects/rpp/en/${version}
   rtd: https://docs.readthedocs.io/en/stable/
   sphinx: https://www.sphinx-doc.org/en/master/
-  tensile: 
+  tensile:
     target: https://rocm.docs.amd.com/projects/Tensile/en/${version}
     development_branch: develop
   transferbench: https://rocm.docs.amd.com/projects/TransferBench/en/${version}
