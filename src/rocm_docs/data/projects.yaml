@@ -78,7 +78,7 @@ projects:
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
   rdc:
     target: https://rocm.docs.amd.com/projects/rdc/en/${version}
-    development_branch: amd-staging
+    development_branch: develop
   radeon:
     target: https://rocm.docs.amd.com/projects/radeon-ryzen/en/${version}
     development_branch: main
@@ -147,11 +147,11 @@ projects:
     development_branch: master
   rocm_smi_lib:
     target: https://rocm.docs.amd.com/projects/rocm_smi_lib/en/${version}
-    development_branch: amd-staging
+    development_branch: develop
   rocmcmakebuildtools: https://rocm.docs.amd.com/projects/ROCmCMakeBuildTools/en/${version}
   rocminfo:
     target: https://rocm.docs.amd.com/projects/rocminfo/en/${version}
-    development_branch: amd-staging
+    development_branch: develop
   rocmvalidationsuite:
     target: https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/${version}
     development_branch: master
@@ -164,13 +164,13 @@ projects:
     development_branch: amd-master
   rocprofiler-compute:
     target: https://rocm.docs.amd.com/projects/rocprofiler-compute/en/${version}
-    development_branch: amd-staging
+    development_branch: develop
   rocprofiler-sdk:
     target: https://rocm.docs.amd.com/projects/rocprofiler-sdk/en/${version}
-    development_branch: amd-mainline
+    development_branch: develop
   rocprofiler-systems:
     target: https://rocm.docs.amd.com/projects/rocprofiler-systems/en/${version}
-    development_branch: amd-staging
+    development_branch: develop
   rocpydecode: https://rocm.docs.amd.com/projects/rocPyDecode/en/${version}
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocr-runtime:
