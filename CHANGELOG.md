@@ -1,3 +1,11 @@
+## v1.31.3 (2026-01-16)
+
+### Fix
+
+- remove trailing spaces
+- add development_branch field to tensile
+- update development_branch field for monorepo projects
+
 ## v1.31.2 (2026-01-14)
 
 ### Fix
