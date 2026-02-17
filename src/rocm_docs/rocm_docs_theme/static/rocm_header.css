@@ -217,9 +217,6 @@ header.common-header .navbar > .main-nav .navbar-nav-container {
   height: auto;
   order: 3;
   overflow-x: hidden;
-  position: fixed;
-  right: 0;
-  top: 3.5rem;
   width: 100%;
 }
 @media (min-width: 1200px) {
