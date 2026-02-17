@@ -79,19 +79,24 @@ header.common-header .navbar > .main-nav a.dropdown-toggle:after {
 }
 header.common-header .navbar > .main-nav .header-logo {
   align-items: center;
+  justify-content: space-between;
   display: flex;
-  order: 2;
-  padding: 0 0 0 0.625rem;
+  width: 100%;
+  padding-left: 0;
 }
 @media (min-width: 1200px) {
   header.common-header .navbar > .main-nav .header-logo {
-    padding: 0 3.5rem 0 1.625rem;
+    padding-left: 1.625rem;
   }
 }
-@media (min-width: 576px) and (max-width: 1199.98px) {
-  header.common-header .navbar > .main-nav .header-logo {
-    padding: 0 0 0 1.625rem;
+@media (max-width: 576px) {
+  a.header-all-versions {
+    display: none;
   }
+}
+header.common-header .navbar > .main-nav .header-logo > .header-logo-title {
+  display: flex;
+  align-items: center;
 }
 header.common-header .navbar > .main-nav .header-logo a.navbar-brand {
   display: inline-block;
@@ -123,7 +128,6 @@ header.common-header .navbar > .main-nav button.navbar-toggler {
   border: none;
   color: #fff;
   margin: 0.625rem;
-  order: 1;
   padding: 0;
 }
 header.common-header .navbar > .main-nav button.navbar-toggler:focus {
@@ -132,10 +136,10 @@ header.common-header .navbar > .main-nav button.navbar-toggler:focus {
 
 header.common-header .navbar > .main-nav button.navbar-toggler#nav-icon {
   height: 1rem;
-  position: relative;
   transform: rotate(0deg);
   transition: 0.5s ease-in-out;
   width: 1.4rem;
+  margin-right: 1.625rem;
 }
 
 header.common-header .navbar > .main-nav button.navbar-toggler#nav-icon span {
@@ -926,10 +930,4 @@ header.common-header
       top: 0;
       width: 60%;
   }
-}
-
-.header-all-versions {
-  position: absolute;
-  margin-left: 90%;
-  margin-right: 10%;
 }
