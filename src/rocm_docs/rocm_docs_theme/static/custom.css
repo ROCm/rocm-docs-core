@@ -313,7 +313,7 @@ a#ot-sdk-btn {
   filter: hue-rotate(-300deg);
 }
 
-:not(p) img {
+article :not(p) img {
   margin-bottom: 1rem;
 }
 
