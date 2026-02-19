@@ -1,3 +1,16 @@
+## v1.32.0 (2026-02-19)
+
+### Feat
+
+- add a new flavor - rocm-llmext
+
+### Fix
+
+- **css**: fix header responsive design
+- **header.jinja**: add hover opacity to "version list" link
+- **css**: don't add margin-bottom to header logo
+- **rocm_header.css**: remove fixed position
+
 ## v1.31.3 (2026-01-16)
 
 ### Fix
