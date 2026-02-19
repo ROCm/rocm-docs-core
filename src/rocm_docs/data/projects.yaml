@@ -118,6 +118,12 @@ projects:
   rocm-finance-internal:
     target: https://rocm.docs.amd.com/projects/rocm-finance-internal/en/${version}
     development_branch: main
+  rocm-llmext:
+    target: https://rocm.docs.amd.com/projects/rocm-llmext/en/${version}
+    development_branch: main
+  rocm-llmext-internal:
+    target: https://rocm.docs.amd.com/projects/rocm-llmext-internal/en/${version}
+    development_branch: main
   roc-optiq:
     target: https://rocm.docs.amd.com/projects/roc-optiq/en/${version}
     development_branch: main
