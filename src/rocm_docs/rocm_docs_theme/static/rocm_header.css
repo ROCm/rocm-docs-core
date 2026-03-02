@@ -75,7 +75,7 @@ header.common-header .navbar.second-level-nav .nav-item.dropdown {
 header.common-header .navbar.second-level-nav .nav-item.dropdown .header-nav-dropdown-toggle {
   display: flex;
   align-items: center;
-  padding: 1rem 1.625rem;
+  padding: 1rem 1.625rem 1rem 1.75rem;
 }
 header.common-header .navbar.second-level-nav .header-nav-dropdown-toggle::after {
   display: inline-block;
@@ -116,8 +116,8 @@ header.common-header .navbar.second-level-nav .header-nav-dropdown-toggle::after
   }
   header.common-header .navbar.second-level-nav .header-nav-dropdown-menu .dropdown-item {
     display: block;
-    padding: 0.625rem 1rem 0.625rem 2.25rem !important;
-    padding-inline-start: 2.25rem !important;
+    padding: 0.5rem 1rem 0.5rem 1.75rem !important;
+    padding-inline-start: 1.75rem !important;
     color: rgba(255, 255, 255, 0.92);
     font-weight: 500;
     font-size: 0.9375rem;
@@ -144,8 +144,8 @@ header.common-header .navbar.second-level-nav .header-nav-dropdown-toggle::after
     box-shadow: none;
   }
   header.common-header .navbar.second-level-nav .header-nav-dropdown-menu .dropdown-item {
-    padding: 0.75rem 1rem 0.75rem 2.25rem !important;
-    padding-inline-start: 2.25rem !important;
+    padding: 0.65rem 1rem 0.65rem 1.75rem !important;
+    padding-inline-start: 1.75rem !important;
     color: #fff;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
