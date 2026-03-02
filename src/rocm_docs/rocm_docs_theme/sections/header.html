@@ -43,10 +43,10 @@
                                         {{ name }}
                                     </a>
                                 {% elif url_or_items is mapping %}
-                                    <a class="nav-link top-level header-menu-links dropdown-toggle" href="#" id="nav{{ name.lower()|replace(' ','-') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
+                                    <a class="nav-link top-level header-menu-links dropdown-toggle header-nav-dropdown-toggle" href="#" id="nav{{ name.lower()|replace(' ','-') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
                                         {{ name }}
                                     </a>
-                                    <ul class="dropdown-menu" aria-labelledby="nav{{ name.lower()|replace(' ','-') }}">
+                                    <ul class="dropdown-menu header-nav-dropdown-menu" aria-labelledby="nav{{ name.lower()|replace(' ','-') }}">
                                         {% for item_name, item_url in url_or_items.items() %}
                                             <li><a class="dropdown-item" href="{{ item_url }}" target="_blank">{{ item_name }}</a></li>
                                         {% endfor %}
