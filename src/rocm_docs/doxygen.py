@@ -38,7 +38,7 @@ def _copy_files(app: Sphinx) -> None:
 
 def _get_config_default(config: Config, key: str) -> Any:
     """Get the default value for a sphinx configuration key."""
-    default_or_callable = config.values[key][0]
+    default_or_callable = config.values[key].default
     if callable(default_or_callable):
         return default_or_callable(config)
     return default_or_callable
