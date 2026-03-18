@@ -67,6 +67,83 @@ header.common-header
     padding: 0 1.625rem;
   }
 }
+
+/* Second-level nav dropdown: click to expand, styling */
+header.common-header .navbar.second-level-nav .nav-item.dropdown {
+  position: relative;
+}
+header.common-header .navbar.second-level-nav .nav-item.dropdown .header-nav-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.625rem 1rem 1.75rem;
+}
+header.common-header .navbar.second-level-nav .header-nav-dropdown-toggle::after {
+  display: inline-block;
+  margin-left: 0.35em;
+  vertical-align: 0.2em;
+  content: "";
+  border: 0.35em solid transparent;
+  border-top-color: currentColor;
+  border-bottom-width: 0;
+}
+@media (min-width: 1200px) {
+  header.common-header .navbar.second-level-nav .nav-item.dropdown .header-nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 14rem;
+    padding: 0.5rem 0;
+    margin: 0.25rem 0 0 0;
+    background-color: #27282b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  header.common-header .navbar.second-level-nav .nav-item.dropdown .header-nav-dropdown-menu.show {
+    display: block;
+  }
+  header.common-header .navbar.second-level-nav .header-nav-dropdown-menu .dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem 0.5rem 1.75rem !important;
+    padding-inline-start: 1.75rem !important;
+    color: rgba(255, 255, 255, 0.92);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    border: none;
+    background: transparent;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  header.common-header .navbar.second-level-nav .header-nav-dropdown-menu .dropdown-item:hover,
+  header.common-header .navbar.second-level-nav .header-nav-dropdown-menu .dropdown-item:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+  header.common-header .navbar.second-level-nav .header-nav-dropdown-menu li {
+    list-style: none;
+  }
+}
+@media (max-width: 1199.98px) {
+  header.common-header .navbar.second-level-nav .header-nav-dropdown-menu {
+    background-color: #27282b;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+  header.common-header .navbar.second-level-nav .header-nav-dropdown-menu .dropdown-item {
+    padding: 0.65rem 1rem 0.65rem 1.75rem !important;
+    padding-inline-start: 1.75rem !important;
+    color: #fff;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  header.common-header .navbar.second-level-nav .header-nav-dropdown-toggle::after {
+    display: none;
+  }
+}
+
 header.common-header .navbar.second-level-nav .navbar-text,
 header.common-header .navbar > .main-nav {
   padding: 0;
