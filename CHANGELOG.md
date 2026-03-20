@@ -1,3 +1,20 @@
+## v1.33.0 (2026-03-20)
+
+### Feat
+
+- expand by hover over -> expand by click
+- shift dropdown list + add more entries
+- add a droplist for rocm-toolkit on header menu
+- add droplist to other flavors
+
+### Fix
+
+- remove whitespace
+- fix linting
+- reverting last change to fix a bug
+- **doxygen.py**: access default config value through attribute access
+- deadlink fix
+
 ## v1.32.1 (2026-03-18)
 
 ### Fix
