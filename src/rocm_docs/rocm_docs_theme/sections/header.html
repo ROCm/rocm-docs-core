@@ -1,51 +1,62 @@
 {%
-from "flavors/" ~ theme_flavor ~ "/header.jinja" import
-    nav_secondary_items, top_level_header, version_list
-with context
-%}
+    from "flavors/" ~ theme_flavor ~ "/header.jinja" import
+        nav_secondary_items, top_level_header, version_list
+    with context
+    %}
 
-<header class="common-header" >
-    <nav class="navbar navbar-expand-xl">
-        <div class="container-fluid main-nav rocm-header">
-            <div class="header-logo">
-                <div class="header-logo-title">
-                    {% if nav_secondary_items %}
-                        <button class="navbar-toggler collapsed" id="nav-icon" data-tracking-information="mainMenuToggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </button>
-                    {% endif %}
-                    <a class="navbar-brand" href="https://www.amd.com/">
-                        <img src="{{ pathto('_static/images/amd-header-logo.svg',1) }}" alt="AMD Logo" title="AMD Logo" width="90" class="d-inline-block align-text-top hover-opacity"/>
-                    </a>
-                    <div class="vr mx-40 my-25"></div>
-                    {{ top_level_header(
-                        theme_repository_branch | replace("docs-", ""),
-                        header_latest_version,
-                        header_release_candidate_version
-                    ) }}
+    <header class="common-header" >
+        <nav class="navbar navbar-expand-xl">
+            <div class="container-fluid main-nav rocm-header">
+                <div class="header-logo">
+                    <div class="header-logo-title">
+                        {% if nav_secondary_items %}
+                            <button class="navbar-toggler collapsed" id="nav-icon" data-tracking-information="mainMenuToggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+                        {% endif %}
+                        <a class="navbar-brand" href="https://www.amd.com/">
+                            <img src="{{ pathto('_static/images/amd-header-logo.svg',1) }}" alt="AMD Logo" title="AMD Logo" width="90" class="d-inline-block align-text-top hover-opacity"/>
+                        </a>
+                        <div class="vr mx-40 my-25"></div>
+                        {{ top_level_header(
+                            theme_repository_branch | replace("docs-", ""),
+                            header_latest_version,
+                            header_release_candidate_version
+                        ) }}
+                    </div>
+                    {{ version_list() }}
                 </div>
-                {{ version_list() }}
+                <div class="icon-nav text-center d-flex ms-auto"></div>
             </div>
-            <div class="icon-nav text-center d-flex ms-auto"></div>
-        </div>
-    </nav>
-    {% if nav_secondary_items %}
-    <nav class="navbar navbar-expand-xl second-level-nav">
-        <div class="container-fluid main-nav">
-            <div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
-                    {% for name, url in nav_secondary_items.items() %}
-                        <li class="nav-item">
-                            <a class="nav-link top-level header-menu-links" href="{{ url }}" id="nav{{ name.lower()|replace(' ','-') }}" role="button" aria-expanded="false" target="_blank" >
-                                {{ name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
+        </nav>
+        {% if nav_secondary_items %}
+        <nav class="navbar navbar-expand-xl second-level-nav">
+            <div class="container-fluid main-nav">
+                <div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+                        {% for name, url_or_items in nav_secondary_items.items() %}
+                            <li class="nav-item{% if url_or_items is mapping %} dropdown{% endif %}">
+                                {% if url_or_items is string %}
+                                    <a class="nav-link top-level header-menu-links" href="{{ url_or_items }}" id="nav{{ name.lower()|replace(' ','-') }}" role="button" aria-expanded="false" target="_blank" >
+                                        {{ name }}
+                                    </a>
+                                {% elif url_or_items is mapping %}
+                                    <a class="nav-link top-level header-menu-links dropdown-toggle header-nav-dropdown-toggle" href="#" id="nav{{ name.lower()|replace(' ','-') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
+                                        {{ name }}
+                                    </a>
+                                    <ul class="dropdown-menu header-nav-dropdown-menu" aria-labelledby="nav{{ name.lower()|replace(' ','-') }}">
+                                        {% for item_name, item_url in url_or_items.items() %}
+                                            <li><a class="dropdown-item" href="{{ item_url }}" target="_blank">{{ item_name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
-    {% endif %}
-</header>
+        </nav>
+        {% endif %}
+    </header>
