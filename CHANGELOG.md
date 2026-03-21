@@ -1,3 +1,10 @@
+## v1.33.1 (2026-03-21)
+
+### Fix
+
+- dynamically extract rocm-toolkit entries
+- remove unreleased components
+
 ## v1.33.0 (2026-03-20)
 
 ### Feat
