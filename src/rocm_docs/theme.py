@@ -19,6 +19,62 @@ logger = sphinx.util.logging.getLogger(__name__)
 
 MAX_RETRY = 100
 
+ROCM_TOOLKITS_URL = "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/rocm_toolkits.txt"
+
+ROCM_TOOLKITS_FALLBACK: dict[str, str] = {
+    "ROCm Data Science": "https://rocm.docs.amd.com/projects/rocm-ds/en/latest/index.html",
+    "ROCm Finance": "https://rocm.docs.amd.com/projects/rocm-finance/en/latest/index.html",
+    "ROCm Life Science": "https://rocm.docs.amd.com/projects/rocm-ls/en/latest/index.html",
+    "ROCm Simulation": "https://rocm.docs.amd.com/projects/rocm-simulation/en/latest/index.html",
+}
+
+
+def _get_rocm_toolkits() -> dict[str, str]:
+    """Fetch rocm_toolkits.txt from new_data branch, retrying for up to 10 minutes.
+
+    Falls back to ROCM_TOOLKITS_FALLBACK if the fetch ultimately fails.
+    """
+    deadline = time.monotonic() + 600  # 10 minutes
+    headers = {"User-Agent": "alexxu-amd"}
+    while True:
+        try:
+            response = requests.get(ROCM_TOOLKITS_URL, headers=headers, timeout=10)
+            if response.status_code == 200:
+                return _parse_rocm_toolkits(response.text.strip())
+        except requests.RequestException:
+            pass
+
+        if time.monotonic() >= deadline:
+            logger.warning(
+                "Failed to fetch rocm_toolkits.txt after 10 minutes; "
+                "using hardcoded fallback list."
+            )
+            return ROCM_TOOLKITS_FALLBACK
+
+        time.sleep(5)
+
+
+def _parse_rocm_toolkits(content: str) -> dict[str, str]:
+    """Parse rocm_toolkits.txt (name: url lines) into a dict.
+
+    Splits on the first colon only; the URL value (which also contains
+    colons) is captured in full after that first separator.
+    Example line: "ROCm Data Science: https://rocm.docs.amd.com/..."
+    """
+    result: dict[str, str] = {}
+    for line in content.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        key, sep, value = line.partition(": ")
+        if not sep:
+            continue
+        key = key.strip()
+        value = value.strip()
+        if key and value:
+            result[key] = value
+    return result if result else ROCM_TOOLKITS_FALLBACK
+
 
 def _get_version_from_url(url: str) -> str:
     headers = {"User-Agent": "alexxu-amd"}
@@ -81,6 +137,8 @@ def _add_custom_context(
     context["google_site_verification_content"] = (
         google_site_verification_content
     )
+
+    context["header_rocm_toolkits"] = _get_rocm_toolkits()
 
 
 def _update_repo_opts(srcdir: str, theme_opts: dict[str, Any]) -> None:
@@ -206,6 +264,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "html_context": {
             "header_latest_version": _parse_version(header_latest_version),
             "header_release_candidate_version": header_release_candidate_version,
+            "header_rocm_toolkits": _get_rocm_toolkits(),
         },
     }
     for key, default in default_config_opts.items():
