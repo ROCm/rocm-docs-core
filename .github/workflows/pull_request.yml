@@ -12,11 +12,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         fetch-depth: 0
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         python-version: "${{ matrix.python-version }}"
         cache: pip
@@ -24,7 +24,7 @@ jobs:
           pyproject.toml
           requirements.txt
     - name: Cache venv
-      uses: actions/cache@v4.2.0
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # 5.0.4
       with:
         path: .venv
         key: venv-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
@@ -33,14 +33,14 @@ jobs:
     - run: echo "PRE_COMMIT_HOME=$GITHUB_WORKSPACE/.cache/pre-commit" >> "$GITHUB_ENV"
       if: ${{ !startsWith(matrix.os, 'windows') }}
     - name: Cache pre-commit
-      uses: actions/cache@v4.2.0
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # 5.0.4
       with:
         path: ${{ env.PRE_COMMIT_HOME }}
         key: pre-commit-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
     - name: Install just
-      uses: extractions/setup-just@v1
+      uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3.1.0
       with:
-        just-version: '1.13.0'
+        just-version: '1.48.0'
     - name: Create virtual env, install requirements
       run: just deps
     - name: Check commit messages
@@ -58,11 +58,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         fetch-depth: 0
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
         python-version: "${{ matrix.python-version }}"
         cache: pip
@@ -70,23 +70,23 @@ jobs:
           pyproject.toml
           requirements.txt
     - name: Set up Doxygen
-      uses: ssciwr/doxygen-install@v1.2.0
+      uses: ssciwr/doxygen-install@329d88f5a303066a5bd006db7516b1925b86350e # v2.0.1
       with:
         version: 1.9.8
     - name: Set up Graphviz
-      uses: ts-graphviz/setup-graphviz@v2.0.2
+      uses: ts-graphviz/setup-graphviz@b1de5da23ed0a6d14e0aeee8ed52fdd87af2363c # v2.0.2
       with:
         ubuntu-graphviz-version: 2.42.2-9ubuntu0.1
         windows-graphviz-version: '9.0.0'
     - name: Cache venv
-      uses: actions/cache@v4.2.0
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # 5.0.4
       with:
         path: .venv
         key: venv-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
     - name: Install just
-      uses: extractions/setup-just@v1
+      uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3.1.0
       with:
-        just-version: '1.13.0'
+        just-version: '1.48.0'
     - name: Create virtual env, install requirements
       run: just deps
     - name: Install
