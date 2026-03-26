@@ -40,7 +40,7 @@ jobs:
     - name: Install just
       uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3.1.0
       with:
-        just-version: '1.48.0'
+        just-version: '1.13.0'
     - name: Create virtual env, install requirements
       run: just deps
     - name: Check commit messages
@@ -86,7 +86,7 @@ jobs:
     - name: Install just
       uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3.1.0
       with:
-        just-version: '1.48.0'
+        just-version: '1.13.0'
     - name: Create virtual env, install requirements
       run: just deps
     - name: Install
