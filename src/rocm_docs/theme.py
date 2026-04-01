@@ -38,7 +38,9 @@ def _get_rocm_toolkits() -> dict[str, str]:
     headers = {"User-Agent": "alexxu-amd"}
     while True:
         try:
-            response = requests.get(ROCM_TOOLKITS_URL, headers=headers, timeout=10)
+            response = requests.get(
+                ROCM_TOOLKITS_URL, headers=headers, timeout=10
+            )
             if response.status_code == 200:
                 return _parse_rocm_toolkits(response.text.strip())
         except requests.RequestException:
