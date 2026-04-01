@@ -1,7 +1,7 @@
 rocm: 7.2.1
 ai-developer-hub: v12.0
 rocm-ds: 25.10
-rocm-ls: 25.11
+rocm-ls: 26.03
 rocm-simulation: 25.11
 rocm-finance: 26.01
 amdgpu: 30.30.1
