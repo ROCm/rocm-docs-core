@@ -1,6 +1,6 @@
 # Pairs of external (public) → internal (private mirror) repos to sync.
 # The sync pipeline runs hourly and pushes each external repo's default branch
-# to its internal counterpart (one-way, force-push).
+# to its internal counterpart (one-way).
 #
 # rocm-docs-core itself has no internal counterpart — do NOT add it here.
 #
@@ -14,3 +14,5 @@ pairs:
     internal: ROCm/ROCm-internal
   - external: ROCm/rocm-install-on-linux
     internal: ROCm/rocm-install-on-linux-internal
+  - external: ROCm/gpu-cluster-networking
+    internal: ROCm/gpu-cluster-networking-internal

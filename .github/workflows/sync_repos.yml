@@ -11,12 +11,6 @@ on:
   schedule:
     - cron: '0 * * * *'  # every hour at :00
   workflow_dispatch:
-  push:
-    branches:
-      - alexxu12/sync-pipeline  # TODO: remove before merging
-    paths:
-      - '.github/workflows/sync_repos.yml'
-      - '.github/sync_repos_list.yml'
 
 concurrency:
   group: sync-repos
