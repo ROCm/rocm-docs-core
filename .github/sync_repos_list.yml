@@ -1,0 +1,16 @@
+# Pairs of external (public) → internal (private mirror) repos to sync.
+# The sync pipeline runs hourly and pushes each external repo's default branch
+# to its internal counterpart (one-way, force-push).
+#
+# rocm-docs-core itself has no internal counterpart — do NOT add it here.
+#
+# Required secret: SYNC_PAT
+#   A GitHub PAT with `repo` scope on all internal repos listed below.
+#
+# To add a new pair, append an entry following the same format.
+
+pairs:
+  - external: ROCm/ROCm
+    internal: ROCm/ROCm-internal
+  - external: ROCm/rocm-install-on-linux
+    internal: ROCm/rocm-install-on-linux-internal
