@@ -17,6 +17,9 @@ projects:
     target: https://rocm.docs.amd.com/projects/aqlprofile/en/${version}
     development_branch: amd-staging
   composable_kernel: https://rocm.docs.amd.com/projects/composable_kernel/en/${version}
+  cuid:
+    target: https://rocm.docs.amd.com/projects/cuid/en/${version}
+    development_branch: develop
   cvs:
     target: https://rocm.docs.amd.com/projects/cvs/en/${version}
     development_branch: main
