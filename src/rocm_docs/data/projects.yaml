@@ -185,7 +185,7 @@ projects:
   rocrand: https://rocm.docs.amd.com/projects/rocRAND/en/${version}
   rocr-runtime:
     target: https://rocm.docs.amd.com/projects/ROCR-Runtime/en/${version}
-    development_branch: master
+    development_branch: develop
   rocr_debug_agent:
     target: https://rocm.docs.amd.com/projects/rocr_debug_agent/en/${version}
     development_branch: amd-staging
