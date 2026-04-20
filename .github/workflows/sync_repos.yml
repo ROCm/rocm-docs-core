@@ -1,0 +1,93 @@
+name: Sync external repos to internal mirrors
+
+# Runs hourly and can be triggered manually.
+# Repo pairs are configured in .github/sync_repos_list.yml.
+# Required secret: SYNC_PAT — a GitHub PAT with `repo` scope on all internal repos.
+#
+# rocm-docs-core itself has no internal counterpart; this workflow only operates
+# on the pairs listed in the config file.
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # every hour at :00
+  workflow_dispatch:
+
+concurrency:
+  group: sync-repos
+  cancel-in-progress: false  # queue rather than cancel an in-progress sync
+
+jobs:
+  setup:
+    name: Build sync matrix
+    runs-on: self-hosted
+    outputs:
+      matrix: ${{ steps.read-config.outputs.matrix }}
+      has_pairs: ${{ steps.read-config.outputs.has_pairs }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Read sync config
+        id: read-config
+        shell: sh
+        run: |
+          python3 - << 'EOF'
+          import json, os, yaml
+
+          with open('.github/sync_repos_list.yml') as f:
+              config = yaml.safe_load(f)
+
+          pairs = config.get('pairs') or []
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write(f"matrix={json.dumps({'include': pairs})}\n")
+              out.write(f"has_pairs={'true' if pairs else 'false'}\n")
+          EOF
+
+  sync:
+    name: "${{ matrix.external }} → ${{ matrix.internal }}"
+    needs: setup
+    if: needs.setup.outputs.has_pairs == 'true'
+    runs-on: self-hosted
+    strategy:
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
+      fail-fast: false  # a failure for one pair should not block others
+    steps:
+      - name: Get default branch of external repo
+        id: branch
+        shell: sh
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+        run: |
+          branch=$(gh api "repos/${{ matrix.external }}" --jq '.default_branch')
+          echo "name=$branch" >> "$GITHUB_OUTPUT"
+
+      - name: Clone internal repo
+        shell: sh
+        run: |
+          git clone \
+            --branch "${{ steps.branch.outputs.name }}" \
+            --single-branch \
+            "https://x-access-token:${{ secrets.SYNC_PAT }}@github.com/${{ matrix.internal }}.git" \
+            repo
+
+      - name: Add external as remote and fetch
+        shell: sh
+        run: |
+          git -C repo remote add external "https://github.com/${{ matrix.external }}.git"
+          git -C repo fetch external "${{ steps.branch.outputs.name }}"
+
+      - name: Merge and push
+        shell: sh
+        run: |
+          git -C repo config user.name "github-actions[bot]"
+          git -C repo config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # --no-edit uses the default merge commit message without opening an editor.
+          # No --no-ff: fast-forward is preferred when internal is simply behind external.
+          if ! git -C repo merge "external/${{ steps.branch.outputs.name }}" --no-edit; then
+            git -C repo merge --abort
+            echo "::warning title=Merge conflict::Skipping ${{ matrix.external }} → ${{ matrix.internal }}: merge conflict on ${{ steps.branch.outputs.name }}, manual resolution required"
+            exit 0
+          fi
+
+          git -C repo push origin "HEAD:${{ steps.branch.outputs.name }}"
