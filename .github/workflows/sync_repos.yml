@@ -19,7 +19,7 @@ concurrency:
 jobs:
   setup:
     name: Build sync matrix
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       matrix: ${{ steps.read-config.outputs.matrix }}
       has_pairs: ${{ steps.read-config.outputs.has_pairs }}
@@ -47,7 +47,7 @@ jobs:
     name: "${{ matrix.external }} → ${{ matrix.internal }}"
     needs: setup
     if: needs.setup.outputs.has_pairs == 'true'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
       fail-fast: false  # a failure for one pair should not block others
