@@ -60,8 +60,8 @@ jobs:
         run: |
           branch=$(gh api "repos/${{ matrix.external }}" --jq '.default_branch')
           echo "name=$branch" >> "$GITHUB_OUTPUT"
-      
-      - name: Clean workfpace
+
+      - name: Clean workspace
         shell: sh
         run: rm -rf repo
 
