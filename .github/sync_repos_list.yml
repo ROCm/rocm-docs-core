@@ -16,3 +16,5 @@ pairs:
     internal: ROCm/rocm-install-on-linux-internal
   - external: ROCm/gpu-cluster-networking
     internal: ROCm/gpu-cluster-networking-internal
+  - external: ROCm/system-acceptance-docs
+    internal: ROCm/system-acceptance-docs-internal
