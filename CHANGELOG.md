@@ -1,3 +1,14 @@
+## v1.34.0 (2026-04-28)
+
+### Feat
+
+- add hipFile
+- Add CUID project
+
+### Fix
+
+- fix typo
+
 ## v1.33.1 (2026-03-21)
 
 ### Fix
