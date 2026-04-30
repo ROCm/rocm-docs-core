@@ -214,6 +214,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "rocm-finance",
         "rocm-simulation",
         "rocm-llmext",
+        "nda",
     ]
     flavor = theme_opts.get("flavor", "rocm")
     if flavor not in supported_flavors:
@@ -233,10 +234,26 @@ def _update_theme_options(app: Sphinx) -> None:
         theme_opts.setdefault("license_link", None)
         theme_opts.setdefault("license_text", "")
 
-    theme_opts.setdefault(
-        "article_header_start",
-        ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
-    )
+    # NDA flavor: strip all navigation chrome for Fluid Topics publication
+    if flavor == "nda":
+        theme_opts["show_navbar_depth"] = 0
+        theme_opts["nosidebar"] = True
+        theme_opts.setdefault("secondary_sidebar_items", [])
+        theme_opts.setdefault("primary_sidebar_end", [])
+        theme_opts.setdefault("navbar_start", [])
+        theme_opts.setdefault("navbar_center", [])
+        theme_opts.setdefault("navbar_end", [])
+        theme_opts.setdefault("navbar_persistent", [])
+        theme_opts.setdefault("article_header_start", [])
+        theme_opts.setdefault("article_header_end", [])
+        theme_opts.setdefault("footer_start", [])
+        theme_opts.setdefault("footer_end", [])
+        theme_opts.setdefault("link_main_doc", False)
+    else:
+        theme_opts.setdefault(
+            "article_header_start",
+            ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],
+        )
 
     if hasattr(app.config, "projects_version_type"):
         _update_banner(flavor, app.config.projects_version_type, theme_opts)

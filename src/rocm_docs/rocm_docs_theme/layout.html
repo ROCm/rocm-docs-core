@@ -5,9 +5,13 @@
 {% endblock %}
 
 {% block docs_navbar %}
-    {%- include "sections/header.html" %}
+    {% if theme_flavor != "nda" %}
+        {%- include "sections/header.html" %}
+    {% endif %}
 {% endblock %}
 
 {%- block footer %}
-    {%- include "sections/footer.html" %}
+    {% if theme_flavor != "nda" %}
+        {%- include "sections/footer.html" %}
+    {% endif %}
 {%- endblock %}
