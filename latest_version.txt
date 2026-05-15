@@ -1,5 +1,5 @@
 rocm: 7.2.3
-ai-developer-hub: v12.0
+ai-developer-hub: v13.0
 rocm-ds: 25.10
 rocm-ls: 26.03
 rocm-simulation: 25.11
