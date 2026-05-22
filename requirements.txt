@@ -102,7 +102,7 @@ idna==3.11
     # via requests
 imagesize==1.4.1
     # via sphinx
-importlib-metadata==8.7.0
+importlib-metadata==9.0.0
     # via
     #   jupyter-cache
     #   myst-nb
