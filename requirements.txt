@@ -100,7 +100,7 @@ identify==2.6.15
     # via pre-commit
 idna==3.11
     # via requests
-imagesize==1.4.1
+imagesize==2.0.0
     # via sphinx
 importlib-metadata==9.0.0
     # via
