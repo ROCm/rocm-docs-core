@@ -151,7 +151,7 @@ markdown-it-py==3.0.0
     #   myst-parser
 markupsafe==3.0.3
     # via jinja2
-matplotlib-inline==0.2.1
+matplotlib-inline==0.2.2
     # via
     #   ipykernel
     #   ipython
