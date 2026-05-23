@@ -59,3 +59,70 @@ jobs:
         if: failure()
         run: |
           echo "Please check for spelling mistakes or add them to '.wordlist.txt' in either the root of this project or in rocm-docs-core."
+
+  word-check:
+    name: "Banned or avoidable words"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Fetch word lists
+        shell: bash
+        run: |
+          curl --silent --show-error --fail --location https://raw.githubusercontent.com/ROCm/rocm-docs-core/linting_improvement/.bannedwords.txt >> .bannedwords.txt
+          curl --silent --show-error --fail --location https://raw.githubusercontent.com/ROCm/rocm-docs-core/linting_improvement/.avoidablewords.txt >> .avoidablewords.txt
+      # 🚫 BANNED WORD CHECK (fails job)
+      - name: Check for banned words
+        id: banned_check
+        shell: bash
+        run: |
+          set +e  # Don't exit on non-zero status
+          FOUND_BANNED=0
+          if [ -s .bannedwords.txt ]; then
+            echo "Checking for banned words in docs/**/*.{md,rst}..."
+            while IFS= read -r word || [ -n "$word" ]; do
+              # Skip blank lines or comments
+              [ -z "$word" ] || [[ "$word" =~ ^#.*$ ]] && continue
+              # Search for word with word boundaries
+              MATCHES=$(grep -rni --include="*.md" --include="*.rst" "\b$word\b" docs/ 2>/dev/null)
+              if [ -n "$MATCHES" ]; then
+                echo "$MATCHES" | while IFS=: read -r file line text; do
+                  echo "::error file=${file},line=${line}::Banned word '${word}' found → ${text}"
+                done
+                FOUND_BANNED=1
+              fi
+            done < .bannedwords.txt
+          fi
+          if [ $FOUND_BANNED -eq 1 ]; then
+            exit 1
+          fi
+
+      # ⚠️ AVOIDABLE WORD CHECK (warnings only)
+      - name: Check for avoidable words
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e  # Don't exit on non-zero status
+          FOUND_AVOIDABLE=0
+          if [ -s .avoidablewords.txt ]; then
+            echo "Checking for avoidable words in docs/**/*.{md,rst}..."
+            while IFS= read -r word || [ -n "$word" ]; do
+              # Skip blank lines or comments
+              [ -z "$word" ] || [[ "$word" =~ ^#.*$ ]] && continue
+              # Search for word with word boundaries
+              MATCHES=$(grep -rni --include="*.md" --include="*.rst" "\b$word\b" docs/ 2>/dev/null)
+              if [ -n "$MATCHES" ]; then
+                echo "$MATCHES" | while IFS=: read -r file line text; do
+                  echo "::warning file=${file},line=${line}::Avoidable word '${word}' found → ${text}"
+                done
+                FOUND_AVOIDABLE=1
+              fi
+            done < .avoidablewords.txt
+          fi
+          echo "Avoidable word check complete."
+          if [ $FOUND_AVOIDABLE -eq 1 ]; then
+            exit 1
+          fi
