@@ -359,7 +359,7 @@ tornado==6.5.2
     #   jupyter-client
 tqdm==4.67.1
     # via mpire
-traitlets==5.14.3
+traitlets==5.15.0
     # via
     #   ipykernel
     #   ipython
