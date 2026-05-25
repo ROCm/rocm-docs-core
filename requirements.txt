@@ -59,7 +59,7 @@ comm==0.2.3
     # via ipykernel
 commitizen==4.10.0
     # via rocm-docs-core (pyproject.toml)
-cryptography==46.0.3
+cryptography==48.0.0
     # via pyjwt
 debugpy==1.8.17
     # via ipykernel
