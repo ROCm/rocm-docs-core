@@ -395,7 +395,7 @@ wheel==0.45.1
     # via pip-tools
 wrapt==2.0.1
     # via deprecated
-zipp==3.23.0
+zipp==4.1.0
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
