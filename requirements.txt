@@ -317,7 +317,7 @@ sphinx-copybutton==0.5.2
     # via rocm-docs-core (pyproject.toml)
 sphinx-design==0.6.1
     # via rocm-docs-core (pyproject.toml)
-sphinx-external-toc==1.0.1
+sphinx-external-toc==1.1.0
     # via rocm-docs-core (pyproject.toml)
 sphinx-notfound-page==1.1.0
     # via rocm-docs-core (pyproject.toml)
