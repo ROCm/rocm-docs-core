@@ -88,7 +88,7 @@ fastjsonschema==2.21.2
     # via
     #   nbformat
     #   rocm-docs-core (pyproject.toml)
-filelock==3.20.0
+filelock==3.29.0
     # via virtualenv
 gitdb==4.0.12
     # via gitpython
