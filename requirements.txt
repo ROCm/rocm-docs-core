@@ -57,7 +57,7 @@ colorama==0.4.6
     # via commitizen
 comm==0.2.3
     # via ipykernel
-commitizen==4.10.0
+commitizen==4.16.2
     # via rocm-docs-core (pyproject.toml)
 cryptography==48.0.0
     # via pyjwt
