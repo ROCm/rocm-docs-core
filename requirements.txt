@@ -383,7 +383,7 @@ typing-extensions==4.15.0
     #   referencing
     #   sqlalchemy
     #   virtualenv
-urllib3==2.5.0
+urllib3==2.7.0
     # via
     #   pygithub
     #   requests
