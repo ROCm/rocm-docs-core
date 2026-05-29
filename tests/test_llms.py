@@ -319,6 +319,85 @@ def test_generate_llms_full_preserves_myst_fences(tmp_path: Path) -> None:
     assert "```" in output
 
 
+def test_generate_llms_full_hip_example(tmp_path: Path) -> None:
+    """HIP kernel launch syntax and angle brackets in code blocks are preserved.
+
+    This is a regression test for the original bug where lines containing
+    angle brackets (e.g. kernel<<<grid, block>>>(...) or std::vector<int>)
+    were incorrectly dropped by the prose filter.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    rst_content = "\n".join(
+        [
+            "Vector addition example using HIP.",
+            "",
+            "This example demonstrates how to add two vectors on a GPU.",
+            "It uses the HIP runtime API for device memory management.",
+            "The kernel is launched with a grid of blocks and threads.",
+            "",
+            ".. code-block:: cpp",
+            "",
+            "   #include <hip/hip_runtime.h>",
+            "   #include <vector>",
+            "",
+            "   __global__ void add(int *a, int *b, int *c, std::size_t size)",
+            "   {",
+            "       const std::size_t index = threadIdx.x + blockDim.x * blockIdx.x;",
+            "       if(index < size)",
+            "       {",
+            "           c[index] += a[index] + b[index];",
+            "       }",
+            "   }",
+            "",
+            "   int main()",
+            "   {",
+            "       constexpr int numOfBlocks = 256;",
+            "       constexpr int threadsPerBlock = 256;",
+            "       constexpr std::size_t arraySize = 1U << 16;",
+            "",
+            "       std::vector<int> a(arraySize), b(arraySize), c(arraySize);",
+            "       int *d_a, *d_b, *d_c;",
+            "",
+            "       HIP_CHECK(hipMalloc(&d_a, arraySize * sizeof(int)));",
+            "       HIP_CHECK(hipMalloc(&d_b, arraySize * sizeof(int)));",
+            "       HIP_CHECK(hipMalloc(&d_c, arraySize * sizeof(int)));",
+            "",
+            "       add<<<numOfBlocks, threadsPerBlock>>>(d_a, d_b, d_c, arraySize);",
+            "       HIP_CHECK(hipGetLastError());",
+            "       HIP_CHECK(hipDeviceSynchronize());",
+            "",
+            "       HIP_CHECK(hipFree(d_a));",
+            "       HIP_CHECK(hipFree(d_b));",
+            "       HIP_CHECK(hipFree(d_c));",
+            "   }",
+        ]
+    )
+    (srcdir / "hip_add.rst").write_text(rst_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # Kernel launch syntax with triple angle brackets must be preserved.
+    assert (
+        "add<<<numOfBlocks, threadsPerBlock>>>(d_a, d_b, d_c, arraySize);"
+        in output
+    )
+    # C++ template syntax with angle brackets must be preserved.
+    assert (
+        "std::vector<int> a(arraySize), b(arraySize), c(arraySize);" in output
+    )
+    # Regular HIP API calls must be preserved.
+    assert "HIP_CHECK(hipMalloc(&d_a, arraySize * sizeof(int)));" in output
+    assert "HIP_CHECK(hipDeviceSynchronize());" in output
+    # The directive line itself must not appear.
+    assert ".. code-block::" not in output
+
+
 def test_generate_llms_full_output_ends_with_newline(tmp_path: Path) -> None:
     """The output file always ends with a newline."""
     srcdir = tmp_path / "src"
