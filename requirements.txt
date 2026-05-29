@@ -245,7 +245,7 @@ pyjwt[crypto]==2.13.0
     # via pygithub
 pynacl==1.6.2
     # via pygithub
-pyparsing==3.2.5
+pyparsing==3.3.2
     # via
     #   doxysphinx
     #   sphinxcontrib-doxylink
