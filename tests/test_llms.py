@@ -58,6 +58,10 @@ def test_should_skip_included_dirs(parts: tuple[str, ...]) -> None:
         "kernel<<<grid, block>>>(args);",
         "std::vector<float> data;",
         "template<typename T>",
+        "| Environment Variable | Type | Default |",
+        # RST multi-line inline hyperlink — URL continuation line must be kept
+        "<https://github.com/ROCm/rccl>`_.",
+        "<https://rocm.docs.amd.com/en/latest/>`_",
     ],
 )
 def test_is_prose_line_kept(line: str) -> None:
@@ -101,10 +105,19 @@ def test_is_prose_line_kept(line: str) -> None:
         "{bdg-primary}`label`",
         # HTML comment close
         "-->",
-        # Lines starting with "<" (raw HTML tags)
+        # HTML tags (caught by _HTML_TAG_RE, not MARKUP_PREFIXES)
         '<div class="note">',
+        "</section>",
+        "<!DOCTYPE html>",
         # sphinx-tags badge
         ":img-top: image.png",
+        # RST .. meta:: options with extended field names (space + qualifier)
+        ":description lang=en: AMD Instinct GPU architecture",
+        # YAML frontmatter key-value pairs (double-quoted keys)
+        '"description lang=en": "AMD Instinct GPU architecture"',
+        # Markdown table separator rows
+        "|-----|------|---------|-------------|",
+        "| :--- | ---: |",
     ],
 )
 def test_is_prose_line_dropped(line: str) -> None:
@@ -396,6 +409,135 @@ def test_generate_llms_full_hip_example(tmp_path: Path) -> None:
     assert "HIP_CHECK(hipDeviceSynchronize());" in output
     # The directive line itself must not appear.
     assert ".. code-block::" not in output
+
+
+def test_generate_llms_full_skips_rst_raw_html(tmp_path: Path) -> None:
+    """Content inside .. raw:: html blocks is excluded from the output."""
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    rst_content = "\n".join(
+        [
+            "Introduction to the MI300X GPU.",
+            "",
+            ".. raw:: html",
+            "",
+            '   <meta name="keywords" content="MI300X, AMD Instinct">',
+            '   <p>MI300X, AMD Instinct"></p>',
+            "",
+            "The MI300X accelerator is designed for AI workloads.",
+            "It features 192 GB of HBM3 memory.",
+            "The peak memory bandwidth exceeds 5 TB/s.",
+            "Multiple compute dies are connected via Infinity Fabric.",
+            "It supports PCIe 5.0 for host communication.",
+            "The device can be used for LLM inference and training.",
+            "ROCm provides the software stack for this hardware.",
+            "See the MI300X documentation for full specifications.",
+            "The architecture supports FP8, BF16, and FP32 formats.",
+            "Tensor parallelism is well-supported across devices.",
+        ]
+    )
+    (srcdir / "mi300x.rst").write_text(rst_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    assert 'content="MI300X, AMD Instinct"' not in output
+    assert "MI300X, AMD Instinct" not in output
+    assert "MI300X accelerator" in output
+
+
+def test_generate_llms_full_skips_meta_directive_options(
+    tmp_path: Path,
+) -> None:
+    """RST .. meta:: options with extended field names are excluded."""
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    rst_content = "\n".join(
+        [
+            ".. meta::",
+            "   :description lang=en: MI100 GPU architecture overview",
+            "   :keywords: MI100, AMD Instinct, GPU",
+            "",
+            "Introduction to the MI100 GPU.",
+            "The MI100 was AMD's first Instinct GPU based on CDNA architecture.",
+            "It features 32 GB of HBM2 memory.",
+            "The peak FP64 performance is 11.5 TFLOPS.",
+            "ROCm supports MI100 with a full software stack.",
+            "The device is suitable for HPC and AI workloads.",
+            "Multiple MI100 GPUs can be connected via Infinity Fabric.",
+            "See the AMD documentation for full specifications.",
+            "The MI100 supports PCIe 4.0 for host communication.",
+            "Matrix operations are accelerated via the Matrix Core Engine.",
+        ]
+    )
+    (srcdir / "mi100.rst").write_text(rst_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    assert ":description lang=en:" not in output
+    assert "MI100 GPU" in output
+
+
+def test_generate_llms_full_preserves_rst_multiline_hyperlinks(
+    tmp_path: Path,
+) -> None:
+    """RST multi-line inline hyperlinks are preserved intact in the output.
+
+    In RST a hyperlink can span two lines::
+
+        `link text
+        <https://example.com>`_
+
+    The second line starts with ``<https://...>``.  It must NOT be dropped by
+    the HTML-tag filter because it is not an HTML tag — it is a URL wrapped in
+    angle brackets as part of an RST inline hyperlink reference.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    rst_content = "\n".join(
+        [
+            "Overview of ROCm Communication Libraries.",
+            "",
+            "You can verify UCC and ROCm version compatibility using the `communication libraries tables",
+            "<https://rocm.docs.amd.com/en/latest/compatibility/compatibility-matrix.html>`_.",
+            "",
+            "Additional prose about GPU-to-GPU communication.",
+            "The RCCL library enables collective operations across GPUs.",
+            "You can install RCCL via the ROCm package repository.",
+            "review and implement the `rccl test install script",
+            "<https://github.com/ROCm/rccl>`_.",
+            "MPI libraries can also be used alongside RCCL.",
+            "See the RCCL documentation for configuration options.",
+            "Bandwidth depends on the interconnect topology.",
+        ]
+    )
+    (srcdir / "comms.rst").write_text(rst_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # The URL continuation line must be present so the hyperlink reads correctly.
+    assert (
+        "<https://rocm.docs.amd.com/en/latest/compatibility/compatibility-matrix.html>`_."
+        in output
+    )
+    assert "<https://github.com/ROCm/rccl>`_." in output
+    # The surrounding prose sentences must also be intact.
+    assert "communication libraries tables" in output
+    assert "rccl test install script" in output
 
 
 def test_generate_llms_full_output_ends_with_newline(tmp_path: Path) -> None:
