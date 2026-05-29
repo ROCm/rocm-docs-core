@@ -540,6 +540,189 @@ def test_generate_llms_full_preserves_rst_multiline_hyperlinks(
     assert "rccl test install script" in output
 
 
+def test_generate_llms_full_drops_multiline_html_tag_continuation(
+    tmp_path: Path,
+) -> None:
+    """Multi-line HTML opening tags discard their attribute continuation lines.
+
+    A ``<meta>`` tag whose ``content`` attribute value wraps to a second line
+    produces a continuation such as ``  MI100, AMD Instinct">`` that does not
+    start with ``<``.  Without state tracking this line passes through the
+    prose filter and appears verbatim in the output.  The fix tracks the
+    unclosed-tag state and discards all lines until the closing ``>`` is seen.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    md_content = "\n".join(
+        [
+            "<head>",
+            '  <meta name="keywords" content="GPU architecture, MI200, MI250, RDNA,',
+            '  MI100, AMD Instinct">',
+            "</head>",
+            "",
+            "# GPU architecture documentation",
+            "",
+            "This page covers AMD Instinct GPU architectures.",
+            "The MI300 series is based on the CDNA 3 architecture.",
+            "The MI200 series is based on the CDNA 2 architecture.",
+            "Each generation improves on memory bandwidth and compute.",
+            "ROCm provides a unified software stack across all devices.",
+            "See the hardware documentation for detailed specifications.",
+            "Performance counters are available for profiling workloads.",
+            "The architecture supports FP64, FP32, FP16, and BF16 formats.",
+        ]
+    )
+    (srcdir / "gpu-arch.md").write_text(md_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # The continuation line of the wrapped <meta> attribute must not appear.
+    assert 'MI100, AMD Instinct">' not in output
+    # Surrounding prose must be preserved.
+    assert "GPU architecture documentation" in output
+    assert "CDNA 3 architecture" in output
+
+
+def test_generate_llms_full_strips_trailing_html_close_tags(
+    tmp_path: Path,
+) -> None:
+    """Trailing HTML close tags on prose lines are stripped from the output.
+
+    Sphinx-design card bodies sometimes contain lines like::
+
+        Browse blogs detailing ROCm workloads.</p>
+
+    where a closing tag is appended to an otherwise plain prose sentence.
+    The sentence should appear in the output without the trailing tag.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    md_content = "\n".join(
+        [
+            "# ROCm Data Science",
+            "",
+            "View the source code for all ROCm-DS components on Github.</p>",
+            "Browse blogs detailing ROCm data-science workloads.</p>",
+            "Installation instructions are available in the documentation.</li>",
+            "The library supports NumPy, PyTorch, and TensorFlow workflows.",
+            "GPU acceleration is enabled transparently via ROCm.",
+            "Multiple GPUs can be used with data-parallel training.",
+            "See the quickstart guide to set up your environment.",
+            "All major Linux distributions are supported.",
+            "Binary packages are available via pip and conda.",
+        ]
+    )
+    (srcdir / "index.md").write_text(md_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # Text content must be present, close tags must be absent.
+    assert (
+        "View the source code for all ROCm-DS components on Github." in output
+    )
+    assert "Browse blogs detailing ROCm data-science workloads." in output
+    assert (
+        "Installation instructions are available in the documentation."
+        in output
+    )
+    assert "</p>" not in output
+    assert "</li>" not in output
+
+
+def test_generate_llms_full_drops_html_comment_body(tmp_path: Path) -> None:
+    """Content inside HTML comment blocks (<!-- ... -->) is excluded.
+
+    HTML comments span multiple lines::
+
+        <!--
+        We need performance data about the P2P communication here.
+        -->
+
+    The opener (``<!--``) and closer (``-->``) are already filtered, but the
+    body lines are plain text that pass the prose filter without state tracking.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    md_content = "\n".join(
+        [
+            "# P2P communication",
+            "",
+            "AMD Instinct GPUs support peer-to-peer memory access.",
+            "Low-latency AMD Infinity Fabric links connect GPUs in a node.",
+            "",
+            "<!---",
+            "We need performance data about the P2P communication here.",
+            "-->",
+            "",
+            "The NPS setting controls how memory is partitioned across dies.",
+            "ROCm exposes P2P transfers via the hipMemcpyPeer API.",
+            "Bandwidth is determined by the Infinity Fabric link speed.",
+            "The topology can be queried with rocm-smi --showtopo.",
+            "NUMA-aware placement improves overall system throughput.",
+            "Use hipMemcpyPeerAsync for non-blocking transfers between GPUs.",
+        ]
+    )
+    (srcdir / "mi300.md").write_text(md_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # The placeholder comment body must not appear.
+    assert "We need performance data" not in output
+    # Surrounding prose must be preserved.
+    assert "Infinity Fabric links connect GPUs" in output
+    assert "hipMemcpyPeer" in output
+
+
+def test_generate_llms_full_drops_inline_html_comment(tmp_path: Path) -> None:
+    """Single-line HTML comments (<!-- comment -->) are discarded entirely."""
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    md_content = "\n".join(
+        [
+            "# Installation guide",
+            "",
+            "<!-- TODO: add package manager instructions -->",
+            "",
+            "Install ROCm using the package manager for your distribution.",
+            "Ubuntu and RHEL are officially supported Linux distributions.",
+            "Follow the pre-installation checklist before running the installer.",
+            "Verify the installation with rocm-smi after completing setup.",
+            "The ROCm version must match the supported driver version.",
+            "Check compatibility with your GPU model before upgrading.",
+            "Documentation for each release is available on ROCm Docs.",
+            "File issues on GitHub if you encounter installation problems.",
+            "Pre-built packages are available for Ubuntu, RHEL, and SLES.",
+        ]
+    )
+    (srcdir / "install.md").write_text(md_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    assert "TODO" not in output
+    assert "add package manager instructions" not in output
+    assert "Install ROCm using the package manager" in output
+
+
 def test_generate_llms_full_output_ends_with_newline(tmp_path: Path) -> None:
     """The output file always ends with a newline."""
     srcdir = tmp_path / "src"
