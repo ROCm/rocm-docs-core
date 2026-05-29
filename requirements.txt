@@ -92,7 +92,7 @@ filelock==3.29.0
     # via virtualenv
 gitdb==4.0.12
     # via gitpython
-gitpython==3.1.45
+gitpython==3.1.50
     # via rocm-docs-core (pyproject.toml)
 greenlet==3.5.1
     # via sqlalchemy
