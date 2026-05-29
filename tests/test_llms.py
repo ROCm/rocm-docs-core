@@ -723,6 +723,55 @@ def test_generate_llms_full_drops_inline_html_comment(tmp_path: Path) -> None:
     assert "Install ROCm using the package manager" in output
 
 
+def test_generate_llms_full_drops_punctuation_only_after_html_strip(
+    tmp_path: Path,
+) -> None:
+    """Lines that are only punctuation after stripping trailing HTML are dropped.
+
+    Source pattern: a paragraph whose continuation line is just ``.</p>``
+    (an artefact of sphinx-design grid cards).  After ``</p>`` is stripped the
+    remaining content is a bare ``.`` with no word characters — it should be
+    silently discarded rather than emitted as a lone period.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    # Source pattern: a paragraph line followed by a ".</p>" continuation,
+    # as produced by sphinx-design grid cards.  The ".</p>" line passes
+    # _is_prose_line (it starts with "."), so _TRAILING_HTML_CLOSE_RE strips
+    # "</p>", leaving a bare "." that should then be discarded.
+    md_content = "\n".join(
+        [
+            "# ROCm Data Science Toolkit",
+            "",
+            "Install ROCm using the package manager for your distribution.",
+            "Ubuntu and RHEL are officially supported Linux distributions.",
+            ".</p>",
+            "Follow the pre-installation checklist before running the installer.",
+            "Verify the installation with rocm-smi after completing setup.",
+            "The ROCm version must match the supported driver version.",
+            "Check compatibility with your GPU model before upgrading.",
+            "Documentation for each release is available on ROCm Docs.",
+            "File issues on GitHub if you encounter installation problems.",
+            "Pre-built packages are available for Ubuntu, RHEL, and SLES.",
+        ]
+    )
+    (srcdir / "index.md").write_text(md_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # The bare "." artifact must not appear as a standalone line.
+    assert "\n.\n" not in output
+    assert "\n. \n" not in output
+    # Real prose must be preserved.
+    assert "Ubuntu and RHEL" in output
+    assert "Follow the pre-installation checklist" in output
+
+
 def test_generate_llms_full_output_ends_with_newline(tmp_path: Path) -> None:
     """The output file always ends with a newline."""
     srcdir = tmp_path / "src"
