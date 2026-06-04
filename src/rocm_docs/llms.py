@@ -33,18 +33,6 @@ MARKUP_PREFIXES: tuple[str, ...] = (
     ":::",
     "```{",
     "```",
-    ":img-top:",
-    ":class",
-    ":link:",
-    ":link-type:",
-    ":shadow:",
-    ":columns:",
-    ":padding:",
-    ":gutter:",
-    ":open:",
-    ":name:",
-    ":header-rows:",
-    ":alt:",
     "+++",
     "-->",
     "{bdg-",
@@ -79,6 +67,9 @@ _HTML_TAG_RE = re.compile(r"^<(?!https?://|ftp://|mailto:)[a-zA-Z/!]")
 _TRAILING_HTML_CLOSE_RE = re.compile(r"(</[a-zA-Z]+>)+\s*$")
 
 MIN_PROSE_LINES: int = 10
+
+# Matches the first `#` heading in a Markdown file (e.g. "# Title").
+_MD_H1_RE = re.compile(r"^#\s+(.+?)\s*$")
 
 
 def _should_skip(path: Path) -> bool:
@@ -123,6 +114,104 @@ def _is_prose_line(line: str) -> bool:
     return not _RST_UNDERLINE_RE.match(stripped)
 
 
+def _extract_kept_lines(lines: list[str]) -> list[str]:
+    """Apply the streaming filter and return the lines that survive.
+
+    This is the single source of truth for what ends up in the output for a
+    given file.  Both the content-length gate and the emitted section use it,
+    so they cannot disagree.
+    """
+    in_backtick_fence = False
+    in_rst_code_block = False
+    in_rst_skip_block = False
+    in_html_comment = False  # inside <!-- ... --> block
+    in_html_open_tag = False  # inside a multi-line HTML opening tag
+    kept: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        # Backtick fences (MyST/Markdown)
+        if stripped.startswith("```"):
+            in_backtick_fence = not in_backtick_fence
+            kept.append(line)
+            continue
+        if in_backtick_fence:
+            kept.append(line)
+            continue
+        # HTML comment block (<!-- ... -->): discard all content until -->.
+        if in_html_comment:
+            if "-->" in stripped:
+                in_html_comment = False
+            continue
+        # RST skip block (e.g. .. raw::): discard all indented content.
+        if in_rst_skip_block:
+            if not stripped or line[0] in (" ", "\t"):
+                continue
+            in_rst_skip_block = False
+        # RST code block: exit when a non-blank, non-indented line appears.
+        if in_rst_code_block:
+            if not stripped or line[0] in (" ", "\t"):
+                kept.append(line)
+                continue
+            in_rst_code_block = False
+        # RST raw block: enter and discard both the directive and its body.
+        if _RST_SKIP_BLOCK_RE.match(stripped):
+            in_rst_skip_block = True
+            continue
+        # RST code block: enter on directive line (directive itself dropped).
+        if _RST_CODE_BLOCK_RE.match(stripped):
+            in_rst_code_block = True
+            continue
+        # HTML comment open (<!-- ... -->): discard opener and enter state.
+        if stripped.startswith("<!--"):
+            if "-->" not in stripped:
+                in_html_comment = True
+            continue
+        # Multi-line HTML opening tag: skip continuation lines until >.
+        if in_html_open_tag:
+            if ">" in stripped:
+                in_html_open_tag = False
+            continue
+        # Detect HTML opening tags that wrap across lines (no > on this line).
+        if _HTML_TAG_RE.match(stripped) and ">" not in stripped:
+            in_html_open_tag = True
+            continue
+        if not stripped:
+            kept.append(line)
+        elif _is_prose_line(line):
+            # Strip trailing HTML close tags (e.g. "See the guide.</p>").
+            cleaned = _TRAILING_HTML_CLOSE_RE.sub("", line).rstrip()
+            cleaned_stripped = cleaned.strip()
+            if not cleaned_stripped:
+                # Entire line was HTML close tags — keep original (shouldn't
+                # normally reach here since _is_prose_line filters HTML).
+                kept.append(line)
+            elif re.search(r"\w", cleaned_stripped):
+                # Line has real word content after stripping close tags.
+                kept.append(cleaned)
+            # else: only punctuation remains (e.g. bare ".") — discard.
+    return kept
+
+
+def _first_md_heading(lines: list[str]) -> str | None:
+    """Return the first Markdown `#` heading text, or None if none is present.
+
+    Used to give appended sections a meaningful title instead of the file path.
+    Headings inside fenced code blocks are ignored.
+    """
+    in_fence = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        m = _MD_H1_RE.match(stripped)
+        if m:
+            return m.group(1)
+    return None
+
+
 def generate_llms_full(app: Sphinx, exception: Any) -> None:
     """Write ``llms-full.txt`` to the output directory after a successful build.
 
@@ -165,84 +254,21 @@ def generate_llms_full(app: Sphinx, exception: Any) -> None:
             continue
 
         lines = content.splitlines()
-        prose_lines = [line for line in lines if _is_prose_line(line)]
+        kept = _extract_kept_lines(lines)
 
-        if len(prose_lines) < MIN_PROSE_LINES:
+        # Gate on what will actually be emitted, not on what _is_prose_line
+        # thinks before the state machine runs.  This way fenced-only files
+        # are not under-counted and noise-only files are not over-counted.
+        non_blank_kept = sum(1 for line in kept if line.strip())
+        if non_blank_kept < MIN_PROSE_LINES:
             continue
 
         relative = doc_file.relative_to(docs_root)
-        in_backtick_fence = False
-        in_rst_code_block = False
-        in_rst_skip_block = False
-        in_html_comment = False  # inside <!-- ... --> block
-        in_html_open_tag = False  # inside a multi-line HTML opening tag
-        kept: list[str] = []
-        for line in lines:
-            stripped = line.strip()
-            # Backtick fences (MyST/Markdown)
-            if stripped.startswith("```"):
-                in_backtick_fence = not in_backtick_fence
-                kept.append(line)
-                continue
-            if in_backtick_fence:
-                kept.append(line)
-                continue
-            # HTML comment block (<!-- ... -->): discard all content until -->.
-            if in_html_comment:
-                if "-->" in stripped:
-                    in_html_comment = False
-                continue
-            # RST skip block (e.g. .. raw::): discard all indented content.
-            if in_rst_skip_block:
-                if not stripped or line[0] in (" ", "\t"):
-                    continue
-                in_rst_skip_block = False
-            # RST code block: exit when a non-blank, non-indented line appears.
-            if in_rst_code_block:
-                if not stripped or line[0] in (" ", "\t"):
-                    kept.append(line)
-                    continue
-                in_rst_code_block = False
-            # RST raw block: enter and discard both the directive and its body.
-            if _RST_SKIP_BLOCK_RE.match(stripped):
-                in_rst_skip_block = True
-                continue
-            # RST code block: enter on directive line (directive itself dropped).
-            if _RST_CODE_BLOCK_RE.match(stripped):
-                in_rst_code_block = True
-                continue
-            # HTML comment open (<!-- ... -->): discard opener and enter state.
-            if stripped.startswith("<!--"):
-                if "-->" not in stripped:
-                    in_html_comment = True
-                continue
-            # Multi-line HTML opening tag: skip continuation lines until >.
-            if in_html_open_tag:
-                if ">" in stripped:
-                    in_html_open_tag = False
-                continue
-            # Detect HTML opening tags that wrap across lines (no > on this line).
-            if _HTML_TAG_RE.match(stripped) and ">" not in stripped:
-                in_html_open_tag = True
-                continue
-            if not stripped:
-                kept.append(line)
-            elif _is_prose_line(line):
-                # Strip trailing HTML close tags (e.g. "See the guide.</p>").
-                cleaned = _TRAILING_HTML_CLOSE_RE.sub("", line).rstrip()
-                cleaned_stripped = cleaned.strip()
-                if not cleaned_stripped:
-                    # Entire line was HTML close tags — keep original (shouldn't
-                    # normally reach here since _is_prose_line filters HTML).
-                    kept.append(line)
-                elif re.search(r"\w", cleaned_stripped):
-                    # Line has real word content after stripping close tags.
-                    kept.append(cleaned)
-                # else: only punctuation remains (e.g. bare ".") — discard.
-        cleaned = "\n".join(kept)
+        heading = _first_md_heading(lines) or str(relative)
+        cleaned = "\n".join(kept).strip()
 
-        combined.append(f"\n\n---\n\n# {relative}\n")
-        combined.append(cleaned.strip())
+        combined.append(f"\n\n---\n\n## {heading}\n\n_Source: `{relative}`_\n")
+        combined.append(cleaned)
 
     output_file.write_text(
         "\n".join(combined) + "\n",

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import unittest.mock
 from pathlib import Path
 
@@ -573,6 +575,8 @@ def test_generate_llms_full_drops_multiline_html_tag_continuation(
             "See the hardware documentation for detailed specifications.",
             "Performance counters are available for profiling workloads.",
             "The architecture supports FP64, FP32, FP16, and BF16 formats.",
+            "Compute Units expose vector and matrix execution pipelines.",
+            "Each device exposes telemetry through rocm-smi for monitoring.",
         ]
     )
     (srcdir / "gpu-arch.md").write_text(md_content, encoding="utf-8")
@@ -673,6 +677,10 @@ def test_generate_llms_full_drops_html_comment_body(tmp_path: Path) -> None:
             "The topology can be queried with rocm-smi --showtopo.",
             "NUMA-aware placement improves overall system throughput.",
             "Use hipMemcpyPeerAsync for non-blocking transfers between GPUs.",
+            "Check the supported peer pairs before enabling P2P access.",
+            "Performance counters surface bandwidth utilisation per link.",
+            "Synchronisation primitives coordinate transfers across streams.",
+            "Profiling tools can attribute traffic to specific source GPUs.",
         ]
     )
     (srcdir / "mi300.md").write_text(md_content, encoding="utf-8")
@@ -784,3 +792,325 @@ def test_generate_llms_full_output_ends_with_newline(tmp_path: Path) -> None:
 
     raw = (outdir / "llms-full.txt").read_bytes()
     assert raw.endswith(b"\n")
+
+
+# ---------------------------------------------------------------------------
+# Fix #1 — gate counts emitted lines, not pre-filter prose-like lines
+# ---------------------------------------------------------------------------
+
+
+def test_gate_counts_emitted_lines_not_raw_prose(tmp_path: Path) -> None:
+    """A file whose `_is_prose_line` count meets MIN_PROSE_LINES but whose
+    actual emission falls below it is skipped under the new gate.
+
+    Before the fix this file would pass the gate (it has 12 prose-shaped
+    lines after the simple per-line check) but then emit nothing because all
+    its content lives inside a `.. raw:: html` block that the state machine
+    discards.  After the fix, the gate sees the empty emission and skips.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    rst_content = "\n".join(
+        [
+            ".. raw:: html",
+            "",
+            "   First line of HTML-only content.",
+            "   Second line of HTML-only content.",
+            "   Third line of HTML-only content.",
+            "   Fourth line of HTML-only content.",
+            "   Fifth line of HTML-only content.",
+            "   Sixth line of HTML-only content.",
+            "   Seventh line of HTML-only content.",
+            "   Eighth line of HTML-only content.",
+            "   Ninth line of HTML-only content.",
+            "   Tenth line of HTML-only content.",
+            "   Eleventh line of HTML-only content.",
+            "   Twelfth line of HTML-only content.",
+        ]
+    )
+    (srcdir / "raw_only.rst").write_text(rst_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # The file produces no emittable content, so it must not appear at all.
+    assert "raw_only.rst" not in output
+    assert "HTML-only content" not in output
+
+
+def test_gate_accepts_fenced_code_when_state_machine_keeps_it(
+    tmp_path: Path,
+) -> None:
+    """A file that is mostly fenced code passes the gate when the state
+    machine emits its content, even though `_is_prose_line` rejects fence
+    interior lines individually.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    # Two short prose lines + a long fenced code block.  Under the old gate
+    # the file would be rejected (only 2 prose-shaped lines).  Under the new
+    # gate the fence interior is part of `kept`, so the gate passes.
+    md_content = "\n".join(
+        [
+            "# Kernel example",
+            "",
+            "Short note.",
+            "Another short note.",
+            "",
+            "```cpp",
+            "void kernel_a() {}",
+            "void kernel_b() {}",
+            "void kernel_c() {}",
+            "void kernel_d() {}",
+            "void kernel_e() {}",
+            "void kernel_f() {}",
+            "void kernel_g() {}",
+            "void kernel_h() {}",
+            "void kernel_i() {}",
+            "void kernel_j() {}",
+            "```",
+        ]
+    )
+    (srcdir / "kernels.md").write_text(md_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    assert "kernel_a" in output
+    assert "kernel_j" in output
+
+
+# ---------------------------------------------------------------------------
+# Fix #3 — synthetic section heading uses the page's first `#` heading
+# ---------------------------------------------------------------------------
+
+
+def test_section_heading_uses_first_md_heading_when_present(
+    tmp_path: Path,
+) -> None:
+    """When a Markdown file has a `#` heading, the section title in the
+    aggregated output uses that heading text rather than the file path.
+    The file path is recorded separately as a `_Source: ..._` line.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    md_content = "\n".join(
+        [
+            "# Installation guide",
+            "",
+            "Install ROCm via the package manager for your distribution.",
+            "Ubuntu and RHEL are officially supported Linux distributions.",
+            "Follow the pre-installation checklist before installing.",
+            "Verify the installation with rocm-smi after completing setup.",
+            "The ROCm version must match the supported driver version.",
+            "Check compatibility with your GPU model before upgrading.",
+            "Documentation for each release is available on ROCm Docs.",
+            "File issues on GitHub if you encounter installation problems.",
+            "Pre-built packages are available for Ubuntu, RHEL, and SLES.",
+            "Container images are also published on Docker Hub.",
+        ]
+    )
+    (srcdir / "install.md").write_text(md_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # The synthetic section heading uses the file's own `#` heading.
+    assert "## Installation guide" in output
+    # The file path is recorded as metadata, not as the heading.
+    assert "_Source: `install.md`_" in output
+    # The path no longer appears as an H1 heading.
+    assert "# install.md" not in output
+
+
+def test_section_heading_falls_back_to_path_when_no_md_heading(
+    tmp_path: Path,
+) -> None:
+    """When a file has no `#` heading (typical of `.rst` files), the section
+    title falls back to the file path so each section is still labelled.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    rst_content = "\n".join(
+        [
+            "Setup notes",
+            "===========",
+            "",
+            "Configure the device before use.",
+            "Set the visible devices via HIP_VISIBLE_DEVICES.",
+            "Confirm the runtime with rocminfo before launching workloads.",
+            "Reserve memory using hipMalloc and release it with hipFree.",
+            "Use hipDeviceSynchronize to wait for outstanding work.",
+            "Check error codes returned by every HIP API call.",
+            "Run rocm-smi to inspect device utilisation.",
+            "Build the example with hipcc and link against the runtime.",
+            "Profile with rocprof to identify hotspots.",
+            "Adjust block and grid dimensions to match the workload.",
+        ]
+    )
+    (srcdir / "setup.rst").write_text(rst_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # Fallback: section heading is the relative file path.
+    assert "## setup.rst" in output
+
+
+def test_section_heading_ignores_md_heading_inside_code_fence(
+    tmp_path: Path,
+) -> None:
+    """A `#` inside a fenced code block is not treated as the page heading.
+
+    Source files sometimes show shell prompts (``# install rocm``) inside a
+    fence.  Those must not become the page's section title.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    md_content = "\n".join(
+        [
+            "```bash",
+            "# install rocm",
+            "apt install rocm",
+            "```",
+            "",
+            "# Real page heading",
+            "",
+            "Install ROCm via the package manager for your distribution.",
+            "Ubuntu and RHEL are officially supported Linux distributions.",
+            "Follow the pre-installation checklist before installing.",
+            "Verify the installation with rocm-smi after completing setup.",
+            "The ROCm version must match the supported driver version.",
+            "Check compatibility with your GPU model before upgrading.",
+            "Documentation for each release is available on ROCm Docs.",
+            "File issues on GitHub if you encounter installation problems.",
+            "Pre-built packages are available for Ubuntu, RHEL, and SLES.",
+            "Container images are also published on Docker Hub.",
+        ]
+    )
+    (srcdir / "fenced.md").write_text(md_content, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    assert "## Real page heading" in output
+    assert "## install rocm" not in output
+
+
+# ---------------------------------------------------------------------------
+# Fix #4 — additional regression coverage for the rstrip-chain replacement
+# ---------------------------------------------------------------------------
+
+
+def test_llms_txt_header_preserves_trailing_dashes_in_content(
+    tmp_path: Path,
+) -> None:
+    """Trailing `-` characters in real `llms.txt` content are preserved.
+
+    The old `.rstrip().rstrip("-").rstrip()` chain would eat any trailing
+    dashes from the last non-blank line — including legitimate ones (e.g.
+    a hyphenated word at end of file).  The replacement only drops a literal
+    trailing `\\n---` separator line.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    # Header content whose last line ends with real dashes.
+    (srcdir / "llms.txt").write_text("# Project rocm-docs-\n", encoding="utf-8")
+    # A doc file so the run produces output.
+    prose = "\n".join(
+        [f"Sentence number {i} for padding the file." for i in range(12)]
+    )
+    (srcdir / "index.md").write_text(prose, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # The trailing dash on the header line must survive intact.
+    assert output.startswith("# Project rocm-docs-")
+
+
+def test_llms_txt_header_strips_trailing_hr_separator(tmp_path: Path) -> None:
+    """A trailing `\\n---` separator at the end of `llms.txt` is removed so
+    the appended section's own `---` does not double up.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    (srcdir / "llms.txt").write_text(
+        "# Header\n\nIntro.\n\n---\n", encoding="utf-8"
+    )
+    prose = "\n".join([f"Padding sentence {i}." for i in range(12)])
+    (srcdir / "index.md").write_text(prose, encoding="utf-8")
+
+    app = _make_app(srcdir, outdir)
+    generate_llms_full(app, None)
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # The single appended separator is `\n\n---\n\n`; with the trailing one
+    # stripped from the header, the output should never contain two `---`
+    # markers back-to-back.
+    assert "---\n\n---" not in output
+    # The "Intro." sentence must survive (i.e. content was not over-stripped).
+    assert "Intro." in output
+
+
+def test_unreadable_file_does_not_raise(tmp_path: Path) -> None:
+    """A doc file whose read raises is logged and skipped, not propagated.
+
+    Regression test for the original `except Exception` clause that referenced
+    an undefined `e` and would have raised `NameError` on the first failure.
+    """
+    srcdir = tmp_path / "src"
+    outdir = tmp_path / "out"
+    srcdir.mkdir()
+    outdir.mkdir()
+
+    # Create one valid file so the run still produces output.
+    prose = "\n".join([f"Valid sentence {i} of padding." for i in range(12)])
+    (srcdir / "valid.md").write_text(prose, encoding="utf-8")
+
+    # Create a `.md` path whose read will raise — simulate via monkey patch.
+    bad = srcdir / "bad.md"
+    bad.write_text("placeholder", encoding="utf-8")
+
+    real_read_text = Path.read_text
+
+    def fake_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
+        if self.name == "bad.md":
+            raise OSError("simulated read failure")
+        return real_read_text(self, *args, **kwargs)
+
+    app = _make_app(srcdir, outdir)
+    with unittest.mock.patch.object(Path, "read_text", fake_read_text):
+        generate_llms_full(app, None)  # must not raise
+
+    output = (outdir / "llms-full.txt").read_text(encoding="utf-8")
+    # The valid file's content is present; the bad file is skipped silently.
+    assert "Valid sentence 0" in output
+    assert "bad.md" not in output
