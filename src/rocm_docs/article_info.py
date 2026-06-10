@@ -190,7 +190,8 @@ def _estimate_read_time(file_name: Path) -> str:
     with open(file_name, encoding="utf-8") as file:
         html = file.read()
     soup = bs4.BeautifulSoup(html, "html.parser")
-    page_text = soup.find_all(text=True)
+    article = soup.find("article") or soup.find("main") or soup
+    page_text = article.find_all(text=True)
     visible_page_text = filter(is_visible, page_text)
     average_word_count = sum(count_words(line) for line in visible_page_text)
     time_minutes = int(max(1, round(average_word_count / words_per_minute)))
