@@ -45,6 +45,7 @@ ProjectMapping: TypeAlias = tuple[str, Inventory]
 DEFAULT_INTERSPHINX_REPOSITORY = "ROCm/rocm-docs-core"
 DEFAULT_INTERSPHINX_BRANCH = "develop"
 DOCS_VERSION_PATTERN = r"^docs-\d+\.\d+\.\d+$"
+PREVIEW_VERSION_PATTERN = r"^\d+\.\d+\.\d+-preview$"
 
 logger = sphinx.util.logging.getLogger(__name__)
 
@@ -162,6 +163,11 @@ class _Project:
         # Past release versions always with docs/
         regex = re.compile(DOCS_VERSION_PATTERN)
         if regex.match(current_branch):
+            return current_branch
+
+        # Pre-release preview builds (e.g. 7.13.0-preview) link to the matching
+        # preview version on each sister project.
+        if re.match(PREVIEW_VERSION_PATTERN, current_branch):
             return current_branch
 
         # Anything besides the canonical development branch links to latest docs
