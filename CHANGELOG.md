@@ -1,3 +1,16 @@
+## v1.35.0 (2026-06-10)
+
+### Feat
+
+- recognize X.Y.Z-preview slugs as static intersphinx versions
+- Fix gate/emission mismatch and improve headings in llms-full.txt
+- Add llms-full.txt generation and LLM friendly guide
+- Ignore .cline_storage and .vscode directories
+
+### Fix
+
+- add new repo sync pair
+
 ## v1.34.0 (2026-04-28)
 
 ### Feat
