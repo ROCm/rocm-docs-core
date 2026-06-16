@@ -25,3 +25,7 @@ Some prose on the RST page. See :doc:`page_md` for the Markdown page.
        int i = threadIdx.x;
        if (i < size) { a[i] = 1.0; }
    }
+
+.. tip::
+
+   Unique tip body text that must survive conversion.

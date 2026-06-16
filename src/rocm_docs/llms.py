@@ -136,15 +136,36 @@ def _render_page_markdown(
     return str(writer.output).strip()
 
 
+# Admonition node types sphinx-markdown-builder has a visitor for. Other
+# admonitions (e.g. ``tip``, ``caution``, generic ``admonition``) have no
+# visitor and would be dropped entirely, so they are converted to ``note`` to
+# preserve their content.
+_SUPPORTED_ADMONITIONS: tuple[type[nodes.Element], ...] = (
+    nodes.note,
+    nodes.warning,
+    nodes.important,
+    nodes.attention,
+    nodes.hint,
+)
+
+
 def _strip_unsupported_nodes(doctree: nodes.document) -> nodes.document:
-    """Return a copy of *doctree* with nodes the translator can't handle removed.
+    """Return a copy of *doctree* normalized for the Markdown translator.
 
     ``meta`` nodes have no visitor in sphinx-markdown-builder and would emit an
-    ``unknown node type: <meta>`` warning for every page.
+    ``unknown node type: <meta>`` warning for every page, so they are removed.
+    Admonitions the translator cannot render are converted to ``note`` so their
+    content is preserved instead of silently dropped.
     """
     clean = doctree.deepcopy()
     for meta in list(clean.findall(nodes.meta)):
         meta.parent.remove(meta)
+    for element in list(clean.findall(nodes.Element)):
+        if not isinstance(element, nodes.Admonition):
+            continue
+        if isinstance(element, _SUPPORTED_ADMONITIONS):
+            continue
+        element.replace_self(nodes.note("", *element.children))
     return clean
 
 

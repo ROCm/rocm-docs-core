@@ -148,6 +148,16 @@ def test_cross_reference_rewritten_to_absolute_url(
     assert f"({BASE_URL}/page_md.html" in llms_build.full
 
 
+def test_unsupported_admonition_content_preserved(
+    llms_build: _LlmsBuild,
+) -> None:
+    # `.. tip::` has no Markdown-builder visitor; its body must be preserved
+    # (converted to a note) rather than dropped.
+    assert "Unique tip body text that must survive conversion." in (
+        llms_build.full
+    )
+
+
 def test_doxygen_page_excluded_from_fulltext(
     llms_build: _LlmsBuild,
 ) -> None:
