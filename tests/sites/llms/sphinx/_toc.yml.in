@@ -1,0 +1,6 @@
+root: index
+subtrees:
+  - entries:
+      - file: page_rst
+      - file: page_md
+      - file: doxygen/generated

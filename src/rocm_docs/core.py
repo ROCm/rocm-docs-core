@@ -129,6 +129,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "sphinx.ext.autosummary",
         "sphinx.ext.doctest",
         "sphinx.ext.duration",
+        "sphinx_markdown_builder",
     ]
     for ext in required_extensions:
         app.setup_extension(ext)
@@ -159,6 +160,12 @@ def setup(app: Sphinx) -> dict[str, Any]:
         default=False,
         rebuild="html",
         types=bool,
+    )
+    app.add_config_value(
+        "rocm_docs_llms_base_url",
+        default="",
+        rebuild="html",
+        types=str,
     )
 
     # Run before notfound.extension sees the config (default priority(=500))

@@ -1,277 +1,340 @@
-"""Generate llms-full.txt from documentation source files.
+"""Generate ``llms.txt`` and ``llms-full.txt`` from the resolved doctree.
 
-When enabled via ``rocm_docs_generate_llms_full = True`` in conf.py,
-this module generates an ``llms-full.txt`` file in the output directory
-after each successful build. The file aggregates prose content from all
-``.md`` and ``.rst`` source files, suitable for AI agent consumption.
+These files follow the `llms.txt standard <https://llmstxt.org/>`_ and make the
+documentation accessible to large language models and AI assistants.
 
-A project-level ``llms.txt`` in the source directory (if present) is used
-as the header section; otherwise the Sphinx ``project`` name is used.
+When enabled via ``rocm_docs_generate_llms_full = True`` in ``conf.py``, this
+module runs on the Sphinx ``build-finished`` event and writes two files to the
+output directory:
+
+* ``llms.txt`` -- a curated, link-only index of the documentation. Its structure
+  follows the project's table of contents, and each entry's description comes
+  from that page's ``description`` metadata (set via MyST ``html_meta`` or an
+  RST ``.. meta::`` directive), falling back to the page title.
+* ``llms-full.txt`` -- the prose documentation inlined into a single file.
+
+Unlike a text-level filter, the content is produced from Sphinx's *resolved*
+doctree using ``sphinx-markdown-builder``'s translator, so RST and Markdown
+sources are handled identically and constructs like tables, code blocks,
+math, footnotes, and cross-references survive conversion intact.
 """
 
 from __future__ import annotations
 
-from typing import Any
-
-import re
+import os
+from collections.abc import Iterator
+from dataclasses import dataclass
 from pathlib import Path
 
 import sphinx.util.logging
+from docutils import nodes  # type: ignore[import-untyped]
+from docutils.io import StringOutput  # type: ignore[import-untyped]
 from sphinx.application import Sphinx
+from sphinx_external_toc.api import FileItem, SiteMap, UrlItem
+from sphinx_external_toc.parsing import parse_toc_yaml
+from sphinx_markdown_builder.builder import (  # type: ignore[import-untyped]
+    MarkdownBuilder,
+)
+from sphinx_markdown_builder.writer import (  # type: ignore[import-untyped]
+    MarkdownWriter,
+)
 
 logger = sphinx.util.logging.getLogger(__name__)
 
-EXCLUDED_DIRS: set[str] = {
-    "_build",
-    "_templates",
-    "_static",
-    ".git",
-    ".venv",
-}
+INDEX_FILENAME = "llms.txt"
+FULL_FILENAME = "llms-full.txt"
 
-MARKUP_PREFIXES: tuple[str, ...] = (
-    ":::",
-    "```{",
-    "```",
-    "+++",
-    "-->",
-    "{bdg-",
-)
-
-# Matches lines like "align: center", "alt:", "name: foo" (directive options
-# not starting with a colon, common in MyST figure/table fences).
-_BARE_DIRECTIVE_RE = re.compile(r"^[a-z][a-z_-]*:\s*\S*$")
-
-# Matches MyST/RST anchor labels like "(some-label)=".
-_ANCHOR_LABEL_RE = re.compile(r"^\(\w[\w-]*\)=$")
-
-# Matches RST section underlines (e.g. "====", "----", "~~~~").
-_RST_UNDERLINE_RE = re.compile(r"^[=\-~^\"\'#*+]{3,}$")
-
-# Matches RST code block directives (e.g. ".. code-block:: cpp", ".. code:: sh").
-_RST_CODE_BLOCK_RE = re.compile(r"^\.\.\s+(code-block|code|sourcecode)::")
-
-# Matches markdown table separator rows (e.g. "|---|---|", "| :--- | ---: |").
-_MD_TABLE_SEP_RE = re.compile(r"^\|[\s|:\-]+\|$")
-
-# Matches RST directives whose indented body should be discarded (e.g. raw HTML).
-_RST_SKIP_BLOCK_RE = re.compile(r"^\.\.\s+raw::")
-
-# Matches HTML tags (e.g. "<div>", "</p>", "<!--") but NOT RST hyperlink URL
-# continuation lines (e.g. "<https://...>`_").  The negative lookahead excludes
-# URL schemes so that multi-line RST inline hyperlinks are preserved.
-_HTML_TAG_RE = re.compile(r"^<(?!https?://|ftp://|mailto:)[a-zA-Z/!]")
-
-# Matches trailing HTML close tags at the end of a prose line
-# (e.g. "Browse blogs.</p>", "See the guide.</li></ul>").
-_TRAILING_HTML_CLOSE_RE = re.compile(r"(</[a-zA-Z]+>)+\s*$")
-
-MIN_PROSE_LINES: int = 10
-
-# Matches the first `#` heading in a Markdown file (e.g. "# Title").
-_MD_H1_RE = re.compile(r"^#\s+(.+?)\s*$")
+# Generated API-reference pages (doxygen/autodoc dumps) are noisy as prose and
+# are linked rather than inlined.
+EXCLUDED_DOC_PREFIXES: tuple[str, ...] = ("doxygen/", "_doxygen/")
 
 
-def _should_skip(path: Path) -> bool:
-    """Return True if *path* is inside an excluded directory."""
-    return any(part in EXCLUDED_DIRS for part in path.parts)
+@dataclass
+class _TocEntry:
+    """A single navigable entry discovered from the table of contents."""
+
+    docname: str | None
+    url: str | None
+    title: str | None
+    depth: int
 
 
-def _is_prose_line(line: str) -> bool:
-    """Return True if *line* is human-readable prose (not markup noise)."""
-    stripped = line.strip()
-    if not stripped:
-        return False
-    if stripped.startswith(MARKUP_PREFIXES):
-        return False
-    # Drop bare directive-option lines (e.g. "align: center", "alt:").
-    if _BARE_DIRECTIVE_RE.match(stripped):
-        return False
-    # Drop MyST/RST anchor labels (e.g. "(some-label)=").
-    if _ANCHOR_LABEL_RE.match(stripped):
-        return False
-    # Drop markdown table separator rows (e.g. "|---|---|", "| :--- | ---: |").
-    if _MD_TABLE_SEP_RE.match(stripped):
-        return False
-    # Drop HTML tags (e.g. "<div>", "</p>") but keep RST hyperlink URL
-    # continuation lines (e.g. "<https://rocm.docs.amd.com/...>`_").
-    if _HTML_TAG_RE.match(stripped):
-        return False
-    # Drop RST directives, comments, hyperlink targets, and substitution defs.
-    if stripped.startswith(".."):
-        return False
-    # Drop YAML frontmatter key-value pairs (e.g. "description lang=en": "text").
-    if stripped.startswith('"') and re.match(r'^"[^"]+"\s*:', stripped):
-        return False
-    # Drop RST field list items (e.g. ":type: int") and extended RST meta
-    # options (e.g. ":description lang=en: text").  Excludes inline roles at
-    # line start (e.g. ":cpp:func:`hipMalloc` returns..." or
-    # ":ref:`foo <bar>` describes...") because those are followed by a backtick,
-    # not a space or end-of-line.
-    if re.match(r"^:[A-Za-z][A-Za-z0-9_ =-]*:(\s|$)", stripped):
-        return False
-    # Drop RST section underlines (e.g. "====", "----", "~~~~").
-    return not _RST_UNDERLINE_RE.match(stripped)
+def generate_llms_full(app: Sphinx, exception: object) -> None:
+    """Write ``llms.txt`` and ``llms-full.txt`` to the output directory.
 
-
-def _extract_kept_lines(lines: list[str]) -> list[str]:
-    """Apply the streaming filter and return the lines that survive.
-
-    This is the single source of truth for what ends up in the output for a
-    given file.  Both the content-length gate and the emitted section use it,
-    so they cannot disagree.
+    Connected to the ``build-finished`` event. Does nothing if the build
+    failed (*exception* is not ``None``).
     """
-    in_backtick_fence = False
-    in_rst_code_block = False
-    in_rst_skip_block = False
-    in_html_comment = False  # inside <!-- ... --> block
-    in_html_open_tag = False  # inside a multi-line HTML opening tag
-    kept: list[str] = []
-    for line in lines:
-        stripped = line.strip()
-        # Backtick fences (MyST/Markdown)
-        if stripped.startswith("```"):
-            in_backtick_fence = not in_backtick_fence
-            kept.append(line)
-            continue
-        if in_backtick_fence:
-            kept.append(line)
-            continue
-        # HTML comment block (<!-- ... -->): discard all content until -->.
-        if in_html_comment:
-            if "-->" in stripped:
-                in_html_comment = False
-            continue
-        # RST skip block (e.g. .. raw::): discard all indented content.
-        if in_rst_skip_block:
-            if not stripped or line[0] in (" ", "\t"):
-                continue
-            in_rst_skip_block = False
-        # RST code block: exit when a non-blank, non-indented line appears.
-        if in_rst_code_block:
-            if not stripped or line[0] in (" ", "\t"):
-                kept.append(line)
-                continue
-            in_rst_code_block = False
-        # RST raw block: enter and discard both the directive and its body.
-        if _RST_SKIP_BLOCK_RE.match(stripped):
-            in_rst_skip_block = True
-            continue
-        # RST code block: enter on directive line (directive itself dropped).
-        if _RST_CODE_BLOCK_RE.match(stripped):
-            in_rst_code_block = True
-            continue
-        # HTML comment open (<!-- ... -->): discard opener and enter state.
-        if stripped.startswith("<!--"):
-            if "-->" not in stripped:
-                in_html_comment = True
-            continue
-        # Multi-line HTML opening tag: skip continuation lines until >.
-        if in_html_open_tag:
-            if ">" in stripped:
-                in_html_open_tag = False
-            continue
-        # Detect HTML opening tags that wrap across lines (no > on this line).
-        if _HTML_TAG_RE.match(stripped) and ">" not in stripped:
-            in_html_open_tag = True
-            continue
-        if not stripped:
-            kept.append(line)
-        elif _is_prose_line(line):
-            # Strip trailing HTML close tags (e.g. "See the guide.</p>").
-            cleaned = _TRAILING_HTML_CLOSE_RE.sub("", line).rstrip()
-            cleaned_stripped = cleaned.strip()
-            if not cleaned_stripped:
-                # Entire line was HTML close tags — keep original (shouldn't
-                # normally reach here since _is_prose_line filters HTML).
-                kept.append(line)
-            elif re.search(r"\w", cleaned_stripped):
-                # Line has real word content after stripping close tags.
-                kept.append(cleaned)
-            # else: only punctuation remains (e.g. bare ".") — discard.
-    return kept
-
-
-def _first_md_heading(lines: list[str]) -> str | None:
-    """Return the first Markdown `#` heading text, or None if none is present.
-
-    Used to give appended sections a meaningful title instead of the file path.
-    Headings inside fenced code blocks are ignored.
-    """
-    in_fence = False
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith("```"):
-            in_fence = not in_fence
-            continue
-        if in_fence:
-            continue
-        m = _MD_H1_RE.match(stripped)
-        if m:
-            return m.group(1)
-    return None
-
-
-def generate_llms_full(app: Sphinx, exception: Any) -> None:
-    """Write ``llms-full.txt`` to the output directory after a successful build.
-
-    This function is connected to the ``build-finished`` Sphinx event.  It does
-    nothing when *exception* is not ``None`` (i.e. the build failed).
-    """
-    if exception:
+    if exception is not None:
         return
 
-    docs_root = Path(str(app.srcdir))
-    output_file = Path(str(app.outdir)) / "llms-full.txt"
-    base_file = docs_root / "llms.txt"
+    base_url = _resolve_base_url(app)
+    builder, writer = _build_markdown_renderer(app)
 
-    combined: list[str] = []
+    # Rewrite internal links to absolute published URLs for the duration of the
+    # render loop, then restore the original value so nothing else is affected.
+    saved_http_base = app.config.markdown_http_base
+    app.config.markdown_http_base = base_url
+    try:
+        entries = list(_iter_toc_pages(app))
+        rendered: dict[str, str] = {}
+        descriptions: dict[str, str] = {}
+        titles: dict[str, str] = {}
+        for entry in entries:
+            docname = entry.docname
+            if docname is None or _is_excluded_docname(app, docname):
+                continue
+            doctree = app.env.get_and_resolve_doctree(docname, app.builder)
+            titles[docname] = entry.title or _page_title(doctree, docname)
+            descriptions[docname] = _extract_description(app, docname, doctree)
+            rendered[docname] = _render_page_markdown(
+                builder, writer, doctree, docname
+            )
+    finally:
+        app.config.markdown_http_base = saved_http_base
 
-    if base_file.exists():
-        base_text = base_file.read_text(encoding="utf-8").rstrip()
-        # Drop a trailing "---" separator line so it doesn't double up with
-        # the one prepended to each appended section below.
-        if base_text.endswith("\n---"):
-            base_text = base_text[:-4].rstrip()
-        combined.append(base_text)
-    else:
-        combined.append(f"# {app.config.project}")
+    index = _assemble_index(app, base_url, entries, titles, descriptions)
+    full = _assemble_full(index, entries, base_url, rendered)
 
-    all_files = sorted(
-        list(docs_root.rglob("*.md")) + list(docs_root.rglob("*.rst"))
+    out_dir = Path(app.outdir)
+    (out_dir / INDEX_FILENAME).write_text(index, encoding="utf-8")
+    (out_dir / FULL_FILENAME).write_text(full, encoding="utf-8")
+    logger.info("Wrote %s and %s", INDEX_FILENAME, FULL_FILENAME)
+
+
+def _build_markdown_renderer(
+    app: Sphinx,
+) -> tuple[MarkdownBuilder, MarkdownWriter]:
+    """Create a Markdown builder/writer pair for rendering single doctrees.
+
+    The builder is initialized but never run as a full build; only its
+    translator (via the writer) is used, page by page.
+    """
+    # Link to published HTML pages rather than to ``.md`` files.
+    app.config.markdown_uri_doc_suffix = ".html"
+    builder = MarkdownBuilder(app, app.env)
+    builder.init()
+    writer = MarkdownWriter(builder)
+    return builder, writer
+
+
+def _render_page_markdown(
+    builder: MarkdownBuilder,
+    writer: MarkdownWriter,
+    doctree: nodes.document,
+    docname: str,
+) -> str:
+    """Render one resolved doctree to a Markdown string (mirrors write_doc)."""
+    clean = _strip_unsupported_nodes(doctree)
+    builder.current_doc_name = docname
+    builder.sec_numbers = builder.env.toc_secnumbers.get(docname, {})
+    destination = StringOutput(encoding="utf-8")
+    writer.write(clean, destination)
+    return str(writer.output).strip()
+
+
+def _strip_unsupported_nodes(doctree: nodes.document) -> nodes.document:
+    """Return a copy of *doctree* with nodes the translator can't handle removed.
+
+    ``meta`` nodes have no visitor in sphinx-markdown-builder and would emit an
+    ``unknown node type: <meta>`` warning for every page.
+    """
+    clean = doctree.deepcopy()
+    for meta in list(clean.findall(nodes.meta)):
+        meta.parent.remove(meta)
+    return clean
+
+
+def _extract_description(
+    app: Sphinx, docname: str, doctree: nodes.document
+) -> str:
+    """Find a one-line description for a page.
+
+    Order: a ``meta`` node named ``description`` (MyST ``html_meta`` or RST
+    ``.. meta::``) in the doctree, then Sphinx's collected page metadata, then
+    an empty string.
+    """
+    for meta in doctree.findall(nodes.meta):
+        name = meta.get("name", "")
+        if name == "description" or name.startswith("description"):
+            content = str(meta.get("content", "")).strip()
+            if content:
+                return content
+
+    metadata = app.env.metadata.get(docname, {})
+    for key, value in metadata.items():
+        is_description = key == "description" or key.startswith("description")
+        if is_description and isinstance(value, str) and value.strip():
+            return value.strip()
+
+    return ""
+
+
+def _page_title(doctree: nodes.document, docname: str) -> str:
+    """Return the first section title of a page, falling back to its docname."""
+    section = doctree.next_node(nodes.section)
+    if section is not None:
+        title = section.next_node(nodes.title)
+        if title is not None:
+            return str(title.astext()).strip()
+    return docname
+
+
+def _iter_toc_pages(app: Sphinx) -> Iterator[_TocEntry]:
+    """Yield ``_TocEntry`` items in table-of-contents order.
+
+    Falls back to all project documents (sorted) if the external TOC is missing
+    or cannot be parsed, so projects without ``sphinx_external_toc`` still work.
+    """
+    toc_path = _toc_path(app)
+    if toc_path is None or not toc_path.is_file():
+        logger.info(
+            "llms: no external TOC found, falling back to all documents"
+        )
+        yield from _fallback_entries(app)
+        return
+
+    try:
+        site_map = parse_toc_yaml(toc_path)
+    except Exception as err:  # degrade gracefully on a malformed TOC
+        logger.warning("llms: could not parse TOC (%s); using all docs", err)
+        yield from _fallback_entries(app)
+        return
+
+    root = site_map.root.docname
+    yield _TocEntry(docname=root, url=None, title=None, depth=0)
+    yield from _walk_sitemap(site_map, root, depth=1, seen={root})
+
+
+def _walk_sitemap(
+    site_map: SiteMap, docname: str, depth: int, seen: set[str]
+) -> Iterator[_TocEntry]:
+    document = site_map[docname]
+    for subtree in document.subtrees:
+        for item in subtree.items:
+            if isinstance(item, UrlItem):
+                yield _TocEntry(
+                    docname=None, url=item.url, title=item.title, depth=depth
+                )
+                continue
+            if not isinstance(item, FileItem):
+                # Glob items are expanded by Sphinx, not resolvable here.
+                continue
+            child = str(item)
+            if child in seen:
+                continue
+            seen.add(child)
+            try:
+                child_doc = site_map[child]
+            except KeyError:
+                # Terminal page not registered as its own document.
+                yield _TocEntry(
+                    docname=child, url=None, title=None, depth=depth
+                )
+                continue
+            yield _TocEntry(
+                docname=child, url=None, title=child_doc.title, depth=depth
+            )
+            yield from _walk_sitemap(site_map, child, depth + 1, seen)
+
+
+def _fallback_entries(app: Sphinx) -> Iterator[_TocEntry]:
+    root = app.config.root_doc
+    if root in app.project.docnames:
+        yield _TocEntry(docname=root, url=None, title=None, depth=0)
+    for docname in sorted(app.project.docnames):
+        if docname != root:
+            yield _TocEntry(docname=docname, url=None, title=None, depth=1)
+
+
+def _toc_path(app: Sphinx) -> Path | None:
+    toc = getattr(app.config, "external_toc_path", "")
+    if not toc:
+        return None
+    return Path(app.srcdir) / toc
+
+
+def _resolve_base_url(app: Sphinx) -> str:
+    """Determine the published base URL for rewriting internal links."""
+    for candidate in (
+        app.config.rocm_docs_llms_base_url,
+        getattr(app.config, "html_baseurl", ""),
+        os.environ.get("READTHEDOCS_CANONICAL_URL", ""),
+    ):
+        if candidate:
+            return candidate.rstrip("/")
+    logger.info("llms: no base URL configured; internal links will be relative")
+    return ""
+
+
+def _is_excluded_docname(app: Sphinx, docname: str) -> bool:
+    if docname.startswith(EXCLUDED_DOC_PREFIXES):
+        return True
+    doxygen_html = getattr(app.config, "doxygen_html", None)
+    return bool(
+        doxygen_html and docname.startswith(str(doxygen_html).strip("/") + "/")
     )
 
-    for doc_file in all_files:
-        if _should_skip(doc_file):
+
+def _page_url(base_url: str, docname: str) -> str:
+    if base_url:
+        return f"{base_url}/{docname}.html"
+    return f"{docname}.html"
+
+
+def _assemble_index(
+    app: Sphinx,
+    base_url: str,
+    entries: list[_TocEntry],
+    titles: dict[str, str],
+    descriptions: dict[str, str],
+) -> str:
+    project_title = app.config.project or "Documentation"
+    lines = [f"# {project_title}", ""]
+
+    root = next((e for e in entries if e.depth == 0 and e.docname), None)
+    if root is not None and root.docname is not None:
+        root_description = descriptions.get(root.docname, "")
+        if root_description:
+            lines += [f"> {root_description}", ""]
+
+    lines += ["## Docs", ""]
+    for entry in entries:
+        if entry.depth == 0:
             continue
-        if doc_file == base_file:
+        indent = "  " * (entry.depth - 1)
+        if entry.url is not None:
+            title = entry.title or entry.url
+            lines.append(f"{indent}- [{title}]({entry.url})")
             continue
-
-        try:
-            content = doc_file.read_text(encoding="utf-8")
-        except Exception as e:
-            logger.warning("Failed to read %s: %s", doc_file, e)
+        docname = entry.docname
+        if docname is None or _is_excluded_docname(app, docname):
             continue
+        title = titles.get(docname, docname)
+        url = _page_url(base_url, docname)
+        bullet = f"{indent}- [{title}]({url})"
+        description = descriptions.get(docname, "")
+        if description:
+            bullet += f": {description}"
+        lines.append(bullet)
 
-        lines = content.splitlines()
-        kept = _extract_kept_lines(lines)
+    return "\n".join(lines) + "\n"
 
-        # Gate on what will actually be emitted, not on what _is_prose_line
-        # thinks before the state machine runs.  This way fenced-only files
-        # are not under-counted and noise-only files are not over-counted.
-        non_blank_kept = sum(1 for line in kept if line.strip())
-        if non_blank_kept < MIN_PROSE_LINES:
+
+def _assemble_full(
+    index: str,
+    entries: list[_TocEntry],
+    base_url: str,
+    rendered: dict[str, str],
+) -> str:
+    parts = [index.rstrip()]
+    for entry in entries:
+        docname = entry.docname
+        if docname is None or docname not in rendered:
             continue
-
-        relative = doc_file.relative_to(docs_root)
-        heading = _first_md_heading(lines) or str(relative)
-        cleaned = "\n".join(kept).strip()
-
-        combined.append(f"\n\n---\n\n## {heading}\n\n_Source: `{relative}`_\n")
-        combined.append(cleaned)
-
-    output_file.write_text(
-        "\n".join(combined) + "\n",
-        encoding="utf-8",
-    )
-    logger.info("llms-full.txt written to %s", output_file)
+        url = _page_url(base_url, docname)
+        body = rendered[docname]
+        # The rendered body already begins with the page's own title heading,
+        # so only a separator and source attribution are prepended here.
+        parts.append(f"---\n\nSource: {url}\n\n{body}")
+    return "\n\n".join(parts) + "\n"

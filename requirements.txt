@@ -319,6 +319,8 @@ sphinx-design==0.6.1
     # via rocm-docs-core (pyproject.toml)
 sphinx-external-toc==1.1.0
     # via rocm-docs-core (pyproject.toml)
+sphinx-markdown-builder==0.6.10
+    # via rocm-docs-core (pyproject.toml)
 sphinx-notfound-page==1.1.0
     # via rocm-docs-core (pyproject.toml)
 sphinxcontrib-applehelp==2.0.0
