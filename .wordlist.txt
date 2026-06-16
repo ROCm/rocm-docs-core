@@ -498,6 +498,7 @@ devicelibs
 devsel
 dimensionality
 disambiguates
+discoverable
 distro
 doctree
 doxysphinx
