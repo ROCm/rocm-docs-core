@@ -5,6 +5,11 @@ html_theme_options = {"flavor": "rocm"}
 external_toc_path = "./sphinx/_toc.yml"
 
 external_projects_current_project = "a"
+# Keep the test build offline and fast: no remote projects.yaml fetch and no
+# intersphinx inventory downloads.
+external_projects_remote_repository = ""
+external_projects = []
+intersphinx_mapping = {}
 
 rocm_docs_generate_llms_full = True
 rocm_docs_llms_base_url = "https://example.com/docs"
