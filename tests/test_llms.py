@@ -29,6 +29,17 @@ class _LlmsBuild:
     warnings: list[str]
 
 
+class _RecordingHandler(logging.Handler):
+    """Logging handler that collects emitted records in a list."""
+
+    def __init__(self) -> None:
+        super().__init__(level=logging.WARNING)
+        self.records: list[logging.LogRecord] = []
+
+    def emit(self, record: logging.LogRecord) -> None:
+        self.records.append(record)
+
+
 @pytest.fixture(scope="module")
 def llms_build(
     tmp_path_factory: pytest.TempPathFactory,
@@ -45,10 +56,7 @@ def llms_build(
     outdir = tmp_path_factory.mktemp("llms_build")
     shutil.copytree(SITES_BASEFOLDER / "llms", srcdir, dirs_exist_ok=True)
 
-    records: list[logging.LogRecord] = []
-    handler = logging.Handler()
-    handler.setLevel(logging.WARNING)
-    handler.emit = records.append  # type: ignore[method-assign]
+    handler = _RecordingHandler()
     translator_log = logging.getLogger(
         "sphinx.sphinx_markdown_builder.translator"
     )
@@ -72,7 +80,7 @@ def llms_build(
     return _LlmsBuild(
         index=(outdir / "llms.txt").read_text(encoding="utf-8"),
         full=(outdir / "llms-full.txt").read_text(encoding="utf-8"),
-        warnings=[r.getMessage() for r in records],
+        warnings=[r.getMessage() for r in handler.records],
     )
 
 
