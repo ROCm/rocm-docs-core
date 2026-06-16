@@ -3,4 +3,5 @@ subtrees:
   - entries:
       - file: page_rst.rst
       - file: page_md.md
+      - file: excluded_page.md
       - file: api/doxygen/html/generated.md

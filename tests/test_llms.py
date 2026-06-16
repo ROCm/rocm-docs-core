@@ -134,11 +134,28 @@ def test_rst_list_table_becomes_markdown_table(
         assert cell in full
 
 
-def test_rst_code_block_is_fenced_with_language(
+def test_code_blocks_are_fenced_with_language(
     llms_build: _LlmsBuild,
 ) -> None:
-    assert "```cpp" in llms_build.full
-    assert "__global__ void rst_kernel" in llms_build.full
+    full = llms_build.full
+    # RST code-block, Markdown fenced block, and a second-language RST block.
+    assert "```cpp" in full
+    assert "```bash" in full
+    assert "__global__ void rst_kernel" in full
+    assert "__global__ void md_kernel" in full
+    assert "export HIP_VISIBLE_DEVICES=0" in full
+
+
+def test_inline_constructs_preserved(llms_build: _LlmsBuild) -> None:
+    full = llms_build.full
+    # Inline literals from both RST (``hipFree``) and Markdown (`hipMalloc`).
+    assert "`hipFree`" in full
+    assert "`hipMalloc`" in full
+    # Inline math and a nested list bullet from the Markdown page.
+    assert "$a^2 + b^2 = c^2$" in full
+    assert "Nested item" in full
+    # A Markdown link renders with its target.
+    assert "[external link](https://rocm.docs.amd.com)" in full
 
 
 def test_cross_reference_rewritten_to_absolute_url(
@@ -148,14 +165,15 @@ def test_cross_reference_rewritten_to_absolute_url(
     assert f"({BASE_URL}/page_md.html" in llms_build.full
 
 
-def test_unsupported_admonition_content_preserved(
+def test_supported_and_unsupported_admonitions_preserved(
     llms_build: _LlmsBuild,
 ) -> None:
-    # `.. tip::` has no Markdown-builder visitor; its body must be preserved
-    # (converted to a note) rather than dropped.
-    assert "Unique tip body text that must survive conversion." in (
-        llms_build.full
-    )
+    full = llms_build.full
+    # A supported `.. note::` renders normally.
+    assert "Supported note body text that must be rendered." in full
+    # `.. tip::` has no Markdown-builder visitor; its body must still be
+    # preserved (converted to a note) rather than dropped.
+    assert "Unique tip body text that must survive conversion." in full
 
 
 def test_doxygen_page_excluded_from_fulltext(
@@ -171,10 +189,13 @@ def test_full_exclude_keeps_page_in_index_only(
     llms_build: _LlmsBuild,
 ) -> None:
     """A page in rocm_docs_llms_full_exclude is indexed but not inlined."""
-    # page_md is still listed in the index...
-    assert f"[Markdown page]({BASE_URL}/page_md.html)" in llms_build.index
-    # ...but its body (the Markdown code block) is not inlined.
-    assert "md_kernel" not in llms_build.full
+    # The excluded page is still listed in the index...
+    assert f"[Excluded page]({BASE_URL}/excluded_page.html)" in (
+        llms_build.index
+    )
+    # ...but its body is not inlined into the full text.
+    assert "UNIQUE_EXCLUDED_BODY_MARKER" not in llms_build.full
+    assert "excluded_kernel" not in llms_build.full
 
 
 def test_no_meta_warning(llms_build: _LlmsBuild) -> None:

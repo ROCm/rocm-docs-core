@@ -4,7 +4,8 @@
 RST page
 ========
 
-Some prose on the RST page. See :doc:`page_md` for the Markdown page.
+Some prose on the RST page mentioning the inline literal ``hipFree``. See
+:doc:`page_md` for the Markdown page.
 
 .. list-table::
    :header-rows: 1
@@ -25,6 +26,14 @@ Some prose on the RST page. See :doc:`page_md` for the Markdown page.
        int i = threadIdx.x;
        if (i < size) { a[i] = 1.0; }
    }
+
+.. code-block:: bash
+
+   export HIP_VISIBLE_DEVICES=0
+
+.. note::
+
+   Supported note body text that must be rendered.
 
 .. tip::
 
