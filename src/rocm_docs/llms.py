@@ -27,8 +27,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import sphinx.util.logging
-from docutils import nodes  # type: ignore[import-untyped]
-from docutils.io import StringOutput  # type: ignore[import-untyped]
+from docutils import nodes
+from docutils.io import StringOutput
 from sphinx.application import Sphinx
 from sphinx_external_toc.api import FileItem, SiteMap, UrlItem
 from sphinx_external_toc.parsing import parse_toc_yaml

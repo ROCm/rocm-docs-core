@@ -440,6 +440,7 @@ benchmarking
 bilinear
 bitsandbytes
 blit
+blockquote
 boson
 bosons
 buildable
@@ -498,6 +499,7 @@ devsel
 dimensionality
 disambiguates
 distro
+doctree
 doxysphinx
 dropdown
 el
@@ -554,6 +556,8 @@ inferencing
 inflight
 init
 initializer
+inlined
+inlines
 inlining
 installable
 instantiation
