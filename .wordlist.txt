@@ -522,6 +522,7 @@ gfortran
 gfx
 githooks
 github
+glob
 gnupg
 grayscale
 gzip

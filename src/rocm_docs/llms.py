@@ -24,6 +24,7 @@ from __future__ import annotations
 import os
 from collections.abc import Iterator
 from dataclasses import dataclass
+from fnmatch import fnmatch
 from pathlib import Path
 
 import sphinx.util.logging
@@ -90,6 +91,11 @@ def generate_llms_full(app: Sphinx, exception: object) -> None:
             doctree = app.env.get_and_resolve_doctree(docname, app.builder)
             titles[docname] = entry.title or _page_title(doctree, docname)
             descriptions[docname] = _extract_description(app, docname, doctree)
+            # Pages excluded from the full text are still listed in the index,
+            # but their body is not inlined (use this for very large generated
+            # pages that would dominate llms-full.txt).
+            if _is_excluded_from_fulltext(app, docname):
+                continue
             rendered[docname] = _render_page_markdown(
                 builder, writer, doctree, docname
             )
@@ -308,6 +314,18 @@ def _is_excluded_docname(app: Sphinx, docname: str) -> bool:
     return bool(
         doxygen_html and docname.startswith(str(doxygen_html).strip("/") + "/")
     )
+
+
+def _is_excluded_from_fulltext(app: Sphinx, docname: str) -> bool:
+    """Return True if a page should be indexed but not inlined into the full text.
+
+    Controlled by the ``rocm_docs_llms_full_exclude`` config: a list of docnames
+    or glob patterns (matched against the suffix-less docname). Use it to keep
+    very large generated pages out of ``llms-full.txt`` while still listing them
+    in ``llms.txt``.
+    """
+    patterns = getattr(app.config, "rocm_docs_llms_full_exclude", []) or []
+    return any(fnmatch(docname, pattern) for pattern in patterns)
 
 
 def _page_url(base_url: str, docname: str) -> str:

@@ -13,6 +13,8 @@ intersphinx_mapping = {}
 
 rocm_docs_generate_llms_full = True
 rocm_docs_llms_base_url = "https://example.com/docs"
+# page_md is indexed but its body is excluded from llms-full.txt.
+rocm_docs_llms_full_exclude = ["page_md"]
 
 version = "1.0.0"
 release = "1.0.0"

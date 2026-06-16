@@ -167,6 +167,12 @@ def setup(app: Sphinx) -> dict[str, Any]:
         rebuild="html",
         types=str,
     )
+    app.add_config_value(
+        "rocm_docs_llms_full_exclude",
+        default=[],
+        rebuild="html",
+        types=list,
+    )
 
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)

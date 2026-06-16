@@ -85,6 +85,19 @@ The content is produced from Sphinx's resolved doctree using the Markdown transl
 - Tables, fenced code blocks (with language tags), math, footnotes, and cross-references are preserved. Cross-references are rewritten to absolute URLs using the configured base URL.
 - Generated API-reference pages (for example, Doxygen output under `doxygen/`) are excluded from the inlined prose; they remain linked from the index where present in the TOC.
 
+### Excluding large pages from the full text
+
+Some pages, such as large generated tables, can dominate `llms-full.txt`. Use `rocm_docs_llms_full_exclude` to keep such pages out of the inlined prose while still listing them in `llms.txt`. It accepts a list of document names or glob patterns, matched against each page's path relative to the documentation root (without the file extension):
+
+```python
+rocm_docs_llms_full_exclude = [
+    "reference/gpu-atomics-operation",
+    "reference/*-performance-counters",
+]
+```
+
+Excluded pages still appear in the `llms.txt` index, so they remain discoverable.
+
 ## Example configuration
 
 The following example enables all three features together:

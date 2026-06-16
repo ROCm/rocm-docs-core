@@ -167,6 +167,16 @@ def test_doxygen_page_excluded_from_fulltext(
     assert "doxygen/html/generated" not in llms_build.index
 
 
+def test_full_exclude_keeps_page_in_index_only(
+    llms_build: _LlmsBuild,
+) -> None:
+    """A page in rocm_docs_llms_full_exclude is indexed but not inlined."""
+    # page_md is still listed in the index...
+    assert f"[Markdown page]({BASE_URL}/page_md.html)" in llms_build.index
+    # ...but its body (the Markdown code block) is not inlined.
+    assert "md_kernel" not in llms_build.full
+
+
 def test_no_meta_warning(llms_build: _LlmsBuild) -> None:
     """meta nodes are stripped, so no 'unknown node type' warning is emitted."""
     assert not any("<meta" in msg for msg in llms_build.warnings)
