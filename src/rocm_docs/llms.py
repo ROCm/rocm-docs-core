@@ -45,8 +45,11 @@ INDEX_FILENAME = "llms.txt"
 FULL_FILENAME = "llms-full.txt"
 
 # Generated API-reference pages (doxygen/autodoc dumps) are noisy as prose and
-# are linked rather than inlined.
+# are linked rather than inlined. Doxysphinx emits pages under a ``doxygen/html``
+# path segment, which may be nested under a project-specific root (for example
+# ``demo/doxygen/html/...``), so this segment is matched anywhere in the docname.
 EXCLUDED_DOC_PREFIXES: tuple[str, ...] = ("doxygen/", "_doxygen/")
+EXCLUDED_DOC_SEGMENTS: tuple[str, ...] = ("doxygen/html/",)
 
 
 @dataclass
@@ -202,12 +205,14 @@ def _iter_toc_pages(app: Sphinx) -> Iterator[_TocEntry]:
         return
 
     root = site_map.root.docname
-    yield _TocEntry(docname=root, url=None, title=None, depth=0)
-    yield from _walk_sitemap(site_map, root, depth=1, seen={root})
+    yield _TocEntry(
+        docname=_normalize_docname(app, root), url=None, title=None, depth=0
+    )
+    yield from _walk_sitemap(app, site_map, root, depth=1, seen={root})
 
 
 def _walk_sitemap(
-    site_map: SiteMap, docname: str, depth: int, seen: set[str]
+    app: Sphinx, site_map: SiteMap, docname: str, depth: int, seen: set[str]
 ) -> Iterator[_TocEntry]:
     document = site_map[docname]
     for subtree in document.subtrees:
@@ -224,18 +229,24 @@ def _walk_sitemap(
             if child in seen:
                 continue
             seen.add(child)
+            # TOC entries may carry the source suffix (e.g. "page.md"); Sphinx
+            # docnames are suffix-less. Normalize before exposing the entry.
+            norm = _normalize_docname(app, child)
             try:
                 child_doc = site_map[child]
             except KeyError:
                 # Terminal page not registered as its own document.
-                yield _TocEntry(
-                    docname=child, url=None, title=None, depth=depth
-                )
+                yield _TocEntry(docname=norm, url=None, title=None, depth=depth)
                 continue
             yield _TocEntry(
-                docname=child, url=None, title=child_doc.title, depth=depth
+                docname=norm, url=None, title=child_doc.title, depth=depth
             )
-            yield from _walk_sitemap(site_map, child, depth + 1, seen)
+            yield from _walk_sitemap(app, site_map, child, depth + 1, seen)
+
+
+def _normalize_docname(app: Sphinx, toc_docname: str) -> str:
+    """Convert a TOC entry name to a Sphinx docname (without source suffix)."""
+    return app.project.path2doc(toc_docname) or toc_docname
 
 
 def _fallback_entries(app: Sphinx) -> Iterator[_TocEntry]:
@@ -269,6 +280,8 @@ def _resolve_base_url(app: Sphinx) -> str:
 
 def _is_excluded_docname(app: Sphinx, docname: str) -> bool:
     if docname.startswith(EXCLUDED_DOC_PREFIXES):
+        return True
+    if any(segment in docname for segment in EXCLUDED_DOC_SEGMENTS):
         return True
     doxygen_html = getattr(app.config, "doxygen_html", None)
     return bool(

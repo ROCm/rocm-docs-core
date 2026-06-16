@@ -151,8 +151,10 @@ def test_cross_reference_rewritten_to_absolute_url(
 def test_doxygen_page_excluded_from_fulltext(
     llms_build: _LlmsBuild,
 ) -> None:
+    # The page lives under a nested ``.../doxygen/html/`` segment; its body must
+    # not be inlined and it must not appear in the index.
     assert "Generated API reference" not in llms_build.full
-    assert "doxygen/generated" not in llms_build.index
+    assert "doxygen/html/generated" not in llms_build.index
 
 
 def test_no_meta_warning(llms_build: _LlmsBuild) -> None:

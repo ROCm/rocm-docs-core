@@ -1,6 +1,6 @@
-root: index
+root: index.md
 subtrees:
   - entries:
-      - file: page_rst
-      - file: page_md
-      - file: doxygen/generated
+      - file: page_rst.rst
+      - file: page_md.md
+      - file: api/doxygen/html/generated.md

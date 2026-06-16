@@ -43,6 +43,12 @@ html_theme_options = {"flavor": "rocm"}
 
 external_toc_path = "./sphinx/_toc.yml"
 
+# Generate llms.txt and llms-full.txt for AI/LLM consumption.
+rocm_docs_generate_llms_full = True
+rocm_docs_llms_base_url = (
+    "https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest"
+)
+
 extensions = ["rocm_docs", "rocm_docs.doxygen"]
 doxygen_root = "demo/doxygen"
 doxysphinx_enabled = True
