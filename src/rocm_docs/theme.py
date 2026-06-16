@@ -234,10 +234,6 @@ def _update_theme_options(app: Sphinx) -> None:
         theme_opts.setdefault("license_link", None)
         theme_opts.setdefault("license_text", "")
 
-    if flavor == "rocm-ft":
-        theme_opts["nosidebar"] = True
-        theme_opts["primary_sidebar_end"] = []
-
     theme_opts.setdefault(
         "article_header_start",
         ["components/toggle-primary-sidebar.html", "breadcrumbs.html"],

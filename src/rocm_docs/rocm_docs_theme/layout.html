@@ -21,3 +21,9 @@
         {{ super() }}
     {% endif %}
 {% endblock %}
+
+{% block docs_sidebar %}
+    {% if theme_flavor != "rocm-ft" %}
+        {{ super() }}
+    {% endif %}
+{% endblock %}
