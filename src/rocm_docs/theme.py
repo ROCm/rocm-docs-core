@@ -202,6 +202,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "rocm",
         "local",
         "instinct",
+        "instinct-design",
         "rocm-docs-home",
         "rocm-blogs",
         "generic",
@@ -274,6 +275,27 @@ def _update_theme_options(app: Sphinx) -> None:
             setattr(app.config, key, default)
 
 
+def _load_flavor_assets(app: Sphinx) -> None:
+    """Load CSS and JS files from a flavor's static/ directory, if present."""
+    theme_opts = get_theme_options_dict(app)
+    flavor = theme_opts.get("flavor", "rocm")
+    flavor_static = (
+        Path(__file__).parent
+        / "rocm_docs_theme"
+        / "flavors"
+        / flavor
+        / "static"
+    )
+    if not flavor_static.is_dir():
+        return
+
+    app.config.html_static_path.append(str(flavor_static))
+    for css_file in sorted(flavor_static.glob("*.css")):
+        app.add_css_file(css_file.name)
+    for js_file in sorted(flavor_static.glob("*.js")):
+        app.add_js_file(js_file.name, loading_method="async")
+
+
 def setup(app: Sphinx) -> dict[str, Any]:
     """Set up the module as a Sphinx extension."""
     app.add_js_file(
@@ -299,6 +321,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
 
     app.connect("html-page-context", _add_custom_context)
     app.connect("builder-inited", _update_theme_options)
+    app.connect("builder-inited", _load_flavor_assets)
 
     # Add theme option declarations
     app.add_config_value("header_title", "", "html")

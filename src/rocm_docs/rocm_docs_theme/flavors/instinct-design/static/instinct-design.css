@@ -1,0 +1,1153 @@
+/*
+ * AMD Instinct Design System — rocm-docs-core flavor
+ *
+ * Maps Instinct Design tokens (from amd-instinct-design/DESIGN.md)
+ * to pydata-sphinx-theme --pst-* CSS variables. Dark-first.
+ *
+ * Source tokens: ~/git/amd-instinct-design/examples/html-slides/tokens.css
+ */
+
+/* ═══════════════════════════════════════════
+   INSTINCT DESIGN TOKENS (raw values)
+   ═══════════════════════════════════════════ */
+:root {
+    --id-teal: #00C2DE;
+    --id-teal-rgb: 0, 194, 222;
+    --id-secondary: #007DB8;
+    --id-background: #131416;
+    --id-foreground: #eaebec;
+    --id-surface-1: #1d1f21;
+    --id-surface-2: #27272a;
+    --id-surface-3: #2d3449;
+    --id-border: #656b72;
+    --id-border-subtle: #222426;
+    --id-muted-text: #b4b9bc;
+    --id-gray-light: #9D9FA2;
+
+    --id-bg-light: #eaebec;
+    --id-fg-light: #131416;
+    --id-surface-1-light: #fafafa;
+    --id-surface-2-light: #FFFFFF;
+    --id-border-light: #c2ccd7;
+    --id-muted-text-light: #5E5E5E;
+
+    --id-radius-sm: 6px;
+    --id-radius-md: 8px;
+    --id-radius-lg: 10px;
+    --id-radius-xl: 14px;
+}
+
+
+/* ═══════════════════════════════════════════
+   DARK THEME (default for instinct-design)
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] {
+    /* Backgrounds */
+    --pst-color-background: var(--id-background);
+    --pst-color-on-background: var(--id-foreground);
+    --pst-color-surface: var(--id-surface-1);
+    --pst-color-on-surface: var(--id-foreground);
+
+    /* Links & accents */
+    --pst-color-primary: var(--id-teal);
+    --pst-color-primary-text: var(--id-teal);
+    --pst-color-link: var(--id-teal);
+    --pst-color-link-hover: var(--id-secondary);
+    --link-color: var(--id-teal);
+
+    /* Borders */
+    --pst-color-border: var(--id-border-subtle);
+
+    /* Text */
+    --pst-color-text-base: var(--id-foreground);
+    --pst-color-text-muted: var(--id-muted-text);
+
+    /* Sidebar */
+    --pst-color-sidebar-background: var(--id-background);
+    --pst-color-sidebar-background-border: var(--id-border-subtle);
+
+    /* Inline code */
+    --pst-color-inline-code: var(--id-teal);
+    --pst-color-inline-code-bg: var(--id-surface-1);
+
+    /* Target highlight (anchored sections) */
+    --pst-color-target: rgba(var(--id-teal-rgb), 0.15);
+
+    /* sphinx-design cards */
+    --sd-color-card-background: var(--id-surface-1);
+    --sd-color-card-border: var(--id-border-subtle);
+
+    /* Admonitions */
+    --pst-color-info: var(--id-teal);
+}
+
+
+/* ═══════════════════════════════════════════
+   LIGHT THEME
+   ═══════════════════════════════════════════ */
+html[data-theme="light"] {
+    /* Backgrounds */
+    --pst-color-background: var(--id-bg-light);
+    --pst-color-on-background: var(--id-fg-light);
+    --pst-color-surface: var(--id-surface-2-light);
+    --pst-color-on-surface: var(--id-fg-light);
+
+    /* Links & accents — teal stays consistent */
+    --pst-color-primary: var(--id-secondary);
+    --pst-color-primary-text: var(--id-secondary);
+    --pst-color-link: var(--id-secondary);
+    --pst-color-link-hover: var(--id-teal);
+    --link-color: var(--id-secondary);
+
+    /* Borders */
+    --pst-color-border: var(--id-border-light);
+
+    /* Text */
+    --pst-color-text-base: var(--id-fg-light);
+    --pst-color-text-muted: var(--id-muted-text-light);
+
+    /* Sidebar */
+    --pst-color-sidebar-background: var(--id-surface-1-light);
+    --pst-color-sidebar-background-border: var(--id-border-light);
+
+    /* Inline code */
+    --pst-color-inline-code: var(--id-secondary);
+    --pst-color-inline-code-bg: var(--id-surface-1-light);
+
+    /* Target highlight */
+    --pst-color-target: rgba(var(--id-teal-rgb), 0.1);
+
+    /* sphinx-design cards */
+    --sd-color-card-background: var(--id-surface-2-light);
+    --sd-color-card-border: var(--id-border-light);
+
+    /* Admonitions */
+    --pst-color-info: var(--id-secondary);
+}
+
+
+/* ═══════════════════════════════════════════
+   HEADER & FOOTER — Daedalus near-black
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] .rocm-header-wrapper,
+html[data-theme="dark"] .rocm-footer-wrapper {
+    background-color: var(--id-background);
+}
+
+html[data-theme="light"] .rocm-header-wrapper {
+    background-color: var(--id-fg-light);
+}
+
+
+/* ═══════════════════════════════════════════
+   TYPOGRAPHY — Inter (self-hosted), refined scale
+   ═══════════════════════════════════════════ */
+/* Self-hosted Inter (SIL OFL) is the single brand typeface. One variable
+   woff2 covers weights 100–900, renders identically across every OS, and
+   carries no licensing constraints. The teal eyebrow rules and design-system
+   accents carry the brand; the typeface stays clean and legible. */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 100 900;
+    src: url("./fonts/inter/inter-latin-wght-normal.woff2") format("woff2-variations");
+}
+
+:root {
+    --id-font-display: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --id-font-body: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.bd-main h1,
+.bd-main h2,
+.bd-main h3,
+.bd-main h4 {
+    font-family: var(--id-font-display);
+    line-height: 1.15;
+}
+
+.bd-main h1 {
+    font-weight: 700;
+    font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+}
+
+.bd-main h2 {
+    font-weight: 500;
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.bd-main h3 {
+    font-weight: 500;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    line-height: 1.2;
+}
+
+.bd-main h4 {
+    font-weight: 500;
+    font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+    line-height: 1.3;
+}
+
+.bd-main p,
+.bd-main li {
+    line-height: 1.55;
+}
+
+
+/* ═══════════════════════════════════════════
+   EYEBROW PATTERN — teal rule + section label
+   Automatic on h2 elements (Daedalus signature)
+   ═══════════════════════════════════════════ */
+.bd-main h2::before {
+    content: "";
+    display: block;
+    width: clamp(1.5rem, 3vw, 2.5rem);
+    height: 2px;
+    background: var(--id-teal);
+    margin-bottom: 0.5rem;
+}
+
+html[data-theme="light"] .bd-main h2::before {
+    background: var(--id-secondary);
+}
+
+/* Card titles are NOT section headings — exempt any h2 used as a card header
+   from the section scale + automatic eyebrow rule, so the flavor coexists
+   with consumer card layouts (e.g. sphinx-design `.sd-card-title`, or a
+   consumer's own `.card-header`) without each consumer re-overriding it.
+   This is the framework-level fix for the card-title specificity issue. */
+.bd-main h2.card-header,
+.bd-main h2.sd-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+.bd-main h2.card-header::before,
+.bd-main h2.sd-card-title::before {
+    display: none;
+}
+
+
+/* ═══════════════════════════════════════════
+   GLOW LINE — gradient divider after h1
+   ═══════════════════════════════════════════ */
+.bd-main h1::after {
+    content: "";
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, var(--id-teal), transparent 70%);
+    opacity: 0.4;
+    margin-top: 0.75rem;
+}
+
+html[data-theme="light"] .bd-main h1::after {
+    background: linear-gradient(90deg, var(--id-secondary), transparent 70%);
+    opacity: 0.55;
+}
+
+.id-glow-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--id-teal), transparent);
+    opacity: 0.3;
+    margin: 2rem 0;
+}
+
+html[data-theme="light"] .id-glow-line {
+    opacity: 0.55;
+}
+
+
+/* ═══════════════════════════════════════════
+   DOT-GRID TEXTURE — Daedalus signature
+   1px teal dots, 8% opacity, 40px grid
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] .bd-main {
+    background-image: radial-gradient(
+        circle,
+        rgba(var(--id-teal-rgb), 0.06) 1px,
+        transparent 1px
+    );
+    background-size: 40px 40px;
+}
+
+
+/* ═══════════════════════════════════════════
+   HERO GRADIENT — subtle teal radial glow
+   Applies to first article section
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] .bd-article-container {
+    background: radial-gradient(
+        ellipse 80% 50% at 50% 0%,
+        rgba(var(--id-teal-rgb), 0.04) 0%,
+        transparent 70%
+    );
+}
+
+html[data-theme="light"] .bd-article-container {
+    background: radial-gradient(
+        ellipse 80% 50% at 50% 0%,
+        rgba(var(--id-teal-rgb), 0.05) 0%,
+        transparent 70%
+    );
+}
+
+
+/* ═══════════════════════════════════════════
+   CIRCUIT BACKGROUND — SVG grid for hero areas
+   Available as .id-circuit-bg utility
+   ═══════════════════════════════════════════ */
+.id-circuit-bg {
+    position: relative;
+    overflow: hidden;
+}
+
+.id-circuit-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M20 0v20h80v80h20' fill='none' stroke='%2300C2DE' stroke-width='0.5' opacity='0.12'/%3E%3Cpath d='M0 60h40v60' fill='none' stroke='%2300C2DE' stroke-width='0.5' opacity='0.08'/%3E%3Cpath d='M60 0v40h60' fill='none' stroke='%2300C2DE' stroke-width='0.5' opacity='0.08'/%3E%3Ccircle cx='20' cy='20' r='2' fill='%2300C2DE' opacity='0.15'/%3E%3Ccircle cx='100' cy='100' r='2' fill='%2300C2DE' opacity='0.15'/%3E%3Ccircle cx='60' cy='40' r='1.5' fill='%2300C2DE' opacity='0.1'/%3E%3Ccircle cx='40' cy='60' r='1.5' fill='%2300C2DE' opacity='0.1'/%3E%3C/svg%3E");
+    background-size: 120px 120px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+html[data-theme="light"] .id-circuit-bg::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M20 0v20h80v80h20' fill='none' stroke='%23636466' stroke-width='0.5' opacity='0.12'/%3E%3Cpath d='M0 60h40v60' fill='none' stroke='%23636466' stroke-width='0.5' opacity='0.08'/%3E%3Cpath d='M60 0v40h60' fill='none' stroke='%23636466' stroke-width='0.5' opacity='0.08'/%3E%3Ccircle cx='20' cy='20' r='2' fill='%23636466' opacity='0.15'/%3E%3Ccircle cx='100' cy='100' r='2' fill='%23636466' opacity='0.15'/%3E%3Ccircle cx='60' cy='40' r='1.5' fill='%23636466' opacity='0.1'/%3E%3Ccircle cx='40' cy='60' r='1.5' fill='%23636466' opacity='0.1'/%3E%3C/svg%3E");
+}
+
+
+/* ═══════════════════════════════════════════
+   CARDS — Daedalus surface hierarchy
+   ═══════════════════════════════════════════ */
+.sd-card {
+    border-radius: var(--id-radius-lg) !important;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+    border: 1px solid rgba(101, 107, 114, 0.25) !important;
+}
+
+html[data-theme="dark"] .sd-card {
+    background-color: var(--id-surface-1) !important;
+}
+
+html[data-theme="dark"] .sd-card:hover {
+    border-color: var(--id-teal) !important;
+    box-shadow: 0 12px 40px rgba(var(--id-teal-rgb), 0.12);
+}
+
+html[data-theme="light"] .sd-card:hover {
+    border-color: var(--id-secondary) !important;
+    box-shadow: 0 12px 40px rgba(var(--id-teal-rgb), 0.10);
+}
+
+.sd-card-header,
+.sd-card-footer {
+    border-color: rgba(101, 107, 114, 0.2) !important;
+}
+
+.sd-card-title {
+    font-family: var(--id-font-display);
+    font-weight: 500;
+}
+
+
+/* ═══════════════════════════════════════════
+   ADMONITIONS — teal accent, surface bg
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] .admonition {
+    border-left-color: var(--id-teal);
+    background-color: var(--id-surface-1);
+    border-radius: 0 var(--id-radius-md) var(--id-radius-md) 0;
+}
+
+html[data-theme="light"] .admonition {
+    border-left-color: var(--id-secondary);
+    border-radius: 0 var(--id-radius-md) var(--id-radius-md) 0;
+}
+
+.admonition > .admonition-title {
+    font-family: var(--id-font-display);
+    font-weight: 500;
+}
+
+
+/* ═══════════════════════════════════════════
+   CODE BLOCKS — Daedalus surface with border
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] .highlight {
+    background-color: var(--id-surface-1) !important;
+    border: 1px solid var(--id-border-subtle);
+    border-radius: var(--id-radius-md);
+}
+
+html[data-theme="light"] .highlight {
+    border: 1px solid var(--id-border-light);
+    border-radius: var(--id-radius-md);
+}
+
+html[data-theme="dark"] .highlight pre {
+    background-color: var(--id-surface-1) !important;
+}
+
+html[data-theme="dark"] code.literal {
+    background-color: var(--id-surface-1);
+    color: var(--id-teal);
+    padding: 0.1rem 0.35rem;
+    border-radius: var(--id-radius-sm);
+    font-size: 0.875em;
+    border: 1px solid var(--id-border-subtle);
+}
+
+html[data-theme="light"] code.literal {
+    background-color: var(--id-surface-1-light);
+    color: var(--id-secondary);
+    padding: 0.1rem 0.35rem;
+    border-radius: var(--id-radius-sm);
+    font-size: 0.875em;
+    border: 1px solid var(--id-border-light);
+}
+
+
+/* ═══════════════════════════════════════════
+   TABLES — teal header accent
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] .bd-main table thead th {
+    background-color: rgba(var(--id-teal-rgb), 0.12);
+    border-bottom: 2px solid var(--id-teal);
+    font-family: var(--id-font-display);
+    font-weight: 500;
+}
+
+html[data-theme="light"] .bd-main table thead th {
+    background-color: rgba(var(--id-teal-rgb), 0.06);
+    border-bottom: 2px solid var(--id-secondary);
+    font-family: var(--id-font-display);
+    font-weight: 500;
+}
+
+html[data-theme="dark"] .bd-main table tbody tr:nth-child(even) {
+    background-color: rgba(var(--id-teal-rgb), 0.03);
+}
+
+html[data-theme="dark"] .bd-main table td {
+    border-color: var(--id-border-subtle);
+}
+
+
+/* ═══════════════════════════════════════════
+   SIDEBAR — teal active indicator
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] .bd-sidebar-primary .current > a {
+    color: var(--id-teal);
+}
+
+html[data-theme="light"] .bd-sidebar-primary .current > a {
+    color: var(--id-secondary);
+}
+
+.bd-sidebar-primary .sidebar-primary-items__start {
+    border-right: 1px solid var(--id-border-subtle);
+}
+
+html[data-theme="light"] .bd-sidebar-primary .sidebar-primary-items__start {
+    border-right-color: var(--id-border-light);
+}
+
+
+/* ═══════════════════════════════════════════
+   BREADCRUMBS — muted, Daedalus style
+   ═══════════════════════════════════════════ */
+.bd-breadcrumbs a {
+    color: var(--id-muted-text) !important;
+    font-size: 0.8rem;
+}
+
+.bd-breadcrumbs a:hover {
+    color: var(--id-teal) !important;
+}
+
+html[data-theme="light"] .bd-breadcrumbs a:hover {
+    color: var(--id-secondary) !important;
+}
+
+
+/* ═══════════════════════════════════════════
+   SCROLL REVEAL — fade + slide-up entrance
+   ═══════════════════════════════════════════ */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+
+/* ═══════════════════════════════════════════
+   SELECTION HIGHLIGHT — teal-tinted
+   ═══════════════════════════════════════════ */
+::selection {
+    background-color: rgba(var(--id-teal-rgb), 0.25);
+    color: inherit;
+}
+
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR — dark theme styling
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--id-background);
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--id-surface-2);
+    border-radius: 4px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--id-border);
+}
+
+
+/* ═══════════════════════════════════════════
+   LINKS — smooth transition
+   ═══════════════════════════════════════════ */
+.bd-main a {
+    transition: color 200ms ease;
+}
+
+/* Hide header anchor link symbol — eyebrow rule is the visual indicator */
+.bd-main .headerlink {
+    display: none !important;
+}
+
+.bd-main *:hover > .headerlink {
+    display: inline-block !important;
+    opacity: 0.35;
+    font-size: 0.7em;
+    margin-left: 0.4em;
+    color: var(--id-teal);
+    text-decoration: none;
+}
+
+html[data-theme="light"] .bd-main *:hover > .headerlink {
+    color: var(--id-secondary);
+}
+
+
+/* ═══════════════════════════════════════════
+   TOC (right sidebar) — refined styling
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] .bd-sidebar-secondary a.active {
+    color: var(--id-teal);
+}
+
+html[data-theme="light"] .bd-sidebar-secondary a.active {
+    color: var(--id-secondary);
+}
+
+.bd-sidebar-secondary a {
+    font-size: 0.8rem;
+    transition: color 200ms ease;
+}
+
+
+/* ═══════════════════════════════════════════
+   SEARCH HIGHLIGHT — teal accent
+   ═══════════════════════════════════════════ */
+.highlighted {
+    background-color: rgba(var(--id-teal-rgb), 0.2) !important;
+    color: inherit !important;
+}
+
+
+
+/* ═══════════════════════════════════════════
+   NO-TRANSITIONS — theme switch helper
+   ═══════════════════════════════════════════ */
+.no-transitions,
+.no-transitions *,
+.no-transitions *::before,
+.no-transitions *::after {
+    transition: none !important;
+}
+
+
+
+/* ═══════════════════════════════════════════
+   DROPDOWNS (sphinx-design) — surface bg, teal accent on open
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] details.sd-dropdown {
+    background-color: var(--id-surface-1) !important;
+    border: 1px solid var(--id-border-subtle) !important;
+}
+
+html[data-theme="light"] details.sd-dropdown {
+    background-color: var(--id-surface-1-light) !important;
+    border: 1px solid var(--id-border-light) !important;
+}
+
+html[data-theme="dark"] details.sd-dropdown > .sd-summary-title {
+    background-color: var(--id-surface-1) !important;
+    color: var(--id-foreground) !important;
+    border-bottom: 1px solid transparent;
+}
+
+html[data-theme="light"] details.sd-dropdown > .sd-summary-title {
+    background-color: var(--id-surface-1-light) !important;
+    color: var(--id-fg-light) !important;
+    border-bottom: 1px solid transparent;
+}
+
+details.sd-dropdown[open] > .sd-summary-title {
+    border-bottom-color: var(--id-teal) !important;
+}
+
+html[data-theme="dark"] details.sd-dropdown > .sd-summary-content,
+html[data-theme="dark"] details.sd-dropdown .sd-card-body {
+    background-color: var(--id-background) !important;
+    color: var(--id-foreground) !important;
+}
+
+html[data-theme="light"] details.sd-dropdown > .sd-summary-content,
+html[data-theme="light"] details.sd-dropdown .sd-card-body {
+    background-color: var(--id-bg-light) !important;
+    color: var(--id-fg-light) !important;
+}
+
+details.sd-dropdown .sd-summary-state-marker svg {
+    fill: var(--id-teal);
+}
+
+
+/* ═══════════════════════════════════════════
+   TABS (sphinx-design) — surface panels, teal active tab
+   ═══════════════════════════════════════════ */
+html[data-theme="dark"] .sd-tab-set > input + label {
+    color: var(--id-foreground-muted, #c8ccd0);
+    border-bottom: 2px solid transparent;
+}
+
+html[data-theme="light"] .sd-tab-set > input + label {
+    color: var(--id-fg-light);
+    border-bottom: 2px solid transparent;
+}
+
+.sd-tab-set > input:checked + label {
+    color: var(--id-teal) !important;
+    border-bottom-color: var(--id-teal) !important;
+}
+
+html[data-theme="light"] .sd-tab-set > input:checked + label {
+    color: var(--id-secondary) !important;
+    border-bottom-color: var(--id-secondary) !important;
+}
+
+.sd-tab-set > input + label:hover {
+    color: var(--id-teal) !important;
+}
+
+html[data-theme="dark"] .sd-tab-set > .sd-tab-content {
+    background-color: var(--id-background) !important;
+    color: var(--id-foreground) !important;
+    border: 1px solid var(--id-border-subtle);
+    border-top-color: var(--id-teal);
+}
+
+html[data-theme="light"] .sd-tab-set > .sd-tab-content {
+    background-color: var(--id-bg-light) !important;
+    color: var(--id-fg-light) !important;
+    border: 1px solid var(--id-border-light);
+    border-top-color: var(--id-secondary);
+}
+
+/* Override PyData's .bd-content scoped rules so tab labels follow the
+   flavor surface palette (their default uses --pst-color-on-background
+   which the flavor remaps to a foreground/text color). */
+html[data-theme="dark"] .bd-content .sd-tab-set > label {
+    background-color: var(--id-surface-1) !important;
+    color: var(--id-foreground) !important;
+}
+
+html[data-theme="light"] .bd-content .sd-tab-set > label {
+    background-color: var(--id-surface-1-light) !important;
+    color: var(--id-fg-light) !important;
+}
+
+html[data-theme="dark"] .bd-content .sd-tab-set > input:checked + label {
+    background-color: var(--id-background) !important;
+    color: var(--id-teal) !important;
+    border-color: var(--id-teal) var(--id-teal) transparent !important;
+}
+
+html[data-theme="light"] .bd-content .sd-tab-set > input:checked + label {
+    background-color: var(--id-bg-light) !important;
+    color: var(--id-secondary) !important;
+    border-color: var(--id-secondary) var(--id-secondary) transparent !important;
+}
+
+/* Tab content panel — match base background, accent top border via active label */
+html[data-theme="dark"] .bd-content .sd-tab-set .sd-tab-content {
+    background-color: var(--id-background) !important;
+    border-color: var(--id-teal) !important;
+}
+
+html[data-theme="light"] .bd-content .sd-tab-set .sd-tab-content {
+    background-color: var(--id-bg-light) !important;
+    border-color: var(--id-border-light) !important;
+    border-top-color: var(--id-secondary) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   LANDING v2 — flat, image-free, System-Admin-first
+   Replaces the nested dropdown/tab/image-card layout.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* These page-level overrides (wider body, no dot-grid, transparent canvas)
+   apply ONLY to landing pages — scoped via :has(.id-hero-eyebrow) so content
+   pages in every consumer keep the default Daedalus dot-grid + width. The
+   landing hero block owns the page atmosphere instead. */
+
+/* ---- Body width: roomier, content-led (landing only) ---- */
+.bd-main .bd-content .bd-article-container:has(.id-hero-eyebrow),
+.bd-main .bd-content .bd-article-container:has(.id-hero-eyebrow) > .bd-article {
+    max-width: 1180px;
+}
+
+/* ---- Kill the dot-grid + radial hero on landing pages only ---- */
+.bd-main:has(.id-hero-eyebrow) {
+    background-image: none;
+}
+.bd-article-container:has(.id-hero-eyebrow) {
+    background: transparent;
+}
+
+/* ───────────────── HERO ───────────────── */
+.id-hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--id-teal);
+    margin-bottom: 1rem;
+}
+html[data-theme="light"] .id-hero-eyebrow { color: var(--id-secondary); }
+
+.id-hero-eyebrow-rule {
+    width: 2rem;
+    height: 2px;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+/* Hero H1 — landing only (scoped via :has so content-page h1s keep the
+   default Daedalus scale + eyebrow rule). Overrides the global eyebrow
+   ::before + glow ::after for the bigger, flush landing headline. */
+.bd-main:has(.id-hero-eyebrow) h1 {
+    font-size: clamp(2.1rem, 5.2vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 1.25rem;
+}
+.bd-main:has(.id-hero-eyebrow) h1::before { display: none; }
+.bd-main:has(.id-hero-eyebrow) h1::after {
+    content: "";
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, var(--id-teal), transparent 60%);
+    opacity: 0.5;
+    margin-top: 1.5rem;
+    max-width: 640px;
+}
+html[data-theme="light"] .bd-main:has(.id-hero-eyebrow) h1::after {
+    background: linear-gradient(90deg, var(--id-secondary), transparent 60%);
+}
+
+.id-hero-lede {
+    font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--id-muted-text);
+    max-width: 720px;
+    margin: 0 0 1.75rem;
+}
+html[data-theme="light"] .id-hero-lede { color: var(--id-muted-text-light); }
+.id-hero-lede strong { color: var(--pst-color-text-base); font-weight: 600; }
+
+/* Hero buttons */
+.id-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+.id-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.25rem;
+    border-radius: var(--id-radius-md);
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none !important;
+    transition: transform 160ms ease, box-shadow 200ms ease,
+                background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+    border: 1px solid transparent;
+}
+.id-btn svg { width: 1.05em; height: 1.05em; transition: transform 200ms ease; }
+.id-btn:hover svg { transform: translateX(3px); }
+
+.id-btn-primary {
+    background: var(--id-teal);
+    color: #06181c !important;
+    box-shadow: 0 6px 22px rgba(var(--id-teal-rgb), 0.28);
+}
+.id-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(var(--id-teal-rgb), 0.4);
+}
+html[data-theme="light"] .id-btn-primary {
+    background: var(--id-secondary);
+    color: #fff !important;
+    box-shadow: 0 6px 22px rgba(0, 125, 184, 0.28);
+}
+
+.id-btn-ghost {
+    background: transparent;
+    color: var(--pst-color-text-base) !important;
+    border-color: var(--id-border);
+}
+.id-btn-ghost:hover {
+    border-color: var(--id-teal);
+    color: var(--id-teal) !important;
+    transform: translateY(-2px);
+}
+html[data-theme="light"] .id-btn-ghost { border-color: var(--id-border-light); }
+html[data-theme="light"] .id-btn-ghost:hover {
+    border-color: var(--id-secondary);
+    color: var(--id-secondary) !important;
+}
+
+.id-glow-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(var(--id-teal-rgb), 0.5), transparent);
+    border: 0;
+    margin: 2.75rem 0;
+}
+
+/* ───────────────── DECK (section block) ───────────────── */
+.id-deck { margin: 0 0 3rem; }
+
+.id-deck-head { margin-bottom: 1.5rem; }
+
+.id-section-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--id-teal);
+    margin-bottom: 0.6rem;
+}
+.id-section-label::before {
+    content: "";
+    width: 1.6rem;
+    height: 2px;
+    background: currentColor;
+    flex-shrink: 0;
+}
+html[data-theme="light"] .id-section-label { color: var(--id-secondary); }
+
+.bd-main h2.id-deck-title {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem;
+}
+.bd-main h2.id-deck-title::before { display: none; }
+
+.id-deck-sub {
+    color: var(--id-muted-text);
+    max-width: 680px;
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.55;
+}
+html[data-theme="light"] .id-deck-sub { color: var(--id-muted-text-light); }
+
+/* Primary deck — System Administrators gets a tinted, bordered canvas
+   so the frequently-updated content reads as the hero of the page. */
+.id-deck--primary {
+    position: relative;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border-radius: var(--id-radius-xl);
+    border: 1px solid rgba(var(--id-teal-rgb), 0.18);
+    background:
+        radial-gradient(ellipse 70% 80% at 0% 0%, rgba(var(--id-teal-rgb), 0.06), transparent 60%),
+        var(--id-surface-1);
+    overflow: hidden;
+}
+.id-deck--primary::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--id-teal), transparent 55%);
+}
+html[data-theme="light"] .id-deck--primary {
+    border-color: rgba(var(--id-teal-rgb), 0.22);
+    background:
+        radial-gradient(ellipse 70% 80% at 0% 0%, rgba(var(--id-teal-rgb), 0.07), transparent 60%),
+        var(--id-surface-1-light);
+}
+
+/* Collapsible sub-group (Bare metal, Containers, …) — native <details>/<summary>,
+   open by default, no JS. Each group's card grid can be toggled by the user. */
+.id-group { margin: 0; }
+
+/* Sub-group label inside a deck — doubles as the <summary> toggle */
+.id-subhead {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--pst-color-text-base);
+    margin: 2rem 0 0.9rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(101, 107, 114, 0.22);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: color 160ms ease, border-color 200ms ease;
+}
+.id-group:first-of-type .id-subhead { margin-top: 0.5rem; }
+
+/* Strip the native disclosure triangle across engines */
+.id-subhead::-webkit-details-marker { display: none; }
+.id-subhead::marker { content: ""; }
+
+/* Custom chevron — rotates when the group is open */
+.id-subhead::before {
+    content: "";
+    width: 0.62rem;
+    height: 0.62rem;
+    flex-shrink: 0;
+    border-right: 2px solid var(--id-teal);
+    border-bottom: 2px solid var(--id-teal);
+    transform: rotate(-45deg);
+    transition: transform 200ms ease;
+}
+.id-group[open] > .id-subhead::before { transform: rotate(45deg); }
+html[data-theme="light"] .id-subhead::before {
+    border-color: var(--id-secondary);
+}
+
+.id-subhead:hover { color: var(--id-teal); border-bottom-color: rgba(var(--id-teal-rgb), 0.4); }
+html[data-theme="light"] .id-subhead:hover { color: var(--id-secondary); }
+.id-subhead:focus-visible {
+    outline: 2px solid var(--id-teal);
+    outline-offset: 3px;
+    border-radius: 3px;
+}
+
+/* The grid sits inside the open <details>; give it breathing room below the summary */
+.id-group > .id-grid { margin-bottom: 0.5rem; }
+
+/* ───────────────── CARD GRID ───────────────── */
+.id-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+    gap: 0.9rem;
+}
+
+.id-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 1.15rem 1.2rem 1.25rem;
+    border-radius: var(--id-radius-lg);
+    border: 1px solid rgba(101, 107, 114, 0.22);
+    background: var(--id-background);
+    text-decoration: none !important;
+    color: inherit !important;
+    overflow: hidden;
+    transition: transform 180ms ease, border-color 200ms ease, box-shadow 220ms ease, background-color 200ms ease;
+}
+html[data-theme="light"] .id-card {
+    background: var(--id-surface-2-light);
+    border-color: var(--id-border-light);
+    box-shadow: 0 1px 2px rgba(16, 20, 22, 0.04);
+}
+/* On the tinted primary deck, lift cards onto a darker base for contrast */
+html[data-theme="dark"] .id-deck--primary .id-card { background: var(--id-background); }
+html[data-theme="light"] .id-deck--primary .id-card { background: #fff; }
+
+.id-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px transparent;
+    transition: box-shadow 220ms ease;
+}
+.id-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(var(--id-teal-rgb), 0.55);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(var(--id-teal-rgb), 0.18);
+}
+html[data-theme="light"] .id-card:hover {
+    border-color: rgba(var(--id-teal-rgb), 0.5);
+    box-shadow: 0 14px 30px rgba(16, 20, 22, 0.1);
+}
+
+.id-card-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--id-radius-md);
+    background: rgba(var(--id-teal-rgb), 0.1);
+    border: 1px solid rgba(var(--id-teal-rgb), 0.22);
+    color: var(--id-teal);
+    margin-bottom: 0.95rem;
+    transition: background-color 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+.id-card-ico svg { width: 21px; height: 21px; }
+html[data-theme="light"] .id-card-ico { color: var(--id-secondary); }
+.id-card:hover .id-card-ico {
+    background: rgba(var(--id-teal-rgb), 0.16);
+    border-color: rgba(var(--id-teal-rgb), 0.45);
+    transform: scale(1.06);
+}
+
+.id-card-title {
+    font-family: var(--id-font-display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    line-height: 1.25;
+    color: var(--pst-color-text-base);
+    margin-bottom: 0.4rem;
+}
+.id-card:hover .id-card-title { color: var(--id-teal); }
+html[data-theme="light"] .id-card:hover .id-card-title { color: var(--id-secondary); }
+
+.id-card-desc {
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--id-muted-text);
+    flex: 1;
+}
+html[data-theme="light"] .id-card-desc { color: var(--id-muted-text-light); }
+.id-card-desc em { font-style: normal; color: var(--id-teal); font-weight: 600; }
+html[data-theme="light"] .id-card-desc em { color: var(--id-secondary); }
+
+.id-card-go {
+    position: absolute;
+    top: 1.15rem;
+    right: 1.1rem;
+    color: var(--id-muted-text);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 200ms ease, transform 200ms ease, color 200ms ease;
+}
+.id-card-go svg { width: 18px; height: 18px; }
+.id-card:hover .id-card-go {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--id-teal);
+}
+html[data-theme="light"] .id-card:hover .id-card-go { color: var(--id-secondary); }
+
+/* ───────────────── VERTICALS BANNER (deprioritized) ───────────────── */
+.id-verticals-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--id-radius-lg);
+    border: 1px dashed rgba(101, 107, 114, 0.4);
+    background: var(--id-surface-1);
+    text-decoration: none !important;
+    color: inherit !important;
+    transition: border-color 200ms ease, background-color 200ms ease;
+}
+html[data-theme="light"] .id-verticals-banner {
+    background: var(--id-surface-1-light);
+    border-color: var(--id-border-light);
+}
+.id-verticals-banner:hover { border-color: var(--id-teal); }
+html[data-theme="light"] .id-verticals-banner:hover { border-color: var(--id-secondary); }
+
+.id-vb-main { display: flex; flex-direction: column; gap: 0.25rem; }
+.id-vb-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--id-teal);
+}
+html[data-theme="light"] .id-vb-label { color: var(--id-secondary); }
+.id-vb-desc { font-size: 0.92rem; color: var(--id-muted-text); }
+html[data-theme="light"] .id-vb-desc { color: var(--id-muted-text-light); }
+
+.id-vb-go {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--id-teal);
+    white-space: nowrap;
+}
+html[data-theme="light"] .id-vb-go { color: var(--id-secondary); }
+.id-vb-go svg { width: 1.05em; height: 1.05em; transition: transform 200ms ease; }
+.id-verticals-banner:hover .id-vb-go svg { transform: translateX(4px); }
+
+/* ───────────────── RESPONSIVE ───────────────── */
+@media (max-width: 600px) {
+    .id-grid { grid-template-columns: 1fr; }
+    .id-deck--primary { padding: 1.25rem; }
+    .id-hero-actions .id-btn { flex: 1 1 auto; justify-content: center; }
+}
+
+/* ───────────────── REDUCED MOTION ───────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .id-card, .id-card-ico, .id-card-go, .id-btn, .id-btn svg, .id-vb-go svg,
+    .id-subhead, .id-subhead::before {
+        transition: none !important;
+    }
+    .id-card:hover { transform: none; }
+}
