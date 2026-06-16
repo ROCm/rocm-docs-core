@@ -15,3 +15,9 @@
         {%- include "sections/footer.html" %}
     {% endif %}
 {%- endblock %}
+
+{% block docs_toc %}
+    {% if theme_flavor != "rocm-ft" %}
+        {{ super() }}
+    {% endif %}
+{% endblock %}
