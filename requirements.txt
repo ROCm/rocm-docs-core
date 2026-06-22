@@ -96,7 +96,7 @@ gitpython==3.1.50
     # via rocm-docs-core (pyproject.toml)
 greenlet==3.5.1
     # via sqlalchemy
-identify==2.6.15
+identify==2.6.19
     # via pre-commit
 idna==3.17
     # via requests
