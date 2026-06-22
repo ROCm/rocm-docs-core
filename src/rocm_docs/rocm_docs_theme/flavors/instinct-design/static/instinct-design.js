@@ -1,34 +1,25 @@
 /**
- * AMD Instinct Design System — scroll reveal + theme toggle helper
+ * AMD Instinct Design System — scroll reveal helper
  *
- * - IntersectionObserver-based fade-in for .reveal elements
- * - .no-transitions helper for flicker-free theme switching
+ * IntersectionObserver-based progressive fade-in for content-page sections.
+ * Respects prefers-reduced-motion: when the user asks for reduced motion,
+ * sections render immediately with no animation.
  */
 (function () {
     "use strict";
 
-    // Scroll reveal: observe .reveal elements, add .visible when in view
-    if ("IntersectionObserver" in window) {
-        var observer = new IntersectionObserver(
-            function (entries) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("visible");
-                    }
-                });
-            },
-            { threshold: 0.1 }
-        );
-
-        document.querySelectorAll(".reveal").forEach(function (el) {
-            observer.observe(el);
-        });
-    }
+    const prefersReducedMotion =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // Auto-reveal sections on content pages for progressive disclosure
-    var sections = document.querySelectorAll(".bd-main section[id]");
-    if (sections.length > 0 && "IntersectionObserver" in window) {
-        var sectionObserver = new IntersectionObserver(
+    const sections = document.querySelectorAll(".bd-main section[id]");
+    if (
+        !prefersReducedMotion &&
+        sections.length > 0 &&
+        "IntersectionObserver" in window
+    ) {
+        const sectionObserver = new IntersectionObserver(
             function (entries) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
