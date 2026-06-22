@@ -61,7 +61,7 @@ commitizen==4.16.2
     # via rocm-docs-core (pyproject.toml)
 cryptography==48.0.0
     # via pyjwt
-debugpy==1.8.17
+debugpy==1.8.21
     # via ipykernel
 decli==0.6.3
     # via commitizen
