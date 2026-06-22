@@ -44,8 +44,11 @@
 html[data-theme="dark"] {
     /* Backgrounds */
     --pst-color-background: var(--id-background);
-    --pst-color-on-background: var(--id-foreground);
-    --pst-color-surface: var(--id-surface-1);
+    /* on-background is a surface that sits on the page bg (search box, cards,
+       admonitions, table rows) — keep it a slight offset from the background,
+       NOT the foreground/text color. */
+    --pst-color-on-background: var(--id-surface-1);
+    --pst-color-surface: var(--id-surface-2);
     --pst-color-on-surface: var(--id-foreground);
 
     /* Links & accents */
@@ -88,7 +91,10 @@ html[data-theme="dark"] {
 html[data-theme="light"] {
     /* Backgrounds */
     --pst-color-background: var(--id-bg-light);
-    --pst-color-on-background: var(--id-fg-light);
+    /* on-background is a surface that sits on the page bg (search box, cards,
+       admonitions, table rows) — keep it a slight offset from the background,
+       NOT the foreground/text color. */
+    --pst-color-on-background: var(--id-surface-1-light);
     --pst-color-surface: var(--id-surface-2-light);
     --pst-color-on-surface: var(--id-fg-light);
 
@@ -449,14 +455,6 @@ html[data-theme="dark"] .bd-sidebar-primary .current > a {
 
 html[data-theme="light"] .bd-sidebar-primary .current > a {
     color: var(--id-secondary);
-}
-
-.bd-sidebar-primary .sidebar-primary-items__start {
-    border-right: 1px solid var(--id-border-subtle);
-}
-
-html[data-theme="light"] .bd-sidebar-primary .sidebar-primary-items__start {
-    border-right-color: var(--id-border-light);
 }
 
 
