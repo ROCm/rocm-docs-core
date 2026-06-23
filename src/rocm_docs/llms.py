@@ -374,6 +374,23 @@ def _page_url(base_url: str, docname: str) -> str:
     return f"{docname}.html"
 
 
+def _llms_files_note() -> str:
+    """A note that each ROCm project publishes its own llms files.
+
+    ROCm documentation is split across multiple sites and projects, each served
+    under ``https://<base_url>/projects/<project_name>/en/latest/``. This note
+    tells an LLM consumer that ``llms.txt`` and ``llms-full.txt`` exist not only
+    at the documentation root but also under each project's path, so other
+    projects' files can be discovered too.
+    """
+    return (
+        "> Note: ROCm documentation is split across multiple projects. In "
+        "addition to this file, each project publishes its own `llms.txt` and "
+        "`llms-full.txt` under "
+        "`https://<base_url>/projects/<project_name>/en/latest/`."
+    )
+
+
 def _assemble_index(
     app: Sphinx,
     base_url: str,
@@ -389,6 +406,8 @@ def _assemble_index(
         root_description = descriptions.get(root.docname, "")
         if root_description:
             lines += [f"> {root_description}", ""]
+
+    lines += [_llms_files_note(), ""]
 
     lines += ["## Docs", ""]
     for entry in entries:

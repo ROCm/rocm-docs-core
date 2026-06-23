@@ -97,6 +97,12 @@ def test_index_has_title_and_summary(llms_build: _LlmsBuild) -> None:
     assert "> Root page of the LLMs test project." in llms_build.index
 
 
+def test_index_notes_multiple_llms_files(llms_build: _LlmsBuild) -> None:
+    # Every llms.txt notes that each project publishes its own llms files.
+    assert "split across multiple projects" in llms_build.index
+    assert "projects/<project_name>/en/latest/" in llms_build.index
+
+
 def test_index_lists_pages_in_toc_order(llms_build: _LlmsBuild) -> None:
     index = llms_build.index
     rst_pos = index.find("page_rst.html")
