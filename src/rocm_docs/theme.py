@@ -225,6 +225,11 @@ def _update_theme_options(app: Sphinx) -> None:
         flavor = supported_flavors[0]
         theme_opts["flavor"] = flavor
 
+    if flavor == "rocm-ft":
+        theme_opts["nosidebar"] = True
+        theme_opts["primary_sidebar_end"] = []
+        theme_opts["primary_sidebar_start"] = []
+
     # Set default generic theme options
     if flavor == "generic":
         theme_opts.setdefault("header_title", "")
