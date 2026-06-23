@@ -11,9 +11,9 @@ myst:
 
 - A per-page **download button** that lets users and agents copy page content directly into an AI context window.
 - A generated **`llms.txt`** index file that AI agents can discover and use as an entry point to the documentation.
-- A generated **`llms-full.txt`** file that inlines the prose documentation into a single document.
+- A generated **`llms-full.txt`** file that combines the prose documentation into a single document.
 
-All three features are opt-in and configured in `conf.py`. The `llms.txt` and `llms-full.txt` files are produced from the same setting and are generated from Sphinx's resolved doctree, so RST and Markdown sources are handled identically and constructs such as tables, code blocks, math, footnotes, and cross-references are preserved.
+All three features are opt-in and configured in `conf.py`. The `llms.txt` and `llms-full.txt` files are produced from the same setting and are generated from Sphinx's resolved doctree. As a result, RST and Markdown sources are handled identically and constructs such as tables, code blocks, math, footnotes, and cross-references are preserved.
 
 ## Per-page download button
 
@@ -35,7 +35,7 @@ Set `rocm_docs_generate_llms_full = True` in `conf.py` to generate both `llms.tx
 rocm_docs_generate_llms_full = True
 ```
 
-Both files are written to the Sphinx output directory alongside the built HTML after each successful build. For a standard build this is `docs/_build/html/`, making them available at `{project_url}/llms.txt` and `{project_url}/llms-full.txt`. Neither file is generated if the build fails.
+After each successful build, both files are written to the Sphinx output directory alongside the built HTML. For a standard build, this is `docs/_build/html/`, making them available at `{project_url}/llms.txt` and `{project_url}/llms-full.txt`. Neither file is generated if the build fails.
 
 ### Setting the base URL
 
@@ -77,7 +77,7 @@ In RST:
 
 ## `llms-full.txt`
 
-`llms-full.txt` inlines the prose documentation into a single Markdown document, with the `llms.txt` index as its header. Each page follows a `---` separator and a `Source:` link to the published page.
+`llms-full.txt` collects all documentation pages into a single Markdown document, with the `llms.txt` index as its header. Each page follows a `---` separator and a `Source:` link to the published page.
 
 The content is produced from Sphinx's resolved doctree using the Markdown translator from [`sphinx-markdown-builder`](https://pypi.org/project/sphinx-markdown-builder/), rather than a text filter. As a result:
 
@@ -87,7 +87,7 @@ The content is produced from Sphinx's resolved doctree using the Markdown transl
 
 ### Excluding large pages from the full text
 
-Some pages, such as large generated tables, can dominate `llms-full.txt`. Use `rocm_docs_llms_full_exclude` to keep such pages out of the inlined prose while still listing them in `llms.txt`. It accepts a list of document names or glob patterns, matched against each page's path relative to the documentation root (without the file extension):
+Some pages can dominate `llms-full.txt` due to their size. Use `rocm_docs_llms_full_exclude` to keep such pages out of the inlined prose while still listing them in `llms.txt`. It accepts a list of document names or glob patterns, matched against each page's path relative to the documentation root (without the file extension):
 
 ```python
 rocm_docs_llms_full_exclude = [
