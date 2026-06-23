@@ -31,6 +31,7 @@ import sphinx.util.logging
 from docutils import nodes
 from docutils.io import StringOutput
 from sphinx.application import Sphinx
+from sphinx_design.tabs import sd_tab_input, sd_tab_label
 from sphinx_external_toc.api import FileItem, SiteMap, UrlItem
 from sphinx_external_toc.parsing import parse_toc_yaml
 from sphinx_markdown_builder.builder import (  # type: ignore[import-untyped]
@@ -158,10 +159,16 @@ _SUPPORTED_ADMONITIONS: tuple[type[nodes.Element], ...] = (
 def _strip_unsupported_nodes(doctree: nodes.document) -> nodes.document:
     """Return a copy of *doctree* normalized for the Markdown translator.
 
-    ``meta`` nodes have no visitor in sphinx-markdown-builder and would emit an
-    ``unknown node type: <meta>`` warning for every page, so they are removed.
-    Admonitions the translator cannot render are converted to ``note`` so their
-    content is preserved instead of silently dropped.
+    sphinx-markdown-builder has no visitor for several node types that would
+    otherwise be dropped silently. To keep the output faithful:
+
+    * ``meta`` nodes are removed (they carry no prose).
+    * Admonitions the translator cannot render are converted to ``note`` so
+      their content is preserved.
+    * ``sphinx-design`` tab labels are converted to a bold paragraph so the tab
+      identity (e.g. "AMD" vs "NVIDIA", "Linux" vs "Windows") is not lost, which
+      otherwise risks conflating platform-specific instructions. The associated
+      radio-button ``sd_tab_input`` nodes carry no text and are removed.
     """
     clean = doctree.deepcopy()
     for meta in list(clean.findall(nodes.meta)):
@@ -172,6 +179,12 @@ def _strip_unsupported_nodes(doctree: nodes.document) -> nodes.document:
         if isinstance(element, _SUPPORTED_ADMONITIONS):
             continue
         element.replace_self(nodes.note("", *element.children))
+    for tab_input in list(clean.findall(sd_tab_input)):
+        tab_input.parent.remove(tab_input)
+    for label in list(clean.findall(sd_tab_label)):
+        para = nodes.paragraph()
+        para += nodes.strong(text=label.astext())
+        label.replace_self(para)
     return clean
 
 

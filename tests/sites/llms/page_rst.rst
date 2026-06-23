@@ -38,3 +38,13 @@ Some prose on the RST page mentioning the inline literal ``hipFree``. See
 .. tip::
 
    Unique tip body text that must survive conversion.
+
+.. tab-set::
+
+   .. tab-item:: AMD
+
+      Use ``amdclang++`` on AMD platforms.
+
+   .. tab-item:: NVIDIA
+
+      Use ``nvcc`` on NVIDIA platforms.

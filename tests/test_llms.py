@@ -176,6 +176,17 @@ def test_supported_and_unsupported_admonitions_preserved(
     assert "Unique tip body text that must survive conversion." in full
 
 
+def test_tab_labels_preserved_as_bold(llms_build: _LlmsBuild) -> None:
+    full = llms_build.full
+    # Tab labels (sd_tab_label) have no Markdown-builder visitor; they must be
+    # rendered as bold text so platform-specific tabs are not conflated, while
+    # the tab bodies are also kept.
+    assert "**AMD**" in full
+    assert "**NVIDIA**" in full
+    assert "Use `amdclang++` on AMD platforms." in full
+    assert "Use `nvcc` on NVIDIA platforms." in full
+
+
 def test_doxygen_page_excluded_from_fulltext(
     llms_build: _LlmsBuild,
 ) -> None:
