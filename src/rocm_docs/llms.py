@@ -21,6 +21,7 @@ math, footnotes, and cross-references survive conversion intact.
 
 from __future__ import annotations
 
+import logging
 import os
 from collections.abc import Iterator
 from dataclasses import dataclass
@@ -54,6 +55,25 @@ EXCLUDED_DOC_PREFIXES: tuple[str, ...] = ("doxygen/", "_doxygen/")
 EXCLUDED_DOC_SEGMENTS: tuple[str, ...] = ("doxygen/html/",)
 
 
+class _DowngradeUnknownNodeFilter(logging.Filter):
+    """Lower "unknown node type" warnings to INFO during Markdown rendering.
+
+    Converting the resolved doctree to Markdown runs the sphinx-markdown-builder
+    translator, which warns once per node type it has no visitor for (e.g.
+    mermaid diagrams or custom directives). These warnings only appear because
+    of this feature, never in a normal HTML build, and are not actionable by doc
+    authors, so they are demoted to INFO to avoid build-warning noise.
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if record.levelno == logging.WARNING and record.getMessage().startswith(
+            "unknown node type:"
+        ):
+            record.levelno = logging.INFO
+            record.levelname = "INFO"
+        return True
+
+
 @dataclass
 class _TocEntry:
     """A single navigable entry discovered from the table of contents."""
@@ -80,6 +100,12 @@ def generate_llms_full(app: Sphinx, exception: object) -> None:
     # render loop, then restore the original value so nothing else is affected.
     saved_http_base = app.config.markdown_http_base
     app.config.markdown_http_base = base_url
+    # The "unknown node type" warning is emitted by SphinxTranslator via
+    # ``sphinx.util.logging.getLogger(__name__)``, which prefixes the logger
+    # name with "sphinx." -> "sphinx.sphinx.util.docutils".
+    docutils_logger = logging.getLogger("sphinx.sphinx.util.docutils")
+    downgrade_filter = _DowngradeUnknownNodeFilter()
+    docutils_logger.addFilter(downgrade_filter)
     try:
         entries = list(_iter_toc_pages(app))
         rendered: dict[str, str] = {}
@@ -101,6 +127,7 @@ def generate_llms_full(app: Sphinx, exception: object) -> None:
                 builder, writer, doctree, docname
             )
     finally:
+        docutils_logger.removeFilter(downgrade_filter)
         app.config.markdown_http_base = saved_http_base
 
     index = _assemble_index(app, base_url, entries, titles, descriptions)

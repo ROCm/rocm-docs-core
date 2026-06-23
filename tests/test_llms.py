@@ -225,3 +225,27 @@ def test_no_files_written_on_build_failure(tmp_path: Path) -> None:
     generate_llms_full(app, exception=RuntimeError("build failed"))
     assert not (tmp_path / "llms.txt").exists()
     assert not (tmp_path / "llms-full.txt").exists()
+
+
+def test_unknown_node_warning_downgraded_to_info() -> None:
+    """The filter lowers 'unknown node type' warnings to INFO, leaving others."""
+    import logging
+
+    from rocm_docs.llms import _DowngradeUnknownNodeFilter
+
+    flt = _DowngradeUnknownNodeFilter()
+
+    def _record(msg: str) -> logging.LogRecord:
+        return logging.LogRecord(
+            "x", logging.WARNING, __file__, 0, msg, None, None
+        )
+
+    unknown = _record("unknown node type: <mermaid: ...>")
+    assert flt.filter(unknown) is True
+    assert unknown.levelno == logging.INFO
+    assert unknown.levelname == "INFO"
+
+    # An unrelated warning is left untouched.
+    other = _record("some other warning")
+    assert flt.filter(other) is True
+    assert other.levelno == logging.WARNING
