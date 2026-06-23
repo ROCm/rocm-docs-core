@@ -203,7 +203,7 @@ pexpect==4.9.0
     # via ipython
 pip-tools==7.5.2
     # via rocm-docs-core (pyproject.toml)
-platformdirs==4.9.6
+platformdirs==4.10.0
     # via
     #   black
     #   jupyter-core
