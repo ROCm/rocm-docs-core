@@ -113,14 +113,14 @@ def generate_llms_full(app: Sphinx, exception: object) -> None:
         titles: dict[str, str] = {}
         for entry in entries:
             docname = entry.docname
-            if docname is None or _is_excluded_docname(app, docname):
+            if docname is None:
                 continue
             doctree = app.env.get_and_resolve_doctree(docname, app.builder)
             titles[docname] = entry.title or _page_title(doctree, docname)
             descriptions[docname] = _extract_description(app, docname, doctree)
             # Pages excluded from the full text are still listed in the index,
-            # but their body is not inlined (use this for very large generated
-            # pages that would dominate llms-full.txt).
+            # but their body is not inlined. This covers generated/doxygen pages
+            # and very large pages that would otherwise dominate llms-full.txt.
             if _is_excluded_from_fulltext(app, docname):
                 continue
             rendered[docname] = _render_page_markdown(
@@ -359,11 +359,15 @@ def _is_excluded_docname(app: Sphinx, docname: str) -> bool:
 def _is_excluded_from_fulltext(app: Sphinx, docname: str) -> bool:
     """Return True if a page should be indexed but not inlined into the full text.
 
-    Controlled by the ``rocm_docs_llms_full_exclude`` config: a list of docnames
-    or glob patterns (matched against the suffix-less docname). Use it to keep
-    very large generated pages out of ``llms-full.txt`` while still listing them
+    Generated/doxygen pages (see :func:`_is_excluded_docname`) are always
+    treated this way: they are noisy as prose but still useful as index links.
+    Projects can exclude additional pages via ``rocm_docs_llms_full_exclude``, a
+    list of docnames or glob patterns (matched against the suffix-less docname),
+    to keep very large pages out of ``llms-full.txt`` while still listing them
     in ``llms.txt``.
     """
+    if _is_excluded_docname(app, docname):
+        return True
     patterns = getattr(app.config, "rocm_docs_llms_full_exclude", []) or []
     return any(fnmatch(docname, pattern) for pattern in patterns)
 
@@ -419,7 +423,7 @@ def _assemble_index(
             lines.append(f"{indent}- [{title}]({entry.url})")
             continue
         docname = entry.docname
-        if docname is None or _is_excluded_docname(app, docname):
+        if docname is None:
             continue
         title = titles.get(docname, docname)
         url = _page_url(base_url, docname)

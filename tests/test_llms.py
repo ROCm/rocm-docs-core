@@ -193,13 +193,20 @@ def test_tab_labels_preserved_as_bold(llms_build: _LlmsBuild) -> None:
     assert "Use `nvcc` on NVIDIA platforms." in full
 
 
-def test_doxygen_page_excluded_from_fulltext(
+def test_doxygen_page_indexed_but_not_inlined(
     llms_build: _LlmsBuild,
 ) -> None:
-    # The page lives under a nested ``.../doxygen/html/`` segment; its body must
-    # not be inlined and it must not appear in the index.
-    assert "Generated API reference" not in llms_build.full
-    assert "doxygen/html/generated" not in llms_build.index
+    # The page lives under a nested ``.../doxygen/html/`` segment. Its body must
+    # not be inlined into the full text (no body prose, no Source: section)...
+    assert "stands in for generated doxygen" not in llms_build.full
+    assert "Source: " + BASE_URL + "/api/doxygen/html/generated.html" not in (
+        llms_build.full
+    )
+    # ...but it must still be listed as a link in the index.
+    assert (
+        f"[Generated API reference]({BASE_URL}/api/doxygen/html/generated.html)"
+        in llms_build.index
+    )
 
 
 def test_full_exclude_keeps_page_in_index_only(
