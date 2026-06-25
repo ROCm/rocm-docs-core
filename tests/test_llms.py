@@ -235,7 +235,22 @@ def test_no_files_written_on_build_failure(tmp_path: Path) -> None:
 
     app = unittest.mock.NonCallableMock()
     app.outdir = str(tmp_path)
+    app.builder.format = "html"
     generate_llms_full(app, exception=RuntimeError("build failed"))
+    assert not (tmp_path / "llms.txt").exists()
+    assert not (tmp_path / "llms-full.txt").exists()
+
+
+def test_no_files_written_for_non_html_builder(tmp_path: Path) -> None:
+    """generate_llms_full is a no-op under non-HTML builders (linkcheck, etc.)."""
+    import unittest.mock
+
+    from rocm_docs.llms import generate_llms_full
+
+    app = unittest.mock.NonCallableMock()
+    app.outdir = str(tmp_path)
+    app.builder.format = "text"  # e.g. linkcheck/gettext have non-"html" format
+    generate_llms_full(app, exception=None)
     assert not (tmp_path / "llms.txt").exists()
     assert not (tmp_path / "llms-full.txt").exists()
 

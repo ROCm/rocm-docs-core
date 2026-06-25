@@ -87,10 +87,14 @@ class _TocEntry:
 def generate_llms_full(app: Sphinx, exception: object) -> None:
     """Write ``llms.txt`` and ``llms-full.txt`` to the output directory.
 
-    Connected to the ``build-finished`` event. Does nothing if the build
-    failed (*exception* is not ``None``).
+    Connected to the ``build-finished`` event. Does nothing if the build failed
+    (*exception* is not ``None``) or if the active builder does not produce HTML
+    (e.g. linkcheck, doctest, latex, gettext). The generated links use ``.html``
+    URLs, so they are only meaningful for HTML output.
     """
     if exception is not None:
+        return
+    if getattr(app.builder, "format", "") != "html":
         return
 
     base_url = _resolve_base_url(app)
