@@ -277,3 +277,44 @@ def test_unknown_node_warning_downgraded_to_info() -> None:
     other = _record("some other warning")
     assert flt.filter(other) is True
     assert other.levelno == logging.WARNING
+
+
+def test_walk_sitemap_dedupes_across_suffix_spellings() -> None:
+    """A page referenced as both 'page' and 'page.md' is visited only once."""
+    from sphinx_external_toc.api import (
+        Document,
+        FileItem,
+        SiteMap,
+        TocTree,
+    )
+
+    from rocm_docs.llms import _iter_toc_pages
+
+    # TOC mixes the suffix-less root with a suffix-full self-reference and two
+    # spellings of the same child page.
+    root = Document(
+        "index",
+        subtrees=[TocTree(items=[FileItem("index.md"), FileItem("page.md")])],
+    )
+    site_map = SiteMap(root)
+    site_map["page.md"] = Document("page.md", subtrees=[])
+
+    app = unittest.mock.NonCallableMock()
+    app.project.path2doc.side_effect = lambda name: (
+        name[:-3] if name.endswith(".md") else name
+    )
+    # Make _iter_toc_pages use our synthetic site map.
+    with (
+        unittest.mock.patch(
+            "rocm_docs.llms.parse_toc_yaml", return_value=site_map
+        ),
+        unittest.mock.patch(
+            "rocm_docs.llms._toc_path", return_value=Path("dummy")
+        ),
+        unittest.mock.patch("pathlib.Path.is_file", return_value=True),
+    ):
+        docnames = [e.docname for e in _iter_toc_pages(app)]
+
+    # "index" (root) and "page" each appear exactly once; the "index.md"
+    # self-reference is de-duplicated rather than recursing forever.
+    assert docnames == ["index", "page"]

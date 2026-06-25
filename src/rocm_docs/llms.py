@@ -276,10 +276,9 @@ def _iter_toc_pages(app: Sphinx) -> Iterator[_TocEntry]:
         return
 
     root = site_map.root.docname
-    yield _TocEntry(
-        docname=_normalize_docname(app, root), url=None, title=None, depth=0
-    )
-    yield from _walk_sitemap(app, site_map, root, depth=1, seen={root})
+    root_norm = _normalize_docname(app, root)
+    yield _TocEntry(docname=root_norm, url=None, title=None, depth=0)
+    yield from _walk_sitemap(app, site_map, root, depth=1, seen={root_norm})
 
 
 def _walk_sitemap(
@@ -296,13 +295,15 @@ def _walk_sitemap(
             if not isinstance(item, FileItem):
                 # Glob items are expanded by Sphinx, not resolvable here.
                 continue
-            child = str(item)
-            if child in seen:
-                continue
-            seen.add(child)
             # TOC entries may carry the source suffix (e.g. "page.md"); Sphinx
-            # docnames are suffix-less. Normalize before exposing the entry.
+            # docnames are suffix-less. De-duplicate on the normalized name so a
+            # page referenced as both "page" and "page.md" is visited only once,
+            # but keep the raw string for SiteMap lookups and recursion.
+            child = str(item)
             norm = _normalize_docname(app, child)
+            if norm in seen:
+                continue
+            seen.add(norm)
             try:
                 child_doc = site_map[child]
             except KeyError:
