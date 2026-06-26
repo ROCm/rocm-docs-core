@@ -6,9 +6,6 @@ projects:
   amdgpu-docs:
     target: https://instinct.docs.amd.com/projects/amdgpu-docs/en/latest/
     development_branch: develop
-  amdgpu-docs-internal:
-    target: https://instinct.docs.amd.com/projects/amdgpu-docs-internal/en/latest/
-    development_branch: develop
   amdmigraphx: https://rocm.docs.amd.com/projects/AMDMIGraphX/en/${version}
   amdsmi:
     target: https://rocm.docs.amd.com/projects/amdsmi/en/${version}
@@ -26,9 +23,6 @@ projects:
   gpuaidev:
     target: https://rocm.docs.amd.com/projects/ai-developer-hub/en/${version}
     development_branch: main
-  gsplat-internal:
-    target: https://rocm.docs.amd.com/projects/gsplat-internal/en/${version}
-    development_branch: amd-integration
   gsplat: https://rocm.docs.amd.com/projects/gsplat/en/${version}
   hip:
     target: https://rocm.docs.amd.com/projects/HIP/en/${version}
@@ -74,13 +68,6 @@ projects:
   monai:
     target: https://rocm.docs.amd.com/projects/monai/en/${version}
     development_branch: amd-integration
-  monai-internal: https://rocm.docs.amd.com/projects/monai-internal/en/${version}
-  omniperf:
-    target: https://rocm.docs.amd.com/projects/omniperf/en/${version}
-    development_branch: amd-staging
-  omnitrace:
-    target: https://rocm.docs.amd.com/projects/omnitrace/en/${version}
-    development_branch: amd-staging
   python: https://docs.python.org/3/
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
   rdc:
@@ -117,19 +104,10 @@ projects:
   rocm-ls:
     target: https://rocm.docs.amd.com/projects/rocm-ls/en/${version}
     development_branch: develop
-  rocm-ds-internal:
-    target: https://rocm.docs.amd.com/projects/rocm-ds-internal/en/${version}
-    development_branch: develop
   rocm-finance:
     target: https://rocm.docs.amd.com/projects/rocm-finance/en/${version}
-  rocm-finance-internal:
-    target: https://rocm.docs.amd.com/projects/rocm-finance-internal/en/${version}
-    development_branch: main
   rocm-llmext:
     target: https://rocm.docs.amd.com/projects/rocm-llmext/en/${version}
-    development_branch: main
-  rocm-llmext-internal:
-    target: https://rocm.docs.amd.com/projects/rocm-llmext-internal/en/${version}
     development_branch: main
   roc-optiq:
     target: https://rocm.docs.amd.com/projects/roc-optiq/en/${version}
@@ -137,17 +115,8 @@ projects:
   rocm-rag:
     target: https://rocm.docs.amd.com/projects/rocm-rag/en/${version}
     development_branch: main
-  rocm-rag-internal:
-    target: https://rocm.docs.amd.com/projects/rocm-rag-internal/en/${version}
-    development_branch: main
   rocm-simulation:
     target: https://rocm.docs.amd.com/projects/rocm-simulation/en/${version}
-  rocm-simulation-internal:
-    target: https://rocm.docs.amd.com/projects/rocm-simulation-internal/en/${version}
-    development_branch: main
-  rocm-ls-internal:
-    target: https://rocm.docs.amd.com/projects/rocm-ls-internal/en/${version}
-    development_branch: main
   rocm-install-on-linux:
     target: https://rocm.docs.amd.com/projects/install-on-linux/en/${version}
     development_branch: develop
