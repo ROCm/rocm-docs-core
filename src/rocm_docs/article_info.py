@@ -13,19 +13,94 @@ from pathlib import Path
 
 import bs4
 import git.repo
+from docutils.parsers.rst import Directive, directives
 from sphinx.application import Sphinx
 from sphinx.config import Config
+from sphinx.util import logging as sphinx_logging
+
+logger = sphinx_logging.getLogger(__name__)
+
+
+class ArticleInfoDirective(Directive):
+    """RST directive to set article info metadata for a page.
+
+    Usage::
+
+        .. article-info::
+           :os: linux windows
+           :author: Author: AMD
+           :date: 2024-07-03
+           :read-time: 2 min read
+
+    The stored data is identical in shape to the ``article_info`` key in
+    MyST front matter, so the rest of the pipeline handles both sources
+    the same way.
+
+    Only one ``article-info`` definition per page is allowed. If
+    ``article_info`` is already present in page metadata (e.g. set via
+    MyST front matter, or by a previous directive), a warning is emitted
+    and the duplicate is ignored.
+    """
+
+    has_content = False
+    required_arguments = 0
+    optional_arguments = 0
+    option_spec = {
+        "os": directives.unchanged,
+        "author": directives.unchanged,
+        "date": directives.unchanged,
+        "read-time": directives.unchanged,
+    }
+
+    def run(self):
+        env = self.state.document.settings.env
+
+        if "article_info" in env.metadata[env.docname]:
+            logger.warning(
+                "article-info is already defined for '%s'; ignoring duplicate."
+                " In MyST Markdown, prefer the front matter 'article_info:'"
+                " block over the '{article-info}' directive.",
+                env.docname,
+                location=(env.docname, self.lineno),
+            )
+            return []
+
+        article_info: dict[str, Any] = {}
+        if "os" in self.options:
+            article_info["os"] = self.options["os"].split()
+        if "author" in self.options:
+            article_info["author"] = self.options["author"]
+        if "date" in self.options:
+            article_info["date"] = self.options["date"]
+        if "read-time" in self.options:
+            article_info["read-time"] = self.options["read-time"]
+
+        if article_info:
+            env.metadata[env.docname]["article_info"] = article_info
+
+        return []
+
+
+def _get_page_article_info_meta(app: Sphinx, docname: str) -> dict[str, Any]:
+    """Return the article_info dict from page metadata, or empty dict."""
+    return app.env.metadata.get(docname, {}).get("article_info", {})
 
 
 def set_article_info(app: Sphinx, _: Config) -> None:
     """Add article info headers to HTML pages."""
+    has_metadata_pages = any(
+        _get_page_article_info_meta(app, docname)
+        for docname in app.project.docnames
+    )
+
     if (
         app.config.setting_all_article_info is False
         and len(app.config.article_pages) == 0
+        and not has_metadata_pages
     ):
         return
 
-    article_info = (
+    article_info_html = (
         importlib.resources.files("rocm_docs")
         .joinpath("rocm_docs_theme/components/article-info.html")
         .read_text(encoding="utf-8")
@@ -33,14 +108,14 @@ def set_article_info(app: Sphinx, _: Config) -> None:
 
     specific_pages: list[str] = []
 
-    _set_page_article_info(app, article_info, specific_pages)
+    _set_page_article_info(app, article_info_html, specific_pages)
 
-    if app.config.setting_all_article_info is True:
-        _set_all_article_info(app, article_info, specific_pages)
+    if app.config.setting_all_article_info is True or has_metadata_pages:
+        _set_all_article_info(app, article_info_html, specific_pages)
 
 
 def _set_page_article_info(
-    app: Sphinx, article_info: str, specific_pages: list[str]
+    app: Sphinx, article_info_html: str, specific_pages: list[str]
 ) -> None:
     """Add article info headers to the configured HTML pages.
 
@@ -66,7 +141,7 @@ def _set_page_article_info(
         article_os_info = " and ".join(os_list)
         if os_list:
             article_os_info = f"Applies to {article_os_info}"
-        modified_info = article_info.replace("<!--os-info-->", article_os_info)
+        modified_info = article_info_html.replace("<!--os-info-->", article_os_info)
 
         author = app.config.all_article_info_author
         if "author" in page:
@@ -111,12 +186,14 @@ def _set_page_article_info(
 
 
 def _set_all_article_info(
-    app: Sphinx, article_info: str, specific_pages: list[str]
+    app: Sphinx, article_info_html: str, specific_pages: list[str]
 ) -> None:
     """Add article info headers with general settings to all HTML pages.
 
     Pages that have specific settings (configured by "article_pages") are
-    skipped.
+    skipped. Pages may also supply an ``article_info`` dict via MyST front
+    matter or the ``.. article-info::`` RST directive; those values override
+    the global ``all_article_info_*`` config defaults.
     """
     repo = git.repo.Repo(app.srcdir, search_parent_directories=True)
     for docname in app.project.docnames:
@@ -132,27 +209,46 @@ def _set_all_article_info(
         if not page.is_file():
             continue
 
+        page_meta = _get_page_article_info_meta(app, docname)
+
+        # Skip pages that have no article_info metadata when not in "all" mode
+        if not app.config.setting_all_article_info and not page_meta:
+            continue
+
+        # OS: page metadata overrides global config
+        raw_os = page_meta.get("os", app.config.all_article_info_os)
+        if isinstance(raw_os, str):
+            raw_os = raw_os.split()
         os_list = []
-        if "linux" in app.config.all_article_info_os:
+        if "linux" in raw_os:
             os_list.append("Linux")
-        if "windows" in app.config.all_article_info_os:
+        if "windows" in raw_os:
             os_list.append("Windows")
         article_os_info = " and ".join(os_list)
         if os_list:
             article_os_info = f"Applies to {article_os_info}"
 
-        date_info = _get_time_last_modified(repo, Path(app.srcdir, page_rel))
-        if not date_info:
-            date_info = cast(str, app.config.all_article_info_date)
+        # Author: page metadata overrides global config
+        author: str = page_meta.get("author", app.config.all_article_info_author)
 
-        modified_info = article_info.replace("<!--os-info-->", article_os_info)
-        modified_info = modified_info.replace(
-            "<!--author-info-->", app.config.all_article_info_author
-        )
+        # Date: page metadata > git last-modified > global config
+        if "date" in page_meta:
+            date_info: str = page_meta["date"]
+        else:
+            date_info = _get_time_last_modified(repo, Path(app.srcdir, page_rel)) or cast(
+                str, app.config.all_article_info_date
+            )
+
+        # Read time: page metadata overrides auto-calculated value
+        if "read-time" in page_meta:
+            read_time: str = page_meta["read-time"]
+        else:
+            read_time = _estimate_read_time(page)
+
+        modified_info = article_info_html.replace("<!--os-info-->", article_os_info)
+        modified_info = modified_info.replace("<!--author-info-->", author)
         modified_info = modified_info.replace("<!--date-info-->", date_info)
-        modified_info = modified_info.replace(
-            "<!--read-info-->", _estimate_read_time(page)
-        )
+        modified_info = modified_info.replace("<!--read-info-->", read_time)
 
         _write_article_info(page, modified_info)
 

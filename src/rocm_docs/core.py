@@ -161,6 +161,8 @@ def setup(app: Sphinx) -> dict[str, Any]:
         types=bool,
     )
 
+    app.add_directive("article-info", article_info.ArticleInfoDirective)
+
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
     app.connect("config-inited", _DefaultSettings.update_config)
