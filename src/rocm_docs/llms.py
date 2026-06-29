@@ -252,7 +252,12 @@ class _HtmlTableParser(HTMLParser):
             and self._cell is not None
             and self._row is not None
         ):
-            self._cell.text = " ".join(self._cell.text.split())
+            # Collapse whitespace within each <br>-separated line, but keep the
+            # newlines themselves so _grid_to_table can preserve line breaks.
+            lines = [
+                " ".join(line.split()) for line in self._cell.text.split("\n")
+            ]
+            self._cell.text = "\n".join(line for line in lines if line)
             self._row.append(self._cell)
             self._cell = None
 
@@ -294,7 +299,9 @@ def _expand_grid(rows: list[list[_HtmlCell]]) -> list[list[_HtmlCell]]:
             if ci >= len(cells):
                 # No more explicit cells in this row; if there are pending rowspans
                 # further to the right, advance to them so they are emitted too.
-                next_pending = min((k for k in pending if k > col), default=None)
+                next_pending = min(
+                    (k for k in pending if k > col), default=None
+                )
                 if next_pending is None:
                     break
                 while col < next_pending:
@@ -338,10 +345,9 @@ def _grid_to_table(grid: list[list[_HtmlCell]]) -> nodes.table | None:
         for cell in cells:
             entry = nodes.entry()
             para = nodes.paragraph()
-            for i, line in enumerate(cell.text.split("\n")):
-                if i:
-                    para += nodes.Text(" ")
-                para += nodes.Text(line)
+            # Keep the <br>-derived newlines: the Markdown table writer turns
+            # newlines within a cell into <br/>, preserving the line breaks.
+            para += nodes.Text(cell.text)
             entry += para
             row_node += entry
         return row_node
