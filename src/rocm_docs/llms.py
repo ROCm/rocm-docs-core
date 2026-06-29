@@ -24,8 +24,9 @@ from __future__ import annotations
 import logging
 import os
 from collections.abc import Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from fnmatch import fnmatch
+from html.parser import HTMLParser
 from pathlib import Path
 
 import sphinx.util.logging
@@ -187,6 +188,203 @@ _SUPPORTED_ADMONITIONS: tuple[type[nodes.Element], ...] = (
 )
 
 
+@dataclass
+class _HtmlCell:
+    """A single parsed HTML table cell."""
+
+    text: str = ""
+    header: bool = False
+    colspan: int = 1
+    rowspan: int = 1
+
+
+@dataclass
+class _HtmlTableParser(HTMLParser):
+    """Parse one or more HTML ``<table>`` blocks into row/cell grids.
+
+    Markdown has no concept of merged cells, so ``colspan``/``rowspan`` are
+    expanded into a full rectangular grid: a spanned cell's text is repeated
+    across every grid position it covers. Cell content is flattened to plain
+    text (nested ``<p>``, ``<a>``, ``<br>`` become spaces/newlines), which is
+    sufficient for the support matrices these tables carry.
+    """
+
+    tables: list[list[list[_HtmlCell]]] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self._rows: list[list[_HtmlCell]] = []
+        self._row: list[_HtmlCell] | None = None
+        self._cell: _HtmlCell | None = None
+        self._depth = 0
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        attr = {k: (v or "") for k, v in attrs}
+        if tag == "table":
+            self._depth += 1
+            if self._depth == 1:
+                self._rows = []
+        elif tag == "tr" and self._depth == 1:
+            self._row = []
+        elif tag in ("td", "th") and self._depth == 1 and self._row is not None:
+            self._cell = _HtmlCell(
+                header=(tag == "th"),
+                colspan=_to_int(attr.get("colspan"), 1),
+                rowspan=_to_int(attr.get("rowspan"), 1),
+            )
+        elif tag == "br" and self._cell is not None:
+            self._cell.text += "\n"
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "table" and self._depth >= 1:
+            if self._depth == 1 and self._rows:
+                self.tables.append(self._rows)
+                self._rows = []
+            self._depth -= 1
+        elif tag == "tr" and self._depth == 1 and self._row is not None:
+            self._rows.append(self._row)
+            self._row = None
+        elif (
+            tag in ("td", "th")
+            and self._depth == 1
+            and self._cell is not None
+            and self._row is not None
+        ):
+            self._cell.text = " ".join(self._cell.text.split())
+            self._row.append(self._cell)
+            self._cell = None
+
+    def handle_data(self, data: str) -> None:
+        if self._cell is not None:
+            self._cell.text += data
+
+
+def _to_int(value: str | None, default: int) -> int:
+    try:
+        return int(value) if value else default
+    except (TypeError, ValueError):
+        return default
+
+
+def _expand_grid(rows: list[list[_HtmlCell]]) -> list[list[_HtmlCell]]:
+    """Expand colspan/rowspan into a dense rectangular grid of cells."""
+    grid: list[list[_HtmlCell]] = [[] for _ in rows]
+    # Maps a column index to a (cell, remaining-rows) pair carried down by a
+    # rowspan from an earlier row.
+    pending: dict[int, tuple[_HtmlCell, int]] = {}
+    for r, row in enumerate(rows):
+        col = 0
+        cells = list(row)
+        out: list[_HtmlCell] = grid[r]
+        ci = 0
+        while ci < len(cells) or pending:
+            # Fill any column carried down by a rowspan from a previous row.
+            if col in pending:
+                cell, remaining = pending[col]
+                for _ in range(cell.colspan):
+                    out.append(_HtmlCell(cell.text, cell.header))
+                if remaining - 1 > 0:
+                    pending[col] = (cell, remaining - 1)
+                else:
+                    del pending[col]
+                col += cell.colspan
+                continue
+            if ci >= len(cells):
+                break
+            cell = cells[ci]
+            ci += 1
+            for _ in range(cell.colspan):
+                out.append(_HtmlCell(cell.text, cell.header))
+            if cell.rowspan > 1:
+                pending[col] = (cell, cell.rowspan - 1)
+            col += cell.colspan
+    width = max((len(grid_row) for grid_row in grid), default=0)
+    for grid_row in grid:
+        grid_row.extend(_HtmlCell() for _ in range(width - len(grid_row)))
+    return grid
+
+
+def _grid_to_table(grid: list[list[_HtmlCell]]) -> nodes.table | None:
+    """Build a standard docutils ``table`` node from an expanded cell grid."""
+    if not grid or not grid[0]:
+        return None
+    cols = len(grid[0])
+    table = nodes.table()
+    tgroup = nodes.tgroup(cols=cols)
+    table += tgroup
+    for _ in range(cols):
+        tgroup += nodes.colspec(colwidth=1)
+
+    # Treat only a leading block of all-header rows as the table head.
+    head_rows = 0
+    for row in grid:
+        if row and all(cell.header for cell in row):
+            head_rows += 1
+        else:
+            break
+
+    def _make_row(cells: list[_HtmlCell]) -> nodes.row:
+        row_node = nodes.row()
+        for cell in cells:
+            entry = nodes.entry()
+            para = nodes.paragraph()
+            for i, line in enumerate(cell.text.split("\n")):
+                if i:
+                    para += nodes.Text(" ")
+                para += nodes.Text(line)
+            entry += para
+            row_node += entry
+        return row_node
+
+    if head_rows:
+        thead = nodes.thead()
+        tgroup += thead
+        for row in grid[:head_rows]:
+            thead += _make_row(row)
+
+    tbody = nodes.tbody()
+    tgroup += tbody
+    for row in grid[head_rows:]:
+        tbody += _make_row(row)
+    return table
+
+
+def _convert_raw_html_tables(clean: nodes.document) -> None:
+    """Convert raw HTML ``<table>`` nodes to docutils tables; drop other raw.
+
+    Markdown has no raw-HTML escape hatch in the generated output, so HTML
+    ``<table>`` blocks (e.g. MyST ``{include}`` of ``.html`` support matrices)
+    would otherwise leak as literal markup. Each such ``raw`` node is replaced
+    by one or more real ``table`` nodes that the Markdown translator renders as
+    GitHub-flavoured Markdown tables. ``raw`` nodes with no table are removed.
+    """
+    for raw in list(clean.findall(nodes.raw)):
+        if raw.get("format") != "html":
+            continue
+        text = raw.astext()
+        if "<table" not in text.lower():
+            raw.parent.remove(raw)
+            continue
+        parser = _HtmlTableParser()
+        try:
+            parser.feed(text)
+            parser.close()
+        except Exception:  # pragma: no cover - defensive: malformed HTML
+            raw.parent.remove(raw)
+            continue
+        replacements: list[nodes.Element] = []
+        for rows in parser.tables:
+            table = _grid_to_table(_expand_grid(rows))
+            if table is not None:
+                replacements.append(table)
+        if replacements:
+            raw.replace_self(replacements)
+        else:
+            raw.parent.remove(raw)
+
+
 def _strip_unsupported_nodes(doctree: nodes.document) -> nodes.document:
     """Return a copy of *doctree* normalized for the Markdown translator.
 
@@ -200,6 +398,9 @@ def _strip_unsupported_nodes(doctree: nodes.document) -> nodes.document:
       identity (e.g. "AMD" vs "NVIDIA", "Linux" vs "Windows") is not lost, which
       otherwise risks conflating platform-specific instructions. The associated
       radio-button ``sd_tab_input`` nodes carry no text and are removed.
+    * Raw HTML ``<table>`` blocks are converted to real Markdown tables and
+      other raw HTML is dropped, since the Markdown output has no HTML escape
+      hatch.
     """
     clean = doctree.deepcopy()
     for meta in list(clean.findall(nodes.meta)):
@@ -216,6 +417,7 @@ def _strip_unsupported_nodes(doctree: nodes.document) -> nodes.document:
         para = nodes.paragraph()
         para += nodes.strong(text=label.astext())
         label.replace_self(para)
+    _convert_raw_html_tables(clean)
     return clean
 
 

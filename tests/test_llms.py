@@ -140,6 +140,30 @@ def test_rst_list_table_becomes_markdown_table(
         assert cell in full
 
 
+def test_raw_html_table_becomes_markdown_table(
+    llms_build: _LlmsBuild,
+) -> None:
+    full = llms_build.full
+    # The raw HTML <table> (with a rowspan) must be converted to a Markdown
+    # table rather than leaking as literal HTML.
+    assert "<table" not in full
+    assert "<td" not in full
+    assert "<th" not in full
+    # Header cells and body cells all appear...
+    for cell in (
+        "GPU",
+        "Mode",
+        "OS",
+        "Passthrough",
+        "SR-IOV",
+        "Ubuntu",
+        "RHEL",
+    ):
+        assert cell in full
+    # ...and the rowspan cell is expanded so it labels both of its rows.
+    assert full.count("HtmlMI300") == 2
+
+
 def test_code_blocks_are_fenced_with_language(
     llms_build: _LlmsBuild,
 ) -> None:
