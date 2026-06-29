@@ -292,7 +292,15 @@ def _expand_grid(rows: list[list[_HtmlCell]]) -> list[list[_HtmlCell]]:
                 col += cell.colspan
                 continue
             if ci >= len(cells):
-                break
+                # No more explicit cells in this row; if there are pending rowspans
+                # further to the right, advance to them so they are emitted too.
+                next_pending = min((k for k in pending if k > col), default=None)
+                if next_pending is None:
+                    break
+                while col < next_pending:
+                    out.append(_HtmlCell())
+                    col += 1
+                continue
             cell = cells[ci]
             ci += 1
             for _ in range(cell.colspan):
