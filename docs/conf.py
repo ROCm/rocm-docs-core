@@ -39,7 +39,11 @@ article_pages = [
 ]
 
 html_theme = "rocm_docs_theme"
-html_theme_options = {"flavor": "rocm"}
+html_theme_options = {
+    "flavor": "rocm",
+    "use_download_button": True
+}
+
 
 external_toc_path = "./sphinx/_toc.yml"
 
