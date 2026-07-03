@@ -210,7 +210,7 @@ platformdirs==4.10.0
     #   virtualenv
 pluggy==1.6.0
     # via pytest
-pre-commit==4.5.0
+pre-commit==4.6.0
     # via rocm-docs-core (pyproject.toml)
 prompt-toolkit==3.0.51
     # via
