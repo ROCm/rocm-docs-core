@@ -208,6 +208,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "generic",
         "rocm-ds",
         "ai-developer-hub",
+        "ai-ecosystem",
         "rocm-ls",
         "gsplat",
         "rocm-rag",
