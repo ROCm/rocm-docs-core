@@ -1,3 +1,35 @@
+## v1.36.0 (2026-07-08)
+
+### Feat
+
+- **llms**: convert raw HTML tables to Markdown in the full text
+- **llms**: note that each project publishes its own llms files
+- **llms**: add rocm_docs_llms_full_exclude to skip pages from full text
+- **llms**: enable generation for rocm-docs-core's own docs
+- **llms**: generate llms.txt and llms-full.txt from the resolved doctree
+- **theme**: add instinct-design flavor with AMD Instinct Design System
+
+### Fix
+
+- **llms**: preserve <br> line breaks in HTML table cells and format
+- **llms**: HTML table conversion fix
+- **llms**: de-duplicate TOC pages on the normalized docname
+- **llms**: only generate llms files for HTML builders
+- **llms**: index generated/doxygen pages instead of dropping them
+- **llms**: log unsupported-node warnings as INFO, not WARNING
+- **llms**: preserve sphinx-design tab labels in the full text
+- **llms**: Apply suggestions from code review
+- **llms**: add 'discoverable' to the spellcheck wordlist
+- **llms**: preserve content of unsupported admonitions
+- **llms**: use a Handler subclass to capture warnings
+- **llms**: resolve CI lint and spellcheck failures
+- **theme**: address instinct-design review feedback
+- **article_info.py**: fix massive read time bug from hipDF
+
+### Refactor
+
+- **llms**: make sphinx-markdown-builder optional and rename config
+
 ## v1.35.0 (2026-06-10)
 
 ### Feat
