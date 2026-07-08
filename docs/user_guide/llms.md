@@ -29,13 +29,27 @@ Once enabled, a download icon appears on each page. Clicking it downloads the so
 
 ## Enabling generation
 
-Set `rocm_docs_generate_llms_full = True` in `conf.py` to generate both `llms.txt` and `llms-full.txt`:
+Generation depends on [`sphinx-markdown-builder`](https://pypi.org/project/sphinx-markdown-builder/), which is an optional dependency. Because the feature is disabled by default, this package is not installed with the base `rocm-docs-core`. Install it with the `llms` extra:
 
-```python
-rocm_docs_generate_llms_full = True
+```bash
+pip install rocm-docs-core[llms]
 ```
 
-After each successful build, both files are written to the Sphinx output directory alongside the built HTML. For a standard build, this is `docs/_build/html/`, making them available at `{project_url}/llms.txt` and `{project_url}/llms-full.txt`. Neither file is generated if the build fails.
+Most ROCm projects pin `rocm-docs-core` in their `docs/sphinx/requirements.in` file rather than installing it directly. To make the extension available in those projects, add the `llms` extra to that entry:
+
+```ini
+rocm-docs-core[llms]==<version>
+```
+
+If the project already uses another extra, combine them in a comma-separated list, for example `rocm-docs-core[api_reference,llms]==<version>`. After editing `requirements.in`, regenerate the pinned `requirements.txt` (for example with `pip-compile`) so the new dependency is locked.
+
+Then set `rocm_docs_generate_llms = True` in `conf.py` to generate both `llms.txt` and `llms-full.txt`:
+
+```python
+rocm_docs_generate_llms = True
+```
+
+After each successful build, both files are written to the Sphinx output directory alongside the built HTML. For a standard build, this is `docs/_build/html/`, making them available at `{project_url}/llms.txt` and `{project_url}/llms-full.txt`. Neither file is generated if the build fails. If the feature is enabled without the `llms` extra installed, the build fails with a message explaining how to install it.
 
 ### Setting the base URL
 
@@ -107,6 +121,6 @@ html_theme_options = {
     "use_download_button": True,
 }
 
-rocm_docs_generate_llms_full = True
+rocm_docs_generate_llms = True
 rocm_docs_llms_base_url = "https://rocm.docs.amd.com/projects/<project>/en/latest"
 ```

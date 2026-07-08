@@ -3,7 +3,7 @@
 These files follow the `llms.txt standard <https://llmstxt.org/>`_ and make the
 documentation accessible to large language models and AI assistants.
 
-When enabled via ``rocm_docs_generate_llms_full = True`` in ``conf.py``, this
+When enabled via ``rocm_docs_generate_llms = True`` in ``conf.py``, this
 module runs on the Sphinx ``build-finished`` event and writes two files to the
 output directory:
 
@@ -21,6 +21,8 @@ math, footnotes, and cross-references survive conversion intact.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import logging
 import os
 from collections.abc import Iterator
@@ -36,12 +38,18 @@ from sphinx.application import Sphinx
 from sphinx_design.tabs import sd_tab_input, sd_tab_label
 from sphinx_external_toc.api import FileItem, SiteMap, UrlItem
 from sphinx_external_toc.parsing import parse_toc_yaml
-from sphinx_markdown_builder.builder import (  # type: ignore[import-untyped]
-    MarkdownBuilder,
-)
-from sphinx_markdown_builder.writer import (  # type: ignore[import-untyped]
-    MarkdownWriter,
-)
+
+if TYPE_CHECKING:
+    # Only needed for type checking. sphinx-markdown-builder is an optional
+    # dependency (installed via the ``llms`` extra); the runtime import happens
+    # lazily in _build_markdown_renderer so that projects not using this feature
+    # do not need the package installed.
+    from sphinx_markdown_builder.builder import (  # type: ignore[import-untyped]
+        MarkdownBuilder,
+    )
+    from sphinx_markdown_builder.writer import (  # type: ignore[import-untyped]
+        MarkdownWriter,
+    )
 
 logger = sphinx.util.logging.getLogger(__name__)
 
@@ -151,7 +159,14 @@ def _build_markdown_renderer(
 
     The builder is initialized but never run as a full build; only its
     translator (via the writer) is used, page by page.
+
+    sphinx-markdown-builder is imported here rather than at module load so it
+    remains an optional dependency: only builds that actually enable
+    ``rocm_docs_generate_llms`` reach this code.
     """
+    from sphinx_markdown_builder.builder import MarkdownBuilder
+    from sphinx_markdown_builder.writer import MarkdownWriter
+
     # Link to published HTML pages rather than to ``.md`` files.
     app.config.markdown_uri_doc_suffix = ".html"
     builder = MarkdownBuilder(app, app.env)

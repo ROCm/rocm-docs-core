@@ -19,6 +19,7 @@ from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
 )
 from sphinx.application import Sphinx
 from sphinx.config import Config
+from sphinx.errors import ExtensionError
 
 from rocm_docs import article_info, llms
 
@@ -113,8 +114,31 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
 
 
 def _generate_llms_full(app: Sphinx, exception: object) -> None:
-    if app.config.rocm_docs_generate_llms_full:
+    if app.config.rocm_docs_generate_llms:
         llms.generate_llms_full(app, exception)
+
+
+def _setup_llms_extension(app: Sphinx, _: Config) -> None:
+    """Register sphinx-markdown-builder only when the llms feature is enabled.
+
+    sphinx-markdown-builder unconditionally adds a builder and eight
+    ``markdown_*`` config values, so registering it for every build would change
+    the config surface of projects that do not use this feature. It is an
+    optional dependency (the ``llms`` extra), so it is set up here, at
+    config-inited, only when ``rocm_docs_generate_llms`` is enabled -- and
+    a clear error is raised if the package is not installed.
+    """
+    if not app.config.rocm_docs_generate_llms:
+        return
+    try:
+        import sphinx_markdown_builder  # type: ignore[import-untyped] # noqa: F401
+    except ImportError as err:
+        raise ExtensionError(
+            "rocm_docs_generate_llms is enabled but "
+            "'sphinx-markdown-builder' is not installed. Install it with: "
+            "pip install rocm-docs-core[llms]"
+        ) from err
+    app.setup_extension("sphinx_markdown_builder")
 
 
 def setup(app: Sphinx) -> dict[str, Any]:
@@ -129,7 +153,6 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "sphinx.ext.autosummary",
         "sphinx.ext.doctest",
         "sphinx.ext.duration",
-        "sphinx_markdown_builder",
     ]
     for ext in required_extensions:
         app.setup_extension(ext)
@@ -156,7 +179,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
         "article_pages", default=[], rebuild="html", types=list
     )
     app.add_config_value(
-        "rocm_docs_generate_llms_full",
+        "rocm_docs_generate_llms",
         default=False,
         rebuild="html",
         types=bool,
@@ -176,6 +199,9 @@ def setup(app: Sphinx) -> dict[str, Any]:
 
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
+    # Register the optional Markdown builder before other config-inited handlers
+    # so its config values are available for the rest of the build.
+    app.connect("config-inited", _setup_llms_extension, priority=300)
     app.connect("config-inited", _DefaultSettings.update_config)
     app.connect("build-finished", article_info.set_article_info, priority=1000)
     app.connect("build-finished", _generate_llms_full)

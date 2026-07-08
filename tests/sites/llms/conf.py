@@ -11,7 +11,7 @@ external_projects_remote_repository = ""
 external_projects = []
 intersphinx_mapping = {}
 
-rocm_docs_generate_llms_full = True
+rocm_docs_generate_llms = True
 rocm_docs_llms_base_url = "https://example.com/docs"
 # excluded_page is indexed but its body is excluded from llms-full.txt.
 rocm_docs_llms_full_exclude = ["excluded_page"]

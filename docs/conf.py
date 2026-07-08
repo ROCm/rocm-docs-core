@@ -48,7 +48,7 @@ html_theme_options = {
 external_toc_path = "./sphinx/_toc.yml"
 
 # Generate llms.txt and llms-full.txt for AI/LLM consumption.
-rocm_docs_generate_llms_full = True
+rocm_docs_generate_llms = True
 rocm_docs_llms_base_url = (
     "https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest"
 )
