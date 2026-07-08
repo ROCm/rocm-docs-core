@@ -1,0 +1,25 @@
+extensions = ["rocm_docs"]
+html_theme = "rocm_docs_theme"
+html_theme_options = {"flavor": "rocm"}
+
+external_toc_path = "./sphinx/_toc.yml"
+
+external_projects_current_project = "a"
+# Keep the test build offline and fast: no remote projects.yaml fetch and no
+# intersphinx inventory downloads.
+external_projects_remote_repository = ""
+external_projects = []
+intersphinx_mapping = {}
+
+rocm_docs_generate_llms = True
+rocm_docs_llms_base_url = "https://example.com/docs"
+# excluded_page is indexed but its body is excluded from llms-full.txt.
+rocm_docs_llms_full_exclude = ["excluded_page"]
+
+version = "1.0.0"
+release = "1.0.0"
+project = "LLMs Test Project"
+author = "Advanced Micro Devices, Inc."
+copyright = (
+    "Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved."
+)

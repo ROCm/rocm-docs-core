@@ -1,7 +1,7 @@
 ---
 myst:
     html_meta:
-        "description": "Make ROCm documentation accessible to AI agents and coding assistants using a curated index and a generated full-text file, plus the per-page download button"
+        "description": "Make ROCm documentation accessible to AI agents and coding assistants using a generated index and full-text file, plus the per-page download button"
         "keywords": "LLM documentation, AI agent, download button, ROCm docs core user guide"
 ---
 
@@ -10,10 +10,10 @@ myst:
 `rocm-docs-core` supports three features that make documentation more accessible to AI coding assistants and agents:
 
 - A per-page **download button** that lets users and agents copy page content directly into an AI context window.
-- A curated **`llms.txt`** index file that AI agents can discover and use as an entry point to the documentation.
-- A generated **`llms-full.txt`** file that aggregates prose content from all source files into a single plain-text document.
+- A generated **`llms.txt`** index file that AI agents can discover and use as an entry point to the documentation.
+- A generated **`llms-full.txt`** file that combines the prose documentation into a single document.
 
-All three features are opt-in and configured in `conf.py`.
+All three features are opt-in and configured in `conf.py`. The `llms.txt` and `llms-full.txt` files are produced from the same setting and are generated from Sphinx's resolved doctree. As a result, RST and Markdown sources are handled identically and constructs such as tables, code blocks, math, footnotes, and cross-references are preserved.
 
 ## Per-page download button
 
@@ -27,67 +27,90 @@ html_theme_options = {
 
 Once enabled, a download icon appears on each page. Clicking it downloads the source file for that page, which users and agents can paste directly into an AI context window.
 
+## Enabling generation
+
+Generation depends on [`sphinx-markdown-builder`](https://pypi.org/project/sphinx-markdown-builder/), which is an optional dependency. Because the feature is disabled by default, this package is not installed with the base `rocm-docs-core`. Install it with the `llms` extra:
+
+```bash
+pip install rocm-docs-core[llms]
+```
+
+Most ROCm projects pin `rocm-docs-core` in their `docs/sphinx/requirements.in` file rather than installing it directly. To make the extension available in those projects, add the `llms` extra to that entry:
+
+```ini
+rocm-docs-core[llms]==<version>
+```
+
+If the project already uses another extra, combine them in a comma-separated list, for example `rocm-docs-core[api_reference,llms]==<version>`. After editing `requirements.in`, regenerate the pinned `requirements.txt` (for example with `pip-compile`) so the new dependency is locked.
+
+Then set `rocm_docs_generate_llms = True` in `conf.py` to generate both `llms.txt` and `llms-full.txt`:
+
+```python
+rocm_docs_generate_llms = True
+```
+
+After each successful build, both files are written to the Sphinx output directory alongside the built HTML. For a standard build, this is `docs/_build/html/`, making them available at `{project_url}/llms.txt` and `{project_url}/llms-full.txt`. Neither file is generated if the build fails. If the feature is enabled without the `llms` extra installed, the build fails with a message explaining how to install it.
+
+### Setting the base URL
+
+Links in the generated files point to your published documentation. Set the base URL with `rocm_docs_llms_base_url` in `conf.py`:
+
+```python
+rocm_docs_llms_base_url = "https://rocm.docs.amd.com/projects/<project>/en/latest"
+```
+
+If `rocm_docs_llms_base_url` is unset, the generator falls back to `html_baseurl`, then to the `READTHEDOCS_CANONICAL_URL` environment variable. If none is available, links are written relative to the output root.
+
 ## `llms.txt`
 
 `llms.txt` is a curated index of your documentation pages, following the [llmstxt.org](https://llmstxt.org/) convention for AI agent documentation discovery. It is also compatible with [Read the Docs llms-txt support](https://docs.readthedocs.com/platform/stable/reference/llms-txt.html).
 
-### Creating the index file
+The index is generated automatically, so it cannot drift from the docs:
 
-Create a `llms.txt` file in your documentation source directory (the same directory as `conf.py`). Write it as a Markdown document with a project description followed by links to your key pages:
+- The section structure and ordering follow the project's table of contents (`sphinx_external_toc`). Projects without an external TOC fall back to all documents in the project, sorted by name.
+- Each entry's description comes from that page's `description` metadata, set with a MyST `html_meta` field in Markdown or a `.. meta::` directive in RST. When no description is present, the page title is used.
+- The project description (the blockquote summary) comes from the root page's description.
+- External URL entries in the TOC are included as links.
 
-```markdown
-# Project name
+To give a page a description, add it to the page's metadata. In Markdown:
 
-> One-sentence description of the project.
-
-## User guide
-
-- [Page title](https://your-docs-url/page-slug): Short description of the page.
-- [Another page](https://your-docs-url/another-page): Short description.
+```yaml
+---
+myst:
+  html_meta:
+    "description lang=en": "One-sentence description of the page."
+---
 ```
 
-### Publishing the index file
+In RST:
 
-Add `llms.txt` to `html_extra_path` in `conf.py` so Sphinx copies it to the output root:
-
-```python
-html_extra_path = ["llms.txt"]
+```rst
+.. meta::
+   :description lang=en: One-sentence description of the page.
 ```
-
-After a successful build, `llms.txt` is available at `{project_url}/llms.txt`.
-
-### Header behavior in the full-text file
-
-If `llms.txt` is present in the source directory, it is also used as the header section of `llms-full.txt`. If no `llms.txt` is present, the Sphinx `project` name from `conf.py` is used as the header instead.
 
 ## `llms-full.txt`
 
-`llms-full.txt` is generated by `rocm-docs-core` after each successful build. It aggregates prose content from all `.md` and `.rst` source files into a single plain-text document.
+`llms-full.txt` collects all documentation pages into a single Markdown document, with the `llms.txt` index as its header. Each page follows a `---` separator and a `Source:` link to the published page.
 
-### Enabling generation
+The content is produced from Sphinx's resolved doctree using the Markdown translator from [`sphinx-markdown-builder`](https://pypi.org/project/sphinx-markdown-builder/), rather than a text filter. As a result:
 
-Set `rocm_docs_generate_llms_full = True` in `conf.py`:
+- RST and Markdown sources produce identical, clean Markdown output.
+- Tables, fenced code blocks (with language tags), math, footnotes, and cross-references are preserved. Cross-references are rewritten to absolute URLs using the configured base URL.
+- Generated API-reference pages (for example, Doxygen output under `doxygen/`) are excluded from the inlined prose; they remain linked from the index where present in the TOC.
+
+### Excluding large pages from the full text
+
+Some pages can dominate `llms-full.txt` due to their size. Use `rocm_docs_llms_full_exclude` to keep such pages out of the inlined prose while still listing them in `llms.txt`. It accepts a list of document names or glob patterns, matched against each page's path relative to the documentation root (without the file extension):
 
 ```python
-rocm_docs_generate_llms_full = True
+rocm_docs_llms_full_exclude = [
+    "reference/gpu-atomics-operation",
+    "reference/*-performance-counters",
+]
 ```
 
-The file is not generated if the build fails.
-
-### Output location
-
-`llms-full.txt` is written to the Sphinx output directory alongside the built HTML. For a standard build this is `docs/_build/html/llms-full.txt`, making it available at `{project_url}/llms-full.txt`.
-
-### Content filtering
-
-The generator filters source files to keep only meaningful prose:
-
-- Files with fewer than 10 prose lines are skipped entirely, excluding navigation-only or boilerplate pages.
-- Files in `_build`, `_static`, `_templates`, `.git`, and `.venv` directories are excluded.
-- Markup noise is stripped from included files: directive syntax, anchor labels, table separator rows, raw HTML blocks, and RST section underlines.
-- Code blocks are preserved.
-
-Each included file is appended as a section separated by `---`, with its path relative to the source directory used as the section heading.
+Excluded pages still appear in the `llms.txt` index, so they remain discoverable.
 
 ## Example configuration
 
@@ -98,7 +121,6 @@ html_theme_options = {
     "use_download_button": True,
 }
 
-html_extra_path = ["llms.txt"]
-
-rocm_docs_generate_llms_full = True
+rocm_docs_generate_llms = True
+rocm_docs_llms_base_url = "https://rocm.docs.amd.com/projects/<project>/en/latest"
 ```

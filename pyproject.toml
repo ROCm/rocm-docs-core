@@ -43,6 +43,9 @@ documentation="https://rocm.docs.amd.com"
 api_reference = [
   "doxysphinx>=3.3.2"
 ]
+llms = [
+  "sphinx-markdown-builder>=0.6.10"
+]
 development = [
   "black>=22.1",
   "build>=0.10.0",
@@ -53,6 +56,7 @@ development = [
   "pre-commit>=3.3.2",
   "pytest>=7.4.2",
   "ruff>=0.0.269",
+  "sphinx-markdown-builder>=0.6.10",
   "sphinxcontrib.doxylink>=1.12.2"
 ]
 

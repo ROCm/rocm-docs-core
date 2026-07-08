@@ -1,277 +1,691 @@
-"""Generate llms-full.txt from documentation source files.
+"""Generate ``llms.txt`` and ``llms-full.txt`` from the resolved doctree.
 
-When enabled via ``rocm_docs_generate_llms_full = True`` in conf.py,
-this module generates an ``llms-full.txt`` file in the output directory
-after each successful build. The file aggregates prose content from all
-``.md`` and ``.rst`` source files, suitable for AI agent consumption.
+These files follow the `llms.txt standard <https://llmstxt.org/>`_ and make the
+documentation accessible to large language models and AI assistants.
 
-A project-level ``llms.txt`` in the source directory (if present) is used
-as the header section; otherwise the Sphinx ``project`` name is used.
+When enabled via ``rocm_docs_generate_llms = True`` in ``conf.py``, this
+module runs on the Sphinx ``build-finished`` event and writes two files to the
+output directory:
+
+* ``llms.txt`` -- a curated, link-only index of the documentation. Its structure
+  follows the project's table of contents, and each entry's description comes
+  from that page's ``description`` metadata (set via MyST ``html_meta`` or an
+  RST ``.. meta::`` directive), falling back to the page title.
+* ``llms-full.txt`` -- the prose documentation inlined into a single file.
+
+Unlike a text-level filter, the content is produced from Sphinx's *resolved*
+doctree using ``sphinx-markdown-builder``'s translator, so RST and Markdown
+sources are handled identically and constructs like tables, code blocks,
+math, footnotes, and cross-references survive conversion intact.
 """
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING
 
-import re
+import logging
+import os
+from collections.abc import Iterator
+from dataclasses import dataclass, field
+from fnmatch import fnmatch
+from html.parser import HTMLParser
 from pathlib import Path
 
 import sphinx.util.logging
+from docutils import nodes
+from docutils.io import StringOutput
 from sphinx.application import Sphinx
+from sphinx_design.tabs import sd_tab_input, sd_tab_label
+from sphinx_external_toc.api import FileItem, SiteMap, UrlItem
+from sphinx_external_toc.parsing import parse_toc_yaml
+
+if TYPE_CHECKING:
+    # Only needed for type checking. sphinx-markdown-builder is an optional
+    # dependency (installed via the ``llms`` extra); the runtime import happens
+    # lazily in _build_markdown_renderer so that projects not using this feature
+    # do not need the package installed.
+    from sphinx_markdown_builder.builder import (  # type: ignore[import-untyped]
+        MarkdownBuilder,
+    )
+    from sphinx_markdown_builder.writer import (  # type: ignore[import-untyped]
+        MarkdownWriter,
+    )
 
 logger = sphinx.util.logging.getLogger(__name__)
 
-EXCLUDED_DIRS: set[str] = {
-    "_build",
-    "_templates",
-    "_static",
-    ".git",
-    ".venv",
-}
+INDEX_FILENAME = "llms.txt"
+FULL_FILENAME = "llms-full.txt"
 
-MARKUP_PREFIXES: tuple[str, ...] = (
-    ":::",
-    "```{",
-    "```",
-    "+++",
-    "-->",
-    "{bdg-",
-)
-
-# Matches lines like "align: center", "alt:", "name: foo" (directive options
-# not starting with a colon, common in MyST figure/table fences).
-_BARE_DIRECTIVE_RE = re.compile(r"^[a-z][a-z_-]*:\s*\S*$")
-
-# Matches MyST/RST anchor labels like "(some-label)=".
-_ANCHOR_LABEL_RE = re.compile(r"^\(\w[\w-]*\)=$")
-
-# Matches RST section underlines (e.g. "====", "----", "~~~~").
-_RST_UNDERLINE_RE = re.compile(r"^[=\-~^\"\'#*+]{3,}$")
-
-# Matches RST code block directives (e.g. ".. code-block:: cpp", ".. code:: sh").
-_RST_CODE_BLOCK_RE = re.compile(r"^\.\.\s+(code-block|code|sourcecode)::")
-
-# Matches markdown table separator rows (e.g. "|---|---|", "| :--- | ---: |").
-_MD_TABLE_SEP_RE = re.compile(r"^\|[\s|:\-]+\|$")
-
-# Matches RST directives whose indented body should be discarded (e.g. raw HTML).
-_RST_SKIP_BLOCK_RE = re.compile(r"^\.\.\s+raw::")
-
-# Matches HTML tags (e.g. "<div>", "</p>", "<!--") but NOT RST hyperlink URL
-# continuation lines (e.g. "<https://...>`_").  The negative lookahead excludes
-# URL schemes so that multi-line RST inline hyperlinks are preserved.
-_HTML_TAG_RE = re.compile(r"^<(?!https?://|ftp://|mailto:)[a-zA-Z/!]")
-
-# Matches trailing HTML close tags at the end of a prose line
-# (e.g. "Browse blogs.</p>", "See the guide.</li></ul>").
-_TRAILING_HTML_CLOSE_RE = re.compile(r"(</[a-zA-Z]+>)+\s*$")
-
-MIN_PROSE_LINES: int = 10
-
-# Matches the first `#` heading in a Markdown file (e.g. "# Title").
-_MD_H1_RE = re.compile(r"^#\s+(.+?)\s*$")
+# Generated API-reference pages (doxygen/autodoc dumps) are noisy as prose and
+# are linked rather than inlined. Doxysphinx emits pages under a ``doxygen/html``
+# path segment, which may be nested under a project-specific root (for example
+# ``demo/doxygen/html/...``), so this segment is matched anywhere in the docname.
+EXCLUDED_DOC_PREFIXES: tuple[str, ...] = ("doxygen/", "_doxygen/")
+EXCLUDED_DOC_SEGMENTS: tuple[str, ...] = ("doxygen/html/",)
 
 
-def _should_skip(path: Path) -> bool:
-    """Return True if *path* is inside an excluded directory."""
-    return any(part in EXCLUDED_DIRS for part in path.parts)
+class _DowngradeUnknownNodeFilter(logging.Filter):
+    """Lower "unknown node type" warnings to INFO during Markdown rendering.
 
-
-def _is_prose_line(line: str) -> bool:
-    """Return True if *line* is human-readable prose (not markup noise)."""
-    stripped = line.strip()
-    if not stripped:
-        return False
-    if stripped.startswith(MARKUP_PREFIXES):
-        return False
-    # Drop bare directive-option lines (e.g. "align: center", "alt:").
-    if _BARE_DIRECTIVE_RE.match(stripped):
-        return False
-    # Drop MyST/RST anchor labels (e.g. "(some-label)=").
-    if _ANCHOR_LABEL_RE.match(stripped):
-        return False
-    # Drop markdown table separator rows (e.g. "|---|---|", "| :--- | ---: |").
-    if _MD_TABLE_SEP_RE.match(stripped):
-        return False
-    # Drop HTML tags (e.g. "<div>", "</p>") but keep RST hyperlink URL
-    # continuation lines (e.g. "<https://rocm.docs.amd.com/...>`_").
-    if _HTML_TAG_RE.match(stripped):
-        return False
-    # Drop RST directives, comments, hyperlink targets, and substitution defs.
-    if stripped.startswith(".."):
-        return False
-    # Drop YAML frontmatter key-value pairs (e.g. "description lang=en": "text").
-    if stripped.startswith('"') and re.match(r'^"[^"]+"\s*:', stripped):
-        return False
-    # Drop RST field list items (e.g. ":type: int") and extended RST meta
-    # options (e.g. ":description lang=en: text").  Excludes inline roles at
-    # line start (e.g. ":cpp:func:`hipMalloc` returns..." or
-    # ":ref:`foo <bar>` describes...") because those are followed by a backtick,
-    # not a space or end-of-line.
-    if re.match(r"^:[A-Za-z][A-Za-z0-9_ =-]*:(\s|$)", stripped):
-        return False
-    # Drop RST section underlines (e.g. "====", "----", "~~~~").
-    return not _RST_UNDERLINE_RE.match(stripped)
-
-
-def _extract_kept_lines(lines: list[str]) -> list[str]:
-    """Apply the streaming filter and return the lines that survive.
-
-    This is the single source of truth for what ends up in the output for a
-    given file.  Both the content-length gate and the emitted section use it,
-    so they cannot disagree.
+    Converting the resolved doctree to Markdown runs the sphinx-markdown-builder
+    translator, which warns once per node type it has no visitor for (e.g.
+    mermaid diagrams or custom directives). These warnings only appear because
+    of this feature, never in a normal HTML build, and are not actionable by doc
+    authors, so they are demoted to INFO to avoid build-warning noise.
     """
-    in_backtick_fence = False
-    in_rst_code_block = False
-    in_rst_skip_block = False
-    in_html_comment = False  # inside <!-- ... --> block
-    in_html_open_tag = False  # inside a multi-line HTML opening tag
-    kept: list[str] = []
-    for line in lines:
-        stripped = line.strip()
-        # Backtick fences (MyST/Markdown)
-        if stripped.startswith("```"):
-            in_backtick_fence = not in_backtick_fence
-            kept.append(line)
-            continue
-        if in_backtick_fence:
-            kept.append(line)
-            continue
-        # HTML comment block (<!-- ... -->): discard all content until -->.
-        if in_html_comment:
-            if "-->" in stripped:
-                in_html_comment = False
-            continue
-        # RST skip block (e.g. .. raw::): discard all indented content.
-        if in_rst_skip_block:
-            if not stripped or line[0] in (" ", "\t"):
-                continue
-            in_rst_skip_block = False
-        # RST code block: exit when a non-blank, non-indented line appears.
-        if in_rst_code_block:
-            if not stripped or line[0] in (" ", "\t"):
-                kept.append(line)
-                continue
-            in_rst_code_block = False
-        # RST raw block: enter and discard both the directive and its body.
-        if _RST_SKIP_BLOCK_RE.match(stripped):
-            in_rst_skip_block = True
-            continue
-        # RST code block: enter on directive line (directive itself dropped).
-        if _RST_CODE_BLOCK_RE.match(stripped):
-            in_rst_code_block = True
-            continue
-        # HTML comment open (<!-- ... -->): discard opener and enter state.
-        if stripped.startswith("<!--"):
-            if "-->" not in stripped:
-                in_html_comment = True
-            continue
-        # Multi-line HTML opening tag: skip continuation lines until >.
-        if in_html_open_tag:
-            if ">" in stripped:
-                in_html_open_tag = False
-            continue
-        # Detect HTML opening tags that wrap across lines (no > on this line).
-        if _HTML_TAG_RE.match(stripped) and ">" not in stripped:
-            in_html_open_tag = True
-            continue
-        if not stripped:
-            kept.append(line)
-        elif _is_prose_line(line):
-            # Strip trailing HTML close tags (e.g. "See the guide.</p>").
-            cleaned = _TRAILING_HTML_CLOSE_RE.sub("", line).rstrip()
-            cleaned_stripped = cleaned.strip()
-            if not cleaned_stripped:
-                # Entire line was HTML close tags — keep original (shouldn't
-                # normally reach here since _is_prose_line filters HTML).
-                kept.append(line)
-            elif re.search(r"\w", cleaned_stripped):
-                # Line has real word content after stripping close tags.
-                kept.append(cleaned)
-            # else: only punctuation remains (e.g. bare ".") — discard.
-    return kept
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if record.levelno == logging.WARNING and record.getMessage().startswith(
+            "unknown node type:"
+        ):
+            record.levelno = logging.INFO
+            record.levelname = "INFO"
+        return True
 
 
-def _first_md_heading(lines: list[str]) -> str | None:
-    """Return the first Markdown `#` heading text, or None if none is present.
+@dataclass
+class _TocEntry:
+    """A single navigable entry discovered from the table of contents."""
 
-    Used to give appended sections a meaningful title instead of the file path.
-    Headings inside fenced code blocks are ignored.
+    docname: str | None
+    url: str | None
+    title: str | None
+    depth: int
+
+
+def generate_llms_full(app: Sphinx, exception: object) -> None:
+    """Write ``llms.txt`` and ``llms-full.txt`` to the output directory.
+
+    Connected to the ``build-finished`` event. Does nothing if the build failed
+    (*exception* is not ``None``) or if the active builder does not produce HTML
+    (e.g. linkcheck, doctest, latex, gettext). The generated links use ``.html``
+    URLs, so they are only meaningful for HTML output.
     """
-    in_fence = False
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith("```"):
-            in_fence = not in_fence
-            continue
-        if in_fence:
-            continue
-        m = _MD_H1_RE.match(stripped)
-        if m:
-            return m.group(1)
-    return None
-
-
-def generate_llms_full(app: Sphinx, exception: Any) -> None:
-    """Write ``llms-full.txt`` to the output directory after a successful build.
-
-    This function is connected to the ``build-finished`` Sphinx event.  It does
-    nothing when *exception* is not ``None`` (i.e. the build failed).
-    """
-    if exception:
+    if exception is not None:
+        return
+    if getattr(app.builder, "format", "") != "html":
         return
 
-    docs_root = Path(str(app.srcdir))
-    output_file = Path(str(app.outdir)) / "llms-full.txt"
-    base_file = docs_root / "llms.txt"
+    base_url = _resolve_base_url(app)
+    builder, writer = _build_markdown_renderer(app)
 
-    combined: list[str] = []
+    # Rewrite internal links to absolute published URLs for the duration of the
+    # render loop, then restore the original value so nothing else is affected.
+    saved_http_base = app.config.markdown_http_base
+    app.config.markdown_http_base = base_url
+    # The "unknown node type" warning is emitted by SphinxTranslator via
+    # ``sphinx.util.logging.getLogger(__name__)``, which prefixes the logger
+    # name with "sphinx." -> "sphinx.sphinx.util.docutils".
+    docutils_logger = logging.getLogger("sphinx.sphinx.util.docutils")
+    downgrade_filter = _DowngradeUnknownNodeFilter()
+    docutils_logger.addFilter(downgrade_filter)
+    try:
+        entries = list(_iter_toc_pages(app))
+        rendered: dict[str, str] = {}
+        descriptions: dict[str, str] = {}
+        titles: dict[str, str] = {}
+        for entry in entries:
+            docname = entry.docname
+            if docname is None:
+                continue
+            doctree = app.env.get_and_resolve_doctree(docname, app.builder)
+            titles[docname] = entry.title or _page_title(doctree, docname)
+            descriptions[docname] = _extract_description(app, docname, doctree)
+            # Pages excluded from the full text are still listed in the index,
+            # but their body is not inlined. This covers generated/doxygen pages
+            # and very large pages that would otherwise dominate llms-full.txt.
+            if _is_excluded_from_fulltext(app, docname):
+                continue
+            rendered[docname] = _render_page_markdown(
+                builder, writer, doctree, docname
+            )
+    finally:
+        docutils_logger.removeFilter(downgrade_filter)
+        app.config.markdown_http_base = saved_http_base
 
-    if base_file.exists():
-        base_text = base_file.read_text(encoding="utf-8").rstrip()
-        # Drop a trailing "---" separator line so it doesn't double up with
-        # the one prepended to each appended section below.
-        if base_text.endswith("\n---"):
-            base_text = base_text[:-4].rstrip()
-        combined.append(base_text)
-    else:
-        combined.append(f"# {app.config.project}")
+    index = _assemble_index(app, base_url, entries, titles, descriptions)
+    full = _assemble_full(index, entries, base_url, rendered)
 
-    all_files = sorted(
-        list(docs_root.rglob("*.md")) + list(docs_root.rglob("*.rst"))
-    )
+    out_dir = Path(app.outdir)
+    (out_dir / INDEX_FILENAME).write_text(index, encoding="utf-8")
+    (out_dir / FULL_FILENAME).write_text(full, encoding="utf-8")
+    logger.info("Wrote %s and %s", INDEX_FILENAME, FULL_FILENAME)
 
-    for doc_file in all_files:
-        if _should_skip(doc_file):
+
+def _build_markdown_renderer(
+    app: Sphinx,
+) -> tuple[MarkdownBuilder, MarkdownWriter]:
+    """Create a Markdown builder/writer pair for rendering single doctrees.
+
+    The builder is initialized but never run as a full build; only its
+    translator (via the writer) is used, page by page.
+
+    sphinx-markdown-builder is imported here rather than at module load so it
+    remains an optional dependency: only builds that actually enable
+    ``rocm_docs_generate_llms`` reach this code.
+    """
+    from sphinx_markdown_builder.builder import MarkdownBuilder
+    from sphinx_markdown_builder.writer import MarkdownWriter
+
+    # Link to published HTML pages rather than to ``.md`` files.
+    app.config.markdown_uri_doc_suffix = ".html"
+    builder = MarkdownBuilder(app, app.env)
+    builder.init()
+    writer = MarkdownWriter(builder)
+    return builder, writer
+
+
+def _render_page_markdown(
+    builder: MarkdownBuilder,
+    writer: MarkdownWriter,
+    doctree: nodes.document,
+    docname: str,
+) -> str:
+    """Render one resolved doctree to a Markdown string (mirrors write_doc)."""
+    clean = _strip_unsupported_nodes(doctree)
+    builder.current_doc_name = docname
+    builder.sec_numbers = builder.env.toc_secnumbers.get(docname, {})
+    destination = StringOutput(encoding="utf-8")
+    writer.write(clean, destination)
+    return str(writer.output).strip()
+
+
+# Admonition node types sphinx-markdown-builder has a visitor for. Other
+# admonitions (e.g. ``tip``, ``caution``, generic ``admonition``) have no
+# visitor and would be dropped entirely, so they are converted to ``note`` to
+# preserve their content.
+_SUPPORTED_ADMONITIONS: tuple[type[nodes.Element], ...] = (
+    nodes.note,
+    nodes.warning,
+    nodes.important,
+    nodes.attention,
+    nodes.hint,
+)
+
+
+@dataclass
+class _HtmlCell:
+    """A single parsed HTML table cell."""
+
+    text: str = ""
+    header: bool = False
+    colspan: int = 1
+    rowspan: int = 1
+
+
+@dataclass
+class _HtmlTableParser(HTMLParser):
+    """Parse one or more HTML ``<table>`` blocks into row/cell grids.
+
+    Markdown has no concept of merged cells, so ``colspan``/``rowspan`` are
+    expanded into a full rectangular grid: a spanned cell's text is repeated
+    across every grid position it covers. Cell content is flattened to plain
+    text (nested ``<p>``, ``<a>``, ``<br>`` become spaces/newlines), which is
+    sufficient for the support matrices these tables carry.
+    """
+
+    tables: list[list[list[_HtmlCell]]] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self._rows: list[list[_HtmlCell]] = []
+        self._row: list[_HtmlCell] | None = None
+        self._cell: _HtmlCell | None = None
+        self._depth = 0
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        attr = {k: (v or "") for k, v in attrs}
+        if tag == "table":
+            self._depth += 1
+            if self._depth == 1:
+                self._rows = []
+        elif tag == "tr" and self._depth == 1:
+            self._row = []
+        elif tag in ("td", "th") and self._depth == 1 and self._row is not None:
+            self._cell = _HtmlCell(
+                header=(tag == "th"),
+                colspan=_to_int(attr.get("colspan"), 1),
+                rowspan=_to_int(attr.get("rowspan"), 1),
+            )
+        elif tag == "br" and self._cell is not None:
+            self._cell.text += "\n"
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "table" and self._depth >= 1:
+            if self._depth == 1 and self._rows:
+                self.tables.append(self._rows)
+                self._rows = []
+            self._depth -= 1
+        elif tag == "tr" and self._depth == 1 and self._row is not None:
+            self._rows.append(self._row)
+            self._row = None
+        elif (
+            tag in ("td", "th")
+            and self._depth == 1
+            and self._cell is not None
+            and self._row is not None
+        ):
+            # Collapse whitespace within each <br>-separated line, but keep the
+            # newlines themselves so _grid_to_table can preserve line breaks.
+            lines = [
+                " ".join(line.split()) for line in self._cell.text.split("\n")
+            ]
+            self._cell.text = "\n".join(line for line in lines if line)
+            self._row.append(self._cell)
+            self._cell = None
+
+    def handle_data(self, data: str) -> None:
+        if self._cell is not None:
+            self._cell.text += data
+
+
+def _to_int(value: str | None, default: int) -> int:
+    try:
+        return int(value) if value else default
+    except (TypeError, ValueError):
+        return default
+
+
+def _expand_grid(rows: list[list[_HtmlCell]]) -> list[list[_HtmlCell]]:
+    """Expand colspan/rowspan into a dense rectangular grid of cells."""
+    grid: list[list[_HtmlCell]] = [[] for _ in rows]
+    # Maps a column index to a (cell, remaining-rows) pair carried down by a
+    # rowspan from an earlier row.
+    pending: dict[int, tuple[_HtmlCell, int]] = {}
+    for r, row in enumerate(rows):
+        col = 0
+        cells = list(row)
+        out: list[_HtmlCell] = grid[r]
+        ci = 0
+        while ci < len(cells) or pending:
+            # Fill any column carried down by a rowspan from a previous row.
+            if col in pending:
+                cell, remaining = pending[col]
+                for _ in range(cell.colspan):
+                    out.append(_HtmlCell(cell.text, cell.header))
+                if remaining - 1 > 0:
+                    pending[col] = (cell, remaining - 1)
+                else:
+                    del pending[col]
+                col += cell.colspan
+                continue
+            if ci >= len(cells):
+                # No more explicit cells in this row; if there are pending rowspans
+                # further to the right, advance to them so they are emitted too.
+                next_pending = min(
+                    (k for k in pending if k > col), default=None
+                )
+                if next_pending is None:
+                    break
+                while col < next_pending:
+                    out.append(_HtmlCell())
+                    col += 1
+                continue
+            cell = cells[ci]
+            ci += 1
+            for _ in range(cell.colspan):
+                out.append(_HtmlCell(cell.text, cell.header))
+            if cell.rowspan > 1:
+                pending[col] = (cell, cell.rowspan - 1)
+            col += cell.colspan
+    width = max((len(grid_row) for grid_row in grid), default=0)
+    for grid_row in grid:
+        grid_row.extend(_HtmlCell() for _ in range(width - len(grid_row)))
+    return grid
+
+
+def _grid_to_table(grid: list[list[_HtmlCell]]) -> nodes.table | None:
+    """Build a standard docutils ``table`` node from an expanded cell grid."""
+    if not grid or not grid[0]:
+        return None
+    cols = len(grid[0])
+    table = nodes.table()
+    tgroup = nodes.tgroup(cols=cols)
+    table += tgroup
+    for _ in range(cols):
+        tgroup += nodes.colspec(colwidth=1)
+
+    # Treat only a leading block of all-header rows as the table head.
+    head_rows = 0
+    for row in grid:
+        if row and all(cell.header for cell in row):
+            head_rows += 1
+        else:
+            break
+
+    def _make_row(cells: list[_HtmlCell]) -> nodes.row:
+        row_node = nodes.row()
+        for cell in cells:
+            entry = nodes.entry()
+            para = nodes.paragraph()
+            # Keep the <br>-derived newlines: the Markdown table writer turns
+            # newlines within a cell into <br/>, preserving the line breaks.
+            para += nodes.Text(cell.text)
+            entry += para
+            row_node += entry
+        return row_node
+
+    if head_rows:
+        thead = nodes.thead()
+        tgroup += thead
+        for row in grid[:head_rows]:
+            thead += _make_row(row)
+
+    tbody = nodes.tbody()
+    tgroup += tbody
+    for row in grid[head_rows:]:
+        tbody += _make_row(row)
+    return table
+
+
+def _convert_raw_html_tables(clean: nodes.document) -> None:
+    """Convert raw HTML ``<table>`` nodes to docutils tables; drop other raw.
+
+    Markdown has no raw-HTML escape hatch in the generated output, so HTML
+    ``<table>`` blocks (e.g. MyST ``{include}`` of ``.html`` support matrices)
+    would otherwise leak as literal markup. Each such ``raw`` node is replaced
+    by one or more real ``table`` nodes that the Markdown translator renders as
+    GitHub-flavoured Markdown tables. ``raw`` nodes with no table are removed.
+    """
+    for raw in list(clean.findall(nodes.raw)):
+        if raw.get("format") != "html":
             continue
-        if doc_file == base_file:
+        text = raw.astext()
+        if "<table" not in text.lower():
+            raw.parent.remove(raw)
             continue
-
+        parser = _HtmlTableParser()
         try:
-            content = doc_file.read_text(encoding="utf-8")
-        except Exception as e:
-            logger.warning("Failed to read %s: %s", doc_file, e)
+            parser.feed(text)
+            parser.close()
+        except Exception:  # pragma: no cover - defensive: malformed HTML
+            raw.parent.remove(raw)
             continue
+        replacements: list[nodes.Element] = []
+        for rows in parser.tables:
+            table = _grid_to_table(_expand_grid(rows))
+            if table is not None:
+                replacements.append(table)
+        if replacements:
+            raw.replace_self(replacements)
+        else:
+            raw.parent.remove(raw)
 
-        lines = content.splitlines()
-        kept = _extract_kept_lines(lines)
 
-        # Gate on what will actually be emitted, not on what _is_prose_line
-        # thinks before the state machine runs.  This way fenced-only files
-        # are not under-counted and noise-only files are not over-counted.
-        non_blank_kept = sum(1 for line in kept if line.strip())
-        if non_blank_kept < MIN_PROSE_LINES:
+def _strip_unsupported_nodes(doctree: nodes.document) -> nodes.document:
+    """Return a copy of *doctree* normalized for the Markdown translator.
+
+    sphinx-markdown-builder has no visitor for several node types that would
+    otherwise be dropped silently. To keep the output faithful:
+
+    * ``meta`` nodes are removed (they carry no prose).
+    * Admonitions the translator cannot render are converted to ``note`` so
+      their content is preserved.
+    * ``sphinx-design`` tab labels are converted to a bold paragraph so the tab
+      identity (e.g. "AMD" vs "NVIDIA", "Linux" vs "Windows") is not lost, which
+      otherwise risks conflating platform-specific instructions. The associated
+      radio-button ``sd_tab_input`` nodes carry no text and are removed.
+    * Raw HTML ``<table>`` blocks are converted to real Markdown tables and
+      other raw HTML is dropped, since the Markdown output has no HTML escape
+      hatch.
+    """
+    clean = doctree.deepcopy()
+    for meta in list(clean.findall(nodes.meta)):
+        meta.parent.remove(meta)
+    for element in list(clean.findall(nodes.Element)):
+        if not isinstance(element, nodes.Admonition):
             continue
+        if isinstance(element, _SUPPORTED_ADMONITIONS):
+            continue
+        element.replace_self(nodes.note("", *element.children))
+    for tab_input in list(clean.findall(sd_tab_input)):
+        tab_input.parent.remove(tab_input)
+    for label in list(clean.findall(sd_tab_label)):
+        para = nodes.paragraph()
+        para += nodes.strong(text=label.astext())
+        label.replace_self(para)
+    _convert_raw_html_tables(clean)
+    return clean
 
-        relative = doc_file.relative_to(docs_root)
-        heading = _first_md_heading(lines) or str(relative)
-        cleaned = "\n".join(kept).strip()
 
-        combined.append(f"\n\n---\n\n## {heading}\n\n_Source: `{relative}`_\n")
-        combined.append(cleaned)
+def _extract_description(
+    app: Sphinx, docname: str, doctree: nodes.document
+) -> str:
+    """Find a one-line description for a page.
 
-    output_file.write_text(
-        "\n".join(combined) + "\n",
-        encoding="utf-8",
+    Order: a ``meta`` node named ``description`` (MyST ``html_meta`` or RST
+    ``.. meta::``) in the doctree, then Sphinx's collected page metadata, then
+    an empty string.
+    """
+    for meta in doctree.findall(nodes.meta):
+        name = meta.get("name", "")
+        if name == "description" or name.startswith("description"):
+            content = str(meta.get("content", "")).strip()
+            if content:
+                return content
+
+    metadata = app.env.metadata.get(docname, {})
+    for key, value in metadata.items():
+        is_description = key == "description" or key.startswith("description")
+        if is_description and isinstance(value, str) and value.strip():
+            return value.strip()
+
+    return ""
+
+
+def _page_title(doctree: nodes.document, docname: str) -> str:
+    """Return the first section title of a page, falling back to its docname."""
+    section = doctree.next_node(nodes.section)
+    if section is not None:
+        title = section.next_node(nodes.title)
+        if title is not None:
+            return str(title.astext()).strip()
+    return docname
+
+
+def _iter_toc_pages(app: Sphinx) -> Iterator[_TocEntry]:
+    """Yield ``_TocEntry`` items in table-of-contents order.
+
+    Falls back to all project documents (sorted) if the external TOC is missing
+    or cannot be parsed, so projects without ``sphinx_external_toc`` still work.
+    """
+    toc_path = _toc_path(app)
+    if toc_path is None or not toc_path.is_file():
+        logger.info(
+            "llms: no external TOC found, falling back to all documents"
+        )
+        yield from _fallback_entries(app)
+        return
+
+    try:
+        site_map = parse_toc_yaml(toc_path)
+    except Exception as err:  # degrade gracefully on a malformed TOC
+        logger.warning("llms: could not parse TOC (%s); using all docs", err)
+        yield from _fallback_entries(app)
+        return
+
+    root = site_map.root.docname
+    root_norm = _normalize_docname(app, root)
+    yield _TocEntry(docname=root_norm, url=None, title=None, depth=0)
+    yield from _walk_sitemap(app, site_map, root, depth=1, seen={root_norm})
+
+
+def _walk_sitemap(
+    app: Sphinx, site_map: SiteMap, docname: str, depth: int, seen: set[str]
+) -> Iterator[_TocEntry]:
+    document = site_map[docname]
+    for subtree in document.subtrees:
+        for item in subtree.items:
+            if isinstance(item, UrlItem):
+                yield _TocEntry(
+                    docname=None, url=item.url, title=item.title, depth=depth
+                )
+                continue
+            if not isinstance(item, FileItem):
+                # Glob items are expanded by Sphinx, not resolvable here.
+                continue
+            # TOC entries may carry the source suffix (e.g. "page.md"); Sphinx
+            # docnames are suffix-less. De-duplicate on the normalized name so a
+            # page referenced as both "page" and "page.md" is visited only once,
+            # but keep the raw string for SiteMap lookups and recursion.
+            child = str(item)
+            norm = _normalize_docname(app, child)
+            if norm in seen:
+                continue
+            seen.add(norm)
+            try:
+                child_doc = site_map[child]
+            except KeyError:
+                # Terminal page not registered as its own document.
+                yield _TocEntry(docname=norm, url=None, title=None, depth=depth)
+                continue
+            yield _TocEntry(
+                docname=norm, url=None, title=child_doc.title, depth=depth
+            )
+            yield from _walk_sitemap(app, site_map, child, depth + 1, seen)
+
+
+def _normalize_docname(app: Sphinx, toc_docname: str) -> str:
+    """Convert a TOC entry name to a Sphinx docname (without source suffix)."""
+    return app.project.path2doc(toc_docname) or toc_docname
+
+
+def _fallback_entries(app: Sphinx) -> Iterator[_TocEntry]:
+    root = app.config.root_doc
+    if root in app.project.docnames:
+        yield _TocEntry(docname=root, url=None, title=None, depth=0)
+    for docname in sorted(app.project.docnames):
+        if docname != root:
+            yield _TocEntry(docname=docname, url=None, title=None, depth=1)
+
+
+def _toc_path(app: Sphinx) -> Path | None:
+    toc = getattr(app.config, "external_toc_path", "")
+    if not toc:
+        return None
+    return Path(app.srcdir) / toc
+
+
+def _resolve_base_url(app: Sphinx) -> str:
+    """Determine the published base URL for rewriting internal links."""
+    for candidate in (
+        app.config.rocm_docs_llms_base_url,
+        getattr(app.config, "html_baseurl", ""),
+        os.environ.get("READTHEDOCS_CANONICAL_URL", ""),
+    ):
+        if candidate:
+            return candidate.rstrip("/")
+    logger.info("llms: no base URL configured; internal links will be relative")
+    return ""
+
+
+def _is_excluded_docname(app: Sphinx, docname: str) -> bool:
+    if docname.startswith(EXCLUDED_DOC_PREFIXES):
+        return True
+    if any(segment in docname for segment in EXCLUDED_DOC_SEGMENTS):
+        return True
+    doxygen_html = getattr(app.config, "doxygen_html", None)
+    return bool(
+        doxygen_html and docname.startswith(str(doxygen_html).strip("/") + "/")
     )
-    logger.info("llms-full.txt written to %s", output_file)
+
+
+def _is_excluded_from_fulltext(app: Sphinx, docname: str) -> bool:
+    """Return True if a page should be indexed but not inlined into the full text.
+
+    Generated/doxygen pages (see :func:`_is_excluded_docname`) are always
+    treated this way: they are noisy as prose but still useful as index links.
+    Projects can exclude additional pages via ``rocm_docs_llms_full_exclude``, a
+    list of docnames or glob patterns (matched against the suffix-less docname),
+    to keep very large pages out of ``llms-full.txt`` while still listing them
+    in ``llms.txt``.
+    """
+    if _is_excluded_docname(app, docname):
+        return True
+    patterns = getattr(app.config, "rocm_docs_llms_full_exclude", []) or []
+    return any(fnmatch(docname, pattern) for pattern in patterns)
+
+
+def _page_url(base_url: str, docname: str) -> str:
+    if base_url:
+        return f"{base_url}/{docname}.html"
+    return f"{docname}.html"
+
+
+def _llms_files_note() -> str:
+    """A note that each ROCm project publishes its own llms files.
+
+    ROCm documentation is split across multiple sites and projects, each served
+    under ``https://<base_url>/projects/<project_name>/en/latest/``. This note
+    tells an LLM consumer that ``llms.txt`` and ``llms-full.txt`` exist not only
+    at the documentation root but also under each project's path, so other
+    projects' files can be discovered too.
+    """
+    return (
+        "> Note: ROCm documentation is split across multiple projects. In "
+        "addition to this file, each project publishes its own `llms.txt` and "
+        "`llms-full.txt` under "
+        "`https://<base_url>/projects/<project_name>/en/latest/`."
+    )
+
+
+def _assemble_index(
+    app: Sphinx,
+    base_url: str,
+    entries: list[_TocEntry],
+    titles: dict[str, str],
+    descriptions: dict[str, str],
+) -> str:
+    project_title = app.config.project or "Documentation"
+    lines = [f"# {project_title}", ""]
+
+    root = next((e for e in entries if e.depth == 0 and e.docname), None)
+    if root is not None and root.docname is not None:
+        root_description = descriptions.get(root.docname, "")
+        if root_description:
+            lines += [f"> {root_description}", ""]
+
+    lines += [_llms_files_note(), ""]
+
+    lines += ["## Docs", ""]
+    for entry in entries:
+        if entry.depth == 0:
+            continue
+        indent = "  " * (entry.depth - 1)
+        if entry.url is not None:
+            title = entry.title or entry.url
+            lines.append(f"{indent}- [{title}]({entry.url})")
+            continue
+        docname = entry.docname
+        if docname is None:
+            continue
+        title = titles.get(docname, docname)
+        url = _page_url(base_url, docname)
+        bullet = f"{indent}- [{title}]({url})"
+        description = descriptions.get(docname, "")
+        if description:
+            bullet += f": {description}"
+        lines.append(bullet)
+
+    return "\n".join(lines) + "\n"
+
+
+def _assemble_full(
+    index: str,
+    entries: list[_TocEntry],
+    base_url: str,
+    rendered: dict[str, str],
+) -> str:
+    parts = [index.rstrip()]
+    for entry in entries:
+        docname = entry.docname
+        if docname is None or docname not in rendered:
+            continue
+        url = _page_url(base_url, docname)
+        body = rendered[docname]
+        # The rendered body already begins with the page's own title heading,
+        # so only a separator and source attribution are prepended here.
+        parts.append(f"---\n\nSource: {url}\n\n{body}")
+    return "\n\n".join(parts) + "\n"

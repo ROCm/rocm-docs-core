@@ -440,6 +440,7 @@ benchmarking
 bilinear
 bitsandbytes
 blit
+blockquote
 boson
 bosons
 buildable
@@ -497,7 +498,9 @@ devicelibs
 devsel
 dimensionality
 disambiguates
+discoverable
 distro
+doctree
 doxysphinx
 dropdown
 el
@@ -520,6 +523,7 @@ gfortran
 gfx
 githooks
 github
+glob
 gnupg
 grayscale
 gzip
@@ -554,6 +558,8 @@ inferencing
 inflight
 init
 initializer
+inlined
+inlines
 inlining
 installable
 instantiation
