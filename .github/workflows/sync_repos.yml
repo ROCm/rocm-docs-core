@@ -4,7 +4,7 @@ name: Sync external repos to internal mirrors
 # Repo pairs are configured in .github/sync_repos_list.yml.
 # Each pair specifies an `app` field ("github" or "emu") to select credentials.
 # Required secrets:
-#   GITHUB_APP_ID / GITHUB_APP_PRIVATE_KEY — GitHub App installed on standard internal repos
+#   APP_ID       / APP_PRIVATE_KEY         — GitHub App installed on standard internal repos
 #   EMU_APP_ID   / EMU_APP_PRIVATE_KEY     — GitHub App installed on EMU internal repos
 #
 # rocm-docs-core itself has no internal counterpart; this workflow only operates
@@ -69,8 +69,8 @@ jobs:
         if: matrix.app == 'github'
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         with:
-          app-id: ${{ secrets.GITHUB_APP_ID }}
-          private-key: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ steps.repo.outputs.owner }}
           repositories: ${{ steps.repo.outputs.name }}
 
