@@ -11,10 +11,17 @@
 
 pairs:
   - external: ROCm/ROCm
+    internal: AMD-ROCm-Internal/rocm-docs-internal
+    app: emu
+  - external: ROCm/ROCm
     internal: ROCm/ROCm-internal
+    app: github
   - external: ROCm/rocm-install-on-linux
     internal: ROCm/rocm-install-on-linux-internal
+    app: github
   - external: ROCm/gpu-cluster-networking
     internal: ROCm/gpu-cluster-networking-internal
+    app: github
   - external: ROCm/system-acceptance-docs
     internal: ROCm/system-acceptance-docs-internal
+    app: github

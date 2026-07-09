@@ -2,7 +2,10 @@ name: Sync external repos to internal mirrors
 
 # Runs hourly and can be triggered manually.
 # Repo pairs are configured in .github/sync_repos_list.yml.
-# Required secret: SYNC_PAT — a GitHub PAT with `repo` scope on all internal repos.
+# Each pair specifies an `app` field ("github" or "emu") to select credentials.
+# Required secrets:
+#   GITHUB_APP_ID / GITHUB_APP_PRIVATE_KEY — GitHub App installed on standard internal repos
+#   EMU_APP_ID   / EMU_APP_PRIVATE_KEY     — GitHub App installed on EMU internal repos
 #
 # rocm-docs-core itself has no internal counterpart; this workflow only operates
 # on the pairs listed in the config file.
@@ -52,11 +55,40 @@ jobs:
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
       fail-fast: false  # a failure for one pair should not block others
     steps:
+      - name: Extract internal repo owner and name
+        id: repo
+        shell: sh
+        env:
+          INTERNAL: ${{ matrix.internal }}
+        run: |
+          echo "owner=${INTERNAL%%/*}" >> "$GITHUB_OUTPUT"
+          echo "name=${INTERNAL##*/}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate token (GitHub app)
+        id: app-token-github
+        if: matrix.app == 'github'
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
+        with:
+          app-id: ${{ secrets.GITHUB_APP_ID }}
+          private-key: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
+          owner: ${{ steps.repo.outputs.owner }}
+          repositories: ${{ steps.repo.outputs.name }}
+
+      - name: Generate token (EMU app)
+        id: app-token-emu
+        if: matrix.app == 'emu'
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
+        with:
+          app-id: ${{ secrets.EMU_APP_ID }}
+          private-key: ${{ secrets.EMU_APP_PRIVATE_KEY }}
+          owner: ${{ steps.repo.outputs.owner }}
+          repositories: ${{ steps.repo.outputs.name }}
+
       - name: Get default branch of external repo
         id: branch
         shell: sh
         env:
-          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+          GH_TOKEN: ${{ steps.app-token-github.outputs.token || steps.app-token-emu.outputs.token }}
         run: |
           branch=$(gh api "repos/${{ matrix.external }}" --jq '.default_branch')
           echo "name=$branch" >> "$GITHUB_OUTPUT"
@@ -71,7 +103,7 @@ jobs:
           git clone \
             --branch "${{ steps.branch.outputs.name }}" \
             --single-branch \
-            "https://x-access-token:${{ secrets.SYNC_PAT }}@github.com/${{ matrix.internal }}.git" \
+            "https://x-access-token:${{ steps.app-token-github.outputs.token || steps.app-token-emu.outputs.token }}@github.com/${{ matrix.internal }}.git" \
             repo
 
       - name: Add external as remote and fetch
