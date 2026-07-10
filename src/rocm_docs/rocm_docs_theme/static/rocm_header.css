@@ -1011,14 +1011,14 @@ header.common-header
 
 header.common-header .navbar.second-level-nav .nav-group-separator {
     width: 2px;
-    height: 1.75rem;
     background-color: rgba(255, 255, 255, 0.3);
     flex-shrink: 0;
-    align-self: center;
 }
 
 @media (min-width: 1200px) {
     header.common-header .navbar.second-level-nav .nav-group-separator {
+        align-self: center;
+        height: 1.75rem;
         margin-right: 3rem;
     }
 }
