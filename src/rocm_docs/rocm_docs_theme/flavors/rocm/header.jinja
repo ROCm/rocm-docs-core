@@ -8,7 +8,7 @@
     {% else %}
         {% set version_name = branch.replace('-', ' ').title() %}
     {% endif %}
-    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Software {{ version_name }}</a>
+    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Core SDK {{ version_name }}</a>
 {%- endmacro -%}
 
 {% macro version_list() -%}
@@ -24,14 +24,24 @@
 {% set repo_url = repo_url|replace("http://", "https://") %}
 
 {%
+set nav_item_classes = {
+    "ROCm Core SDK": "fw-bold",
+}
+%}
+
+{%
 set nav_secondary_items = {
-    "GitHub": repo_url,
-    "Community": "https://github.com/ROCm/ROCm/discussions",
+    "ROCm Core SDK": "https://rocm.docs.amd.com",
+    "AI Ecosystem": "https://rocm.docs.amd.com/projects/ai-ecosystem",
+    "GPU Systems and Infrastructure": "https://instinct.docs.amd.com",
+    "ROCm Toolkits": header_rocm_toolkits,
+}
+%}
+
+{%
+set nav_secondary_items_end = {
     "Blogs": "https://rocm.blogs.amd.com/",
     "ROCm Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
-    "AMD Toolkits": header_rocm_toolkits,
-    "Systems and Infra Docs": "https://instinct.docs.amd.com",
     "Infinity Hub": "https://www.amd.com/en/developer/resources/infinity-hub.html",
-    "Support": repo_url + "/issues/new/choose",
 }
 %}
