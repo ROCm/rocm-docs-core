@@ -320,3 +320,7 @@ article :not(p) img {
 #rocm-banner {
   color: #80dfff;
 }
+
+.bd-header-article .article-header-buttons {
+  align-items: center;
+}
