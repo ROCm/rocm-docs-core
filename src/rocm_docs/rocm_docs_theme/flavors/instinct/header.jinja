@@ -21,12 +21,23 @@
 {%- endmacro -%}
 
 {%
-set nav_secondary_items = theme_nav_secondary_items if theme_nav_secondary_items else {
-    "GitHub": theme_repository_url if theme_repository_url else "#",
-    "Community": "https://github.com/ROCm/ROCm/discussions",
+set nav_secondary_items = {
+    "Core SDK": "https://rocm.docs.amd.com",
+    "AI Ecosystem": "https://rocm.docs.amd.com/projects/ai-ecosystem",
+    "GPU Systems and Infrastructure": "https://instinct.docs.amd.com",
+    "Toolkits": header_rocm_toolkits,
+}
+%}
+
+{%
+set nav_item_classes = {
+    "AI Ecosystem": "fw-bold",
+}
+%}
+
+{%
+set nav_secondary_items_end = {
     "Blogs": "https://rocm.blogs.amd.com/",
-    "ROCm Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
-    "ROCm&#8482; Docs": "https://rocm.docs.amd.com",
-    "Support": (theme_repository_url + "/issues/new/choose") if theme_repository_url else "#"
+    "Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
 }
 %}

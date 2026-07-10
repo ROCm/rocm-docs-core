@@ -24,12 +24,6 @@
 {% set repo_url = repo_url|replace("http://", "https://") %}
 
 {%
-set nav_item_classes = {
-    "Core SDK": "fw-bold",
-}
-%}
-
-{%
 set nav_secondary_items = {
     "Core SDK": "https://rocm.docs.amd.com",
     "AI Ecosystem": "https://rocm.docs.amd.com/projects/ai-ecosystem",
@@ -37,6 +31,13 @@ set nav_secondary_items = {
     "Toolkits": header_rocm_toolkits,
 }
 %}
+
+{%
+set nav_item_classes = {
+    "Core SDK": "fw-bold",
+}
+%}
+
 
 {%
 set nav_secondary_items_end = {
