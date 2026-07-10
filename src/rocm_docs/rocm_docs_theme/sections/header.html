@@ -3,6 +3,8 @@
         nav_secondary_items, top_level_header, version_list
     with context
     %}
+{%- from "flavors/" ~ theme_flavor ~ "/header.jinja" import nav_secondary_items_end with context -%}
+{%- from "flavors/" ~ theme_flavor ~ "/header.jinja" import nav_item_classes with context -%}
 
     <header class="common-header" >
         <nav class="navbar navbar-expand-xl">
@@ -35,11 +37,48 @@
         <nav class="navbar navbar-expand-xl second-level-nav">
             <div class="container-fluid main-nav">
                 <div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+                    {% if nav_secondary_items_end %}
+                    <div class="d-flex w-100 align-items-stretch">
+                        <ul class="navbar-nav nav-mega mb-2 mb-lg-0">
+                            {% for name, url_or_items in nav_secondary_items.items() %}
+                            <li class="nav-item{% if url_or_items is mapping %} dropdown{% endif %}">
+                                {% if url_or_items is string %}
+                                    <a class="nav-link top-level header-menu-links{{ ' ' ~ nav_item_classes[name] if nav_item_classes and name in nav_item_classes else '' }}" href="{{ url_or_items }}" id="nav{{ name.lower()|replace(' ','-') }}" role="button" aria-expanded="false" target="_blank">{{ name }}</a>
+                                {% elif url_or_items is mapping %}
+                                    <a class="nav-link top-level header-menu-links dropdown-toggle header-nav-dropdown-toggle" href="#" id="nav{{ name.lower()|replace(' ','-') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ name }}</a>
+                                    <ul class="dropdown-menu header-nav-dropdown-menu" aria-labelledby="nav{{ name.lower()|replace(' ','-') }}">
+                                        {% for item_name, item_url in url_or_items.items() %}
+                                            <li><a class="dropdown-item" href="{{ item_url }}" target="_blank">{{ item_name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="nav-group-separator"></div>
+                        <ul class="navbar-nav nav-mega mb-2 mb-lg-0">
+                            {% for name, url_or_items in nav_secondary_items_end.items() %}
+                            <li class="nav-item{% if url_or_items is mapping %} dropdown{% endif %}">
+                                {% if url_or_items is string %}
+                                    <a class="nav-link top-level header-menu-links{{ ' ' ~ nav_item_classes[name] if nav_item_classes and name in nav_item_classes else '' }}" href="{{ url_or_items }}" id="nav{{ name.lower()|replace(' ','-') }}" role="button" aria-expanded="false" target="_blank">{{ name }}</a>
+                                {% elif url_or_items is mapping %}
+                                    <a class="nav-link top-level header-menu-links dropdown-toggle header-nav-dropdown-toggle" href="#" id="nav{{ name.lower()|replace(' ','-') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ name }}</a>
+                                    <ul class="dropdown-menu header-nav-dropdown-menu" aria-labelledby="nav{{ name.lower()|replace(' ','-') }}">
+                                        {% for item_name, item_url in url_or_items.items() %}
+                                            <li><a class="dropdown-item" href="{{ item_url }}" target="_blank">{{ item_name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% else %}
                     <ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
                         {% for name, url_or_items in nav_secondary_items.items() %}
                             <li class="nav-item{% if url_or_items is mapping %} dropdown{% endif %}">
                                 {% if url_or_items is string %}
-                                    <a class="nav-link top-level header-menu-links" href="{{ url_or_items }}" id="nav{{ name.lower()|replace(' ','-') }}" role="button" aria-expanded="false" target="_blank" >
+                                    <a class="nav-link top-level header-menu-links{{ ' ' ~ nav_item_classes[name] if nav_item_classes and name in nav_item_classes else '' }}" href="{{ url_or_items }}" id="nav{{ name.lower()|replace(' ','-') }}" role="button" aria-expanded="false" target="_blank" >
                                         {{ name }}
                                     </a>
                                 {% elif url_or_items is mapping %}
@@ -55,6 +94,7 @@
                             </li>
                         {% endfor %}
                     </ul>
+                    {% endif %}
                 </div>
             </div>
         </nav>

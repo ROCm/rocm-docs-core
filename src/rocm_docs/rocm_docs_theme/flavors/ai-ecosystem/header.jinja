@@ -1,0 +1,37 @@
+{% macro top_level_header(branch, latest_version, release_candidate_version) -%}
+    <a class="klavika-font hover-opacity" href="{{ projects['ai-ecosystem'] }}">ROCm&#8482; AI Ecosystem</a>
+{%- endmacro -%}
+
+{% macro version_list() -%}
+{%- endmacro -%}
+
+{% if theme_repository_url.endswith("-docs") %}
+    {% set repo_url = theme_repository_url|replace("-docs", "") %}
+{% else %}
+    {% set repo_url = theme_repository_url %}
+{% endif %}
+
+{% set repo_url = repo_url|replace("http://", "https://") %}
+
+{%
+set nav_secondary_items = {
+    "ROCm Core SDK": "https://rocm.docs.amd.com",
+    "AI Ecosystem": "https://rocm.docs.amd.com/projects/ai-ecosystem",
+    "GPU Systems and Infrastructure": "https://instinct.docs.amd.com",
+    "ROCm Toolkits": header_rocm_toolkits,
+}
+%}
+
+{%
+set nav_item_classes = {
+    "AI Ecosystem": "fw-bold",
+}
+%}
+
+{%
+set nav_secondary_items_end = {
+    "Blogs": "https://rocm.blogs.amd.com/",
+    "ROCm Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
+    "Infinity Hub": "https://www.amd.com/en/developer/resources/infinity-hub.html",
+}
+%}
