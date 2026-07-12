@@ -164,6 +164,14 @@ ul.bd-breadcrumbs li.breadcrumb-item {
   }
 }
 
+.header-article-items__start {
+  display: flex;
+}
+
+.bd-header-article .article-header-buttons {
+  align-items: start;
+}
+
 .bd-sidebar-primary .sidebar-header-items {
   display: flex;
   flex-direction: column;
@@ -319,8 +327,4 @@ article :not(p) img {
 
 #rocm-banner {
   color: #80dfff;
-}
-
-.bd-header-article .article-header-buttons {
-  align-items: center;
 }
