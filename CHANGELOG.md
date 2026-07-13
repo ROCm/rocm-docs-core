@@ -1,3 +1,12 @@
+## v1.37.0 (2026-07-13)
+
+### Feat
+
+- **theme.py**: surpress sidebar for rocm-ft flavor
+- remove left side bar
+- remove TOC side bar
+- add new flavor for Fluid Topics docs
+
 ## v1.36.0 (2026-07-08)
 
 ### Feat
