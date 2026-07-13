@@ -25,7 +25,7 @@ dependencies = [
   "breathe>=4.34.0",
   "myst-nb>=1.1.2",
   "pydata-sphinx-theme>=0.15.4",
-  "sphinx-book-theme>=1.1.4",
+  "sphinx-book-theme==1.1.4",
   "sphinx-copybutton>=0.5.1",
   "sphinx-design>=0.3.0",
   "sphinx_external_toc>=0.3.1",
