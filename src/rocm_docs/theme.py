@@ -215,6 +215,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "rocm-finance",
         "rocm-simulation",
         "rocm-llmext",
+        "rocm-ft",
     ]
     flavor = theme_opts.get("flavor", "rocm")
     if flavor not in supported_flavors:
@@ -224,6 +225,11 @@ def _update_theme_options(app: Sphinx) -> None:
         )
         flavor = supported_flavors[0]
         theme_opts["flavor"] = flavor
+
+    if flavor == "rocm-ft":
+        theme_opts["nosidebar"] = True
+        theme_opts["primary_sidebar_end"] = []
+        theme_opts["primary_sidebar_start"] = []
 
     # Set default generic theme options
     if flavor == "generic":
