@@ -8,7 +8,7 @@
     {% else %}
         {% set version_name = branch %}
     {% endif %}
-    <a class="klavika-font hover-opacity" href="{{ projects['rocm-llmext'] }}">ROCm&#8482; LLMExt {{ version_name }}</a>
+    <a class="klavika-font hover-opacity" href="{{ projects['rocm-llmext'] }}">LLM Extension {{ version_name }}</a>
 {%- endmacro -%}
 
 {% if theme_repository_url.endswith("-docs") %}
@@ -30,7 +30,7 @@ set nav_secondary_items = {
     "Blogs": "https://rocm.blogs.amd.com/",
     "ROCm Docs": "https://rocm.docs.amd.com",
     "ROCm Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
-    "ROCm Toolkits": header_rocm_toolkits,
+    "AMD Toolkits": header_rocm_toolkits,
     "Systems and Infra Docs": "https://instinct.docs.amd.com",
     "Infinity Hub": "https://www.amd.com/en/developer/resources/infinity-hub.html",
     "Support": repo_url + "/issues/new/choose"
