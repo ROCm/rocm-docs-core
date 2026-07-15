@@ -129,27 +129,8 @@ ul.bd-breadcrumbs li.breadcrumb-item {
   align-self: baseline;
 }
 
-.bd-sidebar-primary {
-  top: 3.5rem;
-  height: calc(100vh - 3.5rem);
-}
-
 .sbt-scroll-pixel-helper {
   top: 3.5rem !important;
-}
-
-@media (min-width: 576px) and (max-width: 959.98px) {
-  .bd-sidebar-primary {
-    top: 5.5rem;
-    height: calc(100vh - 5.5rem);
-  }
-}
-
-@media(min-width: 960px) {
-  .bd-sidebar-primary {
-    top: 0;
-    height: 100vh;
-  }
 }
 
 @media(min-width: 576px) {
@@ -220,6 +201,7 @@ a#ot-sdk-btn {
   }
 }
 
+.bd-sidebar-primary,
 .bd-sidebar-secondary {
   /* Header z-index is 2000, flyout z-index is 3000.
    * Setting sidebar's z-index to be between 2000 and 3000 to hover over the header without covering the flyout. */
