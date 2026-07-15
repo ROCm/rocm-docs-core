@@ -1,6 +1,6 @@
 rocm: 7.2.4
 ai-developer-hub: v14.0
-rocm-ds: 25.10
+rocm-ds: 26.03
 rocm-ls: 26.03
 rocm-simulation: 25.11
 rocm-finance: 26.01
