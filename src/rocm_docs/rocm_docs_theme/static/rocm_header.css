@@ -1008,3 +1008,17 @@ header.common-header
       width: 60%;
   }
 }
+
+header.common-header .navbar.second-level-nav .nav-group-separator {
+    width: 2px;
+    background-color: rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+@media (min-width: 1200px) {
+    header.common-header .navbar.second-level-nav .nav-group-separator {
+        align-self: center;
+        height: 1.75rem;
+        margin-right: 3rem;
+    }
+}

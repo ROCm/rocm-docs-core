@@ -164,6 +164,14 @@ ul.bd-breadcrumbs li.breadcrumb-item {
   }
 }
 
+.header-article-items__start {
+  display: flex;
+}
+
+.bd-header-article .article-header-buttons {
+  align-items: start;
+}
+
 .bd-sidebar-primary .sidebar-header-items {
   display: flex;
   flex-direction: column;
@@ -218,12 +226,6 @@ a#ot-sdk-btn {
   input#__primary:checked ~ .bd-container .primary-toggle>span {
     transform: rotate(0);
   }
-}
-
-.bd-sidebar-secondary {
-  /* Header z-index is 2000, flyout z-index is 3000.
-   * Setting sidebar's z-index to be between 2000 and 3000 to hover over the header without covering the flyout. */
-  z-index: 2001;
 }
 
 .sd-card-body.rocm-card-banner {

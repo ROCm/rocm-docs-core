@@ -20,6 +20,9 @@ projects:
   cvs:
     target: https://rocm.docs.amd.com/projects/cvs/en/${version}
     development_branch: main
+  ai-ecosystem:
+    target: https://rocm.docs.amd.com/projects/ai-ecosystem/en/${version}
+    development_branch: main
   gpuaidev:
     target: https://rocm.docs.amd.com/projects/ai-developer-hub/en/${version}
     development_branch: main

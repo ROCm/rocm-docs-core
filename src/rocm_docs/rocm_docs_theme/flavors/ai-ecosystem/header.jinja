@@ -1,18 +1,8 @@
 {% macro top_level_header(branch, latest_version, release_candidate_version) -%}
-    {% if docs_header_version %}
-        {% set version_name = docs_header_version %}
-    {% elif branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
-        {% set version_name = "Future Release" %}
-    {% elif branch == "latest" %}
-        {% set version_name = latest_version["rocm"] %}
-    {% else %}
-        {% set version_name = branch.replace('-', ' ').title() %}
-    {% endif %}
-    <a class="klavika-font hover-opacity" href="{{ projects['rocm'] }}">ROCm&#8482; Core SDK {{ version_name }}</a>
+    <a class="klavika-font hover-opacity" href="{{ projects['ai-ecosystem'] }}">ROCm&#8482; AI Ecosystem</a>
 {%- endmacro -%}
 
 {% macro version_list() -%}
-    <a class="header-all-versions hover-opacity" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
 {%- endmacro -%}
 
 {% if theme_repository_url.endswith("-docs") %}
@@ -34,10 +24,9 @@ set nav_secondary_items = {
 
 {%
 set nav_item_classes = {
-    "Core SDK": "fw-bold",
+    "AI Ecosystem": "fw-bold",
 }
 %}
-
 
 {%
 set nav_secondary_items_end = {
