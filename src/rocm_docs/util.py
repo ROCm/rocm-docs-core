@@ -24,7 +24,6 @@ class VersionType(enum.Enum):
     OTHER_LATEST_RELEASE = enum.auto()
     OLD_RELEASE = enum.auto()
     RELEASE_CANDIDATE = enum.auto()
-    PREVIEW = enum.auto()
 
 
 def get_path_to_docs(
