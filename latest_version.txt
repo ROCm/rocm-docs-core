@@ -4,5 +4,5 @@ rocm-ds: 26.03
 rocm-ls: 26.03
 rocm-simulation: 25.11
 rocm-finance: 26.01
-amdgpu: 30.30.4
+amdgpu: 31.40.0
 rocm-llmext: 26.02
