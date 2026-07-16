@@ -173,13 +173,6 @@ def _update_banner(
         return
 
     announcement_info: str
-    preview_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/preview_version.txt"
-    )
-    latest_version_string = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
-    )
-    latest_version = _parse_version(latest_version_string).get("rocm", "latest")
     if version_type == util.VersionType.RELEASE_CANDIDATE:
         announcement_info = "This page contains changes for a test release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
     elif version_type == util.VersionType.OLD_RELEASE:
