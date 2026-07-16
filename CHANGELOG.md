@@ -1,3 +1,25 @@
+## v1.38.0 (2026-07-16)
+
+### Feat
+
+- **theme**: update rocm theme with new secondary nav
+- **theme**: add ai-ecosystem theme with new secondary header nav
+
+### Fix
+
+- **theme**: update instinct header
+- fix linting
+- expand if statement to include ROCM_LATEST_RELEASE case
+- delete unused variables to fix linting
+- remove preview banner
+- **css**: remove unnecessary z-index override on secondary sidebar
+- pin sphinx-book-theme to 1.1.4
+- update nav links
+- **theme**: update left side menu title
+- **css**: sidebar collapser and breadcrumbs alignment
+- clean up header nav
+- **css**: article header icon alignment
+
 ## v1.37.0 (2026-07-13)
 
 ### Feat
