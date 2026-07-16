@@ -3,6 +3,9 @@ version: 1
 
 # ${version} will be replaced by the version of the (current) project in values
 projects:
+  ai-ecosystem:
+    target: https://rocm.docs.amd.com/projects/ai-ecosystem/en/${version}
+    development_branch: develop
   amdgpu-docs:
     target: https://instinct.docs.amd.com/projects/amdgpu-docs/en/latest/
     development_branch: develop
@@ -22,9 +25,6 @@ projects:
     development_branch: develop
   cvs:
     target: https://rocm.docs.amd.com/projects/cvs/en/${version}
-    development_branch: main
-  ai-ecosystem:
-    target: https://rocm.docs.amd.com/projects/ai-ecosystem/en/${version}
     development_branch: main
   gpuaidev:
     target: https://rocm.docs.amd.com/projects/ai-developer-hub/en/${version}
