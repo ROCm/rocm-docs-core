@@ -10,6 +10,9 @@ projects:
   amdsmi:
     target: https://rocm.docs.amd.com/projects/amdsmi/en/${version}
     development_branch: amd-staging
+  atom:
+    target: https://rocm.docs.amd.com/projects/atom/en/${version}
+    development_branch: main
   aqlprofile:
     target: https://rocm.docs.amd.com/projects/aqlprofile/en/${version}
     development_branch: amd-staging
@@ -64,6 +67,9 @@ projects:
   hip-vs:
     target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
     development_branch: master
+  infera:
+    target: https://rocm.docs.amd.com/projects/infera/en/${version}
+    development_branch: main
   instinct: https://instinct.docs.amd.com/
   llvm-project: https://rocm.docs.amd.com/projects/llvm-project/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
@@ -71,6 +77,9 @@ projects:
   monai:
     target: https://rocm.docs.amd.com/projects/monai/en/${version}
     development_branch: amd-integration
+  primus:
+    target: https://rocm.docs.amd.com/projects/primus/en/${version}
+    development_branch: main
   python: https://docs.python.org/3/
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
   rdc:
