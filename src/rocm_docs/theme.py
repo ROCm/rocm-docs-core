@@ -209,6 +209,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "rocm-simulation",
         "rocm-llmext",
         "rocm-ft",
+        "hyperloom",
     ]
     flavor = theme_opts.get("flavor", "rocm")
     if flavor not in supported_flavors:
