@@ -370,7 +370,7 @@ traitlets==5.15.0
     #   matplotlib-inline
     #   nbclient
     #   nbformat
-typing-extensions==4.15.0
+typing-extensions==4.16.0
     # via
     #   beautifulsoup4
     #   black
