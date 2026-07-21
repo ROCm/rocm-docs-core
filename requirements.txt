@@ -355,7 +355,7 @@ tomli==2.3.0
     #   sphinx
 tomlkit==0.13.3
     # via commitizen
-tornado==6.5.2
+tornado==6.5.7
     # via
     #   ipykernel
     #   jupyter-client
