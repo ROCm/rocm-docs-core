@@ -41,7 +41,7 @@ projects:
   hipcim: https://rocm.docs.amd.com/projects/hipCIM/en/${version}
   hipcub: https://rocm.docs.amd.com/projects/hipCUB/en/${version}
   hipdf: https://rocm.docs.amd.com/projects/hipDF/en/${version}
-  hipdnn: https://rocm.docs.amd.com/projects/hipDNN/en/${version}
+  hipdnn: https://rocm.docs.amd.com/projects/hipdnn/en/${version}
   hipfft: https://rocm.docs.amd.com/projects/hipFFT/en/${version}
   hipfile:
     target: https://rocm.docs.amd.com/projects/hipFile/en/${version}
@@ -70,7 +70,7 @@ projects:
   infera:
     target: https://rocm.docs.amd.com/projects/infera/en/${version}
     development_branch: main
-  instinct: https://instinct.docs.amd.com/
+  instinct: https://instinct.docs.amd.com/en/${version}
   llvm-project: https://rocm.docs.amd.com/projects/llvm-project/en/${version}
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
@@ -80,7 +80,9 @@ projects:
   primus:
     target: https://rocm.docs.amd.com/projects/primus/en/${version}
     development_branch: main
-  python: https://docs.python.org/3/
+  python:
+      target: https://docs.python.org/3/
+      inventory: https://docs.python.org/3/objects.inv
   rccl: https://rocm.docs.amd.com/projects/rccl/en/${version}
   rdc:
     target: https://rocm.docs.amd.com/projects/rdc/en/${version}
