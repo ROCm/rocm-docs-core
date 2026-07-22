@@ -1,0 +1,37 @@
+{% macro top_level_header(branch, latest_version, release_candidate_version) -%}
+    {% if docs_header_version %}
+        {% set version_name = docs_header_version %}
+    {% elif branch in ["develop", "master", "main", "amd-master", "amd-staging"] %}
+        {% set version_name = "Future Release" %}
+    {% elif branch == "latest" %}
+        {% set version_name = latest_version["hyperloom"] %}
+    {% else %}
+        {% set version_name = branch %}
+    {% endif %}
+    <a class="klavika-font hover-opacity" href="{{ projects['hyperloom'] }}">Hyperloom {{ version_name }}</a>
+{%- endmacro -%}
+
+{% if theme_repository_url.endswith("-docs") %}
+    {% set repo_url = theme_repository_url|replace("-docs", "") %}
+{% else %}
+    {% set repo_url = theme_repository_url %}
+{% endif %}
+
+{% set repo_url = repo_url|replace("http://", "https://") %}
+
+{% macro version_list() -%}
+    {% if theme_version_list_link %}
+        <a class="header-all-versions hover-opacity" href="{{ theme_version_list_link }}">Version List</a>
+    {% endif %}
+{%- endmacro -%}
+
+{%
+set nav_secondary_items = {
+    "GitHub": repo_url,
+    "Community": "https://github.com/ROCm/ROCm/discussions",
+    "Blogs": "https://rocm.blogs.amd.com/",
+    "ROCm Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
+    "Infinity Hub": "https://www.amd.com/en/developer/resources/infinity-hub.html",
+    "Support": repo_url + "/issues/new/choose"
+}
+%}
