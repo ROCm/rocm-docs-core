@@ -225,6 +225,9 @@ def _update_theme_options(app: Sphinx) -> None:
         theme_opts["primary_sidebar_end"] = []
         theme_opts["primary_sidebar_start"] = []
 
+    if flavor == "hyperloom":
+        theme_opts.setdefault("link_main_doc", False)
+
     # Set default generic theme options
     if flavor == "generic":
         theme_opts.setdefault("header_title", "")
