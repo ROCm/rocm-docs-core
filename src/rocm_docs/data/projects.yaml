@@ -111,7 +111,7 @@ projects:
   rocm: https://rocm.docs.amd.com/en/${version}
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
   hyperloom:
-    target: https://rocm-handbook.amd.com/projects/hyperloom/en/docs-${version}
+    target: https://rocm.docs.amd.com/projects/hyperloom/en/${version}
     development_branch: main
   rocm-ds:
     target: https://rocm.docs.amd.com/projects/rocm-ds/en/${version}
