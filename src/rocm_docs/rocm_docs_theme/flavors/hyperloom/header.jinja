@@ -2,13 +2,6 @@
     <a class="klavika-font hover-opacity" href="{{ projects['hyperloom'] }}">{{ project }} {{ version }}</a>
 {%- endmacro -%}
 
-{% if theme_repository_url.endswith("-docs") %}
-    {% set repo_url = theme_repository_url|replace("-docs", "") %}
-{% else %}
-    {% set repo_url = theme_repository_url %}
-{% endif %}
-
-{% set repo_url = repo_url|replace("http://", "https://") %}
 
 {% macro version_list() -%}
     {% if theme_version_list_link %}
@@ -18,11 +11,16 @@
 
 {%
 set nav_secondary_items = {
-    "GitHub": repo_url,
-    "Community": "https://github.com/ROCm/ROCm/discussions",
+    "Core SDK": "https://rocm.docs.amd.com",
+    "AI Ecosystem": "https://rocm.docs.amd.com/projects/ai-ecosystem",
+    "GPU Systems and Infrastructure": "https://instinct.docs.amd.com",
+    "Toolkits": header_rocm_toolkits,
+}
+%}
+
+{%
+set nav_secondary_items_end = {
     "Blogs": "https://rocm.blogs.amd.com/",
-    "ROCm Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
-    "Infinity Hub": "https://www.amd.com/en/developer/resources/infinity-hub.html",
-    "Support": repo_url + "/issues/new/choose"
+    "Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
 }
 %}
