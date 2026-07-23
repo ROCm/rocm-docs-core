@@ -6,3 +6,4 @@ rocm-simulation: 25.11
 rocm-finance: 26.01
 amdgpu: 31.40.0
 rocm-llmext: 26.02
+hyperloom: 1.0.0a1
