@@ -1,0 +1,37 @@
+{% macro top_level_header(branch, latest_version, release_candidate_version) -%}
+    {% set header_title = theme_header_title if theme_header_title else project ~ " " ~ version %}
+    {% set header_link  = theme_header_link  if theme_header_link  else "#" %}
+    <a class="klavika-font hover-opacity" href="{{ header_link }}">{{ header_title }}</a>
+{%- endmacro -%}
+
+{% macro version_list() -%}
+    <a class="header-all-versions hover-opacity" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+{%- endmacro -%}
+
+{% if theme_repository_url.endswith("-docs") %}
+    {% set repo_url = theme_repository_url|replace("-docs", "") %}
+{% else %}
+    {% set repo_url = theme_repository_url %}
+{% endif %}
+
+{% set repo_url = repo_url|replace("http://", "https://") %}
+
+{%
+set nav_secondary_items = {
+    "Core SDK": "https://rocm.docs.amd.com",
+    "AI Ecosystem": "https://rocm.docs.amd.com/projects/ai-ecosystem",
+    "GPU Systems and Infrastructure": "https://instinct.docs.amd.com",
+    "Toolkits": header_rocm_toolkits,
+}
+%}
+
+{%
+set nav_item_classes = {}
+%}
+
+{%
+set nav_secondary_items_end = {
+    "Blogs": "https://rocm.blogs.amd.com/",
+    "Developer Hub": "https://www.amd.com/en/developer/resources/rocm-hub.html",
+}
+%}

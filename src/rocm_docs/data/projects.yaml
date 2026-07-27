@@ -109,6 +109,7 @@ projects:
     development_branch: develop
   rocjpeg: https://rocm.docs.amd.com/projects/rocJPEG/en/${version}
   rocm: https://rocm.docs.amd.com/en/${version}
+  rocm-extras: https://rocm.docs.amd.com/en/${version}/components/extras.html
   rocm-docs-core: https://rocm.docs.amd.com/projects/rocm-docs-core/en/${version}
   hyperloom:
     target: https://rocm.docs.amd.com/projects/hyperloom/en/${version}
