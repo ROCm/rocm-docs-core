@@ -5,7 +5,9 @@
 {%- endmacro -%}
 
 {% macro version_list() -%}
-    <a class="header-all-versions hover-opacity" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+    {% if theme_version_list_link %}
+        <a class="header-all-versions hover-opacity" href="{{ theme_version_list_link }}">Version List</a>
+    {% endif %}
 {%- endmacro -%}
 
 {% if theme_repository_url.endswith("-docs") %}
