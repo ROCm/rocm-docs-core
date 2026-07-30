@@ -1,5 +1,4 @@
-"""
-Expand _toc.yml.in with Doxygen children after Doxygen runs.
+"""Expand _toc.yml.in with Doxygen children after Doxygen runs.
 
 This module should be called from doxygen.py immediately after Doxygen completes.
 It modifies _toc.yml.in (the template) so that when projects.py generates _toc.yml,
@@ -8,10 +7,12 @@ it includes all the Doxygen child pages.
 
 from __future__ import annotations
 
-from pathlib import Path
 import re
+from pathlib import Path
+from typing import Any
 
 from sphinx.application import Sphinx
+from sphinx.config import Config
 from sphinx.util import logging
 
 logger = logging.getLogger(__name__)
@@ -28,39 +29,52 @@ except ImportError:
 # Entry point
 # ============================================================
 
-def expand_toc_template(app: Sphinx, doxygen_root: Path) -> None:
-    """Expand _toc.yml.in with Doxygen children."""
+def expand_toc_template(app: Sphinx, doxygen_root: Path) -> Path | None:
+    """Expand the TOC template with Doxygen children.
 
+    Reads the configured TOC template, injects the Doxygen child pages, and
+    writes the result to a build-local generated file. The tracked template
+    (``_toc.yml.in``) is never modified. Returns the path to the generated
+    template so the caller can point ``external_toc_template_path`` at it, or
+    ``None`` if no expansion was performed.
+    """
     if not getattr(app.config, "doxygen_toc_auto_expand", False):
         logger.debug("doxygen_toc_auto_expand is False, skipping")
-        return
+        return None
 
     if not YAML_AVAILABLE:
-        return
+        return None
 
     # ----------------------------------
-    # locate template
+    # locate template (resolve against srcdir to match projects.format_toc)
     # ----------------------------------
-    if hasattr(app.config, "external_toc_template_path"):
-        toc_template = Path(app.confdir) / app.config.external_toc_template_path
+    template_setting = getattr(app.config, "external_toc_template_path", "")
+    if template_setting:
+        toc_template = Path(app.srcdir) / template_setting
     else:
-        toc_template = Path(app.confdir) / ".sphinx" / "_toc.yml.in"
+        toc_template = Path(app.srcdir) / ".sphinx" / "_toc.yml.in"
 
     if not toc_template.exists():
         logger.debug(f"TOC template not found: {toc_template}")
-        return
+        return None
 
     # ----------------------------------
     # locate doxygen html directory
+    #
+    # doxygen_html config value may not be set yet (projects._set_doxygen_html
+    # runs at a later config-inited priority), so prefer the doxysphinx output
+    # under doxygen_root, which exists as soon as doxysphinx has run.
     # ----------------------------------
     doxygen_html = None
+    doxygen_html_setting = getattr(app.config, "doxygen_html", None) or ""
 
     candidates = [
         doxygen_root / "docBin" / "html",
-        Path(app.outdir) / getattr(app.config, "doxygen_html", ""),
-        Path(app.srcdir) / getattr(app.config, "doxygen_html", ""),
         doxygen_root / "html",
     ]
+    if doxygen_html_setting:
+        candidates.append(Path(app.outdir) / doxygen_html_setting)
+        candidates.append(Path(app.srcdir) / doxygen_html_setting)
 
     for c in candidates:
         if c and c.exists():
@@ -70,20 +84,36 @@ def expand_toc_template(app: Sphinx, doxygen_root: Path) -> None:
 
     if not doxygen_html:
         logger.warning("Doxygen HTML not found. Cannot expand TOC.")
-        return
+        return None
 
-    logger.info(f"Expanding {toc_template.name} with Doxygen children from {doxygen_html}")
+    # Write the expanded template to a build-local file, never the source.
+    generated = Path(app.outdir) / ".rocm_docs" / "_toc.yml.in"
+    generated.parent.mkdir(parents=True, exist_ok=True)
 
-    _do_expansion(toc_template, doxygen_html, app.config)
+    logger.info(
+        f"Expanding {toc_template.name} with Doxygen children from "
+        f"{doxygen_html} into {generated}"
+    )
+
+    return _do_expansion(toc_template, generated, doxygen_html, app.config)
 
 
 # ============================================================
 # Main expansion
 # ============================================================
 
-def _do_expansion(toc_template: Path, doxygen_html: Path, config) -> None:
-    """Perform the actual TOC expansion with correct root traversal."""
+def _do_expansion(
+    toc_template: Path,
+    output_path: Path,
+    doxygen_html: Path,
+    config: Config,
+) -> Path | None:
+    """Perform the actual TOC expansion with correct root traversal.
 
+    Reads ``toc_template`` and writes the expanded result to ``output_path``.
+    Returns ``output_path`` if a usable generated template was written, else
+    ``None``.
+    """
     logger.info(f"Reading TOC template: {toc_template}")
 
     toc_text = toc_template.read_text(encoding="utf-8")
@@ -103,7 +133,7 @@ def _do_expansion(toc_template: Path, doxygen_html: Path, config) -> None:
 
     if not toc_data:
         logger.warning("Empty TOC template")
-        return
+        return None
 
     # --------------------------------------------------------
     # Normalize root into a list for uniform traversal
@@ -127,9 +157,9 @@ def _do_expansion(toc_template: Path, doxygen_html: Path, config) -> None:
 
     if expanded_count == 0:
         logger.info("No Doxygen entries needed expansion")
-        return
+        return None
 
-    with open(toc_template, "w", encoding="utf-8") as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         for line in header_lines:
             f.write(line + "\n")
 
@@ -143,6 +173,7 @@ def _do_expansion(toc_template: Path, doxygen_html: Path, config) -> None:
         )
 
     logger.info(f"Expanded {expanded_count} entries with {total_children} children")
+    return output_path
 
 # ============================================================
 # Regex-only expansion (NO BeautifulSoup)
@@ -150,12 +181,19 @@ def _do_expansion(toc_template: Path, doxygen_html: Path, config) -> None:
 
 _HREF_RE = re.compile(r'href="([^"]+\.html)"')
 
+# A TOC entry / node is a plain YAML-loaded dict.
+Node = dict[str, Any]
+# Categorized child references keyed by category (structs/files/groups/other).
+Categorized = dict[str, list[Node]]
 
-def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
-    """
-    Fully recursive walker that traverses the entire _toc.yml tree
-    structure to find and expand doxygen/html/group__* entries at
-    any nesting depth.
+
+def _expand_entries(
+    nodes: list[Node], doxygen_html: Path, max_children: int
+) -> tuple[int, int]:
+    """Traverse the whole _toc.yml tree to expand Doxygen group entries.
+
+    Recursively walks the entire structure to find and expand
+    doxygen/html/group__* entries at any nesting depth.
 
     The _toc.yml.in structure is:
 
@@ -170,21 +208,19 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
     The key insight is that BOTH subtree dicts AND entry dicts can
     contain "subtrees", so we must recurse into both.
     """
-
     expanded_count = 0
     total_children = 0
 
     logger.info(f"Scanning TOC using HTML root: {doxygen_html}")
 
     # High-level Doxygen index pages that should never appear as children
-    _SKIP_STEMS = {"annotated", "files", "classes", "namespaces",
+    skip_stems = {"annotated", "files", "classes", "namespaces",
                     "namespacemembers", "functions", "globals", "pages",
                     "modules", "hierarchy", "inherits", "graph"}
 
     # --------------------------------------------------------
-    def _extract_children(html_file: Path):
-        """
-        Extract child references from a Doxygen HTML page.
+    def _extract_children(html_file: Path) -> Categorized:
+        """Extract child references from a Doxygen HTML page.
 
         Returns a dict with categorized children:
           {
@@ -202,8 +238,10 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
 
         text = html_file.read_text(encoding="utf-8", errors="ignore")
 
-        seen = set()
-        result = {"structs": [], "files": [], "groups": [], "other": []}
+        seen: set[str] = set()
+        result: Categorized = {
+            "structs": [], "files": [], "groups": [], "other": []
+        }
 
         for href in _HREF_RE.findall(text):
             name = Path(href).name
@@ -213,15 +251,14 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
 
             stem = name[:-5]
 
-            # Only process known Doxygen entity prefixes
+            # Only process known Doxygen entity prefixes; also match Doxygen
+            # file pages like "some__thing_8h".
             if not stem.startswith(("struct", "union", "class", "group",
-                                     "namespace", "file", "_")):
-                # Also match Doxygen file pages like "some__thing_8h"
-                if "_8" not in stem:
-                    continue
+                                     "namespace", "file", "_")) and "_8" not in stem:
+                continue
 
             # Skip high-level Doxygen index pages
-            if stem in _SKIP_STEMS:
+            if stem in skip_stems:
                 continue
 
             # Skip source-view and directory pages
@@ -264,18 +301,19 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
         return result
 
     # --------------------------------------------------------
-    def _collect_existing_files(entries: list) -> set:
+    def _collect_existing_files(entries: list[Node]) -> set[str]:
         """Collect all file values already present in a list of entries."""
-        existing = set()
+        existing: set[str] = set()
         for entry in entries:
             if isinstance(entry, dict) and "file" in entry:
                 existing.add(entry["file"])
         return existing
 
     # --------------------------------------------------------
-    def _try_expand_entry(entry: dict, level: int, sibling_entries: list):
-        """
-        Expand a doxygen/html/ entry with children from its HTML page.
+    def _try_expand_entry(
+        entry: Node, level: int, sibling_entries: list[Any]
+    ) -> None:
+        """Expand a doxygen/html/ entry with children from its HTML page.
 
         Three types of expandable entries:
           1. group__*   → extract structs/files, route to annotated/files siblings
@@ -312,12 +350,9 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
                 if "subtrees" not in entry:
                     entry["subtrees"] = [{"entries": []}]
                 entry["subtrees"][0].setdefault("entries", []).extend(new_children)
-            all_count = len(entry.get("subtrees", [{}])[0].get("entries", [])
-                           if entry.get("subtrees") else [])
-            if all_count > 0:
                 expanded_count += 1
-                total_children += all_count
-                logger.info(f"{indent}  → annotated: {all_count} total structs ({len(new_children)} from HTML)")
+                total_children += len(new_children)
+                logger.info(f"{indent}  → annotated: added {len(new_children)} structs from HTML")
             return
 
         # ==== FILES: self-expand with file pages from its HTML ====
@@ -335,12 +370,9 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
                 if "subtrees" not in entry:
                     entry["subtrees"] = [{"entries": []}]
                 entry["subtrees"][0].setdefault("entries", []).extend(new_children)
-            all_count = len(entry.get("subtrees", [{}])[0].get("entries", [])
-                           if entry.get("subtrees") else [])
-            if all_count > 0:
                 expanded_count += 1
-                total_children += all_count
-                logger.info(f"{indent}  → files: {all_count} total file pages ({len(new_children)} from HTML)")
+                total_children += len(new_children)
+                logger.info(f"{indent}  → files: added {len(new_children)} file pages from HTML")
             return
 
         # ==== GROUP: route children to annotated/files siblings ====
@@ -412,9 +444,8 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
             logger.info(f"{indent}  → no direct children (structs/files routed to siblings)")
 
     # --------------------------------------------------------
-    def _walk(node: dict, level: int = 0):
-        """
-        Recursively walk a single TOC node (dict).
+    def _walk(node: Any, level: int = 0) -> None:
+        """Recursively walk a single TOC node (dict).
 
         TOC structure:
           container: { subtrees: [ {entries: [entry, ...]}, ... ] }
@@ -492,7 +523,7 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
     # file entries across the ENTIRE tree (not just within one
     # entries list). First occurrence wins.
     # --------------------------------------------------------
-    def _dedup_entries(tree, global_seen: set):
+    def _dedup_entries(tree: Any, global_seen: set[str]) -> None:
         """Remove duplicate doxygen/html/ file entries across the whole tree."""
         if not isinstance(tree, dict):
             return
@@ -517,7 +548,7 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
             for subtree in tree["subtrees"]:
                 _dedup_entries(subtree, global_seen)
 
-    global_seen = set()
+    global_seen: set[str] = set()
     for node in nodes:
         _dedup_entries(node, global_seen)
 
@@ -525,7 +556,7 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
     # Cleanup pass: remove empty entries/subtrees that result
     # from deduplication (etoc requires non-empty entries lists)
     # --------------------------------------------------------
-    def _cleanup_empty(tree):
+    def _cleanup_empty(tree: Any) -> None:
         """Remove subtrees with empty entries lists."""
         if not isinstance(tree, dict):
             return
@@ -562,18 +593,3 @@ def _expand_entries(nodes: list, doxygen_html: Path, max_children: int):
     logger.info(f"Expansion summary: {expanded_count} groups, {total_children} children")
 
     return expanded_count, total_children
-
-
-# ============================================================
-# Dummy Sphinx setup
-# ============================================================
-
-def setup(app):
-    app.add_config_value("doxygen_toc_auto_expand", False, "env", bool)
-    app.add_config_value("doxygen_toc_max_children", 50, "env", int)
-
-    return {
-        "parallel_read_safe": True,
-        "parallel_write_safe": False,
-        "version": "6.0.0",
-    }
