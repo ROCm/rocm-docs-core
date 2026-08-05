@@ -1,22 +1,40 @@
-$(document).ready(() => {
-    const copy = async(event) => {
-        return await navigator.clipboard.writeText($(event.target).attr('copydata'));
+(function () {
+    "use strict";
+
+    function init() {
+        const copy = async (element) => {
+            return await navigator.clipboard.writeText(
+                element.getAttribute("copydata")
+            );
+        };
+
+        document.querySelectorAll(".table td code").forEach((el) => {
+            const text = el.textContent;
+            el.classList.add("hovertext");
+            el.setAttribute("copydata", text);
+            el.setAttribute("data-hover", "Click to copy.");
+            const newText = text
+                .replaceAll(/_([^\u200B])/g, "_\u200B$1")
+                .replaceAll(/([a-z])([A-Z])/g, "$1\u200B$2");
+            el.textContent = newText;
+            el.addEventListener("click", (event) => {
+                copy(event.target);
+                event.target.setAttribute("data-hover", "Copied!");
+                const onMouseLeave = () => {
+                    event.target.setAttribute("data-hover", "Click to copy.");
+                    event.target.removeEventListener(
+                        "mouseleave",
+                        onMouseLeave
+                    );
+                };
+                event.target.addEventListener("mouseleave", onMouseLeave);
+            });
+        });
     }
 
-    $('.table td code').each( function () {
-        var text = $(this).text()
-        $(this).addClass('hovertext')
-        $(this).attr('copydata', text)
-        $(this).attr('data-hover', "Click to copy.")
-        var new_text = text.replaceAll(/_([^\u200B])/g, '_\u200B$1').replaceAll(/([a-z])([A-Z])/g, '$1\u200B$2')
-        $(this).text(new_text)
-        $(this).click((event) => {
-            copy(event)
-            $(event.target).attr('data-hover', "Copied!")
-            $(event.target).on("mouseleave", () => {
-                $(event.target).attr('data-hover', "Click to copy.")
-                $(event.target).off("mouseleave")
-            })
-        })
-    })
-})
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+    } else {
+        init();
+    }
+})();
