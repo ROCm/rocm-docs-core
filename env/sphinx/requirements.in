@@ -1,9 +1,6 @@
- # Unified requirements.in for all ROCm Libraries docs (projects/ and shared/)
+# Unified requirements.in for all ROCm docs
 # To regenerate: pip-compile requirements.in
 
-# rocm-docs-core — highest version across all projects is 1.38.0.
-# [api_reference] extra is required by: composablekernel, hipcub, hipdnn,
-# hipsparselt, miopen, rocrand, rpp, stinkytofu.
 rocm-docs-core[api_reference]==1.38.0
 
 # Required by: most projects
