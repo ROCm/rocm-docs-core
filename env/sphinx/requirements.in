@@ -1,0 +1,30 @@
+ # Unified requirements.in for all ROCm Libraries docs (projects/ and shared/)
+# To regenerate: pip-compile requirements.in
+
+# rocm-docs-core — highest version across all projects is 1.38.0.
+# [api_reference] extra is required by: composablekernel, hipcub, hipdnn,
+# hipsparselt, miopen, rocrand, rpp, stinkytofu.
+rocm-docs-core[api_reference]==1.38.0
+
+# Required by: most projects
+sphinxcontrib-datatemplates==0.11.0
+
+# Required by: composablekernel (bibliography/citation support)
+sphinxcontrib-bibtex==2.6.5
+
+# Required by: composablekernel (diagram support)
+sphinxcontrib-mermaid>=1.0
+
+# Required by: hipsparse (tabbed content)
+sphinx-tabs==3.5.0
+
+# Required by: hiprand, rocrand
+numpy
+
+# Required by: tensile (API doc-string generation)
+autodoc
+joblib
+
+# Required by: ROCm
+sphinx_substitution_extensions
+sphinx-sitemap
