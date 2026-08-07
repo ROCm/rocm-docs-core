@@ -47,6 +47,9 @@ projects:
     target: https://rocm.docs.amd.com/projects/hipFile/en/${version}
     development_branch: develop
   hipfort: https://rocm.docs.amd.com/projects/hipfort/en/${version}
+  hipthreads: https://rocm.docs.amd.com/projects/hipThreads/en/${version}
+    target: https://rocm.docs.amd.com/projects/hipThreads/en/${version}
+    development_branch: develop
   hipgraph:
     target: https://rocm.docs.amd.com/projects/hipGRAPH/en/${version}
     development_branch: develop
