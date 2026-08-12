@@ -21,7 +21,7 @@ _install-defusedxml: _virtualenv
 	{{python}} -m pip install defusedxml
 
 _install-pip-tools: _virtualenv
-	{{python}} -m pip install pip-tools
+	{{python}} -m pip install pip-tools typing_extensions
 
 # Install development and runtime dependencies
 deps: _install-pip-tools

@@ -1,3 +1,22 @@
+## v1.39.0 (2026-08-07)
+
+### Feat
+
+- add header and footer for new docs flavor
+- add new docs flavor
+- **projects.yaml**: add ATOM, Infera, and Primus to projects list
+
+### Fix
+
+- use version_list_link from conf.py in rocm-extras flavor
+- add rocm-extras flavor
+- link portal header title to the current project index
+- update nav strip to match ROCm flavor
+- use project name and version in header
+- correct docs URL
+- update left-side-menu.jinja
+- **projects.yaml**: fix order
+
 ## v1.38.0 (2026-07-16)
 
 ### Feat

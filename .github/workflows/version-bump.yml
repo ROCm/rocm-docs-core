@@ -40,7 +40,7 @@ jobs:
         run: |
           python -m venv .venv
           . .venv/bin/activate
-          python -m pip install pip-tools
+          python -m pip install pip-tools typing_extensions
           python -m piptools sync requirements.txt
           echo "PATH=$PATH" >> "$GITHUB_ENV"
       - name: Bump version and generate changelog
