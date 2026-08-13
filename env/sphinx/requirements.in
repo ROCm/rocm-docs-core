@@ -24,4 +24,5 @@ joblib
 
 # Required by: ROCm
 sphinx_substitution_extensions
+sphinx-reredirects
 sphinx-sitemap
