@@ -342,3 +342,47 @@ def test_walk_sitemap_dedupes_across_suffix_spellings() -> None:
     # "index" (root) and "page" each appear exactly once; the "index.md"
     # self-reference is de-duplicated rather than recursing forever.
     assert docnames == ["index", "page"]
+
+
+def _base_url_app(
+    llms_base_url: str = "", html_baseurl: str = ""
+) -> unittest.mock.NonCallableMock:
+    """A minimal fake Sphinx app carrying just the base-URL config values."""
+    app = unittest.mock.NonCallableMock()
+    app.config.rocm_docs_llms_base_url = llms_base_url
+    app.config.html_baseurl = html_baseurl
+    return app
+
+
+def test_resolve_base_url_accepts_fully_qualified_url() -> None:
+    from rocm_docs.llms import _resolve_base_url
+
+    app = _base_url_app(html_baseurl="https://instinct.docs.amd.com/")
+    with unittest.mock.patch.dict("os.environ", {}, clear=True):
+        assert _resolve_base_url(app) == "https://instinct.docs.amd.com"
+
+
+def test_resolve_base_url_skips_scheme_less_value() -> None:
+    """A scheme-less html_baseurl must not become the link base.
+
+    Otherwise links render as ``instinct.docs.amd.com/page.html`` rather than a
+    proper absolute URL; falling back to relative links is correct instead.
+    """
+    from rocm_docs.llms import _resolve_base_url
+
+    app = _base_url_app(html_baseurl="instinct.docs.amd.com")
+    with unittest.mock.patch.dict("os.environ", {}, clear=True):
+        assert _resolve_base_url(app) == ""
+
+
+def test_resolve_base_url_prefers_first_valid_candidate() -> None:
+    """A scheme-less higher-priority value is skipped for a valid lower one."""
+    from rocm_docs.llms import _resolve_base_url
+
+    app = _base_url_app(html_baseurl="instinct.docs.amd.com")
+    with unittest.mock.patch.dict(
+        "os.environ",
+        {"READTHEDOCS_CANONICAL_URL": "https://example.com/docs/"},
+        clear=True,
+    ):
+        assert _resolve_base_url(app) == "https://example.com/docs"
