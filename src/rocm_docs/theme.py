@@ -2,10 +2,8 @@
 
 from typing import Any
 
-import time
 from pathlib import Path
 
-import requests
 import sphinx.util.logging
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
@@ -13,47 +11,16 @@ from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
 )
 from sphinx.application import Sphinx
 
-from rocm_docs import util
+from rocm_docs import common, util
 
 logger = sphinx.util.logging.getLogger(__name__)
 
-MAX_RETRY = 100
 
-ROCM_TOOLKITS_URL = "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/rocm_toolkits.txt"
-
-ROCM_TOOLKITS_FALLBACK: dict[str, str] = {
-    "ROCm Data Science": "https://rocm.docs.amd.com/projects/rocm-ds/en/latest/index.html",
-    "ROCm Finance": "https://rocm.docs.amd.com/projects/rocm-finance/en/latest/index.html",
-    "ROCm Life Science": "https://rocm.docs.amd.com/projects/rocm-ls/en/latest/index.html",
-    "ROCm Simulation": "https://rocm.docs.amd.com/projects/rocm-simulation/en/latest/index.html",
-}
-
-
-def _get_rocm_toolkits() -> dict[str, str]:
-    """Fetch rocm_toolkits.txt from new_data branch, retrying for up to 10 minutes.
-
-    Falls back to ROCM_TOOLKITS_FALLBACK if the fetch ultimately fails.
-    """
-    deadline = time.monotonic() + 600  # 10 minutes
-    headers = {"User-Agent": "alexxu-amd"}
-    while True:
-        try:
-            response = requests.get(
-                ROCM_TOOLKITS_URL, headers=headers, timeout=10
-            )
-            if response.status_code == 200:
-                return _parse_rocm_toolkits(response.text.strip())
-        except requests.RequestException:
-            pass
-
-        if time.monotonic() >= deadline:
-            logger.warning(
-                "Failed to fetch rocm_toolkits.txt after 10 minutes; "
-                "using hardcoded fallback list."
-            )
-            return ROCM_TOOLKITS_FALLBACK
-
-        time.sleep(5)
+def _get_rocm_toolkits(common_dir: str | None = None) -> dict[str, str]:
+    """Read rocm_toolkits.txt from the rocm-docs-common checkout."""
+    return _parse_rocm_toolkits(
+        common.read_common_file("data/rocm_toolkits.txt", common_dir).strip()
+    )
 
 
 def _parse_rocm_toolkits(content: str) -> dict[str, str]:
@@ -75,28 +42,14 @@ def _parse_rocm_toolkits(content: str) -> dict[str, str]:
         value = value.strip()
         if key and value:
             result[key] = value
-    return result if result else ROCM_TOOLKITS_FALLBACK
+    return result
 
 
-def _get_version_from_url(url: str) -> str:
-    headers = {"User-Agent": "alexxu-amd"}
-    try:
-        retry_counter = 0
-        response = requests.get(url, headers=headers)
-
-        # Retry in case of failure
-        while (response.status_code != 200) and (retry_counter <= MAX_RETRY):
-            time.sleep(5)
-            response = requests.get(url, headers=headers)
-
-        if retry_counter > MAX_RETRY:
-            raise requests.RequestException(
-                "Unable to acquire version within MAX_RETRY!"
-            )
-        return response.text.strip()
-    except requests.RequestException as e:
-        print(f"Error in rocm-docs-core _get_version_from_url: {e}")
-        return ""
+def _read_common_version(
+    relative_path: str, common_dir: str | None = None
+) -> str:
+    """Read a version data file from the rocm-docs-common checkout."""
+    return common.read_common_file(relative_path, common_dir).strip()
 
 
 def _parse_version(version_string: str) -> dict[str, str]:
@@ -115,32 +68,33 @@ def _parse_version(version_string: str) -> dict[str, str]:
 
 
 def _add_custom_context(
-    app: Sphinx,  # noqa: ARG001
+    app: Sphinx,
     pagename: str,  # noqa: ARG001
     templatename: str,  # noqa: ARG001
     context: dict[str, str | dict[str, str]],
     doctree: object,  # noqa: ARG001
 ) -> None:
-    latest_version_list = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
+    common_dir = getattr(app.config, common.COMMON_DIR_CONFIG, None)
+    latest_version_list = _read_common_version(
+        "data/latest_version.txt", common_dir
     )
     context["header_latest_version"] = _parse_version(latest_version_list)
 
-    header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
+    header_release_candidate_version = _read_common_version(
+        "data/release_candidate.txt", common_dir
     )
     context["header_release_candidate_version"] = (
         header_release_candidate_version
     )
 
-    google_site_verification_content = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/google_site_verification.txt"
+    google_site_verification_content = _read_common_version(
+        "data/google_site_verification.txt", common_dir
     )
     context["google_site_verification_content"] = (
         google_site_verification_content
     )
 
-    context["header_rocm_toolkits"] = _get_rocm_toolkits()
+    context["header_rocm_toolkits"] = _get_rocm_toolkits(common_dir)
 
 
 def _update_repo_opts(srcdir: str, theme_opts: dict[str, Any]) -> None:
@@ -253,12 +207,13 @@ def _update_theme_options(app: Sphinx) -> None:
             0, "components/left-side-menu"
         )
 
-    header_latest_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
+    common_dir = getattr(app.config, common.COMMON_DIR_CONFIG, None)
+    header_latest_version = _read_common_version(
+        "data/latest_version.txt", common_dir
     )
 
-    header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
+    header_release_candidate_version = _read_common_version(
+        "data/release_candidate.txt", common_dir
     )
 
     default_config_opts = {
@@ -269,7 +224,7 @@ def _update_theme_options(app: Sphinx) -> None:
         "html_context": {
             "header_latest_version": _parse_version(header_latest_version),
             "header_release_candidate_version": header_release_candidate_version,
-            "header_rocm_toolkits": _get_rocm_toolkits(),
+            "header_rocm_toolkits": _get_rocm_toolkits(common_dir),
         },
     }
     for key, default in default_config_opts.items():

@@ -13,6 +13,19 @@ from sphinx.application import Sphinx
 from .log_fixtures import ExpectLogFixture
 
 
+COMMON_DATA_DIR = Path(__file__).parent / "common_data"
+
+
+@pytest.fixture(autouse=True)
+def with_common_data(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Point rocm-docs-core at the bundled test copy of rocm-docs-common.
+
+    Data files are read locally from ROCM_DOCS_COMMON_DIR with no remote
+    fallback, so every build-exercising test needs this set.
+    """
+    monkeypatch.setenv("ROCM_DOCS_COMMON_DIR", str(COMMON_DATA_DIR))
+
+
 @pytest.fixture
 def with_no_git_repo(
     monkeypatch: pytest.MonkeyPatch,
@@ -69,4 +82,4 @@ def build_factory(
     return make
 
 
-__all__ = ["build_factory", "with_no_git_repo"]
+__all__ = ["build_factory", "with_common_data", "with_no_git_repo"]
