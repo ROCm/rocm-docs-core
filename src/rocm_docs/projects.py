@@ -429,6 +429,13 @@ def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "intersphinx_disabled_domains"):
         app.config.intersphinx_disabled_domains = ["std"]
 
+    # Resolve the rocm-docs-common checkout (cloning a default if neither the
+    # config value nor ROCM_DOCS_COMMON_DIR is set) so consumer conf.py files
+    # need no common-dir setup. Store it back so downstream reads reuse it.
+    app.config.rocm_docs_common_dir = common.ensure_common_dir(
+        app.confdir, app.config.rocm_docs_common_dir
+    )
+
     projects = _load_projects(app.config.rocm_docs_common_dir)
 
     repo_path = Path(app.srcdir)

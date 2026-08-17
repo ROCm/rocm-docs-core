@@ -72,6 +72,38 @@ def clone_common_if_missing(
     return str(dest_path)
 
 
+def ensure_common_dir(
+    confdir: str | os.PathLike[str],
+    config_value: str | None = None,
+) -> str | None:
+    """Resolve the common dir for a build, cloning a default if needed.
+
+    Called during extension setup so a consumer's ``conf.py`` needs no
+    common-dir configuration at all. Resolution order:
+
+    1. If ``config_value`` (the ``rocm_docs_common_dir`` config value) is set,
+       use it.
+    2. If the ``ROCM_DOCS_COMMON_DIR`` env var is set, defer to it (return
+       ``None`` so :func:`get_common_dir` picks it up).
+    3. Otherwise clone rocm-docs-common to ``<confdir>/../rocm-docs-common``
+       (the repo root in the standard ``docs/`` layout, matching where the
+       Read the Docs ``post_checkout`` job clones it) and return that path.
+
+    Args:
+        confdir: The Sphinx conf.py directory (``app.confdir``).
+        config_value: The current ``rocm_docs_common_dir`` config value.
+
+    Returns:
+        The path to assign to ``rocm_docs_common_dir``, or ``None`` when the
+        env var should be used instead.
+    """
+    if config_value:
+        return config_value
+    if os.environ.get(COMMON_DIR_ENV):
+        return None
+    return clone_common_if_missing(Path(confdir).parent / "rocm-docs-common")
+
+
 def get_common_dir(explicit_dir: str | os.PathLike[str] | None = None) -> Path:
     """Return the rocm-docs-common checkout directory.
 
