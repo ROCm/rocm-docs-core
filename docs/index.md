@@ -18,7 +18,7 @@ ROCm Docs Core is distributed as a pip package available from PyPi as
 ::::{grid} 1 1 2 2
 :gutter: 1
 
-:::{grid-item-card} {doc}`User Guide</user_guide/user_guide>`
+:::{grid-item-card} User guide
 :class-body: rocm-card-banner rocm-hue-1
 
 - {doc}`/user_guide/spellcheck`
@@ -29,7 +29,7 @@ ROCm Docs Core is distributed as a pip package available from PyPi as
 
 :::
 
-:::{grid-item-card} {doc}`Developer Guide</developer_guide/developer_guide>`
+:::{grid-item-card} Developer guide
 :class-body: rocm-card-banner rocm-hue-6
 
 - {doc}`/developer_guide/just`
@@ -40,7 +40,7 @@ ROCm Docs Core is distributed as a pip package available from PyPi as
 
 :::
 
-:::{grid-item-card} Demo Doxygen Documentation Integration
+:::{grid-item-card} Demo Doxygen documentation integration
 :class-body: rocm-card-banner rocm-hue-12
 
 - {doc}`/demo/doxygen/html/index`

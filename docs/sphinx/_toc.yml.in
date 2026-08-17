@@ -10,36 +10,33 @@ defaults:
   maxdepth: 6
 root: index.md
 subtrees:
-  - entries:
-    - file: user_guide/user_guide
-      subtrees:
-      - entries:
-        - file: user_guide/spellcheck
-        - file: user_guide/linting
-        - file: user_guide/linking
-          subtrees:
-          - entries:
-            - file: user_guide/linking_md
-            - file: user_guide/linking_rst
-            - file: user_guide/linking_toc
-        - file: user_guide/doxygen_integration
-        - file: user_guide/article_info
-        - file: user_guide/llms
-    - file: developer_guide/developer_guide
-      subtrees:
-      - entries:
-        - file: developer_guide/just
-        - file: developer_guide/python_linting
-        - file: developer_guide/commitizen
-        - file: developer_guide/projects_yaml
-        - file: developer_guide/dependabot
-  - caption: Demo Doxygen Documentation Integration
+  - caption: User guide
+    entries:
+      - file: user_guide/spellcheck
+      - file: user_guide/linting
+      - file: user_guide/linking
+        subtrees:
+        - entries:
+          - file: user_guide/linking_md
+          - file: user_guide/linking_rst
+          - file: user_guide/linking_toc
+      - file: user_guide/doxygen_integration
+      - file: user_guide/article_info
+      - file: user_guide/llms
+      - file: user_guide/selector
+  - caption: Developer guide
+    entries:
+      - file: developer_guide/just
+      - file: developer_guide/python_linting
+      - file: developer_guide/commitizen
+      - file: developer_guide/projects_yaml
+      - file: developer_guide/dependabot
+  - caption: Demo Doxygen documentation integration
     entries:
     - file: demo/doxygen/html/index
       title: Library API Doxygen Demo
-  - caption: Demo Table of Contents Tree
+  - caption: Demo table of contents tree
     entries:
-    - url: "{url}"
     - url: ${project:python}
     - url: ${project:rocm-docs-core}
     - url: ${project:hipify}

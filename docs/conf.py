@@ -53,7 +53,7 @@ rocm_docs_llms_base_url = (
     "https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest"
 )
 
-extensions = ["rocm_docs", "rocm_docs.doxygen"]
+extensions = ["rocm_docs", "rocm_docs.doxygen", "rocm_docs.selector"]
 doxygen_root = "demo/doxygen"
 doxysphinx_enabled = True
 doxygen_project = {
