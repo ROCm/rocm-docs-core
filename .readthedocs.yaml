@@ -23,3 +23,10 @@ build:
    apt_packages:
      - "doxygen"
      - "graphviz" # For dot graphs in doxygen
+   jobs:
+     # Clone the shared build-data repo (version files, projects.yaml, etc.)
+     # so rocm_docs reads them locally instead of fetching from GitHub.
+     # Cloning the tip of main tracks the latest common data on every build;
+     # docs/conf.py points rocm_docs_common_dir at this checkout.
+     post_checkout:
+       - git clone --depth 1 --branch main https://github.com/neon60/rocm-docs-common.git rocm-docs-common

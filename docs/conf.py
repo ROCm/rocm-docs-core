@@ -8,9 +8,12 @@ For a list of options specific to rocm-docs-core, see the user guide:
 https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/
 """
 
-# Disable fetching projects.yaml, it would be the same as the local one anyway
-# except if a PR modifies it. We want to test with its version in that case
-external_projects_remote_repository = ""
+from pathlib import Path
+
+# Shared build-data files (version files, projects.yaml, etc.) are read from
+# the rocm-docs-common submodule checked out at the repository root.
+rocm_docs_common_dir = str(Path(__file__).parent.parent / "rocm-docs-common")
+
 external_projects = ["hipify", "python", "rocm-docs-core", "rocm"]
 external_projects_current_project = "rocm-docs-core"
 
