@@ -18,10 +18,58 @@ than silently diverging by fetching from a moving branch.
 from __future__ import annotations
 
 import os
+import subprocess
 from pathlib import Path
 
 COMMON_DIR_ENV = "ROCM_DOCS_COMMON_DIR"
 COMMON_DIR_CONFIG = "rocm_docs_common_dir"
+
+# Default source for the shared build-data repo, used by
+# clone_common_if_missing(). Keeping these here means consumer conf.py files do
+# not hardcode the URL/branch.
+COMMON_REPO_URL = "https://github.com/neon60/rocm-docs-common.git"
+COMMON_REPO_BRANCH = "main"
+
+
+def clone_common_if_missing(
+    dest: str | os.PathLike[str],
+    *,
+    repo_url: str = COMMON_REPO_URL,
+    branch: str = COMMON_REPO_BRANCH,
+) -> str:
+    """Clone rocm-docs-common to ``dest`` if it is not already checked out.
+
+    Intended for a consumer's ``conf.py`` so a local ``sphinx-build`` works
+    without a manual clone. On Read the Docs the ``post_checkout`` job usually
+    provides the checkout already, in which case this is a no-op.
+
+    Args:
+        dest: Directory the repo should live in (e.g. ``<repo>/rocm-docs-common``).
+        repo_url: Git URL to clone from. Defaults to :data:`COMMON_REPO_URL`.
+        branch: Branch to clone (shallow). Defaults to :data:`COMMON_REPO_BRANCH`.
+
+    Returns:
+        ``str(dest)``, so callers can assign ``rocm_docs_common_dir`` directly.
+
+    Raises:
+        subprocess.CalledProcessError: if the clone fails.
+    """
+    dest_path = Path(dest)
+    if not (dest_path / "data").is_dir():
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "--depth",
+                "1",
+                "--branch",
+                branch,
+                repo_url,
+                str(dest_path),
+            ],
+            check=True,
+        )
+    return str(dest_path)
 
 
 def get_common_dir(explicit_dir: str | os.PathLike[str] | None = None) -> Path:

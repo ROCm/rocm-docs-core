@@ -8,31 +8,17 @@ For a list of options specific to rocm-docs-core, see the user guide:
 https://rocm.docs.amd.com/projects/rocm-docs-core/en/latest/
 """
 
-import subprocess
 from pathlib import Path
+
+from rocm_docs.common import clone_common_if_missing
 
 # Shared build-data files (version files, projects.yaml, etc.) are read from a
 # rocm-docs-common checkout at the repository root. On Read the Docs this is
-# cloned by the post_checkout job; for local builds we clone it here if it is
-# missing so `sphinx-build` works without a manual clone step.
-_common_dir = Path(__file__).parent.parent / "rocm-docs-common"
-_common_repo = "https://github.com/neon60/rocm-docs-common.git"
-_common_branch = "main"
-if not (_common_dir / "data").is_dir():
-    subprocess.run(
-        [
-            "git",
-            "clone",
-            "--depth",
-            "1",
-            "--branch",
-            _common_branch,
-            _common_repo,
-            str(_common_dir),
-        ],
-        check=True,
-    )
-rocm_docs_common_dir = str(_common_dir)
+# cloned by the post_checkout job; for local builds clone_common_if_missing
+# clones it here when absent so `sphinx-build` works without a manual step.
+rocm_docs_common_dir = clone_common_if_missing(
+    Path(__file__).parent.parent / "rocm-docs-common"
+)
 
 external_projects = ["hipify", "python", "rocm-docs-core", "rocm"]
 external_projects_current_project = "rocm-docs-core"
