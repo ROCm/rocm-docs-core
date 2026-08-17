@@ -99,6 +99,7 @@ FP
 FSDP
 Filesystem
 Flang
+FontAwesome
 Fortran
 Fuyu
 GALB
@@ -181,6 +182,7 @@ LM
 LSAN
 LSTM
 LTS
+LaTeX
 LinearReLU
 LoRA
 MEM
@@ -244,6 +246,7 @@ OMPI
 OMPT
 OMPX
 ONNX
+OR'd
 OSS
 OSU
 Omniperf
@@ -361,6 +364,7 @@ TensorBoard
 TensorFlow
 TensorParallel
 ToC
+TomSelect
 TorchAudio
 TorchInductor
 TorchMIGraphX
@@ -465,6 +469,7 @@ completers
 composability
 composable
 concretization
+cond
 config
 conformant
 convolutional
@@ -487,6 +492,7 @@ datatypes
 dbgapi
 de
 deallocation
+debian
 denoise
 denoised
 denoises
@@ -496,13 +502,17 @@ detections
 dev
 devicelibs
 devsel
+dicts
 dimensionality
 disambiguates
 discoverable
 distro
+dnf
+docname
 doctree
 doxysphinx
 dropdown
+dropdowns
 el
 embeddings
 enablement
@@ -598,6 +608,7 @@ namespaces
 natively
 numref
 ocl
+ol
 opencl
 opencv
 openmp
@@ -609,9 +620,11 @@ parallelization
 parallelize
 parameterization
 passthrough
+pasteable
 perfcounter
 performant
 perl
+pkgman
 pragma
 pre
 prebuilt
@@ -642,6 +655,7 @@ req
 resampling
 rescaling
 reusability
+rhel
 roadmap
 roc
 rocAL
@@ -682,6 +696,7 @@ shader
 sharded
 sharding
 sigmoid
+sles
 sm
 smi
 softmax
@@ -699,6 +714,8 @@ suboptimal
 supercomputing
 templated
 th
+toc
+toctree
 tokenization
 tokenize
 tokenized
@@ -716,6 +733,7 @@ tunable
 tunings
 txt
 uarch
+ubuntu
 unallocated
 uncached
 uncorrectable
