@@ -26,7 +26,16 @@ build:
    jobs:
      # Clone the shared build-data repo (version files, projects.yaml, etc.)
      # so rocm_docs reads them locally instead of fetching from GitHub.
-     # Cloning the tip of main tracks the latest common data on every build;
-     # docs/conf.py points rocm_docs_common_dir at this checkout.
+     # Cloning the tip of main tracks the latest common data on every build.
+     #
+     # Default: rocm_docs resolves this checkout automatically at build time
+     # (see rocm_docs.common.ensure_common_dir) — the extension points
+     # rocm_docs_common_dir at <repo>/rocm-docs-common, matching the path this
+     # job clones to. No conf.py setup is needed.
+     #
+     # To override: set the rocm_docs_common_dir config value in conf.py, or the
+     # ROCM_DOCS_COMMON_DIR environment variable, to point at a different
+     # checkout. When either is set, ensure_common_dir defers to it and this
+     # clone is unused. See docs/developer_guide/local_common_data.md.
      post_checkout:
        - git clone --depth 1 --branch main https://github.com/neon60/rocm-docs-common.git rocm-docs-common

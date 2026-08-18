@@ -30,6 +30,7 @@ subtrees:
       - file: developer_guide/python_linting
       - file: developer_guide/commitizen
       - file: developer_guide/projects_yaml
+      - file: developer_guide/local_common_data
       - file: developer_guide/dependabot
   - caption: Demo Doxygen documentation integration
     entries:
