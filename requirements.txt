@@ -89,7 +89,9 @@ fastjsonschema==2.21.2
     #   nbformat
     #   rocm-docs-core (pyproject.toml)
 filelock==3.29.5
-    # via virtualenv
+    # via
+    #   python-discovery
+    #   virtualenv
 gitdb==4.0.12
     # via gitpython
 gitpython==3.1.50
@@ -259,6 +261,8 @@ python-dateutil==2.9.0.post0
     # via
     #   jupyter-client
     #   sphinxcontrib-doxylink
+python-discovery==1.5.2
+    # via virtualenv
 pytokens==0.3.0
     # via black
 pyyaml==6.0.3
