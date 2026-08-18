@@ -113,6 +113,49 @@ def _force_notfound_prefix(app: Sphinx, _: Config) -> None:
     app.config.notfound_urls_prefix = components.path
 
 
+def _apply_pdf_exclude_patterns(app: Sphinx) -> None:
+    """Exclude extra source patterns from the source set for PDF/LaTeX builds.
+
+    Projects set ``rocm_docs_pdf_exclude_patterns`` in ``conf.py`` to a list of
+    glob patterns (e.g. ``["install/redirect/*"]``) that should be omitted from
+    PDF output.  The handler appends them to ``exclude_patterns`` at
+    builder-inited time so the LaTeX builder never reads those files.
+
+    It also empties any cached ``.doctree`` pickle files that match the
+    patterns.  Without this, the LaTeX builder's ``inline_all_toctrees``
+    can resurrect excluded documents from a previous build's cache because
+    it reads doctree files from disk without checking ``all_docs``.
+    The files are kept (not deleted) so that ``inline_all_toctrees`` still
+    finds a valid doctree — an empty one that contributes no content or
+    TOC entries.
+    """
+    if app.builder.format != "latex":
+        return
+    patterns = app.config.rocm_docs_pdf_exclude_patterns
+    if not patterns:
+        return
+    app.config.exclude_patterns.extend(patterns)
+
+    # Replace cached doctree pickles with empty documents so
+    # inline_all_toctrees finds a valid (but content-free) doctree
+    # instead of resurrecting excluded content from a previous build.
+    import fnmatch
+    import pickle
+    from pathlib import Path
+
+    doctreedir = Path(app.doctreedir)
+    if not doctreedir.is_dir():
+        return
+    for doctree_file in doctreedir.rglob("*.doctree"):
+        docname = str(doctree_file.relative_to(doctreedir))[: -len(".doctree")]
+        if any(fnmatch.fnmatch(docname, pat) for pat in patterns):
+            with open(doctree_file, "rb") as fh:
+                doc = pickle.load(fh)
+            doc.children.clear()
+            with open(doctree_file, "wb") as fh:
+                pickle.dump(doc, fh, pickle.HIGHEST_PROTOCOL)
+
+
 def _generate_llms_full(app: Sphinx, exception: object) -> None:
     if app.config.rocm_docs_generate_llms:
         llms.generate_llms_full(app, exception)
@@ -196,6 +239,12 @@ def setup(app: Sphinx) -> dict[str, Any]:
         rebuild="html",
         types=list,
     )
+    app.add_config_value(
+        "rocm_docs_pdf_exclude_patterns",
+        default=[],
+        rebuild="env",
+        types=list,
+    )
 
     # Run before notfound.extension sees the config (default priority(=500))
     app.connect("config-inited", _force_notfound_prefix, priority=400)
@@ -203,6 +252,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     # so its config values are available for the rest of the build.
     app.connect("config-inited", _setup_llms_extension, priority=300)
     app.connect("config-inited", _DefaultSettings.update_config)
+    app.connect("builder-inited", _apply_pdf_exclude_patterns)
     app.connect("build-finished", article_info.set_article_info, priority=1000)
     app.connect("build-finished", _generate_llms_full)
     return {"parallel_read_safe": True, "parallel_write_safe": True}
