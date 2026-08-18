@@ -14,6 +14,7 @@ import os
 import urllib.parse
 from abc import ABC, abstractmethod
 
+from docutils import nodes
 from pydata_sphinx_theme.utils import (  # type: ignore[import-untyped]
     config_provided_by_user,
 )
@@ -121,13 +122,15 @@ def _apply_pdf_exclude_patterns(app: Sphinx) -> None:
     PDF output.  The handler appends them to ``exclude_patterns`` at
     builder-inited time so the LaTeX builder never reads those files.
 
-    It also empties any cached ``.doctree`` pickle files that match the
-    patterns.  Without this, the LaTeX builder's ``inline_all_toctrees``
-    can resurrect excluded documents from a previous build's cache because
-    it reads doctree files from disk without checking ``all_docs``.
-    The files are kept (not deleted) so that ``inline_all_toctrees`` still
-    finds a valid doctree — an empty one that contributes no content or
-    TOC entries.
+    Note: previously this also mutated on-disk ``.doctree`` pickle files to
+    clear content from excluded pages so that ``inline_all_toctrees`` could
+    not resurrect them from cache.  That approach corrupted shared doctree
+    artifacts: a subsequent HTML build would load the emptied pickles and
+    produce blank pages without any indication that the cache was stale.
+    The correct fix is to prune excluded sections from the *in-memory*
+    assembled LaTeX doctree instead of touching reusable cache files.
+    Pruning is performed by ``_prune_excluded_pdf_sections``, which is
+    connected to the ``doctree-resolved`` event below.
     """
     if app.builder.format != "latex":
         return
@@ -136,24 +139,43 @@ def _apply_pdf_exclude_patterns(app: Sphinx) -> None:
         return
     app.config.exclude_patterns.extend(patterns)
 
-    # Replace cached doctree pickles with empty documents so
-    # inline_all_toctrees finds a valid (but content-free) doctree
-    # instead of resurrecting excluded content from a previous build.
-    import fnmatch
-    import pickle
-    from pathlib import Path
 
-    doctreedir = Path(app.doctreedir)
-    if not doctreedir.is_dir():
+def _prune_excluded_pdf_sections(
+    app: Sphinx, doctree: nodes.document, _docname: str
+) -> None:
+    """Remove sections whose docname matches an exclusion pattern in-memory.
+
+    ``inline_all_toctrees`` inlines excluded pages' cached doctrees into the
+    assembled LaTeX document even when they are listed in ``exclude_patterns``
+    (it reads the doctree cache directly rather than going through the normal
+    source-read pipeline).  This hook runs on ``doctree-resolved`` for the
+    assembled LaTeX doctree and drops any top-level sections that carry a
+    docname matching an exclusion pattern, preventing them from appearing in
+    the PDF without touching the on-disk cache.
+    """
+    if app.builder.format != "latex":
         return
-    for doctree_file in doctreedir.rglob("*.doctree"):
-        docname = str(doctree_file.relative_to(doctreedir))[: -len(".doctree")]
-        if any(fnmatch.fnmatch(docname, pat) for pat in patterns):
-            with open(doctree_file, "rb") as fh:
-                doc = pickle.load(fh)
-            doc.children.clear()
-            with open(doctree_file, "wb") as fh:
-                pickle.dump(doc, fh, pickle.HIGHEST_PROTOCOL)
+    patterns = app.config.rocm_docs_pdf_exclude_patterns
+    if not patterns:
+        return
+
+    import fnmatch
+
+    # ``inline_all_toctrees`` wraps each inlined sub-document in a
+    # ``start_of_file`` node, so tagged sections are not always direct
+    # children of the assembled doctree.  Traverse all descendant sections.
+    # Exact-match patterns such as ``guide/redirect`` must match against the
+    # extensionless docname; glob patterns like ``install/redirect/*`` continue
+    # to work because fnmatch treats ``*`` as matching any sequence including
+    # directory separators.
+    for section in list(doctree.findall(nodes.section)):
+        dn = section.get("docname", "")
+        if (
+            dn
+            and any(fnmatch.fnmatch(dn, pat) for pat in patterns)
+            and section.parent is not None
+        ):
+            section.parent.remove(section)
 
 
 def _generate_llms_full(app: Sphinx, exception: object) -> None:
@@ -253,6 +275,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.connect("config-inited", _setup_llms_extension, priority=300)
     app.connect("config-inited", _DefaultSettings.update_config)
     app.connect("builder-inited", _apply_pdf_exclude_patterns)
+    app.connect("doctree-resolved", _prune_excluded_pdf_sections)
     app.connect("build-finished", article_info.set_article_info, priority=1000)
     app.connect("build-finished", _generate_llms_full)
     return {"parallel_read_safe": True, "parallel_write_safe": True}

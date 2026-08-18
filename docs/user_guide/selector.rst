@@ -311,7 +311,7 @@ Basic example
 
 .. selector:: Installation method
    :key: i
-   :show-cond: distro=fedora distro=rhel distro=sles
+   :show-cond: distro=fedora distro=rhel distro=ol
 
    .. selector-option:: dnf
       :value: pkgman
@@ -444,15 +444,15 @@ metadata at the top of your page:
    :selector-toc2: Installation environment
    :selector-toc2-icon: fa-solid fa-computer
 
-In MyST Markdown:
+In MyST Markdown, place these keys at the top level of the front matter . The
+``html_meta`` block generates HTML ``<meta>`` tags and is not read by the
+extension:
 
 .. code-block:: yaml
 
    ---
-   myst:
-     html_meta:
-       "selector-toc2": "Installation environment"
-       "selector-toc2-icon": "fa-solid fa-computer"
+   selector-toc2: "Installation environment"
+   selector-toc2-icon: "fa-solid fa-computer"
    ---
 
 .. list-table::

@@ -31,7 +31,12 @@ const disable = (elem) => {
 const enable = (elem) => {
   elem.classList.remove(DISABLED_CLASS);
   elem.setAttribute("aria-disabled", "false");
-  elem.setAttribute("tabindex", "0");
+  // tabindex is managed by the roving-tabstop logic in select()/deselect().
+  // Re-enabling an option keeps it at -1 so the group always has exactly one
+  // tab stop (the selected option).  select() will promote it to 0 if needed.
+  if (!elem.getAttribute("tabindex")) {
+    elem.setAttribute("tabindex", "-1");
+  }
 };
 
 const hide = (elem) => {
@@ -47,17 +52,34 @@ const show = (elem) => {
 const select = (elem) => {
   elem.classList.add(SELECTED_CLASS);
   elem.setAttribute("aria-checked", "true");
+  elem.setAttribute("tabindex", "0");
 };
 
 const deselect = (elem) => {
   elem.classList.remove(SELECTED_CLASS);
   elem.setAttribute("aria-checked", "false");
+  elem.setAttribute("tabindex", "-1");
 };
 
 // URL synchronization --------------------------------------------------------
 
 function syncStateToURL() {
-  const query = new URLSearchParams(state).toString();
+  // Merge selector keys into the existing query string.  Only selector-owned
+  // keys (those in primarySelectorKeys or extraBindingKeys) are written or
+  // deleted; unrelated params such as ?highlight= are left untouched.
+  const params = new URLSearchParams(window.location.search);
+  const ownedKeys = new Set([...primarySelectorKeys, ...extraBindingKeys]);
+
+  for (const [key, value] of Object.entries(state)) {
+    params.set(key, value);
+  }
+  // Remove stale selector params whose key is no longer in state.
+  for (const key of Array.from(params.keys())) {
+    if (ownedKeys.has(key) && !(key in state)) {
+      params.delete(key);
+    }
+  }
+  const query = params.toString();
   const newURL = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
   window.history.replaceState({}, "", newURL);
   logDebug("URL updated:", newURL);
@@ -318,6 +340,36 @@ function handleOptionKeydown(e) {
   if (e.key === "Enter" || e.key === " ") {
     e.preventDefault();
     handleOptionSelect(e);
+    return;
+  }
+
+  // Arrow-key roving tabstop within the radio group.
+  if (e.key === "ArrowRight" || e.key === "ArrowLeft" ||
+      e.key === "ArrowDown" || e.key === "ArrowUp") {
+    const option = e.currentTarget;
+    const key = option.dataset.selectorKey;
+    if (!key) return;
+
+    const group = option.closest(GROUP_QUERY);
+    if (!group) return;
+
+    const siblings = Array.from(
+      group.querySelectorAll(`${OPTION_QUERY}:not(.${HIDDEN_CLASS}):not(.${DISABLED_CLASS})`),
+    );
+    const idx = siblings.indexOf(option);
+    if (idx === -1) return;
+
+    const forward = e.key === "ArrowRight" || e.key === "ArrowDown";
+    const next = siblings[(idx + (forward ? 1 : -1) + siblings.length) % siblings.length];
+    if (!next) return;
+
+    e.preventDefault();
+    // Move the tab stop to the next option and focus it.
+    siblings.forEach((s) => s.setAttribute("tabindex", "-1"));
+    next.setAttribute("tabindex", "0");
+    next.focus();
+    // Immediately select the newly focused option (standard radio-group UX).
+    next.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   }
 }
 
@@ -436,6 +488,52 @@ function syncDropdownsToState() {
   }
 }
 
+/**
+ * Propagate show/disable class changes on selector-option elements into the
+ * TomSelect rendered cache.
+ *
+ * The updateVisibility loop updates CSS classes (HIDDEN_CLASS, DISABLED_CLASS)
+ * on native OPTION_QUERY elements, but TomSelect renders its own DOM from an
+ * internal cache and does not observe the native element's class mutations.
+ * This function walks each instance's option cache and updates the
+ * ``disabled`` flag plus the rendered list item's visibility so the dropdown
+ * always reflects the current condition state.
+ */
+function syncDropdownOptionStates() {
+  for (const instances of dropdownInstances.values()) {
+    for (const ts of instances) {
+      for (const [value, opt] of Object.entries(ts.options)) {
+        // Find the matching native option element to read its current classes.
+        const nativeOpt = ts.input
+          .closest(GROUP_QUERY)
+          ?.querySelector(`${OPTION_QUERY}[data-selector-value="${CSS.escape(value)}"]`);
+        if (!nativeOpt) continue;
+
+        const hidden = nativeOpt.classList.contains(HIDDEN_CLASS);
+        const disabled = nativeOpt.classList.contains(DISABLED_CLASS);
+        const changed = opt.disabled !== disabled;
+
+        if (changed) {
+          // Use updateOption so TomSelect invalidates and rebuilds the cached
+          // rendered element ($div), ensuring data-selectable and ARIA
+          // attributes reflect the new disabled state correctly.
+          ts.updateOption(value, { ...opt, disabled });
+        }
+
+        // Show/hide the rendered dropdown item independently of disabled state.
+        const itemEl = ts.getOption(value);
+        if (itemEl) {
+          if (hidden) {
+            itemEl.classList.add(HIDDEN_CLASS);
+          } else {
+            itemEl.classList.remove(HIDDEN_CLASS);
+          }
+        }
+      }
+    }
+  }
+}
+
 function flashNewlyVisible(condElems, hiddenBefore) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -521,6 +619,7 @@ function updateVisibility() {
     syncState();
 
     flashNewlyVisible(condElems, hiddenBefore);
+    syncDropdownOptionStates();
     updateTOC2OptionsList();
     updateTOC2ContentsList();
     syncDropdownsToState();
