@@ -70,14 +70,18 @@ export function updateTOC2OptionsList() {
     liEl.className = `nav-item toc-entry toc-h3 ${TOC_ITEM_CLASS}`;
     liEl.dataset.groupId = group.id || "";
 
+    const selectId = `rocm-docs-toc2-select-${CSS.escape(group.id || headingText)}`;
+
     const label = document.createElement("label");
     label.className = DROPDOWN_INPUT_LABEL_CLASS;
     label.textContent = headingText;
-    label.htmlFor = headingText;
+    label.htmlFor = selectId;
 
     const selectEl = document.createElement("select");
+    selectEl.id = selectId;
     selectEl.className = `form-select ${DROPDOWN_INPUT_CLASS}`;
     selectEl.name = headingText;
+    selectEl.setAttribute("aria-label", headingText);
 
     const mainSelect = group.querySelector(`.${DROPDOWN_INPUT_CLASS}`);
     const mainTs = mainSelect?.tomselect;
@@ -191,12 +195,10 @@ function initTOC2ContentsList() {
     const targetId = h.id || (section ? section.id : "");
     a.href = targetId ? `#${targetId}` : "#";
 
-    // Use only the text from the heading (ignore headerlink icon etc.)
+    // Use only the text from the heading (strip permalink anchors and icons).
     const clone = h.cloneNode(true);
-    const firstTextNode = clone.childNodes.length > 0
-      ? clone.childNodes[0].textContent
-      : "";
-    a.textContent = (firstTextNode || "").trim();
+    clone.querySelectorAll("a.headerlink, i, svg").forEach((el) => el.remove());
+    a.textContent = clone.textContent.trim();
 
     li.dataset.targetId = targetId;
     li.appendChild(a);

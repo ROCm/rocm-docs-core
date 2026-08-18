@@ -164,7 +164,7 @@ html[data-theme="dark"] {
     flex: 0 0 100%;
     max-width: 100%;
 
-    /* When stacked, puth the accent on the bottom */
+    /* When stacked, put the accent on the bottom */
     border-right: 0;
     border-bottom: solid 3px var(--rocm-docs-selector-accent-color);
   }

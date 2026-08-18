@@ -18,19 +18,21 @@ def register_output_flags(app):
     Both the matrix and selector extensions read these flags, and either may be
     loaded first, so registration must not fail if the value already exists:
 
-    - ``rocm_selector_pdf_generation``: tri-state PDF (LaTeX) toggle.
-        * ``True``  — generate all install-page combinations (default).
-        * ``False`` — omit custom matrix/selector content from the PDF.
-        * ``list``  — generate only the install-page combinations matching one
-          of the given spec dicts (e.g. ``[{"os": "ubuntu", "i": "pkgman"}]``);
-          each dict is a partial match, unspecified keys act as wildcards.
+    - ``rocm_docs_pdf_mock_selector_state``: controls PDF (LaTeX) selector expansion.
+        * ``False`` — omit selector content from the PDF entirely (default).
+        * ``True``  — expand all selector combinations for every page.
+        * ``dict``  — page-scoped mock state: maps each docname (source-file
+          path without extension) to a list of spec dicts representing simulated
+          selector selections.  Only combos matching at least one spec are
+          included.  Pages not listed in the dict are skipped.
+          Example: ``{"install/rocm": [{"os": "ubuntu", "ver": "24.04"}]}``
     - ``rocm_selector_markdown_generation``: when False, custom matrix/selector
       content is dropped from Markdown (llms-full.txt) output.
     """
-    if "rocm_selector_pdf_generation" not in app.config:
-        # Accept either a bool (all/none) or a list (subset of combos).
+    if "rocm_docs_pdf_mock_selector_state" not in app.config:
+        # Accept either a bool (all/none) or a dict (page-scoped mock states).
         app.add_config_value(
-            "rocm_selector_pdf_generation", True, "env", types=(bool, list)
+            "rocm_docs_pdf_mock_selector_state", False, "env", types=(bool, dict)
         )
     if "rocm_selector_markdown_generation" not in app.config:
         app.add_config_value("rocm_selector_markdown_generation", True, "env")
@@ -80,7 +82,7 @@ def kv_to_data_attr(name, kv_str, separator="="):
 
     Args:
         name: Name of the data attribute; it will be prefixed with "data-" for conventional HTML.
-        condition_str: String in format "key=value os=ubuntu".
+        kv_str: String in format "key=value os=ubuntu".
 
     Example output:
         'data-show-cond="{"os": "ubuntu"}"'

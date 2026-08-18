@@ -8,10 +8,9 @@ from .nodes import (
     SelectorDropdownDirective,
     SelectorGroup,
     SelectorGroupDirective,
-    SelectorInfo,
-    SelectorInfoDirective,
     SelectorOption,
     SelectorOptionDirective,
+    register_selector_assets,
 )
 from .transforms import (
     SelectorPDFReorganizeTransform,
@@ -40,18 +39,29 @@ def _merge_selector_pages(_app, env, _docnames, other):
 
 def _has_toc2_metadata(env, docname):
     metadata = env.metadata.get(docname, {})
-    return "selector-toc2" in metadata or "selector-toc2-icon" in metadata
+    return "selector-toc2" in metadata
 
 
 def _inject_selector_sidebar(app, env):
     selector_pages: set[str] = getattr(env, "_selector_pages", set())
     if not selector_pages:
         return
-    sidebar = app.config.html_theme_options.setdefault(
-        "secondary_sidebar_items", {}
-    )
-    if not isinstance(sidebar, dict):
-        return
+    theme_opts = app.config.html_theme_options
+
+    # pydata-sphinx-theme accepts secondary_sidebar_items as either a list
+    # (global default for every page) or a dict (per-page mapping).  Normalize
+    # to a dict so we can inject per-page overrides without losing the global
+    # defaults the project already configured.  Always write the result back so
+    # pydata-sphinx-theme picks it up regardless of which branch we take.
+    existing = theme_opts.get("secondary_sidebar_items")
+    if isinstance(existing, list):
+        sidebar: dict[str, list[str]] = {"**": existing}
+    elif isinstance(existing, dict):
+        sidebar = existing
+    else:
+        sidebar = {}
+    theme_opts["secondary_sidebar_items"] = sidebar
+
     sidebar.setdefault("**", ["page-toc"])
     for docname in selector_pages:
         if _has_toc2_metadata(env, docname) and docname not in sidebar:
@@ -84,15 +94,6 @@ def setup(app):
         texinfo=(skip_node, noop),
     )
     app.add_node(
-        SelectorInfo,
-        html=(SelectorInfo.visit_html, SelectorInfo.depart_html),
-        markdown=(skip_node, noop),
-        latex=(skip_node, noop),
-        text=(skip_node, noop),
-        man=(skip_node, noop),
-        texinfo=(skip_node, noop),
-    )
-    app.add_node(
         SelectorOption,
         html=(SelectorOption.visit_html, SelectorOption.depart_html),
         markdown=(skip_node, noop),
@@ -113,7 +114,6 @@ def setup(app):
 
     app.add_directive("selector", SelectorGroupDirective)
     app.add_directive("selector-dropdown", SelectorDropdownDirective)
-    app.add_directive("selector-info", SelectorInfoDirective)
     app.add_directive("selector-option", SelectorOptionDirective)
     app.add_directive("selected-content", SelectedContentDirective)
     app.add_directive("selected", SelectedContentDirective)
@@ -125,6 +125,7 @@ def setup(app):
     register_output_flags(app)
 
     app.connect("config-inited", _add_templates)
+    app.connect("builder-inited", register_selector_assets)
     app.connect("env-purge-doc", _purge_selector_pages)
     app.connect("env-merge-info", _merge_selector_pages)
     app.connect("env-updated", _inject_selector_sidebar)

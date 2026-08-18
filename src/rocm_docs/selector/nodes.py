@@ -1,10 +1,9 @@
 """Docutils/Sphinx node classes and directives for the selector extension."""
 
-from typing import Any, ClassVar
-
 import html as html_mod
 import json
 from pathlib import Path
+from typing import ClassVar
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -12,29 +11,81 @@ from sphinx.util.docutils import SphinxDirective
 
 from .utils import kv_to_data_attr, logger, normalize_key
 
+# CSS classes forming the Python / CSS / JS interface
+SELECTOR_GROUP_CLASS = "rocm-docs-selector-group"
+SELECTOR_HEADING_CLASS = "rocm-docs-selector-group-heading"
+SELECTOR_HEADING_TEXT_CLASS = "rocm-docs-selector-group-heading-text"
+SELECTOR_OPTION_CLASS = "rocm-docs-selector-option"
+SELECTOR_DROPDOWN_INPUT_CLASS = "rocm-docs-selector-dropdown-input"
+SELECTOR_ICON_CLASS = "rocm-docs-selector-icon"
+SELECTED_CONTENT_CLASS = "rocm-docs-selected-content"
+CUSTOM_HEADING_CLASS = "rocm-docs-custom-heading"
+DEFAULT_OPTION_CLASS = "rocm-docs-selector-option-default"
 
-def _register_selector_assets(env):
-    if hasattr(env, "_selector_js_added"):
-        return
+# Defaults
+DEFAULT_HEADING_WIDTH = 3
+DEFAULT_OPTION_WIDTH = 6
+
+
+def register_selector_assets(app):
+    """Register selector static assets with the Sphinx application.
+
+    Must be called from a setup-time event (e.g. ``builder-inited``) so that
+    ``app.add_js_file`` / ``app.add_css_file`` are invoked before parallel
+    reading starts.  Calling these during directive ``run()`` is unsafe with
+    ``parallel_read_safe=True`` because worker-process environments are merged
+    back to the parent without the app-level asset registrations.
+    """
     static_assets_dir = Path(__file__).parent / "static"
-    env.app.config.html_static_path.append(str(static_assets_dir))
+    if str(static_assets_dir) not in app.config.html_static_path:
+        app.config.html_static_path.append(str(static_assets_dir))
     # https://tom-select.js.org/
-    env.app.add_js_file("vendor/tom-select.base.min.js")
-    env.app.add_css_file("vendor/tom-select.bootstrap5.min.css")
-    env.app.add_js_file("selector.js", type="module", defer="defer")
-    env.app.add_css_file("selector.css")
-    env._selector_js_added = True
+    app.add_js_file("vendor/tom-select.base.min.js")
+    app.add_css_file("vendor/tom-select.bootstrap5.min.css")
+    app.add_js_file("selector.js", type="module", defer="defer")
+    app.add_css_file("selector.css")
 
 
 def _warn_must_be_nested(state, lineno, docname, directive_name, parent_name):
-    parent = getattr(state, "parent", None)
-    if not parent or not any(
-        isinstance(p, SelectorGroup) for p in parent.traverse(include_self=True)
-    ):
-        logger.warning(
-            f"'.. {directive_name}::' at line {lineno} should be nested under a '.. {parent_name}::' directive",
-            location=(docname, lineno),
-        )
+    # Walk the ancestor chain (not descendants) to find a SelectorGroup.
+    node = getattr(state, "parent", None)
+    while node is not None:
+        if isinstance(node, SelectorGroup):
+            return
+        node = node.parent
+    logger.warning(
+        f"'.. {directive_name}::' at line {lineno} should be nested"
+        f" under a '.. {parent_name}::' directive",
+        location=(docname, lineno),
+    )
+
+
+def _parse_heading_width(value, lineno, docname):
+    """Parse and validate :heading-width: (1-12 integer or CSS percentage)."""
+    if isinstance(value, str) and value.endswith("%"):
+        try:
+            pct = float(value[:-1])
+            if pct <= 0 or pct > 100:
+                raise ValueError("must be between 0 and 100")
+            return value
+        except ValueError as e:
+            logger.warning(
+                f"Invalid percentage heading-width '{value}' ({e}), using default",
+                location=(docname, lineno),
+            )
+            return DEFAULT_HEADING_WIDTH
+    else:
+        try:
+            col_num = int(value)
+            if col_num < 1 or col_num > 12:
+                raise ValueError("must be between 1 and 12")
+            return col_num
+        except ValueError as e:
+            logger.warning(
+                f"Invalid heading-width '{value}' ({e}), using default",
+                location=(docname, lineno),
+            )
+            return DEFAULT_HEADING_WIDTH
 
 
 def _parse_width(value, lineno, docname):
@@ -49,7 +100,7 @@ def _parse_width(value, lineno, docname):
                 f"Invalid percentage width '{value}' ({e}), using default",
                 location=(docname, lineno),
             )
-            return 6
+            return DEFAULT_OPTION_WIDTH
     else:
         try:
             col_num = int(value)
@@ -61,7 +112,7 @@ def _parse_width(value, lineno, docname):
                 f"Invalid width '{value}' ({e}), using default",
                 location=(docname, lineno),
             )
-            return 6
+            return DEFAULT_OPTION_WIDTH
 
 
 class SelectorGroup(nodes.General, nodes.Element):
@@ -76,38 +127,41 @@ class SelectorGroup(nodes.General, nodes.Element):
         heading_width = node["heading-width"]
         is_dropdown = node.get("dropdown-input", False)
 
-        info_node = next(node.findall(SelectorInfo), None)
-        info_link = info_node["link"] if info_node else None
-        info_icon = info_node["icon"] if info_node else None
-
-        info_icon_html = (
-            f'<a href="{info_link}" target="_blank">'
-            f'<i class="rocm-docs-selector-icon {info_icon}"></i>'
-            f"</a>"
-            if info_link
-            else ""
-        )
-
         role_attr = "" if is_dropdown else 'role="radiogroup"'
         select_open = (
-            f'<select class="form-select rocm-docs-selector-dropdown-input"'
+            f'<select class="form-select {SELECTOR_DROPDOWN_INPUT_CLASS}"'
             f' data-selector-key="{key}" aria-label="{label}">'
             if is_dropdown
             else ""
         )
 
-        translator.body.append(f"""
-            <div id="{nodes.make_id(label)}"
-                class="rocm-docs-selector-group row pt-2"
+        if isinstance(heading_width, str) and heading_width.endswith("%"):
+            remainder = f"{100 - float(heading_width[:-1])}%"
+            heading_div_attrs = (
+                f'class="me-1 px-2 {SELECTOR_HEADING_CLASS}"'
+                f' style="width: {heading_width}"'
+            )
+            content_div_attrs = f'class="row pe-0" style="width: {remainder}"'
+        else:
+            col = int(heading_width)
+            heading_div_attrs = (
+                f'class="col-{col} me-1 px-2 {SELECTOR_HEADING_CLASS}"'
+            )
+            content_div_attrs = f'class="row col-{12 - col} pe-0"'
+
+        translator.body.append(
+            f"""
+            <div id="{node['dom-id']}"
+                class="{SELECTOR_GROUP_CLASS} row pt-2"
                 data-selector-key="{key}"
                 {show_cond_attr}
                 {role_attr}
                 aria-label="{label}"
             >
-                <div class="col-{heading_width} me-1 px-2 rocm-docs-selector-group-heading">
-                    <span class="rocm-docs-selector-group-heading-text">{label}{info_icon_html}</span>
+                <div {heading_div_attrs}>
+                    <span class="{SELECTOR_HEADING_TEXT_CLASS}">{label}</span>
                 </div>
-                <div class="row col-{12 - heading_width} pe-0">
+                <div {content_div_attrs}>
                 {select_open}
             """.strip())
 
@@ -129,8 +183,6 @@ class _SelectorGroupBase(SphinxDirective):
     _is_dropdown = False  # overridden in subclass
 
     def run(self):
-        _register_selector_assets(self.env)
-
         if not hasattr(self.env, "_selector_pages"):
             self.env._selector_pages = set()  # type: ignore[attr-defined]
         self.env._selector_pages.add(self.env.docname)  # type: ignore[attr-defined]
@@ -140,8 +192,30 @@ class _SelectorGroupBase(SphinxDirective):
         node["label"] = label
         node["key"] = normalize_key(self.options.get("key", label))
         node["show-cond"] = self.options.get("show-cond", "")
-        node["heading-width"] = self.options.get("heading-width", 3)
+        node["heading-width"] = _parse_heading_width(
+            self.options.get("heading-width", DEFAULT_HEADING_WIDTH),
+            self.lineno,
+            self.env.docname,
+        )
         node["dropdown-input"] = self._is_dropdown
+
+        # Allocate a document-unique DOM ID for this group so repeated titles
+        # (e.g. two "Installation method" selectors on one page) do not
+        # collide in the HTML output and confuse getUniqueGroups.
+        if not hasattr(self.env, "_selector_group_ids"):
+            self.env._selector_group_ids = {}  # type: ignore[attr-defined]
+        page_ids = self.env._selector_group_ids.setdefault(self.env.docname, set())  # type: ignore[attr-defined]
+        base_id = (
+            nodes.make_id(label)
+            or "selector-" + label.replace(" ", "-").lower()
+        )
+        candidate = base_id
+        counter = 1
+        while candidate in page_ids:
+            counter += 1
+            candidate = f"{base_id}-{counter}"
+        page_ids.add(candidate)
+        node["dom-id"] = candidate
 
         self.state.nested_parse(self.content, self.content_offset, node)
 
@@ -180,10 +254,10 @@ class _SelectorGroupBase(SphinxDirective):
 class SelectorGroupDirective(_SelectorGroupBase):
     """Directive for a radio-button selector group row."""
 
-    option_spec: ClassVar[dict[str, Any]] = {
+    option_spec: ClassVar[dict[str, object]] = {
         "key": directives.unchanged,
         "show-cond": directives.unchanged,
-        "heading-width": directives.nonnegative_int,
+        "heading-width": directives.unchanged,
     }
     _is_dropdown = False
 
@@ -191,66 +265,13 @@ class SelectorGroupDirective(_SelectorGroupBase):
 class SelectorDropdownDirective(_SelectorGroupBase):
     """Directive for a dropdown selector group row."""
 
-    option_spec: ClassVar[dict[str, Any]] = {
+    option_spec: ClassVar[dict[str, object]] = {
         "key": directives.unchanged,
         "show-cond": directives.unchanged,
-        "heading-width": directives.nonnegative_int,
+        "heading-width": directives.unchanged,
         "sort": directives.unchanged,
     }
     _is_dropdown = True
-
-
-class SelectorInfo(nodes.General, nodes.Element):
-    """Represents an informational icon/link associated with a selector group.
-
-    Appears as a clickable icon in the selector group heading.
-
-    rST usage:
-
-    .. selector:: AMD EPYC Server CPU
-       :key: cpu
-
-       .. selector-info:: https://www.amd.com/en/products/processors/server/epyc.html
-          :icon: fa-solid fa-circle-info fa-lg
-
-       .. selector-option:: EPYC 9005 (5th gen.)
-          :value: 9005
-    """
-
-    @staticmethod
-    def visit_html(translator, node):
-        """No-op; rendering is handled by the parent SelectorGroup."""
-        pass  # rendering handled by SelectorGroup
-
-    @staticmethod
-    def depart_html(translator, node):
-        """No-op depart to prevent NotImplementedError."""
-        pass  # prevent NotImplementedError
-
-
-class SelectorInfoDirective(SphinxDirective):
-    """Directive for adding an informational icon/link to a selector group heading."""
-
-    required_arguments = 1  # link URL
-    final_argument_whitespace = True
-    has_content = False
-    option_spec: ClassVar[dict[str, Any]] = {"icon": directives.unchanged}
-
-    def run(self):
-        """Parse the directive and return a SelectorInfo node."""
-        node = SelectorInfo()
-        node["link"] = self.arguments[0]
-        node["icon"] = self.options.get("icon", "fa-solid fa-circle-info fa-lg")
-
-        _warn_must_be_nested(
-            self.state,
-            self.lineno,
-            self.env.docname,
-            "selector-info",
-            "selector",
-        )
-
-        return [node]
 
 
 class SelectorOption(nodes.General, nodes.Element):
@@ -280,16 +301,22 @@ class SelectorOption(nodes.General, nodes.Element):
 
         if is_dropdown:
             display_text = alt_name if alt_name else label
+            default_class = (
+                f" {DEFAULT_OPTION_CLASS}" if default else ""
+            )
+            toc_label_attr = f' data-toc-label="{toc_label}"' if toc_label else ""
             translator.body.append(
-                f'<option class="rocm-docs-selector-option"'
+                f'<option class="{SELECTOR_OPTION_CLASS}{default_class}"'
                 f' value="{value}"'
                 f' data-selector-key="{node.get("group_key", "")}"'
                 f' data-selector-value="{value}"'
-                f"{' selected' if default else ''} {show_cond_attr} {disable_cond_attr} {extra_bindings_attr}>{display_text}</option>"
+                f"{' selected' if default else ''}"
+                f" {show_cond_attr} {disable_cond_attr}"
+                f"{toc_label_attr} {extra_bindings_attr}>{display_text}</option>"
             )
             return
 
-        default_class = "rocm-docs-selector-option-default" if default else ""
+        default_class = DEFAULT_OPTION_CLASS if default else ""
 
         if isinstance(width, str) and width.endswith("%"):
             width_class = ""
@@ -301,7 +328,7 @@ class SelectorOption(nodes.General, nodes.Element):
         toc_label_attr = f'data-toc-label="{toc_label}"' if toc_label else ""
 
         translator.body.append(f"""
-            <div class="rocm-docs-selector-option {default_class} {width_class} px-2"
+            <div class="{SELECTOR_OPTION_CLASS} {default_class} {width_class} px-2"
                 data-selector-key="{node.get("group_key", "")}"
                 data-selector-value="{value}"
                 {show_cond_attr}
@@ -324,7 +351,7 @@ class SelectorOption(nodes.General, nodes.Element):
         icon = node["icon"]
         if icon:
             translator.body.append(
-                f'<i class="rocm-docs-selector-icon {icon}"></i>'
+                f'<i class="{SELECTOR_ICON_CLASS} {icon}"></i>'
             )
         translator.body.append("</div>")
 
@@ -334,7 +361,7 @@ class SelectorOptionDirective(SphinxDirective):
 
     required_arguments = 1  # text of tile
     final_argument_whitespace = True
-    option_spec: ClassVar[dict[str, Any]] = {
+    option_spec: ClassVar[dict[str, object]] = {
         "value": directives.unchanged,
         "alt-name": directives.unchanged,
         "show-cond": directives.unchanged,
@@ -356,12 +383,15 @@ class SelectorOptionDirective(SphinxDirective):
         # bindings, e.g. ":value: mi355x gfx=gfx950 arch=cdna3".
         # The first token without '=' is the option's own value; the rest set
         # additional selector keys when this option is chosen.
-        value_raw = self.options.get("value", label)
-        tokens = value_raw.split()
-        bare_tokens = [t for t in tokens if "=" not in t]
-        kv_tokens = [t for t in tokens if "=" in t]
-
-        node["value"] = normalize_key(bare_tokens[0] if bare_tokens else label)
+        if "value" in self.options:
+            value_raw = self.options["value"]
+            tokens = value_raw.split()
+            bare_tokens = [t for t in tokens if "=" not in t]
+            kv_tokens = [t for t in tokens if "=" in t]
+            node["value"] = normalize_key(bare_tokens[0] if bare_tokens else label)
+        else:
+            kv_tokens = []
+            node["value"] = normalize_key(label)
 
         extra_bindings = {}
         for token in kv_tokens:
@@ -374,7 +404,9 @@ class SelectorOptionDirective(SphinxDirective):
         node["disable-cond"] = self.options.get("disable-cond", "")
         node["default"] = "default" in self.options
         node["width"] = _parse_width(
-            self.options.get("width", "6"), self.lineno, self.env.docname
+            self.options.get("width", DEFAULT_OPTION_WIDTH),
+            self.lineno,
+            self.env.docname,
         )
         node["alt-name"] = self.options.get("alt-name", "")
         node["icon"] = self.options.get("icon")
@@ -407,24 +439,27 @@ class SelectedContent(nodes.General, nodes.Element):
         show_cond_attr = kv_to_data_attr("show-cond", show_cond)
         classes = " ".join(node.get("class", []))
         heading = node.get("heading", "")
-        heading_level = min(node.get("heading-level") or 2, 6)
+        heading_level = max(2, min(node.get("heading-level") or 2, 6))
 
         id_attr = ""
         heading_elem = ""
+        explicit_id = node.get("id", "")
         if heading:
             combined_show_cond = node.get("combined-show-cond", show_cond)
-            id_attr = nodes.make_id(f"{heading}-{combined_show_cond}")
+            id_attr = explicit_id or nodes.make_id(f"{heading}-{combined_show_cond}")
             heading_elem = (
-                f'<h{heading_level} class="rocm-docs-custom-heading">'
+                f'<h{heading_level} class="{CUSTOM_HEADING_CLASS}">'
                 f'{heading}<a class="headerlink" href="#{id_attr}" title="Link to this heading">#</a>'
                 f"</h{heading_level}>"
             )
+        elif explicit_id:
+            id_attr = explicit_id
 
         tag = "section" if heading else "div"
         translator.body.append(f"""
             <{tag}
                 id="{id_attr}"
-                class="rocm-docs-selected-content {classes}"
+                class="{SELECTED_CONTENT_CLASS} {classes}"
                 {show_cond_attr}
                 aria-hidden="true">
                 {heading_elem}
@@ -442,13 +477,13 @@ class SelectedContent(nodes.General, nodes.Element):
 
         Normally SelectorToSectionTransform rewrites every SelectedContent into
         plain sections before the writer runs, so this handler sees nothing. But
-        when ``rocm_selector_pdf_generation`` is False that transform is skipped
-        for LaTeX, leaving raw SelectedContent nodes in the tree. A plain no-op
-        visit would still let the writer descend into and render all children;
-        skip the whole subtree instead so the conditional install content is
-        genuinely omitted from the PDF.
+        when ``rocm_docs_pdf_mock_selector_state`` is False that transform is
+        skipped for LaTeX, leaving raw SelectedContent nodes in the tree. A
+        plain no-op visit would still let the writer descend into and render
+        all children; skip the whole subtree instead so the conditional content
+        is genuinely omitted from the PDF.
         """
-        if not translator.config.rocm_selector_pdf_generation:
+        if not translator.config.rocm_docs_pdf_mock_selector_state:
             raise nodes.SkipNode
         # PDF generation enabled (or a non-LaTeX static builder): let the
         # already-transformed children render as before.
@@ -491,9 +526,9 @@ class SelectedContentDirective(SphinxDirective):
     required_arguments = 1  # condition (e.g., os=ubuntu)
     final_argument_whitespace = True
     has_content = True
-    option_spec: ClassVar[dict[str, Any]] = {
+    option_spec: ClassVar[dict[str, object]] = {
         "id": directives.unchanged,
-        "class": directives.unchanged,
+        "class": directives.class_option,
         "heading": directives.unchanged,
         "heading-level": directives.nonnegative_int,
         "no-pdf": directives.flag,
