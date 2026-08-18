@@ -19,7 +19,7 @@ The shared files are:
 - `data/google_site_verification.txt`
 - `data/projects.yaml` (the intersphinx project mapping)
 
-## Why
+## Benefits of local common data
 
 Previously each of these files was fetched from `raw.githubusercontent.com` on
 every build, and the version and toolkit files were fetched once per page.
@@ -31,7 +31,7 @@ throttling.
 Reading from a pinned local checkout removes those requests and the retry
 loops, and makes builds depend on committed data rather than a moving branch.
 
-## How the checkout is resolved
+## Determining the common data directory
 
 At `config-inited`, `rocm_docs` resolves the checkout location in this order
 (see `rocm_docs.common.ensure_common_dir`):
