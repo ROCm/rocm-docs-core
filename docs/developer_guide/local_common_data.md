@@ -24,9 +24,9 @@ The shared files are:
 Previously each of these files was fetched from `raw.githubusercontent.com` on
 every build, and the version and toolkit files were fetched once per page.
 `projects.yaml` also required an unauthenticated GitHub API call. Across the
-parallel component-repo CI this produced hundreds of requests per build and hit
-GitHub rate limits, and the retry loops could stall a build for minutes on
-throttling.
+parallel component-repository CI this produced hundreds of requests per build
+and hit GitHub rate limits, and the retry loops could stall a build for minutes
+on throttling.
 
 Reading from a pinned local checkout removes those requests and the retry
 loops, and makes builds depend on committed data rather than a moving branch.
