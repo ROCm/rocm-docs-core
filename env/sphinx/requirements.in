@@ -1,7 +1,7 @@
 # Unified requirements.in for all ROCm docs
 # To regenerate: pip-compile requirements.in
 
-rocm-docs-core[api_reference,llms]==1.38.0
+rocm-docs-core[api_reference,llms]==1.40.0
 
 # Required by: most projects
 sphinxcontrib-datatemplates==0.11.0
