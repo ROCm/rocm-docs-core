@@ -1,9 +1,11 @@
 """Docutils/Sphinx node classes and directives for the selector extension."""
 
+from typing import Any, ClassVar
+
 import html as html_mod
 import json
+from collections.abc import Callable
 from pathlib import Path
-from typing import ClassVar
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -25,6 +27,7 @@ DEFAULT_OPTION_CLASS = "rocm-docs-selector-option-default"
 # Defaults
 DEFAULT_HEADING_WIDTH = 3
 DEFAULT_OPTION_WIDTH = 6
+DirectiveOptionSpec = dict[str, Callable[[str], Any]]
 
 
 def register_selector_assets(app):
@@ -163,17 +166,20 @@ class SelectorGroup(nodes.General, nodes.Element):
                 </div>
                 <div {content_div_attrs}>
                 {select_open}
-            """.strip())
+            """.strip()
+        )
 
     @staticmethod
     def depart_html(translator, node):
         """Emit the closing HTML for a selector group row."""
         is_dropdown = node.get("dropdown-input", False)
-        translator.body.append(f"""
+        translator.body.append(
+            f"""
                 {"</select>" if is_dropdown else ""}
                 </div>
             </div>
-            """)
+            """
+        )
 
 
 class _SelectorGroupBase(SphinxDirective):
@@ -254,7 +260,7 @@ class _SelectorGroupBase(SphinxDirective):
 class SelectorGroupDirective(_SelectorGroupBase):
     """Directive for a radio-button selector group row."""
 
-    option_spec: ClassVar[dict[str, object]] = {
+    option_spec: ClassVar[DirectiveOptionSpec] = {
         "key": directives.unchanged,
         "show-cond": directives.unchanged,
         "heading-width": directives.unchanged,
@@ -265,7 +271,7 @@ class SelectorGroupDirective(_SelectorGroupBase):
 class SelectorDropdownDirective(_SelectorGroupBase):
     """Directive for a dropdown selector group row."""
 
-    option_spec: ClassVar[dict[str, object]] = {
+    option_spec: ClassVar[DirectiveOptionSpec] = {
         "key": directives.unchanged,
         "show-cond": directives.unchanged,
         "heading-width": directives.unchanged,
@@ -301,10 +307,10 @@ class SelectorOption(nodes.General, nodes.Element):
 
         if is_dropdown:
             display_text = alt_name if alt_name else label
-            default_class = (
-                f" {DEFAULT_OPTION_CLASS}" if default else ""
+            default_class = f" {DEFAULT_OPTION_CLASS}" if default else ""
+            toc_label_attr = (
+                f' data-toc-label="{toc_label}"' if toc_label else ""
             )
-            toc_label_attr = f' data-toc-label="{toc_label}"' if toc_label else ""
             translator.body.append(
                 f'<option class="{SELECTOR_OPTION_CLASS}{default_class}"'
                 f' value="{value}"'
@@ -327,7 +333,8 @@ class SelectorOption(nodes.General, nodes.Element):
 
         toc_label_attr = f'data-toc-label="{toc_label}"' if toc_label else ""
 
-        translator.body.append(f"""
+        translator.body.append(
+            f"""
             <div class="{SELECTOR_OPTION_CLASS} {default_class} {width_class} px-2"
                 data-selector-key="{node.get("group_key", "")}"
                 data-selector-value="{value}"
@@ -341,7 +348,8 @@ class SelectorOption(nodes.General, nodes.Element):
                 {width_style}
             >
                 <span>{label}</span>
-            """.strip())
+            """.strip()
+        )
 
     @staticmethod
     def depart_html(translator, node):
@@ -361,7 +369,7 @@ class SelectorOptionDirective(SphinxDirective):
 
     required_arguments = 1  # text of tile
     final_argument_whitespace = True
-    option_spec: ClassVar[dict[str, object]] = {
+    option_spec: ClassVar[DirectiveOptionSpec] = {
         "value": directives.unchanged,
         "alt-name": directives.unchanged,
         "show-cond": directives.unchanged,
@@ -388,7 +396,9 @@ class SelectorOptionDirective(SphinxDirective):
             tokens = value_raw.split()
             bare_tokens = [t for t in tokens if "=" not in t]
             kv_tokens = [t for t in tokens if "=" in t]
-            node["value"] = normalize_key(bare_tokens[0] if bare_tokens else label)
+            node["value"] = normalize_key(
+                bare_tokens[0] if bare_tokens else label
+            )
         else:
             kv_tokens = []
             node["value"] = normalize_key(label)
@@ -446,7 +456,9 @@ class SelectedContent(nodes.General, nodes.Element):
         explicit_id = node.get("id", "")
         if heading:
             combined_show_cond = node.get("combined-show-cond", show_cond)
-            id_attr = explicit_id or nodes.make_id(f"{heading}-{combined_show_cond}")
+            id_attr = explicit_id or nodes.make_id(
+                f"{heading}-{combined_show_cond}"
+            )
             heading_elem = (
                 f'<h{heading_level} class="{CUSTOM_HEADING_CLASS}">'
                 f'{heading}<a class="headerlink" href="#{id_attr}" title="Link to this heading">#</a>'
@@ -456,14 +468,16 @@ class SelectedContent(nodes.General, nodes.Element):
             id_attr = explicit_id
 
         tag = "section" if heading else "div"
-        translator.body.append(f"""
+        translator.body.append(
+            f"""
             <{tag}
                 id="{id_attr}"
                 class="{SELECTED_CONTENT_CLASS} {classes}"
                 {show_cond_attr}
                 aria-hidden="true">
                 {heading_elem}
-            """.strip())
+            """.strip()
+        )
 
     @staticmethod
     def depart_html(translator, node):
@@ -526,7 +540,7 @@ class SelectedContentDirective(SphinxDirective):
     required_arguments = 1  # condition (e.g., os=ubuntu)
     final_argument_whitespace = True
     has_content = True
-    option_spec: ClassVar[dict[str, object]] = {
+    option_spec: ClassVar[DirectiveOptionSpec] = {
         "id": directives.unchanged,
         "class": directives.class_option,
         "heading": directives.unchanged,
