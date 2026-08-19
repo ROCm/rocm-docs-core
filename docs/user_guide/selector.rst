@@ -197,32 +197,6 @@ for the option's group key, and ``gfx=gfx950`` and ``arch=cdna3`` are also set.
 This allows downstream ``selected-content`` blocks to condition on ``gfx`` or
 ``arch`` without a separate visible selector.
 
-``selector-info``
-~~~~~~~~~~~~~~~~~
-
-An informational icon added to a selector group heading. Clicking it opens a
-link. Must be nested inside a ``selector`` or ``selector-dropdown``.
-
-.. code-block:: rst
-
-   .. selector:: AMD GPU
-      :key: gpu
-
-      .. selector-info:: https://rocm.docs.amd.com/en/latest/compatibility/compatibility-matrix.html
-         :icon: fa-solid fa-circle-info fa-lg
-
-      .. selector-option:: MI355X
-         :value: mi355x
-
-.. list-table::
-   :header-rows: 1
-   :widths: 25 75
-
-   * - Option
-     - Description
-   * - ``:icon:``
-     - FontAwesome icon class. Default: ``fa-solid fa-circle-info fa-lg``.
-
 ``selected-content`` / ``selected``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
