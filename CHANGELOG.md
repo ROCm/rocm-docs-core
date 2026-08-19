@@ -1,3 +1,16 @@
+## v1.40.0 (2026-08-19)
+
+### Feat
+
+- **core**: add `rocm_docs_pdf_exclude_patterns` config option
+- add selector directive
+
+### Fix
+
+- **selector**: rocm_pdf_mock_selector_state options
+- add missing python-discovery dependency to requirements.txt
+- **projects.yaml**: malformed hipthreads entry
+
 ## v1.39.0 (2026-08-07)
 
 ### Feat
