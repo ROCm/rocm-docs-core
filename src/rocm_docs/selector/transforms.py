@@ -288,9 +288,7 @@ def _gather_content(
             into.append(child.deepcopy())
 
 
-def _remap_references(
-    tree: list[nodes.Node], id_remap: dict[str, str]
-) -> None:
+def _remap_references(tree: list[nodes.Node], id_remap: dict[str, str]) -> None:
     """Update ``reference['refid']`` values in *tree* using *id_remap*.
 
     Called after each combo's content nodes are attached so that internal
@@ -363,8 +361,13 @@ def _collect_selector_options(
             # preserved so that _iter_combos can evaluate all possible paths for
             # visibility; dropping one hides values that are reachable via the
             # alternative condition.
-            if val and (val, group_show_cond, option_show_cond) not in seen[key]:
-                opts[key].append((val, label, group_show_cond, option_show_cond))
+            if (
+                val
+                and (val, group_show_cond, option_show_cond) not in seen[key]
+            ):
+                opts[key].append(
+                    (val, label, group_show_cond, option_show_cond)
+                )
                 seen[key].add((val, group_show_cond, option_show_cond))
     return opts
 
@@ -407,7 +410,9 @@ def _iter_combos(
         if val not in seen_vals:
             vals_ordered.append(val)
             seen_vals.add(val)
-        val_label_options.setdefault(val, []).append((label, group_cond, option_cond))
+        val_label_options.setdefault(val, []).append(
+            (label, group_cond, option_cond)
+        )
 
     # Only iterate values not definitively hidden given the partial combo so far.
     # A value is kept if at least one of its (group, option) condition pairs is

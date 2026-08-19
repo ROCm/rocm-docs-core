@@ -32,7 +32,10 @@ def register_output_flags(app):
     if "rocm_docs_pdf_mock_selector_state" not in app.config:
         # Accept either a bool (all/none) or a dict (page-scoped mock states).
         app.add_config_value(
-            "rocm_docs_pdf_mock_selector_state", False, "env", types=(bool, dict)
+            "rocm_docs_pdf_mock_selector_state",
+            False,
+            "env",
+            types=(bool, dict),
         )
     if "rocm_selector_markdown_generation" not in app.config:
         app.add_config_value("rocm_selector_markdown_generation", True, "env")
