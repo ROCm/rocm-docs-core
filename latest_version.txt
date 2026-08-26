@@ -1,9 +1,9 @@
-rocm: 7.14.0
+rocm: 10.0.0
 ai-developer-hub: v15.0
 rocm-ds: 26.03
 rocm-ls: 26.03
 rocm-simulation: 25.11
 rocm-finance: 26.05
-amdgpu: 31.40.1
+amdgpu: 31.50.0
 rocm-llmext: 26.02
 hyperloom: 1.0.0a1
