@@ -1,3 +1,10 @@
+## v1.40.1 (2026-08-27)
+
+### Fix
+
+- add ROCm.AI nav item to header flavors
+- add rocm-ai docs flavor
+
 ## v1.40.0 (2026-08-19)
 
 ### Feat
