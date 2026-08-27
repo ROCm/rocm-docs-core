@@ -10,15 +10,12 @@
 # To add a new pair, append an entry following the same format.
 
 pairs:
-  - external: ROCm/ROCm
-    internal: AMD-ROCm-Internal/rocm-docs-internal
+  - external: ROCm/legacy-rocm-build
+    internal: AMD-ROCm-Internal/rocm-internal
     app: emu
-  - external: ROCm/ROCm
-    internal: ROCm/ROCm-internal
-    app: github
-  - external: ROCm/rocm-install-on-linux
-    internal: ROCm/rocm-install-on-linux-internal
-    app: github
+  - external: ROCm/gpuaidev
+    internal: AMD-ROCm-Internal/gpuaidev-internal
+    app: emu
   - external: ROCm/gpu-cluster-networking
     internal: ROCm/gpu-cluster-networking-internal
     app: github
