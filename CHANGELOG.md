@@ -1,3 +1,9 @@
+## v1.40.2 (2026-08-27)
+
+### Fix
+
+- add Hyperloom link to ROCm.AI nav menu
+
 ## v1.40.1 (2026-08-27)
 
 ### Fix
