@@ -75,10 +75,19 @@ html_theme_options = {
     "announcement": (
         "You are viewing an archived page. See the "
         "<a data-rocm-banner-latest-link "
-        "href='https://rocm.docs.amd.com/en/latest/'>latest version</a>."
+        "href='https://rocm.docs.amd.com/projects/<project>/en/latest/'>"
+        "latest version</a>."
     ),
 }
 ```
 
-The `href` you provide is used as the no-JavaScript fallback, and the script
-upgrades it to the current page under `latest` at runtime.
+The `href` is required, and you choose it: the script only rewrites an
+existing link, it does not create one. An `<a>` without an `href` is not a
+working link (it is not clickable, focusable, or styled as a link), so the
+`data-rocm-banner-latest-link` attribute alone is not enough.
+
+The `href` you set is also the fallback used whenever the rewrite does not run,
+such as before the script loads or when JavaScript is disabled. Point it at a
+sensible landing page for your project, for example your project's latest index
+rather than the ROCm documentation root. When the script does run, it replaces
+this href with the current page under `latest`.
