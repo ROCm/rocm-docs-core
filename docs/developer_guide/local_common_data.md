@@ -39,7 +39,8 @@ At `config-inited`, `rocm_docs` resolves the checkout location in this order
 1. The `rocm_docs_common_dir` config value, if set in `conf.py`.
 2. The `ROCM_DOCS_COMMON_DIR` environment variable, if set.
 3. Otherwise, clone `rocm-docs-common` (tip of `main`) to
-   `<repo>/rocm-docs-common` and use that.
+   `<repo>/rocm-docs-common`, or refresh it to the tip of `main` if it already
+   exists, and use that.
 
 The resolved path is stored back on the config so the theme and projects reads
 reuse it. There is no per-file remote fallback: if the resolved directory or a
@@ -49,9 +50,12 @@ moving branch.
 ## Local builds
 
 No setup is required. When you run `sphinx-build`, `rocm_docs` clones
-`rocm-docs-common` to the repository root if the folder is absent, then reads
-the data from it. The clone directory is listed in `.gitignore`, so it is never
-committed.
+`rocm-docs-common` to the repository root if the folder is absent. If the folder
+is already present, `rocm_docs` fast-forwards it to the tip of `main` so
+repeated local builds do not read stale data. This refresh is best-effort: if it
+fails (for example, you are offline), the build logs a warning and uses the
+existing checkout. Delete the directory to force a fresh clone. The clone
+directory is listed in `.gitignore`, so it is never committed.
 
 To use a checkout you already have — for example, to test unreleased common
 data — point `rocm_docs_common_dir` at it in `conf.py`:

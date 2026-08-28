@@ -21,6 +21,10 @@ import os
 import subprocess
 from pathlib import Path
 
+import sphinx.util.logging
+
+logger = sphinx.util.logging.getLogger(__name__)
+
 COMMON_DIR_ENV = "ROCM_DOCS_COMMON_DIR"
 COMMON_DIR_CONFIG = "rocm_docs_common_dir"
 
@@ -37,22 +41,32 @@ def clone_common_if_missing(
     repo_url: str = COMMON_REPO_URL,
     branch: str = COMMON_REPO_BRANCH,
 ) -> str:
-    """Clone rocm-docs-common to ``dest`` if it is not already checked out.
+    """Clone rocm-docs-common to ``dest``, or refresh it if already present.
 
     Intended for a consumer's ``conf.py`` so a local ``sphinx-build`` works
     without a manual clone. On Read the Docs the ``post_checkout`` job usually
-    provides the checkout already, in which case this is a no-op.
+    provides a fresh checkout already, so this refresh is redundant there but
+    harmless.
+
+    When ``dest`` does not yet contain a checkout it is cloned (shallow). When
+    it already exists, it is fast-forwarded to the tip of ``branch`` so repeated
+    local builds do not read stale data from a checkout cloned days ago. The
+    refresh is best-effort: a failure (offline, GitHub throttling) is logged and
+    the existing checkout is used, since a slightly stale local build is better
+    than a blocked one. The initial clone still raises, because without it there
+    is no data to build from at all.
 
     Args:
         dest: Directory the repo should live in (e.g. ``<repo>/rocm-docs-common``).
         repo_url: Git URL to clone from. Defaults to :data:`COMMON_REPO_URL`.
-        branch: Branch to clone (shallow). Defaults to :data:`COMMON_REPO_BRANCH`.
+        branch: Branch to clone/refresh (shallow). Defaults to
+            :data:`COMMON_REPO_BRANCH`.
 
     Returns:
         ``str(dest)``, so callers can assign ``rocm_docs_common_dir`` directly.
 
     Raises:
-        subprocess.CalledProcessError: if the clone fails.
+        subprocess.CalledProcessError: if the initial clone fails.
     """
     dest_path = Path(dest)
     if not (dest_path / "data").is_dir():
@@ -68,6 +82,35 @@ def clone_common_if_missing(
                 str(dest_path),
             ],
             check=True,
+        )
+        return str(dest_path)
+
+    # Already checked out: pull the latest so local builds don't go stale.
+    try:
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(dest_path),
+                "fetch",
+                "--depth",
+                "1",
+                repo_url,
+                branch,
+            ],
+            check=True,
+        )
+        subprocess.run(
+            ["git", "-C", str(dest_path), "checkout", "FETCH_HEAD"],
+            check=True,
+        )
+    except (subprocess.CalledProcessError, OSError) as error:
+        logger.warning(
+            "Could not refresh the rocm-docs-common checkout at %s (%s). "
+            "Building against the existing, possibly stale, copy. Delete the "
+            "directory to force a fresh clone.",
+            dest_path,
+            error,
         )
     return str(dest_path)
 
@@ -87,7 +130,8 @@ def ensure_common_dir(
        ``None`` so :func:`get_common_dir` picks it up).
     3. Otherwise clone rocm-docs-common to ``<confdir>/../rocm-docs-common``
        (the repo root in the standard ``docs/`` layout, matching where the
-       Read the Docs ``post_checkout`` job clones it) and return that path.
+       Read the Docs ``post_checkout`` job clones it), refreshing it to the
+       branch tip if it already exists, and return that path.
 
     Args:
         confdir: The Sphinx conf.py directory (``app.confdir``).
