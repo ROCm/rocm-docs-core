@@ -30,6 +30,7 @@ from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlparse
 
 import sphinx.util.logging
 from docutils import nodes
@@ -569,14 +570,30 @@ def _toc_path(app: Sphinx) -> Path | None:
 
 
 def _resolve_base_url(app: Sphinx) -> str:
-    """Determine the published base URL for rewriting internal links."""
+    """Determine the published base URL for rewriting internal links.
+
+    A candidate is only used if it is a fully-qualified URL (has a scheme and a
+    network location, e.g. ``https://example.com``). A scheme-less value such as
+    ``instinct.docs.amd.com`` would otherwise be emitted verbatim, producing
+    malformed links like ``instinct.docs.amd.com/page.html``; such values are
+    skipped so links fall back to relative form instead.
+    """
     for candidate in (
         app.config.rocm_docs_llms_base_url,
         getattr(app.config, "html_baseurl", ""),
         os.environ.get("READTHEDOCS_CANONICAL_URL", ""),
     ):
-        if candidate:
+        if not candidate:
+            continue
+        parsed = urlparse(candidate)
+        if parsed.scheme and parsed.netloc:
             return candidate.rstrip("/")
+        logger.warning(
+            "llms: ignoring base URL %r because it is not a fully-qualified "
+            "URL (needs a scheme, e.g. https://); internal links will be "
+            "relative",
+            candidate,
+        )
     logger.info("llms: no base URL configured; internal links will be relative")
     return ""
 
