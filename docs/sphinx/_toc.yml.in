@@ -23,6 +23,7 @@ subtrees:
       - file: user_guide/doxygen_integration
       - file: user_guide/article_info
       - file: user_guide/llms
+      - file: user_guide/remote_content
       - file: user_guide/selector
   - caption: Developer guide
     entries:
