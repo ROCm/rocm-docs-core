@@ -12,7 +12,6 @@ from sphinx.application import Sphinx
 
 from .log_fixtures import ExpectLogFixture
 
-
 COMMON_DATA_DIR = Path(__file__).parent / "common_data"
 
 
