@@ -22,6 +22,7 @@ subtrees:
           - file: user_guide/linking_toc
       - file: user_guide/doxygen_integration
       - file: user_guide/article_info
+      - file: user_guide/banner
       - file: user_guide/llms
       - file: user_guide/selector
   - caption: Developer guide
