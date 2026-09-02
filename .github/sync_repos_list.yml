@@ -16,9 +16,4 @@ pairs:
   - external: ROCm/gpuaidev
     internal: AMD-ROCm-Internal/gpuaidev-internal
     app: emu
-  - external: ROCm/gpu-cluster-networking
-    internal: ROCm/gpu-cluster-networking-internal
-    app: github
-  - external: ROCm/system-acceptance-docs
-    internal: ROCm/system-acceptance-docs-internal
-    app: github
+
