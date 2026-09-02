@@ -525,6 +525,7 @@ exascale
 executables
 ffmpeg
 filesystem
+focusable
 fortran
 galb
 gcc
@@ -559,6 +560,7 @@ hipsparse
 hpp
 hsa
 hsakmt
+href
 html
 hyperparameter
 ib_core
