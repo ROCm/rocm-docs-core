@@ -10,7 +10,7 @@
 # To add a new pair, append an entry following the same format.
 
 pairs:
-  - external: ROCm/legacy-rocm-build
+  - external: ROCm/rocm-docs
     internal: AMD-ROCm-Internal/rocm-internal
     app: emu
   - external: ROCm/gpuaidev
