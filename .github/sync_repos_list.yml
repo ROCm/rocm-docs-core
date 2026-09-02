@@ -16,4 +16,3 @@ pairs:
   - external: ROCm/gpuaidev
     internal: AMD-ROCm-Internal/gpuaidev-internal
     app: emu
-
