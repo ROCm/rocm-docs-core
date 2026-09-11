@@ -46,8 +46,11 @@ This works in two layers:
   JavaScript is unavailable.
 - At runtime, `bannerLatestLink.js` rewrites the href of any link carrying the
   `data-rocm-banner-latest-link` attribute to the matching page under `latest`,
-  based on the current URL. If the page does not exist on the latest version,
-  Read the Docs serves its own 404 for that version.
+  based on the current URL. When the link is clicked, the script first checks
+  whether that page exists on the latest version. If it does not (for example,
+  the page was renamed or removed and no redirect was set up), the reader is
+  sent to the project's landing page on `latest` instead of a 404. Existing
+  redirects still work, because the check follows them.
 
 ## Custom announcement
 
