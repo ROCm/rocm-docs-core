@@ -231,6 +231,7 @@ NUMA
 NVCC
 NVIDIA
 NVPTX
+Namespaced
 Nano
 Navi
 Noncoherently
@@ -649,6 +650,7 @@ rccl
 rdc
 reStructuredText
 reformats
+repo
 repos
 representativeness
 req
