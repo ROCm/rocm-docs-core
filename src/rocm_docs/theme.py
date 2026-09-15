@@ -175,13 +175,16 @@ def _update_banner(
     ):
         return
 
+    # The links carry data-rocm-banner-latest-link so bannerLatestLink.js
+    # rewrites their fixed href to the matching page on the latest version at
+    # runtime; the href here is the no-JS fallback.
     announcement_info: str
     if version_type == util.VersionType.RELEASE_CANDIDATE:
-        announcement_info = "This page contains changes for a test release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+        announcement_info = "This page contains changes for a test release of ROCm. Read the <a id='rocm-banner' data-rocm-banner-latest-link href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
     elif version_type == util.VersionType.OLD_RELEASE:
-        announcement_info = "This is not the latest version of ROCm documentation. See <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>ROCm documentation</a> for the latest version."
+        announcement_info = "This is not the latest version of ROCm documentation. See <a id='rocm-banner' data-rocm-banner-latest-link href='https://rocm.docs.amd.com/en/latest/'>ROCm documentation</a> for the latest version."
     elif version_type == util.VersionType.DEVELOPMENT:
-        announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a id='rocm-banner' href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
+        announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a id='rocm-banner' data-rocm-banner-latest-link href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
 
     theme_opts.setdefault("announcement", announcement_info)
 
@@ -309,6 +312,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_js_file("renameVersionLinks.js", loading_method="async")
     app.add_js_file("rdcMisc.js", loading_method="async")
     app.add_js_file("theme_mode_captions.js", loading_method="async")
+    app.add_js_file("bannerLatestLink.js", loading_method="async")
     app.add_js_file("search.js", loading_method="defer")
     here = Path(__file__).parent.resolve()
     theme_path = here / "rocm_docs_theme"

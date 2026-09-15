@@ -526,6 +526,7 @@ exascale
 executables
 ffmpeg
 filesystem
+focusable
 fortran
 galb
 gcc
@@ -558,6 +559,7 @@ hipify
 hipsolver
 hipsparse
 hpp
+href
 hsa
 hsakmt
 html
