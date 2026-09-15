@@ -46,6 +46,14 @@
         // The HEAD request follows redirects, so a redirected page returns a
         // 2xx and counts as present. A genuine 404 means the page is gone with
         // no redirect: fall back to the project landing page on latest.
+        //
+        // We match 404 specifically rather than `!response.ok` on purpose. Only
+        // a 404 is a definite "page is missing" signal. A transient 5xx (or a
+        // 403) does not mean the page is gone, so diverting to the project home
+        // would strip the reader's page context for what is likely a temporary
+        // problem the actual navigation may not even hit. That mirrors the
+        // `catch` below, which treats an inconclusive check by navigating to the
+        // page, not home: we only send the reader home on a definite 404.
         fetch(targets.page, { method: "HEAD" })
             .then((response) => {
                 if (response.status === 404) {
