@@ -10,7 +10,6 @@ from typing import Any, TypeAlias, cast
 import functools
 import importlib.resources
 import json
-import os
 import re
 import sys
 import urllib.parse
@@ -18,8 +17,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import fastjsonschema  # type: ignore[import-untyped]
-import github
-import requests
 import sphinx.util.logging
 import yaml
 from packaging.version import Version
@@ -30,7 +27,7 @@ from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.errors import ExtensionError
 
-from rocm_docs import formatting, theme, util
+from rocm_docs import common, formatting, theme, util
 
 if sys.version_info < (3, 11):
     import importlib.abc as importlib_abc
@@ -320,83 +317,14 @@ def _create_mapping(
     return {name: project.mapping for name, project in projects.items()}
 
 
-class MappingFileFetchError(RuntimeError):
-    """Fetching the yaml file from the remote failed."""
-
-
-def _fetch_projects(
-    remote_repository: str,
-    remote_branch: str,
-    remote_filepath: str,
-) -> str:
-    try:
-        gh_api = github.Github(os.environ.get("TOKEN"))
-        repo = gh_api.get_repo(remote_repository)
-        contents = repo.get_contents(remote_filepath, remote_branch)
-        if isinstance(contents, list):
-            raise MappingFileFetchError("Expected a file not a directory!")
-
-        return contents.decoded_content.decode("utf-8")
-    except github.GithubException as err:
-        assert isinstance(err.data["message"], str)
-        message: str = err.data["message"]
-        raise MappingFileFetchError(
-            "failed to read remote mappings from "
-            f"{remote_repository}:{remote_filepath} "
-            f"on branch={remote_branch}, API returned {err.status}: {message}.",
-        ) from err
-
-
-def _load_projects(
-    remote_repository: str, remote_branch: str
-) -> dict[str, _Project]:
-    projects_file_loc = "data/projects.yaml"
-
-    def should_fetch_mappings(
-        remote_repository: str | None, remote_branch: str | None
-    ) -> bool:
-        if not remote_repository:
-            logger.info(
-                "Skipping the fetch for remote mappings, remote_repository "
-                "is unset."
-            )
-            return False
-
-        if not remote_branch:
-            logger.error(
-                "Remote branch is unset, cannot fetch remote mappings."
-            )
-            return False
-
-        logger.info(
-            "Remote mappings will be fetched from "
-            f"{remote_repository} branch={remote_branch}"
-        )
-        return True
-
-    projects: dict[str, _Project] | None = None
-    if should_fetch_mappings(remote_repository, remote_branch):
-        try:
-            remote_filepath = "src/rocm_docs/" + projects_file_loc
-            projects = _create_projects(
-                _fetch_projects(
-                    remote_repository,
-                    remote_branch,
-                    remote_filepath,
-                )
-            )
-        except (MappingFileFetchError, InvalidMappingFileError) as err:
-            logger.warning(
-                f"Failed to use remote mapping: {err} "
-                "Falling back to bundled mapping."
-            )
-
-    if projects is None:
-        projects = _create_projects(
-            importlib.resources.files("rocm_docs") / projects_file_loc
-        )
-
-    return projects
+def _load_projects(common_dir: str | None = None) -> dict[str, _Project]:
+    # The project mapping is read from the local rocm-docs-common checkout
+    # (see rocm_docs.common). There is no remote fetch and no bundled
+    # fallback — a missing common file fails the build.
+    logger.info("Loading project mappings from rocm-docs-common")
+    return _create_projects(
+        common.read_common_file("data/projects.yaml", common_dir)
+    )
 
 
 def _get_context(
@@ -417,9 +345,10 @@ def _update_theme_configs(
     flavor: str,
 ) -> None:
     """Update configurations for use in theme.py"""
-    latest_version_list = requests.get(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
-    ).text.strip()
+    common_dir = app.config.rocm_docs_common_dir
+    latest_version_list = common.read_common_file(
+        "data/latest_version.txt", common_dir
+    ).strip()
     latest_version_dict = theme._parse_version(latest_version_list)
     latest_version = latest_version_dict.get(flavor, "latest")
     latest_version_string_list = ["latest"]
@@ -427,9 +356,9 @@ def _update_theme_configs(
         # Some component's docs branch has "docs-" prefix, others do not
         latest_version_string_list += [f"docs-{latest_version}", latest_version]
 
-    release_candidate = requests.get(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
-    ).text.strip("\r\n")
+    release_candidate = common.read_common_file(
+        "data/release_candidate.txt", common_dir
+    ).strip("\r\n")
     release_candidate_string = f"docs-{release_candidate}"
 
     development_branch = _Project.default_value("development_branch")
@@ -500,9 +429,14 @@ def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "intersphinx_disabled_domains"):
         app.config.intersphinx_disabled_domains = ["std"]
 
-    remote_repository = app.config.external_projects_remote_repository
-    remote_branch = app.config.external_projects_remote_branch
-    projects = _load_projects(remote_repository, remote_branch)
+    # Resolve the rocm-docs-common checkout (cloning a default if neither the
+    # config value nor ROCM_DOCS_COMMON_DIR is set) so consumer conf.py files
+    # need no common-dir setup. Store it back so downstream reads reuse it.
+    app.config.rocm_docs_common_dir = common.ensure_common_dir(
+        app.confdir, app.config.rocm_docs_common_dir
+    )
+
+    projects = _load_projects(app.config.rocm_docs_common_dir)
 
     repo_path = Path(app.srcdir)
     __, branch = util.get_branch(repo_path)
@@ -554,6 +488,12 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.setup_extension("sphinx_external_toc")
 
     app.add_config_value(
+        common.COMMON_DIR_CONFIG,
+        None,
+        rebuild="env",
+        types=[str, type(None)],
+    )
+    app.add_config_value(
         "external_projects_remote_repository",
         DEFAULT_INTERSPHINX_REPOSITORY,
         rebuild="env",
@@ -597,9 +537,7 @@ def debug_projects() -> None:
 
     Provided as a debugging tool for the functionality of this module.
     """
-    projects = _load_projects(
-        DEFAULT_INTERSPHINX_REPOSITORY, DEFAULT_INTERSPHINX_BRANCH
-    )
+    projects = _load_projects()
     print(projects)
 
     current_project = _get_current_project(projects, "rocm-docs-core")

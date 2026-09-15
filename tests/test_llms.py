@@ -67,6 +67,10 @@ def llms_build(
     try:
         with pytest.MonkeyPatch.context() as monkeypatch:
             monkeypatch.setenv("ROCM_DOCS_REMOTE_DETAILS", ",")
+            monkeypatch.setenv(
+                "ROCM_DOCS_COMMON_DIR",
+                str(Path(__file__).parent / "common_data"),
+            )
             # Sphinx's logging.setup() reconfigures global logging handlers,
             # which would corrupt log capture in other test modules. Disable it
             # for this build, exactly as the _with_sphinx_logs fixture does.

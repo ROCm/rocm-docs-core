@@ -11,7 +11,7 @@ from sphinx.errors import ExtensionError
 import rocm_docs.projects
 
 from .log_fixtures import ExpectLogFixture
-from .sphinx_fixtures import SITES_BASEFOLDER
+from .sphinx_fixtures import COMMON_DATA_DIR, SITES_BASEFOLDER
 
 TEMPLATE_FOLDER = SITES_BASEFOLDER / "templates"
 
@@ -38,6 +38,7 @@ def create_app(
         / "_toc.yml.in",
         "external_toc_path": "_toc.yml",
         "intersphinx_mapping": {},
+        "rocm_docs_common_dir": str(COMMON_DATA_DIR),
     }
     app.config.configure_mock(**app.config._raw_config)
     return app
