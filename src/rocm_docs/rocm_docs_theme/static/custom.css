@@ -322,3 +322,5 @@ article :not(p) img {
 #rocm-banner {
   color: #80dfff;
 }
+
+.search-button__wrapper { display: none !important; }
