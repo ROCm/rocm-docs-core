@@ -1,22 +1,28 @@
-const RTD_SEARCH_EVENT = "readthedocs-search-show";
+const RTD_SEARCH_SHOW_EVENT = "readthedocs-search-show";
+const RTD_SEARCH_HIDE_EVENT = "readthedocs-search-hide";
 const SEARCH_FIELD_QUERY = ".search-button-field.search-button__button";
 
-function showRtdSearch() {
-    document.dispatchEvent(new CustomEvent(RTD_SEARCH_EVENT));
+let _rtdSearchOpen = false;
+
+document.addEventListener(RTD_SEARCH_SHOW_EVENT, () => { _rtdSearchOpen = true; });
+document.addEventListener(RTD_SEARCH_HIDE_EVENT, () => { _rtdSearchOpen = false; });
+
+function toggleRtdSearch() {
+    document.dispatchEvent(
+        new CustomEvent(_rtdSearchOpen ? RTD_SEARCH_HIDE_EVENT : RTD_SEARCH_EVENT_EVENT)
+    );
 }
 
-// Trigger the Read the Docs Addons Search modal when clicking on "Search docs"
-// input from the topnav.
 const searchField = document.querySelector(SEARCH_FIELD_QUERY);
 if (searchField) {
-    searchField.addEventListener("focusin", showRtdSearch);
+    searchField.addEventListener("focusin", () => {
+        document.dispatchEvent(new CustomEvent(RTD_SEARCH_SHOW_EVENT));
+    });
 }
 
-// To preserve old search shortcut, open the Read the Docs Addons Search modal
-// on Ctrl+K / Cmd+K. Read the Docs Addons Search uses slash by default.
 document.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "k") {
         e.preventDefault();
-        showRtdSearch();
+        toggleRtdSearch();
     }
 });
