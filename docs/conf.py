@@ -61,8 +61,8 @@ doxygen_project = {
     "path": "demo/doxygen/xml",
 }
 
-version = "1.40.2"
-release = "1.40.2"
+version = "1.41.0"
+release = "1.41.0"
 html_title = f"ROCm Docs Core {version}"
 project = "ROCm Docs Core"
 author = "Advanced Micro Devices, Inc."

@@ -1,3 +1,28 @@
+## v1.41.0 (2026-09-17)
+
+### Feat
+
+- add centralized remote_content extension
+
+### Fix
+
+- Disable client-side search and use RTD's server-side Search addon only
+- **search.js**: make comments a little more accurate
+- **search**: restore focusin and CTRL+K events
+- **search**: disable PyData Sphinx Theme search
+- fall back to project home when latest page is missing
+- point old-version banner to the matching page on latest
+- fix linting
+- remove unused repo pairs
+- adjust rocm source repo name
+- change repo pair list
+- change GITHUB_APP_ID to APP_ID as secrete cannot start with GITHUB
+- **llms**: require a fully-qualified base URL for link rewriting
+
+### Refactor
+
+- rename banner script and make the latest-link opt-in
+
 ## v1.40.2 (2026-08-27)
 
 ### Fix
