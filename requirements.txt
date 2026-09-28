@@ -141,7 +141,7 @@ jupyter-core==5.9.1
     #   jupyter-client
     #   nbclient
     #   nbformat
-librt==0.11.0
+librt==0.13.0
     # via mypy
 libsass==0.22.0
     # via doxysphinx
