@@ -10,7 +10,7 @@ alabaster==1.0.0
     # via sphinx
 argcomplete==3.6.3
     # via commitizen
-asttokens==3.0.1
+asttokens==3.0.2
     # via stack-data
 attrs==26.1.0
     # via
