@@ -75,7 +75,9 @@ projects:
     development_branch: main
   instinct: https://instinct.docs.amd.com/
   llvm-project: https://rocm.docs.amd.com/projects/llvm-project/en/${version}
-  libhipcxx: https://rocm.docs.amd.com/projects/libhipcxx/en/${version}
+  libhipcxx: 
+    target: https://rocm.docs.amd.com/projects/libhipcxx/en/${version}
+    development_branch: main
   miopen: https://rocm.docs.amd.com/projects/MIOpen/en/${version}
   mivisionx: https://rocm.docs.amd.com/projects/MIVisionX/en/${version}
   monai:
