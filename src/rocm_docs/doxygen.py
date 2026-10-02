@@ -23,6 +23,8 @@ from sphinx.util import logging
 from sphinx.util.display import progress_message
 from sphinx.util.osutil import copyfile
 
+from rocm_docs import doxygen_toc_expander
+
 logger = logging.getLogger(__name__)
 
 
@@ -92,6 +94,21 @@ def _run_doxygen(app: Sphinx, config: Config) -> None:
 
     _update_breathe_settings(app, doxygen_root)
     _run_doxysphinx(app, doxygen_root, doxyfile, doxygen_exe)
+
+    # Expand the TOC with Doxygen children after doxysphinx has produced the
+    # HTML. The expander reads the configured template and writes an expanded
+    # copy under the build directory, then we repoint external_toc_template_path
+    # at that copy so projects._update_config (config-inited, default priority
+    # 500) renders it. This runs at priority 400 (see setup() below), i.e.
+    # before that handler, so the repointed path is in effect when the TOC is
+    # generated. The tracked _toc.yml.in is never modified.
+    try:
+        generated = doxygen_toc_expander.expand_toc_template(app, doxygen_root)
+        if generated is not None:
+            app.config.external_toc_template_path = str(generated)
+    except Exception as e:
+        # Log warning but don't fail the build if TOC expansion fails
+        logger.warning(f"Could not expand TOC with Doxygen children: {e}")
 
 
 def _update_breathe_settings(app: Sphinx, doxygen_root: Path) -> None:
@@ -213,6 +230,8 @@ def setup(app: Sphinx) -> dict[str, Any]:
     """Set up rocm_docs.doxygen as a Sphinx extension."""
     app.setup_extension("sphinx.ext.mathjax")
     app.setup_extension("breathe")
+    # Sidebar group anchors for XML+Breathe API reference builds.
+    app.setup_extension("rocm_docs.doxygen_group_toc")
 
     app.add_config_value(
         "doxygen_root", ".doxygen", rebuild="", types=[str, os.PathLike]
