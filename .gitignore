@@ -10,3 +10,6 @@
 .cline_storage
 .vscode
 CLAUDE.md
+
+# Shared build-data repo, cloned at build time (RTD post_checkout) — never commit
+/rocm-docs-common
