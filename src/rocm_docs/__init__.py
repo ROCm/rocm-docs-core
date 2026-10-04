@@ -45,7 +45,7 @@ class ROCmDocs:
         self.html_theme: str
         self.html_theme_options: dict[str, str | (bool | list[str])] = {}
         self.doxygen_root: MaybePath = None
-        self.doxygen_project: dict[str, str | None | MaybePath] = {
+        self.doxygen_project: dict[str, str | MaybePath | None] = {
             "name": None,
             "path": None,
         }
