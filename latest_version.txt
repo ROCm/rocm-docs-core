@@ -1,4 +1,4 @@
-rocm: 10.0.0
+rocm: 10.1.0
 ai-developer-hub: v16.0
 rocm-ds: 26.03
 rocm-ls: 26.03
