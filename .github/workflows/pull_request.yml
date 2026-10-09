@@ -44,7 +44,10 @@ jobs:
     - name: Create virtual env, install requirements
       run: just deps
     - name: Check commit messages
-      run: just _check-commit-range "refs/remotes/origin/${{ github.base_ref }}..HEAD"
+      shell: bash
+      env:
+        BASE_REF: ${{ github.base_ref }}
+      run: just _check-commit-range "refs/remotes/origin/${BASE_REF}..HEAD"
     - name: Check linting, formatting, types
       run: just --set verbose_errors true -- check-codestyle
 

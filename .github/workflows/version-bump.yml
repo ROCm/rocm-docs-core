@@ -26,15 +26,12 @@ jobs:
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "${{ env.PYTHON_VERSION }}"
-          cache: pip
-          cache-dependency-path: |
-            pyproject.toml
-            requirements.txt
       - name: Set up cache
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # 5.0.4
         with:
           path: .venv
           key: venv-${{ env.PYTHON_VERSION }}-${{ hashFiles('pyproject.toml','requirements.txt') }}
+          lookup-only: true
       - name: Create virtual env, install requirements
         shell: sh
         run: |
@@ -66,12 +63,15 @@ jobs:
       - name: Push changes
         if: steps.cz-bump.outputs.bumped == 'true'
         shell: sh
+        env:
+          TARGET_REF: ${{ github.ref }}
+          REVISION: ${{ steps.cz-bump.outputs.revision }}
         run: |
-          git push --atomic origin "HEAD:${{ github.ref }}" \
-            "${{ steps.cz-bump.outputs.revision }}"
+          git push --atomic origin "HEAD:${TARGET_REF}" \
+            "${REVISION}"
       - name: Release
         if: steps.cz-bump.outputs.bumped == 'true'
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
         with:
           body_path: "body.md"
           tag_name: ${{ steps.cz-bump.outputs.revision }}
@@ -93,11 +93,13 @@ jobs:
     if: needs.bump-version.outputs.bumped == 'true'
     steps:
     - shell: sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REPO: ${{ github.repository }}
+        SHA: ${{ needs.bump-version.outputs.sha }}
+        REQUIRED_CHECK_CONTEXTS: ${{ vars.REQUIRED_CHECK_CONTEXTS }}
       run: |
-        REPO="${{ github.repository }}"
-        SHA="${{ needs.bump-version.outputs.sha }}"
-
-        printf '%s' "${{ vars.REQUIRED_CHECK_CONTEXTS }}" | \
+        printf '%s' "$REQUIRED_CHECK_CONTEXTS" | \
         while IFS="" read -r CONTEXT; do
           # Mark each check as succeeded
           gh api "/repos/$REPO/statuses/$SHA"                     \
@@ -108,8 +110,6 @@ jobs:
             --field description='Skipped for version bump commit' \
             --raw-field context="$CONTEXT"
         done
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   call-sync-branches:
     name: Trigger merge

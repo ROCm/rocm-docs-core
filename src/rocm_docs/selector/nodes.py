@@ -152,8 +152,7 @@ class SelectorGroup(nodes.General, nodes.Element):
             )
             content_div_attrs = f'class="row col-{12 - col} pe-0"'
 
-        translator.body.append(
-            f"""
+        translator.body.append(f"""
             <div id="{node['dom-id']}"
                 class="{SELECTOR_GROUP_CLASS} row pt-2"
                 data-selector-key="{key}"
@@ -166,20 +165,17 @@ class SelectorGroup(nodes.General, nodes.Element):
                 </div>
                 <div {content_div_attrs}>
                 {select_open}
-            """.strip()
-        )
+            """.strip())
 
     @staticmethod
     def depart_html(translator, node):
         """Emit the closing HTML for a selector group row."""
         is_dropdown = node.get("dropdown-input", False)
-        translator.body.append(
-            f"""
+        translator.body.append(f"""
                 {"</select>" if is_dropdown else ""}
                 </div>
             </div>
-            """
-        )
+            """)
 
 
 class _SelectorGroupBase(SphinxDirective):
@@ -333,8 +329,7 @@ class SelectorOption(nodes.General, nodes.Element):
 
         toc_label_attr = f'data-toc-label="{toc_label}"' if toc_label else ""
 
-        translator.body.append(
-            f"""
+        translator.body.append(f"""
             <div class="{SELECTOR_OPTION_CLASS} {default_class} {width_class} px-2"
                 data-selector-key="{node.get("group_key", "")}"
                 data-selector-value="{value}"
@@ -348,8 +343,7 @@ class SelectorOption(nodes.General, nodes.Element):
                 {width_style}
             >
                 <span>{label}</span>
-            """.strip()
-        )
+            """.strip())
 
     @staticmethod
     def depart_html(translator, node):
@@ -468,16 +462,14 @@ class SelectedContent(nodes.General, nodes.Element):
             id_attr = explicit_id
 
         tag = "section" if heading else "div"
-        translator.body.append(
-            f"""
+        translator.body.append(f"""
             <{tag}
                 id="{id_attr}"
                 class="{SELECTED_CONTENT_CLASS} {classes}"
                 {show_cond_attr}
                 aria-hidden="true">
                 {heading_elem}
-            """.strip()
-        )
+            """.strip())
 
     @staticmethod
     def depart_html(translator, node):
