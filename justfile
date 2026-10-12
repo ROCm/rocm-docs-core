@@ -9,13 +9,16 @@ verbose_errors := "false"
 
 set windows-shell := ["powershell.exe", "-c"]
 
+# Test the interpreter, not the directory: a cached .venv restores as a
+# directory whose bin/python is a dangling symlink once the runner's Python
+# patch version changes, which a -d check accepts and every later recipe fails on.
 [unix]
 _virtualenv:
-	[ -d {{venvdir}} ] || {{base-python}} -m venv {{venvdir}}
+	[ -x {{python}} ] || {{base-python}} -m venv --clear {{venvdir}}
 
 [windows]
 _virtualenv:
-	if (-Not (Test-Path {{venvdir}} -PathType Container)) { {{base-python}} -m venv {{venvdir}} }
+	if (-Not (Test-Path {{python}}.exe -PathType Leaf)) { {{base-python}} -m venv --clear {{venvdir}} }
 
 _install-defusedxml: _virtualenv
 	{{python}} -m pip install defusedxml
