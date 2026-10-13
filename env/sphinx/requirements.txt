@@ -21,13 +21,13 @@ babel==2.18.0
     # via
     #   pydata-sphinx-theme
     #   sphinx
-beartype==0.22.9
+beartype==0.23.1
     # via sphinx-substitution-extensions
 beautifulsoup4==4.15.0
     # via
     #   pydata-sphinx-theme
     #   webtest
-breathe==5.0.0
+breathe==5.1.0
     # via rocm-docs-core
 certifi==2026.7.22
     # via requests
@@ -65,6 +65,7 @@ docutils==0.21.2
     #   pybtex-docutils
     #   pydata-sphinx-theme
     #   sphinx
+    #   sphinx-jinja
     #   sphinx-markdown-builder
     #   sphinx-substitution-extensions
     #   sphinx-tabs
@@ -73,7 +74,7 @@ doxysphinx==3.3.14
     # via rocm-docs-core
 exceptiongroup==1.3.1
     # via ipython
-executing==2.2.1
+executing==2.3.0
     # via stack-data
 fastjsonschema==2.22.2
     # via
@@ -99,12 +100,13 @@ ipython==8.39.0
     # via
     #   ipykernel
     #   myst-nb
-jedi==0.20.0
+jedi==0.20.1
     # via ipython
 jinja2==3.1.6
     # via
     #   myst-parser
     #   sphinx
+    #   sphinx-jinja
     #   sphinxcontrib-mermaid
 joblib==1.6.0
     # via -r requirements.in
@@ -134,7 +136,7 @@ markdown-it-py==3.0.0
     # via
     #   mdit-py-plugins
     #   myst-parser
-markupsafe==3.0.3
+markupsafe==3.0.4
     # via jinja2
 matplotlib-inline==0.2.2
     # via
@@ -161,7 +163,7 @@ nbformat==5.11.1
     #   jupyter-cache
     #   myst-nb
     #   nbclient
-nest-asyncio2==1.7.3
+nest-asyncio2==1.7.4
     # via ipykernel
 numpy==2.2.6
     # via -r requirements.in
@@ -174,7 +176,7 @@ parso==0.8.7
     # via jedi
 pexpect==4.9.0
     # via ipython
-platformdirs==4.12.2
+platformdirs==4.12.4
     # via jupyter-core
 prompt-toolkit==3.0.53
     # via ipython
@@ -190,7 +192,7 @@ pybtex==0.26.1
     #   sphinxcontrib-bibtex
 pybtex-docutils==1.0.3
     # via sphinxcontrib-bibtex
-pycparser==3.0
+pycparser==3.11
     # via cffi
 pydata-sphinx-theme==0.15.4
     # via
@@ -264,6 +266,7 @@ sphinx==8.1.3
     #   sphinx-copybutton
     #   sphinx-design
     #   sphinx-external-toc
+    #   sphinx-jinja
     #   sphinx-last-updated-by-git
     #   sphinx-markdown-builder
     #   sphinx-multitoc-numbering
@@ -283,6 +286,8 @@ sphinx-design==0.6.1
     # via rocm-docs-core
 sphinx-external-toc==1.1.0
     # via rocm-docs-core
+sphinx-jinja==2.0.2
+    # via -r requirements.in
 sphinx-last-updated-by-git==0.3.8
     # via sphinx-sitemap
 sphinx-markdown-builder==0.6.11
@@ -327,7 +332,7 @@ tabulate==0.10.0
     # via
     #   jupyter-cache
     #   sphinx-markdown-builder
-tomli==2.4.1
+tomli==2.5.0
     # via sphinx
 tornado==6.5.10
     # via
@@ -363,11 +368,11 @@ urllib3==2.8.0
     #   requests
 waitress==3.0.2
     # via webtest
-wcwidth==0.9.1
+wcwidth==0.9.2
     # via prompt-toolkit
 webob==1.8.11
     # via webtest
 webtest==3.0.7
     # via autodoc
-zipp==4.1.0
+zipp==4.1.1
     # via importlib-metadata

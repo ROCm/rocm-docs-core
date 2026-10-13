@@ -15,6 +15,10 @@ sphinxcontrib-mermaid>=1.0
 # Required by: hipsparse (tabbed content)
 sphinx-tabs==3.5.0
 
+# Required by: rocprofiler-compute
+sphinxcontrib.datatemplates==0.11.0
+sphinx-jinja==2.0.2
+
 # Required by: hiprand, rocrand
 numpy
 
