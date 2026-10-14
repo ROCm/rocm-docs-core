@@ -73,6 +73,9 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ steps.repo.outputs.owner }}
           repositories: ${{ steps.repo.outputs.name }}
+          # Scope the token to only what the sync needs: clone + push branch contents.
+          permission-contents: write
+          permission-metadata: read
 
       - name: Generate token (EMU app)
         id: app-token-emu
@@ -83,6 +86,9 @@ jobs:
           private-key: ${{ secrets.EMU_APP_PRIVATE_KEY }}
           owner: ${{ steps.repo.outputs.owner }}
           repositories: ${{ steps.repo.outputs.name }}
+          # Scope the token to only what the sync needs: clone + push branch contents.
+          permission-contents: write
+          permission-metadata: read
 
       - name: Get default branch of external repo
         id: branch

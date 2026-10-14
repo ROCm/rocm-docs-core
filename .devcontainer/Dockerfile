@@ -27,4 +27,9 @@ CMD mkdir -p /workspace && chown developer:developer /workspace
 WORKDIR /workspace
 VOLUME /workspace
 
+# The container is a development environment, not a long-running service, so
+# this simply confirms the Python toolchain is responsive.
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD python --version || exit 1
+
 USER developer

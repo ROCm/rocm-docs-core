@@ -39,7 +39,7 @@ else:
 
 Traversable = importlib_abc.Traversable
 
-Inventory: TypeAlias = str | None | tuple[str | None, ...]
+Inventory: TypeAlias = str | tuple[str | None, ...] | None
 ProjectMapping: TypeAlias = tuple[str, Inventory]
 
 DEFAULT_INTERSPHINX_REPOSITORY = "ROCm/rocm-docs-core"
@@ -94,8 +94,8 @@ class _Project:
         doxygen_entry = entry["doxygen"]
         assert isinstance(doxygen_entry, dict | str)
 
-        if isinstance(doxygen_entry, dict):  # type:ignore
-            doxygen_entry = doxygen_entry["html"]  # type:ignore
+        if isinstance(doxygen_entry, dict):  # type: ignore
+            doxygen_entry = doxygen_entry["html"]  # type: ignore
 
         # Parse as a URI, but only allow the path component
         urlparts = urllib.parse.urlsplit(doxygen_entry)

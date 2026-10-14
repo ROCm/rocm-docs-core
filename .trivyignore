@@ -1,0 +1,10 @@
+# CVE-2026-41066 — lxml information disclosure via untrusted XML input.
+#
+# lxml is pinned to 5.2.1 transitively because doxysphinx==3.3.14 (the latest
+# release) hard-caps lxml<=5.2.1. It cannot be upgraded to the fixed 6.1.0
+# without a doxysphinx release that lifts the cap.
+#
+# rocm-docs-core only feeds doxysphinx trusted, build-time Doxygen XML that it
+# generates itself, so the untrusted-input vector this CVE describes does not
+# apply. Revisit once doxysphinx permits lxml>=6.1.0.
+CVE-2026-41066
