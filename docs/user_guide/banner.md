@@ -18,11 +18,11 @@ For projects using the `rocm` theme flavor, the banner is added automatically
 based on the version type that `rocm-docs-core` detects from the build branch.
 No configuration is required.
 
-| Version type      | When it applies                              | Banner message                                                |
-| ----------------- | -------------------------------------------- | ------------------------------------------------------------- |
-| Old release       | A `docs-X.Y.Z` branch that is not the latest | This is not the latest version of ROCm documentation.         |
-| Release candidate | The current release-candidate branch         | This page contains changes for a test release of ROCm.        |
-| Development        | The development branch (for example `develop`) | This page contains proposed changes for a future release.     |
+| Version type      | When it applies                                | Banner message                                            |
+| ----------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| Old release       | A `docs-X.Y.Z` branch that is not the latest   | This is not the latest version of ROCm documentation.     |
+| Release candidate | The current release-candidate branch           | This page contains changes for a test release of ROCm.    |
+| Development       | The development branch (for example `develop`) | This page contains proposed changes for a future release. |
 
 No banner is shown when the build is the latest release, because there is
 nothing newer to point to.
