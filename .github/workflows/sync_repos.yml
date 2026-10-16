@@ -27,7 +27,7 @@ jobs:
       matrix: ${{ steps.read-config.outputs.matrix }}
       has_pairs: ${{ steps.read-config.outputs.has_pairs }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Read sync config
         id: read-config
@@ -73,6 +73,9 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ steps.repo.outputs.owner }}
           repositories: ${{ steps.repo.outputs.name }}
+          # Scope the token to only what the sync needs: clone + push branch contents.
+          permission-contents: write
+          permission-metadata: read
 
       - name: Generate token (EMU app)
         id: app-token-emu
@@ -83,6 +86,9 @@ jobs:
           private-key: ${{ secrets.EMU_APP_PRIVATE_KEY }}
           owner: ${{ steps.repo.outputs.owner }}
           repositories: ${{ steps.repo.outputs.name }}
+          # Scope the token to only what the sync needs: clone + push branch contents.
+          permission-contents: write
+          permission-metadata: read
 
       - name: Get default branch of external repo
         id: branch

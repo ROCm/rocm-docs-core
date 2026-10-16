@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Fetch config
         shell: sh
         run: |
           test -f .markdownlint.yaml && echo "Using local config file" || curl --silent --show-error --fail --location https://raw.githubusercontent.com/ROCm/rocm-docs-core/develop/.markdownlint.yaml -O
       - name: Use markdownlint-cli2
-        uses: DavidAnson/markdownlint-cli2-action@455b6612a7b7a80f28be9e019b70abdd11696e4e # v14.0.0
+        uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff # v24.2.0
         with:
           globs: "**/*.md"
 
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Fetch config
         if: ${{ ! contains( github.repository, 'rocm-docs-core') }}
         shell: sh
@@ -54,7 +54,7 @@ jobs:
         run: |
           python3 .github/workflows/yaml_merger.py .spellcheck.yaml .spellcheck.local.yaml .spellcheck.yaml
       - name: Run spellcheck
-        uses: rojopolis/spellcheck-github-actions@e3cd8e9aec4587ec73bc0e60745aafd45c37aa2e # v0.60.0
+        uses: rojopolis/spellcheck-github-actions@c1934c57e61c734261d7905b525486b12f8eb670 # v0.66.0
       - name: On fail
         if: failure()
         run: |

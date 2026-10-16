@@ -16,13 +16,16 @@ jobs:
     steps:
     - name: Push develop forward (ff only)
       shell: sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        REPOSITORY: ${{ github.repository }}
+        TARGET_SHA: ${{ inputs.sha || github.sha }}
       run: |
-        REF="refs/heads/${{ github.event.repository.default_branch }}"
-        gh api "/repos/${{ github.repository }}/git/$REF"   \
+        REF="refs/heads/${DEFAULT_BRANCH}"
+        gh api "/repos/${REPOSITORY}/git/$REF"              \
           --method PATCH                                    \
           --header "Accept: application/vnd.github+json"    \
           --header "X-GitHub-Api-Version: 2022-11-28"       \
-          --raw-field sha='${{ inputs.sha || github.sha }}' \
+          --raw-field sha="${TARGET_SHA}"                   \
           --field force=false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
