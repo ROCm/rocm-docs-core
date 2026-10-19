@@ -1,4 +1,4 @@
-AMD Data Science: https://rocm.docs.amd.com/projects/rocm-ds/en/latest/index.html
+AMD Data Science: https://rocm.docs.amd.com/projects/datascience/en/latest/index.html
 AMD Finance: https://rocm.docs.amd.com/projects/finance/en/latest/index.html
 AMD Life Science: https://rocm.docs.amd.com/projects/lifescience/en/latest/index.html
 AMD LLM Extension: https://rocm.docs.amd.com/projects/llmextension/en/latest/index.html
