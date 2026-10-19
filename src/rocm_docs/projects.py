@@ -46,6 +46,8 @@ DEFAULT_INTERSPHINX_REPOSITORY = "ROCm/rocm-docs-core"
 DEFAULT_INTERSPHINX_BRANCH = "develop"
 DOCS_VERSION_PATTERN = r"^docs-\d+\.\d+\.\d+$"
 PREVIEW_VERSION_PATTERN = r"^\d+\.\d+\.\d+-preview$"
+INVENTORY_URL_ENV = "ROCM_DOCS_INVENTORY_URL"
+INVENTORY_TOKEN_ENV = "ROCM_DOCS_INVENTORY_TOKEN"
 
 logger = sphinx.util.logging.getLogger(__name__)
 
@@ -496,6 +498,38 @@ def _set_doxygen_html(app: Sphinx, current_project: _Project | None) -> None:
     app.config.doxygen_html = doxygen_html
 
 
+def _private_inventory_url(
+    template: str, project: str, target: str, token: str
+) -> str:
+    """Expand an inventory URL template for a single project."""
+    path = urllib.parse.urlsplit(target).path.strip("/")
+    return template.format(
+        project=project, target=target.rstrip("/"), path=path, token=token
+    )
+
+
+def _use_private_inventories(
+    template: str, mapping: dict[str, ProjectMapping]
+) -> dict[str, ProjectMapping]:
+    """Fetch inventories from a non-public location.
+
+    The target (used to build links) is left untouched, so links in the output
+    already point at the final public URLs. The default inventory location is
+    kept as a fallback, Sphinx tries each location in order.
+    """
+    token = os.environ.get(INVENTORY_TOKEN_ENV, "")
+    result: dict[str, ProjectMapping] = {}
+    for name, (target, inventory) in mapping.items():
+        items = (inventory,) if isinstance(inventory, str) else inventory
+        if any(item is not None for item in items or ()):
+            # Explicit inventory in projects.yaml, don't override.
+            result[name] = (target, inventory)
+            continue
+        private = _private_inventory_url(template, name, target, token)
+        result[name] = (target, (private, None))
+    return result
+
+
 def _update_config(app: Sphinx, _: Config) -> None:
     if not config_provided_by_user(app, "intersphinx_disabled_domains"):
         app.config.intersphinx_disabled_domains = ["std"]
@@ -512,8 +546,15 @@ def _update_config(app: Sphinx, _: Config) -> None:
     remote_mapping = _create_mapping(projects, current_project, branch)
     external_projects = _get_external_projects(app, remote_mapping)
 
+    inventory_template = app.config.external_projects_inventory_url
+    inventory_mapping = (
+        _use_private_inventories(inventory_template, remote_mapping)
+        if inventory_template
+        else remote_mapping
+    )
+
     mapping: dict[str, ProjectMapping] = app.config.intersphinx_mapping
-    for key, value in remote_mapping.items():
+    for key, value in inventory_mapping.items():
         if key in external_projects:
             mapping.setdefault(key, value)
 
@@ -573,6 +614,12 @@ def setup(app: Sphinx) -> dict[str, Any]:
     )
     app.add_config_value(
         "external_projects", "all", rebuild="env", types=[list, str]
+    )
+    app.add_config_value(
+        "external_projects_inventory_url",
+        lambda _: os.environ.get(INVENTORY_URL_ENV, ""),
+        rebuild="env",
+        types=str,
     )
 
     def external_toc_template_default(config: Config) -> str:

@@ -37,6 +37,7 @@ def create_app(
         / ".sphinx"
         / "_toc.yml.in",
         "external_toc_path": "_toc.yml",
+        "external_projects_inventory_url": "",
         "intersphinx_mapping": {},
     }
     app.config.configure_mock(**app.config._raw_config)
@@ -76,6 +77,51 @@ def test_external_projects(
     # the value of "external_projects"
     expected_context = {k: v.target for k, v in mocked_projects.items()}
     assert app.config.projects_context["projects"] == expected_context
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+def test_private_inventory_url(
+    mocked_projects: dict[str, rocm_docs.projects._Project],
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    with_no_git_repo: ExpectLogFixture.Validator,
+) -> None:
+    with_no_git_repo.required = False
+    monkeypatch.setenv(rocm_docs.projects.INVENTORY_TOKEN_ENV, "secret")
+    app = create_app(tmp_path, "all")
+    app.config.external_projects_inventory_url = (
+        "https://user:{token}@private.example.com/{project}/{path}/objects.inv"
+    )
+    rocm_docs.projects._update_config(app, app.config)
+
+    # Targets are unchanged, inventories come from the private location with
+    # the public location as a fallback.
+    assert app.config.intersphinx_mapping == {
+        k: (
+            v.target,
+            (
+                f"https://user:secret@private.example.com/{k}/{k}/objects.inv",
+                None,
+            ),
+        )
+        for k, v in mocked_projects.items()
+    }
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+def test_private_inventory_url_keeps_explicit_inventory() -> None:
+    mapping: dict[str, rocm_docs.projects.ProjectMapping] = {
+        "a": ("https://example.com/a", ("objects-a.inv",)),
+        "b": ("https://example.com/b", (None,)),
+    }
+    result = rocm_docs.projects._use_private_inventories(
+        "https://private.example.com/{path}/objects.inv", mapping
+    )
+    assert result["a"] == mapping["a"]
+    assert result["b"] == (
+        "https://example.com/b",
+        ("https://private.example.com/b/objects.inv", None),
+    )
 
 
 @pytest.mark.usefixtures("mocked_projects", "_no_unexpected_warnings")

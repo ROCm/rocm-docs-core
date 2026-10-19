@@ -63,3 +63,32 @@ Intersphinx references to projects that are not in `external_projects` will not
 be resolved. References in the the TOC like `${project:project_name}` will
 continue to be resolved to the URL of `project_name`, even if `project_name` is
 not set in `external_projects` (but it's defined in `projects.yaml`).
+
+## Building before the external projects are public
+
+Intersphinx normally downloads `<target>/objects.inv` from the public URL of
+each project, which fails for docs that are not published yet. To build ahead of
+time, set `external_projects_inventory_url` (or the environment variable
+`ROCM_DOCS_INVENTORY_URL`) to a template for a non-public location of the
+inventories:
+
+```python
+external_projects_inventory_url = "https://private.example.com/{path}/objects.inv"
+```
+
+Available placeholders:
+
+- `{project}`: the project name in `projects.yaml`
+- `{target}`: the resolved public target URL, without trailing slash
+- `{path}`: the path component of the target, without leading or trailing slash
+- `{token}`: the value of the environment variable `ROCM_DOCS_INVENTORY_TOKEN`,
+  for example to use as `https://user:{token}@host/...`
+
+Only the inventory is read from this location. The target is unchanged, so links
+in the built HTML already point to the final public URLs and the docs don't need
+to be rebuilt once published. If the inventory can't be fetched, Sphinx falls
+back to the public location. Projects that set an explicit `inventory` in
+`projects.yaml` are not affected.
+
+Sphinx hides the user and password of a URL in its log output, but not query
+parameters, so prefer basic authentication over a token in the query string.
