@@ -87,10 +87,11 @@ def test_private_inventory_url(
     with_no_git_repo: ExpectLogFixture.Validator,
 ) -> None:
     with_no_git_repo.required = False
-    monkeypatch.setenv(rocm_docs.projects.INVENTORY_TOKEN_ENV, "secret")
+    monkeypatch.setenv("RTD_TOKEN_A", "secret-a")
+    monkeypatch.setenv("RTD_TOKEN_B", "secret-b")
     app = create_app(tmp_path, "all")
     app.config.external_projects_inventory_url = (
-        "https://user:{token}@private.example.com/{project}/{path}/objects.inv"
+        "https://{token}:@private.example.com/{project}/{path}/objects.inv"
     )
     rocm_docs.projects._update_config(app, app.config)
 
@@ -100,12 +101,39 @@ def test_private_inventory_url(
         k: (
             v.target,
             (
-                f"https://user:secret@private.example.com/{k}/{k}/objects.inv",
+                f"https://secret-{k}:@private.example.com/{k}/{k}/objects.inv",
                 None,
             ),
         )
         for k, v in mocked_projects.items()
     }
+
+
+def test_private_inventory_token_env_name() -> None:
+    assert rocm_docs.projects._inventory_token_env("docs") == "RTD_TOKEN_DOCS"
+    assert (
+        rocm_docs.projects._inventory_token_env("hip-python")
+        == "RTD_TOKEN_HIP_PYTHON"
+    )
+
+
+def test_private_inventory_url_missing_token(
+    expect_log: ExpectLogFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("RTD_TOKEN_A", raising=False)
+    mapping: dict[str, rocm_docs.projects.ProjectMapping] = {
+        "a": ("https://example.com/a", (None,)),
+    }
+    with expect_log(
+        "sphinx.rocm_docs.projects",
+        "WARNING",
+        "RTD_TOKEN_A is not set, using the public inventory of project 'a'.",
+    ):
+        result = rocm_docs.projects._use_private_inventories(
+            "https://{token}:@private.example.com/{path}/objects.inv", mapping
+        )
+    assert result == mapping
 
 
 @pytest.mark.usefixtures("_no_unexpected_warnings")

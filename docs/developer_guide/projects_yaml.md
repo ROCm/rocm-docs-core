@@ -81,8 +81,12 @@ Available placeholders:
 - `{project}`: the project name in `projects.yaml`
 - `{target}`: the resolved public target URL, without trailing slash
 - `{path}`: the path component of the target, without leading or trailing slash
-- `{token}`: the value of the environment variable `ROCM_DOCS_INVENTORY_TOKEN`,
-  for example to use as `https://user:{token}@host/...`
+- `{token}`: the Read the Docs token of the project, read from the environment
+  variable `RTD_TOKEN_<PROJECT>`, where `<PROJECT>` is the project name in
+  upper case with non-alphanumeric characters replaced by `_` (for example
+  `RTD_TOKEN_DOCS` for `docs` and `RTD_TOKEN_HIP_PYTHON` for `hip-python`).
+  Use it as `https://{token}:@host/...`. If the variable is not set, a warning
+  is logged and the public inventory is used for that project.
 
 Only the inventory is read from this location. The target is unchanged, so links
 in the built HTML already point to the final public URLs and the docs don't need

@@ -47,7 +47,7 @@ DEFAULT_INTERSPHINX_BRANCH = "develop"
 DOCS_VERSION_PATTERN = r"^docs-\d+\.\d+\.\d+$"
 PREVIEW_VERSION_PATTERN = r"^\d+\.\d+\.\d+-preview$"
 INVENTORY_URL_ENV = "ROCM_DOCS_INVENTORY_URL"
-INVENTORY_TOKEN_ENV = "ROCM_DOCS_INVENTORY_TOKEN"
+INVENTORY_TOKEN_ENV_PREFIX = "RTD_TOKEN_"
 
 logger = sphinx.util.logging.getLogger(__name__)
 
@@ -498,6 +498,15 @@ def _set_doxygen_html(app: Sphinx, current_project: _Project | None) -> None:
     app.config.doxygen_html = doxygen_html
 
 
+def _inventory_token_env(project: str) -> str:
+    """Name of the env var with the RTD token of a project.
+
+    For example RTD_TOKEN_DOCS for "docs", RTD_TOKEN_HIP_PYTHON for
+    "hip-python".
+    """
+    return INVENTORY_TOKEN_ENV_PREFIX + re.sub(r"\W", "_", project).upper()
+
+
 def _private_inventory_url(
     template: str, project: str, target: str, token: str
 ) -> str:
@@ -517,12 +526,19 @@ def _use_private_inventories(
     already point at the final public URLs. The default inventory location is
     kept as a fallback, Sphinx tries each location in order.
     """
-    token = os.environ.get(INVENTORY_TOKEN_ENV, "")
     result: dict[str, ProjectMapping] = {}
     for name, (target, inventory) in mapping.items():
         items = (inventory,) if isinstance(inventory, str) else inventory
         if any(item is not None for item in items or ()):
             # Explicit inventory in projects.yaml, don't override.
+            result[name] = (target, inventory)
+            continue
+        token = os.environ.get(_inventory_token_env(name), "")
+        if "{token}" in template and not token:
+            logger.warning(
+                f"{_inventory_token_env(name)} is not set, "
+                f"using the public inventory of project '{name}'."
+            )
             result[name] = (target, inventory)
             continue
         private = _private_inventory_url(template, name, target, token)
