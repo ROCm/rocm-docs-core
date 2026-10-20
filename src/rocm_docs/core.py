@@ -184,14 +184,12 @@ def _generate_llms_full(app: Sphinx, exception: object) -> None:
 
 
 def _setup_llms_extension(app: Sphinx, _: Config) -> None:
-    """Register sphinx-markdown-builder only when the llms feature is enabled.
+    """Register sphinx-markdown-builder when the llms feature is enabled.
 
     sphinx-markdown-builder unconditionally adds a builder and eight
-    ``markdown_*`` config values, so registering it for every build would change
-    the config surface of projects that do not use this feature. It is an
-    optional dependency (the ``llms`` extra), so it is set up here, at
-    config-inited, only when ``rocm_docs_generate_llms`` is enabled -- and
-    a clear error is raised if the package is not installed.
+    ``markdown_*`` config values, so it is set up here, at config-inited,
+    rather than in :func:`setup`: projects that opt out by setting
+    ``rocm_docs_generate_llms = False`` keep their previous config surface.
     """
     if not app.config.rocm_docs_generate_llms:
         return
@@ -200,8 +198,10 @@ def _setup_llms_extension(app: Sphinx, _: Config) -> None:
     except ImportError as err:
         raise ExtensionError(
             "rocm_docs_generate_llms is enabled but "
-            "'sphinx-markdown-builder' is not installed. Install it with: "
-            "pip install rocm-docs-core[llms]"
+            "'sphinx-markdown-builder' is not installed. It is a required "
+            "dependency of rocm-docs-core, so this usually means a broken "
+            "environment; reinstall with: pip install --force-reinstall "
+            "rocm-docs-core"
         ) from err
     app.setup_extension("sphinx_markdown_builder")
 
@@ -245,7 +245,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     )
     app.add_config_value(
         "rocm_docs_generate_llms",
-        default=False,
+        default=True,
         rebuild="html",
         types=bool,
     )
