@@ -79,7 +79,8 @@ jobs:
     - name: Set up Graphviz
       uses: ts-graphviz/setup-graphviz@b1de5da23ed0a6d14e0aeee8ed52fdd87af2363c # v2.0.2
       with:
-        ubuntu-graphviz-version: 2.42.2-9ubuntu0.1
+        # unpinned on Ubuntu: apt package versions are tied to the
+        # runner image, so a pin breaks whenever ubuntu-latest moves to a new release.
         windows-graphviz-version: '9.0.0'
     - name: Cache venv
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # 6.1.0
