@@ -696,7 +696,8 @@ domReady(() => {
     const key = elem.dataset.selectorKey;
     if (!key) return;
 
-    const ts = new TomSelect(elem);
+    // Tom Select caps the list at 50 options by default; show all of them.
+    const ts = new TomSelect(elem, { maxOptions: null });
 
     const initVal = initialState[key];
     if (initVal !== undefined && ts.getValue() !== initVal) {
