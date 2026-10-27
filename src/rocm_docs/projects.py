@@ -507,6 +507,17 @@ def _inventory_token_env(project: str) -> str:
     return INVENTORY_TOKEN_ENV_PREFIX + re.sub(r"\W", "_", project).upper()
 
 
+def _strip_quotes(value: str) -> str:
+    """Remove whitespace and one pair of matching outer quotes.
+
+    Read the Docs may store environment variable values wrapped in quotes.
+    """
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+        return value[1:-1].strip()
+    return value
+
+
 def _private_inventory_url(
     template: str, project: str, target: str, token: str
 ) -> str:
@@ -526,6 +537,7 @@ def _use_private_inventories(
     already point at the final public URLs. The default inventory location is
     kept as a fallback, Sphinx tries each location in order.
     """
+    template = _strip_quotes(template)
     result: dict[str, ProjectMapping] = {}
     for name, (target, inventory) in mapping.items():
         items = (inventory,) if isinstance(inventory, str) else inventory
@@ -533,7 +545,7 @@ def _use_private_inventories(
             # Explicit inventory in projects.yaml, don't override.
             result[name] = (target, inventory)
             continue
-        token = os.environ.get(_inventory_token_env(name), "")
+        token = _strip_quotes(os.environ.get(_inventory_token_env(name), ""))
         if "{token}" in template and not token:
             logger.warning(
                 f"{_inventory_token_env(name)} is not set, "

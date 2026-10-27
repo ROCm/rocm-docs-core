@@ -109,6 +109,39 @@ def test_private_inventory_url(
     }
 
 
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("abc", "abc"),
+        ("'abc'", "abc"),
+        ('"abc"', "abc"),
+        ("  'abc'  ", "abc"),
+        ("'abc\"", "'abc\""),
+        ("'", "'"),
+        ("", ""),
+    ],
+)
+def test_strip_quotes(value: str, expected: str) -> None:
+    assert rocm_docs.projects._strip_quotes(value) == expected
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+def test_private_inventory_url_quoted_values(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("RTD_TOKEN_A", "'secret'")
+    mapping: dict[str, rocm_docs.projects.ProjectMapping] = {
+        "a": ("https://example.com/a", (None,)),
+    }
+    result = rocm_docs.projects._use_private_inventories(
+        "'https://{token}:@private.example.com/{path}/objects.inv'", mapping
+    )
+    assert result["a"] == (
+        "https://example.com/a",
+        ("https://secret:@private.example.com/a/objects.inv", None),
+    )
+
+
 def test_private_inventory_token_env_name() -> None:
     assert rocm_docs.projects._inventory_token_env("docs") == "RTD_TOKEN_DOCS"
     assert (
