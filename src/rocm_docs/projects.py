@@ -521,8 +521,20 @@ def _strip_quotes(value: str) -> str:
 def _private_inventory_url(
     template: str, project: str, target: str, token: str
 ) -> str:
-    """Expand an inventory URL template for a single project."""
-    path = urllib.parse.urlsplit(target).path.strip("/")
+    """Build the private inventory URL of a single project.
+
+    Without a template the URL is derived from the target: the token is added
+    as the user of the target's URL and "objects.inv" is appended.
+    """
+    token = urllib.parse.quote(token, safe="")
+    parts = urllib.parse.urlsplit(target)
+    path = parts.path.strip("/")
+    if not template:
+        netloc = f"{token}:@{parts.netloc}" if token else parts.netloc
+        inventory_path = "/".join(p for p in (path, "objects.inv") if p)
+        return urllib.parse.urlunsplit(
+            (parts.scheme, netloc, "/" + inventory_path, "", "")
+        )
     return template.format(
         project=project, target=target.rstrip("/"), path=path, token=token
     )
@@ -536,8 +548,20 @@ def _use_private_inventories(
     The target (used to build links) is left untouched, so links in the output
     already point at the final public URLs. The default inventory location is
     kept as a fallback, Sphinx tries each location in order.
+
+    Projects with a token in RTD_TOKEN_<PROJECT> use their own target as the
+    inventory location. A template can be set to change the location, it is
+    then used for all projects. Projects without a token use the public
+    inventory.
     """
     template = _strip_quotes(template)
+    tokens = {
+        name: _strip_quotes(os.environ.get(_inventory_token_env(name), ""))
+        for name in mapping
+    }
+    if not template and not any(tokens.values()):
+        return mapping
+
     result: dict[str, ProjectMapping] = {}
     for name, (target, inventory) in mapping.items():
         items = (inventory,) if isinstance(inventory, str) else inventory
@@ -545,9 +569,9 @@ def _use_private_inventories(
             # Explicit inventory in projects.yaml, don't override.
             result[name] = (target, inventory)
             continue
-        token = _strip_quotes(os.environ.get(_inventory_token_env(name), ""))
-        if "{token}" in template and not token:
-            logger.warning(
+        token = tokens[name]
+        if not token and (not template or "{token}" in template):
+            logger.info(
                 f"{_inventory_token_env(name)} is not set, "
                 f"using the public inventory of project '{name}'."
             )
@@ -574,11 +598,8 @@ def _update_config(app: Sphinx, _: Config) -> None:
     remote_mapping = _create_mapping(projects, current_project, branch)
     external_projects = _get_external_projects(app, remote_mapping)
 
-    inventory_template = app.config.external_projects_inventory_url
-    inventory_mapping = (
-        _use_private_inventories(inventory_template, remote_mapping)
-        if inventory_template
-        else remote_mapping
+    inventory_mapping = _use_private_inventories(
+        app.config.external_projects_inventory_url, remote_mapping
     )
 
     mapping: dict[str, ProjectMapping] = app.config.intersphinx_mapping

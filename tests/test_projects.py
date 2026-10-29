@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
+import logging
+import os
 import unittest.mock
 from pathlib import Path
 
@@ -14,6 +16,14 @@ from .log_fixtures import ExpectLogFixture
 from .sphinx_fixtures import SITES_BASEFOLDER
 
 TEMPLATE_FOLDER = SITES_BASEFOLDER / "templates"
+
+
+@pytest.fixture(autouse=True)
+def _no_rtd_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Tokens in the environment would enable private inventories."""
+    for name in list(os.environ):
+        if name.startswith(rocm_docs.projects.INVENTORY_TOKEN_ENV_PREFIX):
+            monkeypatch.delenv(name)
 
 
 def str_or_list_to_id(val: str | list[str]) -> str:
@@ -150,23 +160,77 @@ def test_private_inventory_token_env_name() -> None:
     )
 
 
+@pytest.mark.usefixtures("_no_unexpected_warnings")
 def test_private_inventory_url_missing_token(
-    expect_log: ExpectLogFixture,
-    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
-    monkeypatch.delenv("RTD_TOKEN_A", raising=False)
     mapping: dict[str, rocm_docs.projects.ProjectMapping] = {
         "a": ("https://example.com/a", (None,)),
     }
-    with expect_log(
-        "sphinx.rocm_docs.projects",
-        "WARNING",
-        "RTD_TOKEN_A is not set, using the public inventory of project 'a'.",
-    ):
+    with caplog.at_level(logging.INFO, logger="sphinx.rocm_docs.projects"):
         result = rocm_docs.projects._use_private_inventories(
             "https://{token}:@private.example.com/{path}/objects.inv", mapping
         )
     assert result == mapping
+    # Not a warning, builds with fail_on_warning must not fail
+    assert [(r.levelname, r.getMessage()) for r in caplog.records] == [
+        (
+            "INFO",
+            "RTD_TOKEN_A is not set, using the public inventory of "
+            "project 'a'.",
+        )
+    ]
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+def test_private_inventory_derived_from_target(
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    monkeypatch.setenv("RTD_TOKEN_A", "'secret'")
+    mapping: dict[str, rocm_docs.projects.ProjectMapping] = {
+        "a": ("https://example.com/projects/a/en/docs-1.0.0", (None,)),
+        "b": ("https://example.com:8080/b/", (None,)),
+        "c": ("https://example.com/c", ("objects-c.inv",)),
+    }
+    with caplog.at_level(logging.INFO, logger="sphinx.rocm_docs.projects"):
+        result = rocm_docs.projects._use_private_inventories("", mapping)
+
+    assert result["a"] == (
+        "https://example.com/projects/a/en/docs-1.0.0",
+        (
+            "https://secret:@example.com/projects/a/en/docs-1.0.0/objects.inv",
+            None,
+        ),
+    )
+    # No token: public inventory. Explicit inventory: untouched.
+    assert result["b"] == mapping["b"]
+    assert result["c"] == mapping["c"]
+    assert [r.getMessage() for r in caplog.records] == [
+        "RTD_TOKEN_B is not set, using the public inventory of project 'b'."
+    ]
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+def test_private_inventory_derived_keeps_port() -> None:
+    url = rocm_docs.projects._private_inventory_url(
+        "", "b", "https://example.com:8080/b/", "tok"
+    )
+    assert url == "https://tok:@example.com:8080/b/objects.inv"
+
+
+@pytest.mark.usefixtures("_no_unexpected_warnings")
+def test_private_inventory_disabled_without_tokens(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    mapping: dict[str, rocm_docs.projects.ProjectMapping] = {
+        "a": ("https://example.com/a", (None,)),
+    }
+    with caplog.at_level(logging.INFO, logger="sphinx.rocm_docs.projects"):
+        result = rocm_docs.projects._use_private_inventories("", mapping)
+    # Behavior is unchanged and nothing is logged for projects not using it
+    assert result == mapping
+    assert caplog.records == []
 
 
 @pytest.mark.usefixtures("_no_unexpected_warnings")
