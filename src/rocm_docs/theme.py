@@ -195,6 +195,7 @@ def _update_theme_options(app: Sphinx) -> None:
 
     supported_flavors = [
         "rocm",
+        "hpc-sdk",
         "local",
         "instinct",
         "instinct-design",
