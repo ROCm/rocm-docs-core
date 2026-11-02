@@ -427,11 +427,6 @@ def _update_theme_configs(
         # Some component's docs branch has "docs-" prefix, others do not
         latest_version_string_list += [f"docs-{latest_version}", latest_version]
 
-    release_candidate = requests.get(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
-    ).text.strip("\r\n")
-    release_candidate_string = f"docs-{release_candidate}"
-
     development_branch = _Project.default_value("development_branch")
     if current_project is not None:
         development_branch = current_project.development_branch
@@ -442,8 +437,6 @@ def _update_theme_configs(
         app.config.projects_version_type = util.VersionType.ROCM_LATEST_RELEASE
     elif flavor != "rocm" and current_branch in latest_version_string_list:
         app.config.projects_version_type = util.VersionType.OTHER_LATEST_RELEASE
-    elif current_branch.startswith(release_candidate_string):
-        app.config.projects_version_type = util.VersionType.RELEASE_CANDIDATE
     elif re.match(doc_branch_pattern, current_branch):
         app.config.projects_version_type = util.VersionType.OLD_RELEASE
     elif current_branch == development_branch:
