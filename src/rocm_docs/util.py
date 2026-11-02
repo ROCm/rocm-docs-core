@@ -17,13 +17,12 @@ from github.GithubException import UnknownObjectException
 
 
 class VersionType(enum.Enum):
-    """Describes how recent a version is (i.e. latest rc, or an older release)"""
+    """Describes how recent a version is (i.e. latest or an older release)"""
 
     DEVELOPMENT = enum.auto()
     ROCM_LATEST_RELEASE = enum.auto()
     OTHER_LATEST_RELEASE = enum.auto()
     OLD_RELEASE = enum.auto()
-    RELEASE_CANDIDATE = enum.auto()
 
 
 def get_path_to_docs(
