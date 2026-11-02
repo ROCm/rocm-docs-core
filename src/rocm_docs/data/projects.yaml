@@ -70,6 +70,7 @@ projects:
   hip-vs:
     target: https://rocm.docs.amd.com/projects/hip-vs/en/${version}
     development_branch: master
+  hpc-sdk: https://rocm.docs.amd.com/en/${version}/components/hpc-sdk
   infera:
     target: https://rocm.docs.amd.com/projects/infera/en/${version}
     development_branch: main
