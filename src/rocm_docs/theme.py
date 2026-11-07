@@ -87,6 +87,7 @@ def _get_version_from_url(url: str) -> str:
         # Retry in case of failure
         while (response.status_code != 200) and (retry_counter <= MAX_RETRY):
             time.sleep(5)
+            retry_counter += 1
             response = requests.get(url, headers=headers)
 
         if retry_counter > MAX_RETRY:
@@ -125,13 +126,6 @@ def _add_custom_context(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
     )
     context["header_latest_version"] = _parse_version(latest_version_list)
-
-    header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
-    )
-    context["header_release_candidate_version"] = (
-        header_release_candidate_version
-    )
 
     google_site_verification_content = _get_version_from_url(
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/google_site_verification.txt"
@@ -179,9 +173,7 @@ def _update_banner(
     # rewrites their fixed href to the matching page on the latest version at
     # runtime; the href here is the no-JS fallback.
     announcement_info: str
-    if version_type == util.VersionType.RELEASE_CANDIDATE:
-        announcement_info = "This page contains changes for a test release of ROCm. Read the <a id='rocm-banner' data-rocm-banner-latest-link href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
-    elif version_type == util.VersionType.OLD_RELEASE:
+    if version_type == util.VersionType.OLD_RELEASE:
         announcement_info = "This is not the latest version of ROCm documentation. See <a id='rocm-banner' data-rocm-banner-latest-link href='https://rocm.docs.amd.com/en/latest/'>ROCm documentation</a> for the latest version."
     elif version_type == util.VersionType.DEVELOPMENT:
         announcement_info = "This page contains proposed changes for a future release of ROCm. Read the <a id='rocm-banner' data-rocm-banner-latest-link href='https://rocm.docs.amd.com/en/latest/'>latest Linux release of ROCm documentation</a> for your production environments."
@@ -261,10 +253,6 @@ def _update_theme_options(app: Sphinx) -> None:
         "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
     )
 
-    header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
-    )
-
     default_config_opts = {
         "html_show_sphinx": False,
         "html_favicon": "https://www.amd.com/content/dam/code/images/favicon/favicon.ico",
@@ -272,7 +260,6 @@ def _update_theme_options(app: Sphinx) -> None:
         "notfound_template": "404.html",
         "html_context": {
             "header_latest_version": _parse_version(header_latest_version),
-            "header_release_candidate_version": header_release_candidate_version,
             "header_rocm_toolkits": _get_rocm_toolkits(),
         },
     }
