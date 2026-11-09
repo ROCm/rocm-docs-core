@@ -19,9 +19,21 @@ jobs:
       revision: ${{ steps.cz-bump.outputs.revision }}
       sha: ${{ steps.cz-bump.outputs.sha }}
     steps:
+      # GITHUB_TOKEN cannot bypass the branch_protection ruleset on main, so the
+      # bump commit and tag are pushed as a GitHub app that is on its bypass list.
+      - name: Generate token (GitHub app)
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          # Scope the token to only what the bump needs: push commit and tag.
+          permission-contents: write
+          permission-metadata: read
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
