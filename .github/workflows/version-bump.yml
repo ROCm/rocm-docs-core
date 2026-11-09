@@ -88,15 +88,8 @@ jobs:
           body_path: "body.md"
           tag_name: ${{ steps.cz-bump.outputs.revision }}
 
-  call-release:
-    name: Trigger a Release
-    needs: [bump-version]
-    if: needs.bump-version.outputs.bumped == 'true'
-    uses: ./.github/workflows/release.yml
-    with:
-      revision: ${{ needs.bump-version.outputs.revision }}
-    secrets:
-      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+  # The release workflow is triggered by the tag pushed with the app token, so it
+  # is not called from here (that would publish the same version twice).
 
   mark-status-checks:
     name: Mark required status checks as succeeded
@@ -130,3 +123,6 @@ jobs:
     uses: ./.github/workflows/sync_branches.yml
     with:
       sha: ${{ needs.bump-version.outputs.sha }}
+    secrets:
+      APP_ID: ${{ secrets.APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
