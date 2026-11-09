@@ -1,3 +1,25 @@
+## v1.42.0 (2026-11-09)
+
+### Feat
+
+- add HPC SDK theme
+- **projects**: derive private inventory URL from the target
+- **projects**: use per-project RTD tokens for private inventories
+- **projects**: read intersphinx inventories from a private location
+- make llms.txt generation enabled by default
+- add new flavour libhipcxx
+
+### Fix
+
+- **ci**: push version bump with a GitHub app token
+- **deps**: bump black, filelock, gitpython, virtualenv for Trivy
+- strip outer quotes from private inventory template and token
+- **selector**: show all options in selector dropdowns
+- **deps**: bump certifi to 2026.10.19
+- rebuild venv when the cached interpreter is gone
+- force bash for commit-range check on Windows runner
+- resolve security scanner findings (Trivy, Zizmor)
+
 ## v1.41.0 (2026-09-17)
 
 ### Feat
