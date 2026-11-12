@@ -23,7 +23,7 @@ jobs:
         run: |
           test -f .markdownlint.yaml && echo "Using local config file" || curl --silent --show-error --fail --location https://raw.githubusercontent.com/ROCm/rocm-docs-core/develop/.markdownlint.yaml -O
       - name: Use markdownlint-cli2
-        uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff # v24.2.0
+        uses: DavidAnson/markdownlint-cli2-action@696eb3f2509270d7b882d2aa68347bc676e7af34 # v25.0.0
         with:
           globs: "**/*.md"
 
@@ -54,7 +54,7 @@ jobs:
         run: |
           python3 .github/workflows/yaml_merger.py .spellcheck.yaml .spellcheck.local.yaml .spellcheck.yaml
       - name: Run spellcheck
-        uses: rojopolis/spellcheck-github-actions@c1934c57e61c734261d7905b525486b12f8eb670 # v0.66.0
+        uses: rojopolis/spellcheck-github-actions@dad57fc333130f4c9ae9632a6ad7ddc4de3515a2 # v0.69.0
       - name: On fail
         if: failure()
         run: |
