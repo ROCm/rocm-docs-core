@@ -114,35 +114,6 @@ def _parse_version(version_string: str) -> dict[str, str]:
     }
 
 
-def _add_custom_context(
-    app: Sphinx,  # noqa: ARG001
-    pagename: str,  # noqa: ARG001
-    templatename: str,  # noqa: ARG001
-    context: dict[str, str | dict[str, str]],
-    doctree: object,  # noqa: ARG001
-) -> None:
-    latest_version_list = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/latest_version.txt"
-    )
-    context["header_latest_version"] = _parse_version(latest_version_list)
-
-    header_release_candidate_version = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/new_data/release_candidate.txt"
-    )
-    context["header_release_candidate_version"] = (
-        header_release_candidate_version
-    )
-
-    google_site_verification_content = _get_version_from_url(
-        "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/google_site_verification.txt"
-    )
-    context["google_site_verification_content"] = (
-        google_site_verification_content
-    )
-
-    context["header_rocm_toolkits"] = _get_rocm_toolkits()
-
-
 def _update_repo_opts(srcdir: str, theme_opts: dict[str, Any]) -> None:
     default_branch_options: dict[str, Any] = {
         "use_edit_page_button": False,
@@ -270,15 +241,21 @@ def _update_theme_options(app: Sphinx) -> None:
         "html_favicon": "https://www.amd.com/content/dam/code/images/favicon/favicon.ico",
         "notfound_context": {"title": "404 - Page Not Found"},
         "notfound_template": "404.html",
-        "html_context": {
-            "header_latest_version": _parse_version(header_latest_version),
-            "header_release_candidate_version": header_release_candidate_version,
-            "header_rocm_toolkits": _get_rocm_toolkits(),
-        },
     }
     for key, default in default_config_opts.items():
         if not config_provided_by_user(app, key):
             setattr(app.config, key, default)
+
+    app.config.html_context.update(
+        {
+            "header_latest_version": _parse_version(header_latest_version),
+            "header_release_candidate_version": header_release_candidate_version,
+            "header_rocm_toolkits": _get_rocm_toolkits(),
+            "google_site_verification_content": _get_version_from_url(
+                "https://raw.githubusercontent.com/ROCm/rocm-docs-core/data/google_site_verification.txt"
+            ),
+        }
+    )
 
 
 def _load_flavor_assets(app: Sphinx) -> None:
@@ -326,7 +303,6 @@ def setup(app: Sphinx) -> dict[str, Any]:
     ]:
         app.add_css_file(css)
 
-    app.connect("html-page-context", _add_custom_context)
     app.connect("builder-inited", _update_theme_options)
     app.connect("builder-inited", _load_flavor_assets)
 
