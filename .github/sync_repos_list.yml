@@ -19,6 +19,6 @@ pairs:
   - external: ROCm/system-acceptance-docs
     internal: AMD-ROCm-Internal/system-acceptance-docs-internal
     app: emu
-  - external: ROCm/gpu-cluster-neworking
+  - external: ROCm/gpu-cluster-networking
     internal: AMD-ROCm-Internal/gpu-cluster-networking-internal
     app: emu
