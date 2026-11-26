@@ -19,6 +19,9 @@ pairs:
   - external: ROCm/amdgpu-docs
     internal: AMD-ROCm-Internal/amdgpu-docs-internal
     app: emu
+  - external: AMD-Ecosystem/ai-ecosystem
+    internal: AMD-ROCm-Internal/ai-ecosystem-internal
+    app: emu
   - external: ROCm/system-acceptance-docs
     internal: AMD-ROCm-Internal/system-acceptance-docs-internal
     app: emu
