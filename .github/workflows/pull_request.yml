@@ -77,7 +77,7 @@ jobs:
       with:
         version: 1.9.8
     - name: Set up Graphviz
-      uses: ts-graphviz/setup-graphviz@b1de5da23ed0a6d14e0aeee8ed52fdd87af2363c # v2.0.2
+      uses: ts-graphviz/setup-graphviz@6005aebc0168bb7f1c4b55f1e611648e57fb15d0 # v2.0.3
       with:
         # unpinned on Ubuntu: apt package versions are tied to the
         # runner image, so a pin breaks whenever ubuntu-latest moves to a new release.
